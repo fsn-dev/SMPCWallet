@@ -1,0 +1,39 @@
+{
+  "net": [
+    {
+      "name": "Fusion",
+      "url": "https://api.dcrm.network",
+      "chainId": 4
+    },
+    {
+      "name": "Fusion dev",
+      "url": "/api",
+      "chainId": 4
+    },
+    {
+      "name": "Eth Test",
+      "url": "https://api.nodes.run",
+      "chainId": 4
+    },
+    {
+      "name": "DCRM5",
+      "url": "https://api.dcrm.network/dcrm5",
+      "chainId": 30400
+    },
+    {
+      "name": "Test",
+      "url": "https://10.192.32.92",
+      "chainId": 30400
+    },
+    {
+      "name": "Test1",
+      "url": "https://api.dcrm.network/cc",
+      "chainId": 4
+    },
+    {
+      "name": "Test2",
+      "url": "http://10.192.32.92:9904",
+      "chainId": 30400
+    }
+  ]
+}

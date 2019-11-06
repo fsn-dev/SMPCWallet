@@ -1,0 +1,16 @@
+{
+  "path": [
+    {
+      "path": "m/44'/1'/0'/0",
+      "name": "Network: Testnets"
+    },
+    {
+      "path": "m/44'/60'/0'/0",
+      "name": "Jaxx, Metamask, Exodus, imToken, TREZOR (ETH) & Digital Bitbox"
+    },
+    {
+      "path": "m/44'/60'/0'",
+      "name": "Ledger (ETH)"
+    }
+  ]
+}
