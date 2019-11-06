@@ -178,7 +178,6 @@ export default {
     }
     
     this.setNetwort(this.network)
-    // this.language = localStorage.getItem(this.$$.config.AppName + '_WALLET_LANGUAGE_TYPE') ? localStorage.getItem(this.$$.config.AppName + '_WALLET_LANGUAGE_TYPE') : this.$i18n.locale
   },
   methods: {
     Refresh (data) {
@@ -209,7 +208,6 @@ export default {
           ws.onopen = () => {
             console.log('connect')
             ws.send(JSON.stringify({address: this.faucetVal, cointype: this.$$.config.initCoin}))
-            // ws.send(JSON.stringify({address: '0x773E19217c8D83A459d899Fd4E6c4C0066Db5EA7', cointype: "FSN"}))
           }
           ws.onmessage = (res) => {
             let data = JSON.parse(res.data)

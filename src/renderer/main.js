@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 
 import i18n from '@/local'
-import $$ from './assets/js/methods'
+import $$ from '@/libs/index'
 
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/css.css'
@@ -72,9 +72,6 @@ Vue.use(Pagination)
 Vue.use(Option)
 
 Vue.use(Vuex)
-
-// import i18n from '@/locale'
-// import config from '@/config'
 
 Vue.config.productionTip = false
 

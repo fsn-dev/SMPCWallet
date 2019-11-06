@@ -109,7 +109,7 @@ export default {
     createFile () {
       const walletInit = this.$$.wallet.generate(this.registerObj.password)
       let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
-      this.$$.fs.writeFile(this.$$.config.baseFileUrl + '/' + this.registerObj.username + '.json', JSON.stringify(walletJSON), (err, res) => {
+      this.$$.fs.writeFile(this.$$.config.file.url + '/' + this.registerObj.username + this.$$.config.file.type, JSON.stringify(walletJSON), (err, res) => {
         if (err) {
           this.$message.error(err.toString())
         } else {

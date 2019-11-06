@@ -35,6 +35,9 @@
         </el-row>
       </div>
     </div>
+
+    <div id="code"></div>
+
   </div>
 </template>
 
@@ -61,6 +64,8 @@ export default {
       })
     }
     this.$store.commit('storeAddress', '')
+
+    // console.log(this.$$.getCoinInfo('FSN'))
   },
   methods: {
     

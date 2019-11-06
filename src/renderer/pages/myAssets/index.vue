@@ -230,7 +230,6 @@ export default {
     // else {
     //   this.fullscreenLoading = false
     // }
-
   },
   updated () {
     this.tableHeight()
