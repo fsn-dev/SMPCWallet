@@ -80,7 +80,7 @@ export const methods = {
   getSignData (data) {
     console.log(data)
     if (data.signTx) {
-      if (Number(this.$$.getCookies('safeMode'))) {
+      if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
         this.serializedTxView = true
         this.sendInfoVisible = false
         this.qrcode(this.signTx)

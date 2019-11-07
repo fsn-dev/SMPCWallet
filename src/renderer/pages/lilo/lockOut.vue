@@ -166,8 +166,8 @@ export default {
     },
   },
   mounted () {
-    if (Number(this.$$.getCookies('safeMode'))) {
-      this.selfSet = Number(this.$$.getCookies('safeMode')) ? true : false
+    if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
+      this.selfSet = Number(this.$$.getCookies(this.$$.config.cookies.safeMode)) ? true : false
       this.loading.screen = false
     }
   },
@@ -185,7 +185,7 @@ export default {
     // getSignData (data) {
     //   console.log(data)
     //   if (data.signTx) {
-    //     if (Number(this.$$.getCookies('safeMode'))) {
+    //     if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
     //       this.serializedTxView = true
     //       this.sendInfoVisible = false
     //       this.qrcode(this.signTx)

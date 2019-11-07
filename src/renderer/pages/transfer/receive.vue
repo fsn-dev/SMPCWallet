@@ -83,10 +83,7 @@
         </div>
       </div>
 
-      <el-dialog
-        :visible.sync="codeViewVisible"
-        width="380px"
-        >
+      <el-dialog :visible.sync="codeViewVisible" width="380px">
         <div class="qrcodeCont_box">
           <div id="qrcode" class="flex-c"></div>
           <div class="qrcodeCont_title">
@@ -120,28 +117,28 @@ export default {
       // count: 0
     }
   },
-  sockets: {
-    receiveHistory (res) {
-      // console.log(res)
-      this.historyData = []
-      if (res.msg === "Success" && res.info.length > 0) {
-        for (let i = 0; i < res.info.length; i++) {
-          if (res.info[i].coinType === this.selectData.ERC20coin && res.info[i].hash) {
-            res.info[i].status = this.$$.changeState(res.info[i].status)
-            res.info[i].date = this.$$.timeChange({date: res.info[i].timestamp, type:"yyyy-mm-dd hh:mm"})
-            this.historyData.push(res.info[i])
-          }
-        }
-        this.pageInfo.total = Math.ceil(res.total / this.pageInfo.pageSize)
-      }
-      this.historyLoading = false
-      this.isRefreshStart = true
-      clearTimeout(this.refreshTable)
-      this.refreshTable = setTimeout(() => {
-        this.getSendHistory()
-      }, 1000 * Number(this.$$.config.refreshDataTime))
-    }
-  },
+  // sockets: {
+  //   receiveHistory (res) {
+  //     // console.log(res)
+  //     this.historyData = []
+  //     if (res.msg === "Success" && res.info.length > 0) {
+  //       for (let i = 0; i < res.info.length; i++) {
+  //         if (res.info[i].coinType === this.selectData.ERC20coin && res.info[i].hash) {
+  //           res.info[i].status = this.$$.changeState(res.info[i].status)
+  //           res.info[i].date = this.$$.timeChange({date: res.info[i].timestamp, type:"yyyy-mm-dd hh:mm"})
+  //           this.historyData.push(res.info[i])
+  //         }
+  //       }
+  //       this.pageInfo.total = Math.ceil(res.total / this.pageInfo.pageSize)
+  //     }
+  //     this.historyLoading = false
+  //     this.isRefreshStart = true
+  //     clearTimeout(this.refreshTable)
+  //     this.refreshTable = setTimeout(() => {
+  //       this.getSendHistory()
+  //     }, 1000 * Number(this.$$.config.refreshDataTime))
+  //   }
+  // },
   watch: {
     selectData (cur, old) {
       console.log(cur)
@@ -184,27 +181,28 @@ export default {
       })
     },
     getSendHistory () {
-      if (Number(this.$$.getCookies('safeMode'))) {
-        this.historyLoading = false
-        return
-      }
-      if (!this.address || !this.selectData.coinType) {
-        this.historyLoading = false
-        return
-      }
-      if (!this.selectData.isConfirm && this.selectData.coinType !== this.$$.config.initCoin) {
-        this.historyLoading = false
-        return
-      }
-      this.isRefreshStart = false
-      this.$socket.emit('receiveHistory', {
-        status: 1,
-        to: this.address,
-        coin: this.selectData.ERC20coin,
-        pageSize: this.pageInfo.pageSize,
-        pageNum: this.pageInfo.pageNum,
-        url: this.$store.state.network.url
-      })
+      this.historyLoading = false
+      // if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
+      //   this.historyLoading = false
+      //   return
+      // }
+      // if (!this.address || !this.selectData.coinType) {
+      //   this.historyLoading = false
+      //   return
+      // }
+      // if (!this.selectData.isConfirm && this.selectData.coinType !== this.$$.config.initCoin) {
+      //   this.historyLoading = false
+      //   return
+      // }
+      // this.isRefreshStart = false
+      // this.$socket.emit('receiveHistory', {
+      //   status: 1,
+      //   to: this.address,
+      //   coin: this.selectData.ERC20coin,
+      //   pageSize: this.pageInfo.pageSize,
+      //   pageNum: this.pageInfo.pageNum,
+      //   url: this.$store.state.network.url
+      // })
     }
   },
   beforeDestroy () {

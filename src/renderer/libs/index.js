@@ -44,7 +44,13 @@ let $$ = {
   config,
   wallet,
   web3,
-  coininfo
+  coininfo,
+  quitApp (that) {
+    that.$$.setToken('')
+    that.$$.setCookies(config.cookies.address, '')
+    that.$store.commit('storeAddress', '')
+    that.$router.push('/')
+  }
 }
 
 export default $$

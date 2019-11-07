@@ -65,10 +65,7 @@ export default {
       console.log(username)
       if (!username) {
         this.$message.error('登陆超时，请重新登陆！')
-        this.$$.setToken('')
-        this.$$.setCookies('address', '')
-        this.$store.commit('storeAddress', '')
-        this.$router.push('/')
+        this.$$.quitApp(this)
         this.sureForm.password = ''
         this.loading.wait = false
       } else {
@@ -95,7 +92,7 @@ export default {
       }
     },
     toSign (pwd) {
-      this.$$.toSign(this.sendDataPage, pwd, Number(this.$$.getCookies('safeMode')))
+      this.$$.toSign(this.sendDataPage, pwd, Number(this.$$.getCookies(this.$$.config.cookies.safeMode)))
         .then(res => {
           this.loading.wait = false
           this.$emit("sendSignData", res)

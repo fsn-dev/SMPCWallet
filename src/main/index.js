@@ -1,6 +1,10 @@
+const path = require('path').resolve('.')
 import { app, BrowserWindow, Menu  } from 'electron'
+import Cookies from 'js-cookie'
 const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
-
+import config from '../../static/js/config'
+// const config = require(path + '/static/js/config.js').default
+// console.log(config)
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -35,6 +39,9 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+    Cookies.set(config.cookies.token, '', { expires: 0 })
+    Cookies.set(config.cookies.address, '', { expires: 0 })
+    Cookies.set(config.cookies.safeMode, '', { expires: 0 })
   })
 }
 

@@ -174,7 +174,7 @@ export default {
     }
   },
   mounted () {
-    if (!Number(this.$$.getCookies('safeMode'))) {
+    if (!Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
       // this.$socket.emit('queryAccount', {
       //   address: this.address,
       //   url: this.$store.state.network.url

@@ -94,7 +94,7 @@ export default {
           )
           let address = this.walletInfo.getChecksumAddressString()
           this.$$.setToken(this.loginObj.username)
-          this.$$.setCookies('address', address)
+          this.$$.setCookies(this.$$.config.cookies.address, address)
           this.$store.commit('storeAddress', address)
           this.$router.push('/myAssets')
         } catch (e) {

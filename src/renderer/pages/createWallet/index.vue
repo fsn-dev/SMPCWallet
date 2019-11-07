@@ -64,7 +64,7 @@ export default {
       })
     }
     // this.$store.commit('storeAddress', '')
-    this.$$.setCookies('safeMode', 0)
+    this.$$.quitApp(this)
     // console.log(this.$$.getCoinInfo('FSN'))
   },
   methods: {

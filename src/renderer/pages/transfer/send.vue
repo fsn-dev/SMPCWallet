@@ -46,7 +46,7 @@
           </div>
         </el-form>
         <div class="receiveAddress_btn flex-c">
-          <el-button class="W240 mt-10" @click="privateSure" type="primary" :loading="loading.btn">{{Number($$.getCookies('safeMode')) ? $t('BTN').GENERATE_INFORMATION : $t('BTN').SEND}}</el-button>
+          <el-button class="W240 mt-10" @click="privateSure" type="primary" :loading="loading.btn">{{Number($$.getCookies(this.$$.config.cookies.safeMode)) ? $t('BTN').GENERATE_INFORMATION : $t('BTN').SEND}}</el-button>
         </div>
       </div>
 
@@ -158,15 +158,15 @@ export default {
     },
   },
   mounted () {
-    if (Number(this.$$.getCookies('safeMode'))) {
-      this.selfSet = Number(this.$$.getCookies('safeMode')) ? true : false
+    if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
+      this.selfSet = Number(this.$$.getCookies(this.$$.config.cookies.safeMode)) ? true : false
       this.loading.screen = false
     }
   },
   methods: {
     ...methods,
     // getInitData () {
-    //   if (Number(this.$$.getCookies('safeMode'))) {
+    //   if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
     //     this.loading.history = false
     //     this.loading.screen = false
     //     return
@@ -186,7 +186,7 @@ export default {
     // getSignData (data) {
     //   console.log(data)
     //   if (data.signTx) {
-    //     if (Number(this.$$.getCookies('safeMode'))) {
+    //     if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
     //       this.serializedTxView = true
     //       this.sendInfoVisible = false
     //       this.qrcode(this.signTx)
@@ -213,7 +213,7 @@ export default {
 			})
     },
     async getHistory () {
-      if (Number(this.$$.getCookies('safeMode'))) {
+      if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
         this.loading.history = false
         return
       }

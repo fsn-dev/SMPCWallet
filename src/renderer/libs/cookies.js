@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
-
-const TOKEN_KEY = 'token'
+import config from '@etc/js/config'
+const TOKEN_KEY = config.cookies.token
 export default {
   setToken (val, expires) {
     Cookies.set(TOKEN_KEY, val, { expires: expires || 1 })

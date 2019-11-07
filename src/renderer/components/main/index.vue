@@ -125,6 +125,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: 'index',
   data () {
@@ -159,12 +160,7 @@ export default {
     }
   },
   computed: {
-    address () {
-      if (!this.$store.state.address && this.$$.getCookies('address')) {
-        this.$store.commit('storeAddress', this.$$.getCookies('address'))
-      }
-      return this.$store.state.address || this.$$.getCookies('address')
-    }
+    ...computedPub
   },
   mounted () {
     if (this.address) {
@@ -175,7 +171,6 @@ export default {
     } else {
       this.isSelectOrSet = true
     }
-    // this.$$.setCookies('safeMode', 0)
     this.setNetwort(this.network)
   },
   methods: {
@@ -272,7 +267,7 @@ export default {
       if (this.network === "https://") {
         this.networkVisible = true
       } else if (this.network === "offLine") {
-        this.$$.setCookies('safeMode', 1)
+        this.$$.setCookies(this.$$.config.cookies.safeMode, 1)
       } else {
         this.setNetwort(this.network)
       }
@@ -313,9 +308,7 @@ export default {
       })
     },
     quitMethod () {
-      this.$$.setToken('')
-      this.$$.setCookies('address', '')
-      this.$router.push("/")
+      this.$$.quitApp(this)
     }
   }
 }

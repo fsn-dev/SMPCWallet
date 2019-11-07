@@ -63,7 +63,15 @@ let publicSet = {
   /**
    * @description 监听页面，超时时间
    */
-  watchPageTime: 1000 * 60 * 30
+  watchPageTime: 1000 * 60 * 3,
+  /**
+   * @description Cookie key
+   */
+  cookies: {
+    token: 'token',
+    address: 'address',
+    safeMode: 'safeMode'
+  }
 }
 
 publicSet.appURL = 'http://localhost:8100'
