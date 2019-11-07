@@ -93,10 +93,7 @@ export default {
     }
   },
   created () {
-    console.log(123)
-    if (this.$store.state.walletFn) {
-      this.walletInfo = this.$store.state.walletFn
-    }
+
   },
   mounted () {
     this.pageRefresh()

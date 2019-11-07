@@ -7,7 +7,7 @@
       {{selectData.coinType}} does not support Deposit!
     </div>
     <div class="receiveContent_box"
-        v-loading="fullscreenLoading"
+        v-loading="loading.screen"
         element-loading-text="Loading……" v-if="selectData.isConfirm && isSupportCoin">
       <div class="receiveAddress_box">
         <el-form label-position="top" label-width="80px">
@@ -22,7 +22,7 @@
             <el-popover
               trigger="hover"
               :content="$t('BTN').COPY_CLIPBOARD">
-              <div class="addreess" slot="reference">{{$t('BTN').COPY_CLIPBOARD}}</div>
+              <div class="address" slot="reference">{{$t('BTN').COPY_CLIPBOARD}}</div>
             </el-popover>
           </button>
         </div>
@@ -42,7 +42,7 @@
               <el-input v-model="customTxhaxVal" placeholder=""></el-input>
             </el-form-item>
             <div class="receiveAddress_btn flex-c">
-              <el-button class="W240 mt-10" @click="getCoinTxn" type="primary" :loading="lockinBtnLoading">{{$t('TITLE').LOCKIN}}</el-button>
+              <el-button class="W240 mt-10" @click="getCoinTxn" type="primary" :loading="loading.btn">{{$t('TITLE').LOCKIN}}</el-button>
             </div>
           </div>
         </el-form>
@@ -53,7 +53,7 @@
           <h3 class="title">{{$t('TITLE').HISTORY}}:</h3>
         </hgroup>
         <div class="tableHistory_table table-responsive" 
-          v-loading="historyLoading"
+          v-loading="loading.history"
           element-loading-text="Loading……">
           <el-table
             :data="historyData"
@@ -124,160 +124,56 @@
 
 
 <script>
+import {data, computed} from '@/assets/js/pages/txnsPages'
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: "lockIn",
   props: ["selectData"],
   data () {
     return {
-      walletAddress: "",
+      ...data,
       historyData: [],
       dataPage: {},
       codeViewVisible: false,
       privateSureVisible: false,
       activeNames: "",
-      fullscreenLoading: true,
-      historyLoading: true,
-      lockinBtnLoading: false,
       customTxhax: false,
       customTxhaxVal: '',
       refreshTable: null,
       isRefreshStart: true,
       isSupportCoin: true,
-      coinOtherArr: this.$$.coinOtherArr
-    }
-  },
-  sockets: {
-    lockin (res) {
-      // console.log(res)
-      if (res.msg === 'Success') {
-        this.privateSure({
-          value: res.info,
-          hash: this.customTxhaxVal
-        })
-      } else {
-        this.$message.error(res.info)
-      }
-      this.lockinBtnLoading = false
-    },
-    lockInHistory (res) {
-      // console.log(res)
-      this.historyData = []
-      if (res.msg === 'Error') {
-        this.historyLoading = false
-        return
-      }
-      this.historyData = []
-      for (let arr of res.info) {
-        arr.status = this.$$.changeState(arr.status)
-        arr.date = this.$$.timeChange({date: Number(arr.timestamp), type:"yyyy-mm-dd hh:mm"})
-        this.historyData.push(arr)
-      }
-      let compare = function compare (property) {
-        return function (a, b) {
-          let value1 = a[property]
-          let value2 = b[property]
-          if (value1 > value2) {
-            return -1
-          } else if (value1 < value2) {
-            return 1
-          } else {
-            return 0
-          }
-        }
-      }
-      this.historyData.sort(compare("timestamp"))
-      this.historyLoading = false
-      clearTimeout(this.refreshTable)
-      this.refreshTable = setTimeout(() => {
-        this.getInitData()
-      }, 1000 * Number(this.$$.config.refreshDataTime))
-    },
-    sendTxns (res) {
-      if (res.msg === 'Success') {
-        this.getAll()
-        this.$message({ message: 'Success', type: 'success' })
-      } else {
-        this.$message.error(res.error)
-      }
-    },
-    base (res) {
-      res = res.info
-      let data = {}
-      if (!isNaN(res.gasLimit)) {
-        data.gas = res.gasLimit * 6
-      } else {
-        console.log(res.gasLimit)
-        this.$message.error(res.gasLimit)
-        return
-      }
-      if (!isNaN(res.nonce)) {
-        data.nonce = res.nonce
-      } else {
-        console.log(res.nonce)
-        this.$message.error(res.nonce)
-        return
-      }
-      if (res.gasPrice) {
-        data.gasPrice = res.gasPrice
-      } else {
-        console.log(res.gasPrice)
-        this.$message.error(res.gasPrice)
-        return
-      }
-      let to_value = this.dataPage.to_value
-      if (res.value) {
-        to_value = res.value
-      }
-      to_value = Number(Number(to_value).toFixed(16))
-      data.hash = this.dataPage.hash
-      if (!data.hash) {
-        return
-      }
-      this.dataPage = {
-        nonce: Number(data.nonce),
-        gasPrice: Number(data.gasPrice),//Number类型 
-        gasLimit: Number(data.gas),
-        from: this.walletAddress,
-        to: "0x00000000000000000000000000000000000000dc",
-        value: Number(0),//Number类型
-        data: "LOCKIN:" + data.hash + ":" + to_value + ":" + this.selectData.ERC20coin,
-        to_value: to_value,
-        sendType: "LOCKIN",
-        coin: this.selectData.coinType,
-        hash: data.hash,
-        url: this.$store.state.network.url
-      }
-      console.log(this.dataPage)
-      this.privateSureVisible = true
-      this.lockinBtnLoading = false
+      coininfo: this.$$.coininfo
     }
   },
   watch: {
     selectData (cur, old) {
       // console.log(cur)
-      this.historyLoading = true
+      this.loading.history = true
       this.historyData = []
+      this.isSupportCoin = this.selectData.isLockin
       this.getInitData()
     }
   },
   computed: {
+    ...computedPub,
+    ...computed,
     addressTitle: function () {
       return this.selectData.coinType + " Deposit Address"
     },
   },
   mounted () {
-    this.walletAddress = this.$store.state.address
     if (this.selectData) {
       setTimeout(() => {
         this.getInitData()
       }, 100)
     }
+    this.rawTx.from = this.address
   },
   methods: {
     getInitData () {
       if (!this.selectData.isConfirm) {
-        this.fullscreenLoading = false
-        this.historyLoading = false
+        this.loading.screen = false
+        this.loading.history = false
         return
       }
       this.isSupportCoin = this.selectData.isLockin
@@ -285,19 +181,19 @@ export default {
         // console.log(123)
         this.getAll()
       }
-      this.fullscreenLoading = false
+      this.loading.screen = false
     },
     validTxHax (hash, coin) {
       coin = coin ? coin : this.selectData.coinType
-      if (typeof this.coinOtherArr[coin] === 'undefined' || !this.coinOtherArr[coin].hashFM) return hash
-      if (this.coinOtherArr[coin].hashFM) {
-        hash = hash.indexOf(this.coinOtherArr[coin].hashFM) === 0 ? hash : (this.coinOtherArr[coin].hashFM + hash)
+      if (typeof this.coininfo[coin] === 'undefined' || !this.coininfo[coin].hashFM) return hash
+      if (this.coininfo[coin].hashFM) {
+        hash = hash.indexOf(this.coininfo[coin].hashFM) === 0 ? hash : (this.coininfo[coin].hashFM + hash)
       }
       return hash
     },
     getCoinTxn () {
       event.preventDefault()
-      this.lockinBtnLoading = true
+      this.loading.btn = true
       // console.log(event)
       // this.customTxhaxVal = '1b872f4c434f1d41b92fcf51cf9ac0d34c4b4ea1c4119407ad9e091c9ba8c323'
       this.customTxhaxVal = this.customTxhaxVal.replace(/\s/g, '')
@@ -366,7 +262,7 @@ export default {
       }
       this.isRefreshStart = false
       this.$socket.emit('lockInHistory', {
-        from: this.walletAddress,
+        from: this.address,
         dcrmAddress: this.selectData.dcrmAddress,
         coin: this.selectData.ERC20coin,
         // from: 'mtjq9RmBBDVne7YB4AFHYCZFn3P2AXv9D5',

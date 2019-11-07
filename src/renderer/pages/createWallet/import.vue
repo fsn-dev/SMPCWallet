@@ -61,8 +61,8 @@ export default {
     // this.$$.readFile('fsn')
     // console.log(this.$$.web3)
     // console.log(this.$$.web3.isConnected())
-    let pub = this.$$.web3.dcrm.genPubkey()
-    console.log(pub)
+    // let pub = this.$$.web3.dcrm.genPubkey()
+    // console.log(pub)
     // let sign = this.$$.web3.dcrm.sign(pub.pubkey, '0x19b6236d2e7eb3e925d0c6e8850502c1f04822eb9aa67cb92e5004f7017e5e41')
     // console.log(sign)
   },

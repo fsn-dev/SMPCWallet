@@ -1,5 +1,5 @@
 <template>
-  <div class="boxContent">123
+  <div class="boxContent">
     <header class="headerTop_box flex-bc">
       <div class="logo flex-c">
         <router-link :to="$$.getToken() ? '/myAssets' : '/'" class="logoImg flex-c">
@@ -44,8 +44,8 @@
             </a>
           </li>
           <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="isFaucetModel = true"><img src="@etc/img/faucet.jpg"></a></li>
-          <li :title="'Backups'"><a class="setBtn flex-c cursorP" @click="tobackupWallet"><img src="@etc/img/Setting2.svg"></a></li>
-          <li :title="'Help'"><router-link class="setBtn flex-c" to="/"><img src="@etc/img/Help.svg"></router-link></li>
+          <!-- <li :title="'Backups'"><a class="setBtn flex-c cursorP" @click="tobackupWallet"><img src="@etc/img/Setting2.svg"></a></li>
+          <li :title="'Help'"><router-link class="setBtn flex-c" to="/"><img src="@etc/img/Help.svg"></router-link></li> -->
           <li :title="'Refresh'"><div class="setBtn flex-c cursorP" @click="Refresh"><img src="@etc/img/Refresh.svg"></div></li>
           <li :title="'Sign out'"><div class="setBtn flex-c cursorP" @click="quitMethod"><img src="@etc/img/Quit.svg"></div></li>
           
@@ -135,12 +135,12 @@ export default {
         {value: 'en-US', label: 'English'},
         {value: 'zh-CN', label: '中文简体'}
       ],
-      network: this.$$.baseUrl,
+      network: this.$$.config.serverRPC,
       networkOPtion: require('@etc/js/config/network').net,
       isRouterAlive: true,
+      childRefresh: true,
       networkVisible: false,
       chainId: '',
-      childRefresh: true,
       isSelectOrSet: true,
       isFaucetModel: false,
       faucetVal: '',
@@ -156,7 +156,6 @@ export default {
       } else {
         this.isSelectOrSet = true
       }
-      // console.log(this.isSelectOrSet)
     }
   },
   computed: {
@@ -176,7 +175,7 @@ export default {
     } else {
       this.isSelectOrSet = true
     }
-    
+    // this.$$.setCookies('safeMode', 0)
     this.setNetwort(this.network)
   },
   methods: {
@@ -187,7 +186,6 @@ export default {
 			})
     },
     reload () {
-      // console.log(1)
 			this.isRouterAlive = false
 			this.$nextTick(() => {
 				this.isRouterAlive = true
@@ -267,15 +265,14 @@ export default {
     },
     cancelCustomNet () {
       this.networkVisible = false
-      this.network = this.$$.baseUrl
+      this.network = this.$$.config.serverRPC
       this.setNetwort(this.network)
     },
     changNetwork() {
-      this.$store.commit("storeSafeMode", false)
       if (this.network === "https://") {
         this.networkVisible = true
       } else if (this.network === "offLine") {
-        this.$store.commit("storeSafeMode", true)
+        this.$$.setCookies('safeMode', 1)
       } else {
         this.setNetwort(this.network)
       }

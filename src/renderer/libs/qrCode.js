@@ -7,7 +7,8 @@ export default {
       height: 270, // 高度
       text: cont, // 二维码内容
       // render: "canvas" // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
-      background: "none"
+      background: "none",
+      correctLevel: 3
       // foreground: "#ff0"
     })
   }

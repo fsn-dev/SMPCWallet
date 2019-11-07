@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import wallet from './store-wallet.js'
+// import wallet from './store-wallet.js'
 // import exchange from './store-exchange.js'
 Vue.use(Vuex)
 
@@ -12,9 +12,6 @@ const store = new Vuex.Store({
     address: '',
     coininfoArr: [],
     network: {},
-    keystoreFile: '',
-    loginState: 0,
-    walletFn: '',
     coinDollarArr: '',
   },
   mutations: {
@@ -27,21 +24,12 @@ const store = new Vuex.Store({
     storeNetwork (state, data) {
       state.network = data
     },
-    storeKeystoreFile (state, data) {
-      state.keystoreFile = data
-    },
-    storeLoginState (state, type) {
-      state.loginState = type
-    },
-    storeWalletFn (state, data) {
-      state.walletFn = data
-    },
     storeCoinDollarArr (state, data) {
       state.coinDollarArr = data
     },
   },
   modules: {
-    wallet,
+    // wallet,
     // exchange
   }
 })

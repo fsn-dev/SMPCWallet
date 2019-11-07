@@ -56,7 +56,7 @@ export default {
       SetcoinAndUrl: [],
       walletAddress: "",
       coinDataPage: "",
-      coinOtherArr: this.$$.coinOtherArr,
+      coininfo: this.$$.coininfo,
       navFlag: true
     }
   },
@@ -70,7 +70,7 @@ export default {
   },
   mounted () {
     this.pageRefresh()
-    this.selectVal = this.$route.query.currency ? this.$route.query.currency : "ETH"
+    // this.selectVal = this.$route.query.currency ? this.$route.query.currency : "ETH"
     // this.selectVal = this.$route.query.currency ? this.$route.query.currency : "BTC"
     if (!this.selectVal) {
       this.getCoinInfo(this.selectVal)
@@ -95,11 +95,33 @@ export default {
       // console.log(coin)
       this.SetcoinAndUrl = []
       let coinlist = this.$store.state.coininfoArr.length > 0 ? this.$store.state.coininfoArr : []
+      coinlist = [
+         {
+          coinType: 'FSN',
+          ERC20coin: 'FSN',
+          isERC20: 0,
+          address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
+          limit: 2,
+          balance: 100,
+          isConfirm: 1,
+          isLockout: 1,
+          isLockin: 1
+        },
+        {
+          coinType: 'BTC',
+          ERC20coin: 'BTC',
+          isERC20: 0,
+          address: '12dRugNcdxK39288NjcDV4GX7rMsKCGn6B',
+          limit: 2,
+          balance: 100,
+          isConfirm: 1,
+          isLockout: 1,
+          isLockin: 1
+        },
+      ]
       if (coinlist.length > 0) {
         for (let i = 0; i < coinlist.length; i++) {
           if (coinlist[i].coinType !== this.$$.config.initCoin) {
-            // this.SetcoinAndUrl.push({coin: coinlist[i].coinType})
-            // this.SetcoinAndUrl.push({coin: coinlist[i].ERC20coin})
             this.SetcoinAndUrl.push({
               coinType: coinlist[i].coinType,
               isERC20: coinlist[i].isERC20,
@@ -109,14 +131,14 @@ export default {
           if (coin === coinlist[i].ERC20coin) {
           // console.log(coinlist[i])
             this.coinDataPage = coinlist[i]
-            this.coinDataPage.token = this.coinOtherArr[coin] && this.coinOtherArr[coin].token ? this.coinOtherArr[coin].token : ''
-            this.coinDataPage.limit = this.coinOtherArr[coin] && this.coinOtherArr[coin].limit ? this.coinOtherArr[coin].limit : 0
+            this.coinDataPage.token = this.coininfo[coin] && this.coininfo[coin].token ? this.coininfo[coin].token : ''
+            this.coinDataPage.limit = this.coininfo[coin] && this.coininfo[coin].limit ? this.coininfo[coin].limit : 0
             this.coinDataPage.isConfirm = coinlist[0].isConfirm
             // console.log(this.coinDataPage)
           }
         }
       } else {
-        let coinArr = this.$$.coinOtherArr
+        let coinArr = this.$$.coininfo
         for (let name in coinArr) {
           this.SetcoinAndUrl.push({ coin: name })
           if (coin === name) {
@@ -124,12 +146,13 @@ export default {
               coinType: coin,
               address: '',
               balance: 0,
-              limit: this.coinOtherArr[coin] && this.coinOtherArr[coin].limit ? this.coinOtherArr[coin].limit : 0,
-              token: this.coinOtherArr[coin] && this.coinOtherArr[coin].token ? this.coinOtherArr[coin].token : ''
+              limit: this.coininfo[coin] && this.coininfo[coin].limit ? this.coininfo[coin].limit : 0,
+              token: this.coininfo[coin] && this.coininfo[coin].token ? this.coininfo[coin].token : ''
             }
           }
         }
       }
+      this.selectVal = this.SetcoinAndUrl[0].coinType
     }
   }
 }

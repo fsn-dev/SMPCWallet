@@ -54,7 +54,7 @@ export default {
     }
   },
   mounted () {
-    let coinlist = this.$$.coinOtherArr
+    let coinlist = this.$$.coininfo
     const coinArr = [this.$$.config.initCoin, 'BTC', 'ETH', 'TRX', 'BNB', 'MKR', 'GUSD', 'HT', 'BNT']
     for (let i of coinArr) {
       // console.log(i)
@@ -63,8 +63,8 @@ export default {
         title: i
       })
     }
-    this.$store.commit('storeAddress', '')
-
+    // this.$store.commit('storeAddress', '')
+    this.$$.setCookies('safeMode', 0)
     // console.log(this.$$.getCoinInfo('FSN'))
   },
   methods: {

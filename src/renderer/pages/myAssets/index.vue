@@ -1,6 +1,6 @@
 <template>
   <div style="background:#fff;min-height:100%"
-        v-loading="fullscreenLoading"
+        v-loading="loading.screen"
         element-loading-text="Loading……">
     <div class="contentHeader_box flex-bc">
       <h1 class="contentHeader_title">{{$t('NAV').MY_WALLET}}</h1>
@@ -22,12 +22,7 @@
     </div>
 
     <div class="myAssetsTable_box">
-      <el-table
-        :data="bitIconTypeSearch"
-        style="width: 100%"
-        :height="tableH"
-        empty-text="Null"
-      >
+      <el-table :data="bitIconTypeSearch" style="width: 100%" :height="tableH" empty-text="Null">
         <el-table-column :label="$t('THEAD').COIN" min-width="180">
           <template slot-scope="scope">
             <div class="flex-sc relative">
@@ -95,21 +90,11 @@
       </el-table>
     </div>
 
-    <el-dialog
-      :title="$t('BTN').UNLOCK"
-      :visible.sync="privateSureVisible"
-      width="75%"
-      :before-close="modalClick"
-    >
-      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="getElDialogView" v-if="privateSureVisible"></pwdSure>
+    <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="privateSureVisible" width="300" :before-close="modalClick">
+      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="privateSureVisible"></pwdSure>
     </el-dialog>
 
-    <el-dialog
-      :title="$t('TITLE').REQUEST_CONFIRM"
-      :visible.sync="confirmDcrmVisible"
-      width="60%"
-      :before-close="modalClick"
-    >
+    <el-dialog :title="$t('TITLE').REQUEST_CONFIRM" :visible.sync="confirmDcrmVisible" width="60%" :before-close="modalClick">
       <div class="">
         {{$t('WARNING_TIP').TIP_1}}
       </div>
@@ -126,64 +111,33 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: "myAssets",
   // inject: ['reload'],
   data () {
     return {
+      loading: {
+        screen: true
+      },
       myAssetsTotal: 0.00,
       bitIconTypeData: [],
       bitIconTypeSearch: [],
-      address: "",
       dataPage: {},
       searchContent: "",
       refreshTable: "",
       confirmData: "",
       privateSureVisible: false,
       confirmDcrmVisible: false,
-      fullscreenLoading: true,
       count: 0,
       tableH: 0,
       publicKey: '',
       isConfirmCount: false,
       isWaiting: false,
-      isRefreshStart: true,
-      coinOtherArr: this.$$.coinOtherArr
+      coininfo: this.$$.coininfo
     }
   },
   sockets: {
-    connect () {
-      console.log('connect success')
-    },
-    queryAccount (data) {
-      // console.log(data)
-      this.getCoinList(data)
-    },
-    createAccount (data) {
-      // console.log(data)
-      this.createCoinList(data)
-    },
-    AccountSendTxn (data) {
-      let res = data
-      // console.log(res)
-      if (res.msg === "Success") {
-        this.$message({ message: 'Success', type: 'success' })
-        this.isWaiting = true
-        setTimeout(() => {
-          this.$socket.emit('queryAccount', {
-            address: this.address,
-            url: this.$store.state.network.url
-          })
-        }, 1000 * 8)
-      } else {
-        this.$socket.emit('queryAccount', {
-          address: this.address,
-          url: this.$store.state.network.url
-        })
-        this.$message.error(res.info)
-      }
-      this.modalClick()
-    },
     getCoinDollar (res) {
       // console.log(res)
       if (res.length > 0) {
@@ -214,22 +168,22 @@ export default {
     }
   },
   computed: {
+    ...computedPub,
     coinDollarArr () {
       return this.$store.state.coinDollarArr
     }
   },
   mounted () {
-    this.address = this.$store.state.address
-    // if (!this.$store.state.wallet.safeMode) {
-    //   this.$socket.emit('queryAccount', {
-    //     address: this.address,
-    //     url: this.$store.state.network.url
-    //   })
-    //   this.$socket.emit('getCoinDollar')
-    // }
-    // else {
-    //   this.fullscreenLoading = false
-    // }
+    if (!Number(this.$$.getCookies('safeMode'))) {
+      // this.$socket.emit('queryAccount', {
+      //   address: this.address,
+      //   url: this.$store.state.network.url
+      // })
+      // this.$socket.emit('getCoinDollar')
+    }
+    else {
+      this.loading.screen = false
+    }
   },
   updated () {
     this.tableHeight()
@@ -238,9 +192,6 @@ export default {
     }
   },
   methods: {
-    getElDialogView () {
-      this.modalClick()
-    },
     setDollar (coin, index) {
       for (let obj of this.coinDollarArr) {
         if (obj.coin === coin) {
@@ -248,85 +199,6 @@ export default {
         }
       }
       return ''
-    },
-    async getCoinList (data) {
-      // console.log(data)
-      this.isRefreshStart = false
-      if (data.msg === 'Success' && data.publicKey) {
-        this.myAssetsTotal = 0
-        let coinList = []
-        this.isConfirmCount = data.isConfirm === 1 ? true : false
-        for (let i = 0, len = data.info.length; i < len; i++) {
-          let obj = data.info[i],
-              _dollar = this.setDollar(obj.coinType)
-          if (typeof this.coinOtherArr[obj.coinType] === 'undefined') {
-            obj.logo = ''
-          } else {
-            obj.logo = this.coinOtherArr[obj.coinType].logo
-          }
-          obj.balance = isNaN(obj.balance) ? 0 : Number(Number(obj.balance).toFixed(16))
-          obj.coinType = this.$$.replaceStr(obj.coinType)
-          obj.ERC20coin = obj.isERC20 ? 'ERC20' + obj.coinType : obj.coinType
-
-          if (_dollar && _dollar.toUsd && _dollar.toBtc) {
-            obj.dollar = Number(obj.balance) * Number(_dollar.toUsd)
-            obj.btc = Number(obj.balance) * Number(_dollar.toBtc)
-          } else {
-            obj.dollar = '--'
-            obj.btc = '--'
-          }
-          coinList.push(obj)
-        }
-        this.bitIconTypeSearch = this.bitIconTypeData = coinList
-
-        this.publicKey = data.publicKey
-        this.fullscreenLoading = false
-        this.isWaiting = false
-
-        clearTimeout(this.refreshTable)
-        this.refreshTable = setTimeout(() => {
-          this.$socket.emit('queryAccount', {
-            address: this.address,
-            url: this.$store.state.network.url
-          })
-        }, 1000 * 30)
-      } else if (data.msg === 'Null' || !data.publicKey) {
-        // this.createCoinList()
-        this.isWaiting = true
-        this.$socket.emit('createAccount', {
-          address: this.address,
-          url: this.$store.state.network.url
-        })
-      } else {
-        this.isConfirmCount = false
-        this.bitIconTypeSearch = this.bitIconTypeData = []
-        this.fullscreenLoading = false
-        this.isWaiting = false
-      }
-      this.isRefreshStart = true
-      this.searchInput()
-    },
-    async createCoinList (data) {
-      if (data.code === 5) {
-        let coinList = []
-        for (let obj of data.info) {
-          if (typeof this.coinOtherArr[obj.coinType] === 'undefined') {
-            obj.logo = ''
-          } else {
-            obj.logo = this.coinOtherArr[obj.coinType].logo
-          }
-          coinList.push(obj)
-        }
-        this.bitIconTypeSearch = this.bitIconTypeData = coinList
-      } else if (data.code === 4) {
-        this.$socket.emit('queryAccount', {
-          address: this.address,
-          url: this.$store.state.network.url
-        })
-      } else {
-        this.$message.error(data.info)
-      }
-      this.fullscreenLoading = false
     },
     confirmAll () {
       if (!this.publicKey) {
@@ -392,17 +264,18 @@ export default {
     },
     getSignData (data) {
       console.log(data)
-      if (data) {
-        this.sendRawTransion(data)
+      if (data.signTx) {
+        this.sendRawTransion(data.signTx)
       } else {
         this.$message.error(this.$t('ERROR_TIP').TIP_6)
       }
       this.privateSureVisible = false
     },
-    sendRawTransion (data) {
-      this.$socket.emit('AccountSendTxn', {
-        serializedTx: data.serializedTx ? data.serializedTx : '',
-        url: this.$store.state.network.url
+    sendRawTransion (signTx) {
+      this.$$.sendTxns(signTx).then(res => {
+        this.$message({ message: 'Success', type: 'success' })
+      }).catch(err => {
+        this.$message.error(res.error)
       })
     }
   },

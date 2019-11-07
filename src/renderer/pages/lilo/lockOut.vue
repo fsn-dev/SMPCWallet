@@ -14,34 +14,31 @@
 
         <el-form label-position="top" label-width="80px" @submit.native.prevent>
           <el-form-item :label="addressTitle + '：'">
-            <el-input v-model="toAddress"></el-input>
+            <el-input v-model="rawTx.to"></el-input>
           </el-form-item>
           <el-form-item :label="$t('LABEL').AMOUNT + '：'">
-            <el-input v-model="sendAmound" @keypress="keyPressBtn"></el-input>
-            <span :class="Number(balanceNum) === 0 ? 'color_red' : 'color_99'" v-if="balanceNum">{{Number(balanceNum) === 0 ? "Insufficient balance" : "Account Balance: " + balanceNum}}</span>
+            <el-input v-model="rawTx.value" @keypress="keyPressBtn"></el-input>
+            <span :class="Number(selectData.balance) === 0 ? 'color_red' : 'color_99'" v-if="selectData.balance">{{Number(selectData.balance) === 0 ? "Insufficient balance" : "Account Balance: " + selectData.balance}}</span>
           </el-form-item>
           <el-form-item label="Advanced:">
-            <el-switch
-              v-model="selfSet"
-              :active-value="true"
-              :inactive-value="false"
+            <el-switch v-model="selfSet" :active-value="true" :inactive-value="false"
             ></el-switch>
           </el-form-item>
           <div v-if="selfSet">
             <el-form-item label="Nonce：">
-              <el-input v-model="nonceNum"></el-input>
+              <el-input v-model="rawTx.nonce"></el-input>
             </el-form-item>
             <el-form-item label="Gas Price：">
-              <el-input v-model="gasPriceNum"></el-input>
+              <el-input v-model="rawTx.gasPrice"></el-input>
             </el-form-item>
             <el-form-item label="Gas Limit：">
-              <el-input v-model="gasLimitNum"></el-input>
+              <el-input v-model="rawTx.gasLimit"></el-input>
             </el-form-item>
           </div>
         </el-form>
         <div class="receiveAddress_btn flex-c">
           <!-- <button class="btn blue flex-c W240 mt-10" @click="privateSure">{{$t('TITLE').LOCKOUT}}</button> -->
-          <el-button class="W240 mt-10" @click="privateSure" type="primary" :loading="lockinBtnLoading">{{$t('TITLE').LOCKOUT}}</el-button>
+          <el-button class="W240 mt-10" @click="privateSure" type="primary" :loading="loading.btn">{{$t('TITLE').LOCKOUT}}</el-button>
         </div>
       </div>
 
@@ -50,7 +47,7 @@
           <h3 class="title">{{$t('TITLE').HISTORY}}:</h3>
         </hgroup>
         <div class="tableHistory_table table-responsive"
-          v-loading="historyLoading"
+          v-loading="loading.history"
           element-loading-text="Loading……">
           <el-table
             :data="historyData"
@@ -99,13 +96,8 @@
       </div>
     </div>
 
-    <el-dialog
-      :title="$t('TITLE').LOCKOUT"
-      :visible.sync="privateSureVisible"
-      width="85%"
-      :before-close="modalClick"
-      >
-      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="getElDialogView" v-if="privateSureVisible"></pwdSure>
+    <el-dialog :title="$t('TITLE').LOCKOUT" :visible.sync="privateSureVisible" width="300" :before-close="modalClick">
+      <pwdSure @sendSignData="getSignData" :sendDataPage="rawTx" @elDialogView="getElDialogView" v-if="privateSureVisible"></pwdSure>
     </el-dialog>
 
 
@@ -117,22 +109,22 @@
       >
       <div class="sendInfo_box">
         <ul>
-          <li><h3>To Address:</h3><span>{{toAddress}}</span></li>
-          <li><h3>From Address:</h3><span>{{walletAddress}}</span></li>
-          <li><h3>Amount to Send:</h3><span>{{sendAmound}}</span></li>
-          <li><h3>Account Balance:</h3><span>{{Number(balanceNum)}} {{selectData.coinType}}</span></li>
+          <li><h3>To Address:</h3><span>{{rawTx.to}}</span></li>
+          <li><h3>From Address:</h3><span>{{address}}</span></li>
+          <li><h3>Amount to Send:</h3><span>{{rawTx.value}}</span></li>
+          <li><h3>Account Balance:</h3><span>{{Number(selectData.balance)}} {{selectData.coinType}}</span></li>
           <li><h3>Coin:</h3><span>{{selectData.coinType}}</span></li>
           <li><h3>Network:</h3><span>{{netWorkInfo}}</span></li>
-          <li><h3>Gas Limit:</h3><span>{{gasLimitNum}}</span></li>
-          <li><h3>Gas Price:</h3><span>{{gasPriceNum}}</span></li>
+          <li><h3>Gas Limit:</h3><span>{{rawTx.gasLimit}}</span></li>
+          <li><h3>Gas Price:</h3><span>{{rawTx.gasPrice}}</span></li>
           <li><h3>Max TX Fee:</h3><span>{{maxFee}}</span></li>
-          <li><h3>Nonce:</h3><span>{{nonceNum}}</span></li>
-          <li><h3>Data:</h3><span>{{dataPage.data}}</span></li>
+          <li><h3>Nonce:</h3><span>{{rawTx.nonce}}</span></li>
+          <li><h3>Data:</h3><span>{{rawTx.data}}</span></li>
         </ul>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="info" size="small" @click="modalClick">{{$t('BTN').GET_OUT}}</el-button>
-        <el-button type="primary" size="small" @click="sendAmoundInfo" :disabled="sendBtnFlag">{{$t('BTN').YES_SURE}}</el-button>
+        <el-button type="primary" size="small" @click="sendDatabase" :disabled="sendBtnFlag">{{$t('BTN').YES_SURE}}</el-button>
       </span>
     </el-dialog>
 
@@ -140,183 +132,47 @@
 </template>
 
 <script>
+import {data, computed, methods} from '@/assets/js/pages/txnsPages'
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: "lockOut",
   props: ["selectData"],
   data () {
     return {
-      // addressTitle: "",
-      walletAddress: "",
-      coinAddress: "",
-      toAddress: "",
-      historyData: [],
-      sendAmound: "",
-      sendBtnFlag: false,
-      nonceNum: "",
-      gasPriceNum: "",
-      gasLimitNum: "",
-      balanceNum: "",
-      maxFee: "",
-      netWorkInfo: "",
-      dataPage: {},
-      sendInfoVisible: false,
-      privateSureVisible: false,
-      activeNames: "",
-      selfSet: false,
-      fullscreenLoading: true,
-      historyLoading: true,
-      lockinBtnLoading: false,
-      isRefreshStart: true,
-      pageInfo: {
-        pageNum: 1,
-        total: 0,
-        pageSize: 20,
-      },
+      ...data,
       refreshTable: null,
+      sendInfoVisible: false,
+      selfSet: false,
+      serializedTxView: false,
+      isRefreshStart: true,
       isSupportCoin: true
-    }
-  },
-  sockets: {
-    sendTxns (res) {
-      // res = res.data
-      if (res.msg === 'Success') {
-        this.getInitData()
-        this.$message({ message: 'Success', type: 'success' })
-      } else {
-        this.$message.error(res.error)
-      }
-      this.modalClick()
-    },
-    lockOutHistory (res) {
-      console.log(res)
-      this.historyData = []
-      if (res.msg === "Success") {
-        for (let i = 0; i < res.info.length; i++) {
-          res.info[i].status = this.$$.changeState(res.info[i].status)
-          res.info[i].date = this.$$.timeChange({date: Number(res.info[i].timestamp), type:"yyyy-mm-dd hh:mm"})
-          res.info[i].value = Number(Number(res.info[i].value).toFixed(16))
-          this.historyData.push(res.info[i])
-        }
-        this.pageInfo.total = Math.ceil(res.total / this.pageInfo.pageSize)
-      }
-      this.historyLoading = false
-      this.isRefreshStart = true
-      clearTimeout(this.refreshTable)
-      this.refreshTable = setTimeout(() => {
-        this.getDatabaseInfo()
-      }, 1000 * Number(this.$$.config.refreshDataTime))
-    },
-    changeWei (res) {
-      let to_value = res.info
-      to_value = Number(Number(to_value).toFixed(16))
-      this.dataPage = {
-        nonce: this.nonceNum,
-        gasPrice: Number(this.gasPriceNum),//Number类型 
-        gasLimit: Number(this.gasLimitNum),
-        from: this.walletAddress,
-        to: "0x00000000000000000000000000000000000000dc",
-        value: Number(0),//Number类型
-        data: "LOCKOUT:" + this.toAddress + ":" + to_value + ":" + this.selectData.ERC20coin,
-        sendType: "LOCKOUT",
-        coin: this.selectData.coinType,
-        to_value: to_value,
-        to_address: this.toAddress,
-        to_from: this.coinAddress
-      }
-      this.privateSureVisible = true
-      this.lockinBtnLoading = false
-    },
-    base (res) {
-      res = res.info
-      if (!isNaN(res.nonce)) {
-        this.nonceNum = res.nonce
-      }
-      if (!isNaN(res.gasPrice)) {
-        this.gasPriceNum = res.gasPrice
-      }
-      if (res.netWorkInfo) {
-        this.netWorkInfo = res.netWorkInfo
-      }
-      if (!isNaN(res.gasLimit)) {
-        // this.gasLimitNum = res.gasLimit * 6
-        this.gasLimitNum = Number(res.gasLimit) * 10
-      }
-      if (res.balance || res.initBalance) {
-        if (this.selectData.coinType === this.$$.config.initCoin) {
-          this.balanceNum = res.initBalance
-        } else {
-          this.balanceNum = res.balance
-        }
-      }
-      console.log(res)
-      this.fullscreenLoading = false
     }
   },
   watch: {
     selectData (cur, old) {
-      this.historyLoading = true
-      this.getInitData()
-      this.toAddress = ""
-      this.sendAmound = ""
+      this.rawTx.from = this.selectData.address
+      this.rawTx.data = ''
+      this.rawTx.to = ""
+      this.rawTx.value = ""
+      this.loading.history = true
+      this.isSupportCoin = this.selectData.isLockout
     }
   },
   computed: {
+    ...computedPub,
+    ...computed,
     addressTitle: function () {
       return this.selectData.coinType + " Withdraw Address"
     },
   },
   mounted () {
-    this.walletAddress = this.$store.state.address
-    if (this.selectData) {
-      this.getInitData()
-    }
-    if (this.$store.state.wallet.safeMode) {
-      this.fullscreenLoading = false
-      this.selfSet = true
-      return
+    if (Number(this.$$.getCookies('safeMode'))) {
+      this.selfSet = Number(this.$$.getCookies('safeMode')) ? true : false
+      this.loading.screen = false
     }
   },
   methods: {
-    prevClick () {
-      this.pageInfo --
-      this.getDatabaseInfo()
-    },
-    nextClick () {
-      this.pageInfo ++
-      this.getDatabaseInfo()
-    },
-    keyPressBtn (e) {
-      if (e.which === 13) {
-        this.privateSure()
-      }
-    },
-    getInitData () {
-      if (this.$store.state.wallet.safeMode) {
-        this.fullscreenLoading = false
-        this.historyLoading = false
-        return
-      }
-      if (!this.selectData.isConfirm) {
-        this.fullscreenLoading = false
-        this.historyLoading = false
-        return
-      }
-      let _nonceType = 3
-      if (this.selectData.ERC20coin === 'BTC') {
-        _nonceType = 2
-      }
-      // console.log(this.selectData)
-      this.coinAddress = this.selectData.dcrmAddress
-      this.isSupportCoin = this.selectData.isLockout
-      this.getDatabaseInfo()
-      this.$socket.emit('base', {
-        from: this.$store.state.address,
-        to: '0x00000000000000000000000000000000000000dc',
-        url: this.$store.state.network.url,
-        coin: this.selectData.ERC20coin,
-        nonceType: _nonceType
-      })
-    },
+    ...methods,
     getElDialogView () {
       this.modalClick()
     },
@@ -326,58 +182,36 @@ export default {
       this.sendInfoVisible = false
       this.sendBtnFlag = false
     },
-    getSignData (data) {
-      if (data) {
-        this.serializedTx = data
-        this.sendInfoVisible = true
-      } else {
-        this.sendInfoVisible = false
-        this.$message.error(this.$t('ERROR_TIP').TIP_6)
-      }
-      this.privateSureVisible = false
-    },
-    privateSure () {
-      event.preventDefault()
-      this.lockinBtnLoading = true
-      if (!this.toAddress) {
-        this.$message.error(this.selectData.coinType + this.$t('ERROR_TIP').TIP_11)
-        this.lockinBtnLoading = false
-        return
-      }
-      if (this.toAddress.toLowerCase() === this.walletAddress.toLowerCase()) {
-        this.$message.error(this.$t('ERROR_TIP').TIP_4)
-        this.lockinBtnLoading = false
-        return
-      }
-      let getAmountTip = this.$$.limitCoin(this.sendAmound, this.selectData.limit, this.selectData.number)
-      if (getAmountTip.flag) {
-        this.$message.error(getAmountTip.msg)
-        this.lockinBtnLoading = false
-        return
-      }
-      this.maxFee = this.$$.fromWei(Number(this.gasLimitNum) * Number(this.gasPriceNum), "ether")
-      this.$socket.emit('changeWei', {
-        type: 'toWei',
-        coin: this.selectData.coinType,
-        balance: this.sendAmound
-      })
-    },
-    sendAmoundInfo () {
-      this.sendBtnFlag = true
-      this.$socket.emit('sendTxns', {
-        signSerializedTx: this.serializedTx,
-        url: this.$store.state.network.url
-      })
-    },
+    // getSignData (data) {
+    //   console.log(data)
+    //   if (data.signTx) {
+    //     if (Number(this.$$.getCookies('safeMode'))) {
+    //       this.serializedTxView = true
+    //       this.sendInfoVisible = false
+    //       this.qrcode(this.signTx)
+    //     } else {
+    //       this.sendDatabase(data.signTx)
+    //       this.rawTx.nonce = data.nonce
+    //       this.rawTx.gasLimit = data.gasLimit
+    //       this.rawTx.gasPrice = data.gasPrice
+    //       this.rawTx.data = data.data
+    //       this.sendInfoVisible = true
+    //     }
+    //     this.signTx = data.signTx ? data.signTx : ''
+    //     this.maxFee = this.$$.fromWei(Number(data.gasPrice) * Number(data.gasLimit), "ether")
+    //   } else {
+    //     this.sendInfoVisible = false
+    //     this.$message.error(this.selectData.coinType + this.$t('ERROR_TIP').TIP_6)
+    //   }
+    //   this.privateSureVisible = false
+    // },
     getDatabaseInfo () {
       if (!this.selectData.isConfirm) {
         return
       }
       this.isRefreshStart = false
-      // console.log(this.walletAddress)
-      // console.log(this.$store.state.address)
       this.$socket.emit('lockOutHistory', {
-        from: this.walletAddress ? this.walletAddress : this.$store.state.address,
+        from: this.address ? this.address : this.$store.state.address,
         coin: this.selectData.ERC20coin,
         pageSize: this.pageInfo.pageSize,
         pageNum: this.pageInfo.pageNum,

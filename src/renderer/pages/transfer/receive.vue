@@ -4,11 +4,11 @@
       <div class="receiveAddress_box">
         <el-form label-position="top" label-width="80px" @submit.native.prevent>
           <el-form-item :label="addressTitle">
-            <el-input v-model="walletAddress" id="walletAdressHide" class="font24" :readonly	="true"></el-input>
+            <el-input v-model="address" id="walletAdressHide" class="font24" :readonly	="true"></el-input>
           </el-form-item>
         </el-form>
         <div class="receiveAddress_btn flex-c" id="receiveAddressBtn">
-          <button class="btn blue flex-c" @click="qrcode(walletAddress)">
+          <button class="btn blue flex-c" @click="qrcode(address)">
             <div class="icon">
               <img src="@etc/img/QRcode.svg">
             </div>
@@ -100,13 +100,12 @@
 </template>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: "receive",
   props: ["selectData"],
   data () {
     return {
-      // addressTitle: "",
-      walletAddress: "",
       historyData: [],
       refreshTable: null,
       codeViewVisible: false,
@@ -151,12 +150,12 @@ export default {
     }
   },
   computed: {
+    ...computedPub,
     addressTitle () {
       return this.selectData.coinType + " Receiving Address"
     }
   },
   mounted () {
-    this.walletAddress = this.$store.state.address
     if (this.selectData.coinType) {
       this.getSendHistory()
     }
@@ -185,11 +184,11 @@ export default {
       })
     },
     getSendHistory () {
-      if (this.$store.state.wallet.safeMode) {
+      if (Number(this.$$.getCookies('safeMode'))) {
         this.historyLoading = false
         return
       }
-      if (!this.walletAddress || !this.selectData.coinType) {
+      if (!this.address || !this.selectData.coinType) {
         this.historyLoading = false
         return
       }
@@ -200,7 +199,7 @@ export default {
       this.isRefreshStart = false
       this.$socket.emit('receiveHistory', {
         status: 1,
-        to: this.walletAddress,
+        to: this.address,
         coin: this.selectData.ERC20coin,
         pageSize: this.pageInfo.pageSize,
         pageNum: this.pageInfo.pageNum,

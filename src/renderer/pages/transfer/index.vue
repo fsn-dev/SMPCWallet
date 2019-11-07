@@ -50,11 +50,10 @@ export default {
   name: "Transfer",
   data () {
     return {
-      // selectData: "",
       selectVal: "",
       SetcoinAndUrl: [],
       coinDataPage: {},
-      coinOtherArr: this.$$.coinOtherArr,
+      coininfo: this.$$.coininfo,
       navFlag: true
     }
   },
@@ -89,6 +88,27 @@ export default {
     getCoinInfo (coin) {
       this.SetcoinAndUrl = []
       let coinlist = this.$store.state.coininfoArr.length > 0 ? this.$store.state.coininfoArr : []
+      // console.log(coinlist)
+      coinlist = [
+         {
+          coinType: 'FSN',
+          ERC20coin: 'FSN',
+          isERC20: 0,
+          address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
+          limit: 2,
+          balance: 100,
+          isConfirm: 1
+        },
+        {
+          coinType: 'BTC',
+          ERC20coin: 'BTC',
+          isERC20: 0,
+          address: '12dRugNcdxK39288NjcDV4GX7rMsKCGn6B',
+          limit: 2,
+          balance: 100,
+          isConfirm: 1
+        },
+      ]
       if (coinlist.length > 0) {
         for (let i = 0; i < coinlist.length; i++) {
           // this.SetcoinAndUrl.push({coin: coinlist[i].coinType})
@@ -99,12 +119,12 @@ export default {
           })
           if (coinlist[i].ERC20coin === coin) {
             this.coinDataPage = coinlist[i]
-            this.coinDataPage.limit = this.coinOtherArr[coin] && this.coinOtherArr[coin].limit ? this.coinOtherArr[coin].limit : 0
+            this.coinDataPage.limit = this.coininfo[coin] && this.coininfo[coin].limit ? this.coininfo[coin].limit : 0
             this.coinDataPage.isConfirm = coinlist[0].isConfirm
           }
         }
       } else {
-        let coinArr = this.$$.coinOtherArr
+        let coinArr = this.$$.coininfo
         for (let name in coinArr) {
           this.SetcoinAndUrl.push({
             coin: name
@@ -113,7 +133,7 @@ export default {
             this.coinDataPage = {
               coinType: coin,
               address: '',
-              limit: this.coinOtherArr[coin] && this.coinOtherArr[coin].limit ? this.coinOtherArr[coin].limit : 0,
+              limit: this.coininfo[coin] && this.coininfo[coin].limit ? this.coininfo[coin].limit : 0,
               balance: 0
             }
           }

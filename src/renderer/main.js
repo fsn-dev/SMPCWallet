@@ -78,6 +78,9 @@ Vue.config.productionTip = false
 Vue.prototype.$$ = $$
 Vue.prototype.$message = Message
 
+import pwdSure from '@/pages/public/pwdSure'
+
+Vue.component('pwdSure', pwdSure)
 
 /* eslint-disable no-new */
 new Vue({
