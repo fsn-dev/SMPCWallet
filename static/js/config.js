@@ -63,7 +63,7 @@ let publicSet = {
   /**
    * @description 监听页面，超时时间
    */
-  watchPageTime: 1000 * 60 * 3,
+  watchPageTime: 1000 * 60 * 30,
   /**
    * @description Cookie key
    */
@@ -71,10 +71,15 @@ let publicSet = {
     token: 'token',
     address: 'address',
     safeMode: 'safeMode'
-  }
+  },
+  /**
+   * @description 启动gdcrm路径
+   */
+  gDcrm: path + '/gdcrm.exe'
 }
 
 publicSet.appURL = 'http://localhost:8100'
+// publicSet.serverRPC = 'http://192.168.1.104:9012'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 // module.exports = publicSet
 export default publicSet

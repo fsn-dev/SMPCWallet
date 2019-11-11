@@ -27,6 +27,34 @@ web3._extend({
       inputFormatter: [null, null],
       outputFormatter: null
     }),
+    new web3._extend.Method({
+      name: 'reqDcrmAddr',
+      call: 'dcrm_reqDcrmAddr',
+      params: 2,
+      inputFormatter: [null, null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'lockOut',
+      call: 'dcrm_lockOut',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'getBalance',
+      call: 'dcrm_getBalance',
+      params: 2,
+      inputFormatter: [null, null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'getNonce',
+      call: 'dcrm_getNonce',
+      params: 2,
+      inputFormatter: [null, null],
+      outputFormatter: null
+    }),
   ]
 })
 

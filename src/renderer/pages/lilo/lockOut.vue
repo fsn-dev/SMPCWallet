@@ -14,10 +14,10 @@
 
         <el-form label-position="top" label-width="80px" @submit.native.prevent>
           <el-form-item :label="addressTitle + '：'">
-            <el-input v-model="rawTx.to"></el-input>
+            <el-input v-model="toAddress"></el-input>
           </el-form-item>
           <el-form-item :label="$t('LABEL').AMOUNT + '：'">
-            <el-input v-model="rawTx.value" @keypress="keyPressBtn"></el-input>
+            <el-input v-model="toValue" @keypress="keyPressBtn"></el-input>
             <span :class="Number(selectData.balance) === 0 ? 'color_red' : 'color_99'" v-if="selectData.balance">{{Number(selectData.balance) === 0 ? "Insufficient balance" : "Account Balance: " + selectData.balance}}</span>
           </el-form-item>
           <el-form-item label="Advanced:">
@@ -140,6 +140,8 @@ export default {
   data () {
     return {
       ...data,
+      toAddress: '',
+      toValue: '',
       refreshTable: null,
       sendInfoVisible: false,
       selfSet: false,
@@ -151,9 +153,9 @@ export default {
   watch: {
     selectData (cur, old) {
       this.rawTx.from = this.selectData.address
-      this.rawTx.data = ''
-      this.rawTx.to = ""
-      this.rawTx.value = ""
+      // this.rawTx.data = "LOCKOUT:" + this.toAddress + ":" + this.toValue + ":" + this.selectData.ERC20coin,
+      this.rawTx.to = "0x00000000000000000000000000000000000000dc"
+      this.rawTx.value = "0"
       this.loading.history = true
       this.isSupportCoin = this.selectData.isLockout
     }

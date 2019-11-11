@@ -108,10 +108,10 @@ export default {
           isLockin: 1
         },
         {
-          coinType: 'BTC',
-          ERC20coin: 'BTC',
+          coinType: 'ETH',
+          ERC20coin: 'ETH',
           isERC20: 0,
-          address: '12dRugNcdxK39288NjcDV4GX7rMsKCGn6B',
+          address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
           limit: 2,
           balance: 100,
           isConfirm: 1,

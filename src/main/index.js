@@ -1,10 +1,13 @@
 const path = require('path').resolve('.')
-import { app, BrowserWindow, Menu  } from 'electron'
 import Cookies from 'js-cookie'
-const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 import config from '../../static/js/config'
-// const config = require(path + '/static/js/config.js').default
-// console.log(config)
+import { app, BrowserWindow, Menu , ipcMain } from 'electron'
+const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
+
+const {spawn} = require('child_process')
+
+// spawn(config.gDcrm)
+await spawn(path + '/gdcrm.exe')
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -20,6 +23,7 @@ const winURL = process.env.NODE_ENV === 'development'
 
 function createWindow () {
   Menu.setApplicationMenu(null)
+  
   /**
    * Initial window options
    */
@@ -35,9 +39,18 @@ function createWindow () {
     }
   })
 
+  // ipcMain.on('app-child',(e,appUrl)=>{
+  //   console.log('appUrl')
+  //   console.log(appUrl)
+  //   // spawn(appUrl)
+  // })
+  // console.log(spawn)
+  // console.log(ipcMain)
+
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
+    mainWindow.close()
     mainWindow = null
     Cookies.set(config.cookies.token, '', { expires: 0 })
     Cookies.set(config.cookies.address, '', { expires: 0 })

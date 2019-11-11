@@ -12,3 +12,5 @@ thumbs.db
 data/*
 key-house-win32-x64/*
 *.zip
+*.exe
+*.key

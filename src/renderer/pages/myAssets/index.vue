@@ -184,6 +184,7 @@ export default {
     else {
       this.loading.screen = false
     }
+    this.loading.screen = false
   },
   updated () {
     this.tableHeight()

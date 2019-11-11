@@ -72,6 +72,7 @@ export const methods = {
       this.loading.btn = false
       return
     }
+    this.rawTx.data = "LOCKOUT:" + this.toAddress + ":" + this.toValue + ":" + this.selectData.ERC20coin,
     // this.maxFee = this.$$.fromWei(Number(this.gasLimitNum) * Number(this.gasPriceNum), "ether")
     // this.rawTx.from = this.selectData.address
     this.privateSureVisible = true
@@ -79,11 +80,12 @@ export const methods = {
   },
   getSignData (data) {
     console.log(data)
+    console.log(data.signTx)
     if (data.signTx) {
       if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
         this.serializedTxView = true
         this.sendInfoVisible = false
-        this.qrcode(this.signTx)
+        // this.qrcode(this.signTx)
       } else {
         // this.sendDatabase(data.signTx)
         this.rawTx.nonce = data.nonce
