@@ -1,4 +1,4 @@
-const config = require('@etc/js/config')
+import config from '@etc/js/config'
 export default {
 	ERROR_TIP: {
 		TIP_0: "Your password must be at least 9 characters. Please ensure it is a strong password.",

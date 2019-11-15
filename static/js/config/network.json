@@ -2,7 +2,7 @@
   "net": [
     {
       "name": "Mainnet",
-      "url": "http://127.0.0.1:5559",
+      "url": "http://127.0.0.1:4449",
       "chainId": 4
     }
   ]

@@ -1,8 +1,8 @@
 <template>
-  <div class="boxContent">
+  <div class="boxContent page-component__scroll el-scrollbar">
     <header class="headerTop_box flex-bc">
       <div class="logo flex-c">
-        <router-link :to="$$.getToken() ? '/myAssets' : '/'" class="logoImg flex-c">
+        <router-link :to="$$.getToken() ? '/group' : '/'" class="logoImg flex-c">
           <img src="@etc/img/logo.svg" class="logoImgVisibleLg">
           <img src="@etc/img/logoxs.svg" class="logoImgVisibleXs">
         </router-link>
@@ -43,9 +43,9 @@
               <img src="@etc/img/copy2.svg">
             </a>
           </li>
+          <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="toUrl('/gNewsList')"><el-badge :is-dot="isHaveNews" class="item"><i class="el-icon-bell"></i></el-badge></a></li>
           <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="isFaucetModel = true"><img src="@etc/img/faucet.jpg"></a></li>
-          <!-- <li :title="'Backups'"><a class="setBtn flex-c cursorP" @click="tobackupWallet"><img src="@etc/img/Setting2.svg"></a></li>
-          <li :title="'Help'"><router-link class="setBtn flex-c" to="/"><img src="@etc/img/Help.svg"></router-link></li> -->
+          <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="toUrl('createGroup')">+</a></li>
           <li :title="'Refresh'"><div class="setBtn flex-c cursorP" @click="Refresh"><img src="@etc/img/Refresh.svg"></div></li>
           <li :title="'Sign out'"><div class="setBtn flex-c cursorP" @click="quitMethod"><img src="@etc/img/Quit.svg"></div></li>
           
@@ -54,45 +54,12 @@
     </header>
     <input type="text" v-model="address" id="addressCopy" class="fixedHide">
     
-    <section id="boxContent_box" v-if="!address">
+    <!-- <section id="boxContent_box" v-if="!address"> -->
+    <section id="boxContent_box">
       <transition name="fade">
         <router-view v-if="isRouterAlive" ref="nav"></router-view>
       </transition>
     </section>
-
-    <section id="boxContent_box" v-if="address">
-      <div class="boxConntent1 navBox">
-        <nav class="navLeft_box">
-          <ul>
-            <li><router-link to="/MyAssets" class="item flex-ai-c"><div class="icon"><img src="@etc/img/MyAssets.svg"></div><p>{{$t('NAV').MY_ASSETS}}</p></router-link></li>
-            <li><router-link to="/Transfer" class="item flex-ai-c"><div class="icon"><img src="@etc/img/Transfer.svg"></div><p>{{$t('NAV').TRANSFER}}</p></router-link></li>
-            <li><router-link to="/LILO" class="item flex-ai-c"><div class="icon"><img src="@etc/img/LILO.svg"></div><p>{{$t('NAV').LILO}}</p></router-link></li>
-            <li><router-link to="/DAPP" class="item flex-ai-c"><div class="icon"><img src="@etc/img/DAPP.svg"></div><p>{{$t('NAV').DAPP}}</p></router-link></li>
-            <!-- <li><router-link to="/exchangeEnter" class="item flex-ai-c"><div class="icon"><img src="@etc/img/DAPP.svg"></div><p>Exchange</p></router-link></li> -->
-          </ul>
-        </nav>
-        <div class="navContent_box">
-          <div style="width:100%;height:100%;position:absolute;top:0;left:0;overflow:auto;overflow-x:hidden;">
-            <div style="width:100%;height:100%;position:relative;">
-              <transition name="fade">
-                <router-view v-if="childRefresh"></router-view>
-              </transition>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footerBottom_box flex-c">
-      <ul class="flex-c">
-        <li><a :href="$$.config.otherUrl.mainNetwork" target="_blank"><img src="@etc/img/logo-white.svg" width="61" height="16"></a></li>
-        <li class="center flex-c">
-          <a class="mr-10 flex-c" :href="$$.config.otherUrl.github" target="_blank"><img src="@etc/img/GIT.svg" width="16" height="16"></a>
-          <a class="flex-c" :href="$$.config.otherUrl.gitter" target="_blank"><img src="@etc/img/GIT2.svg" width="16" height="16"></a>
-        </li>
-        <li>{{$$.config.copyRight}}</li>
-      </ul>
-    </footer>
 
     <el-dialog :title="$t('TITLE').CUSTOM_NODE" :visible.sync="networkVisible" :close-on-click-modal="false" width="30%" center>
       <el-input placeholder="HTTPS://" v-model="network" clearable> </el-input>
@@ -104,19 +71,7 @@
       </span>
     </el-dialog>
 
-
-    <el-dialog :title="$$.config.AppName + 'DCRM Faucet'" :visible.sync="isFaucetModel" :close-on-click-modal="false" width="50%" center>
-      <div v-loading="faucetLoading">
-        <el-input placeholder="Please enter your account." v-model="faucetVal" :disabled="true" clearable>
-          <template slot="prepend">{{$$.config.initCoin}}:</template>
-        </el-input>
-        <div class="H20"></div>
-        <span slot="footer" class="dialog-footer flex-c">
-          <el-button @click="isFaucetModel = false">{{$t('BTN').CANCEL}}</el-button>
-          <el-button type="primary" @click="faucetModelBtn"> Give me {{$$.config.initCoin}}</el-button>
-        </span>
-      </div>
-    </el-dialog>
+    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
   </div>
 </template>
 
@@ -143,9 +98,7 @@ export default {
       networkVisible: false,
       chainId: '',
       isSelectOrSet: true,
-      isFaucetModel: false,
-      faucetVal: '',
-      faucetLoading: false
+      isHaveNews: false
     }
   },
   watch: {
@@ -185,59 +138,6 @@ export default {
 			this.$nextTick(() => {
 				this.isRouterAlive = true
 			})
-    },
-    faucetModelBtn () {
-      if (!this.faucetVal) {
-        this.$message.error('Address is null!')
-        return
-      }
-      this.faucetVal = this.faucetVal.replace(/\s/g, '')
-      // console.log(this.faucetVal)
-      if ('WebSocket' in window) {
-        try {
-          this.faucetLoading = true
-          let ws = new WebSocket(this.$$.config.faucetURL)
-          // console.log(ws)
-          ws.onopen = () => {
-            console.log('connect')
-            ws.send(JSON.stringify({address: this.faucetVal, cointype: this.$$.config.initCoin}))
-          }
-          ws.onmessage = (res) => {
-            let data = JSON.parse(res.data)
-            if (data.state && data.state === 'ERR') {
-              this.$message.error(data.msg)
-            } else if (data.state && data.state === 'OK') {
-              this.$message({ message: data.msg, type: 'success' })
-              setTimeout(() => {
-                this.reload()
-              }, 3000)
-            }
-            // console.log(JSON.parse(res.data))
-            this.isFaucetModel = false
-            this.faucetLoading = false
-          }
-          ws.onerror = (err) => {
-            console.log(err)
-            this.isFaucetModel = false
-            this.faucetLoading = false
-          }
-          ws.onclose = () => {
-            console.log('close')
-            this.isFaucetModel = false
-            this.faucetLoading = false
-          }
-        } catch (error) {
-          this.faucetLoading = false
-          this.isFaucetModel = false
-          console.log(error)
-          this.$message({
-            message: error.toString(),
-            type: 'warning'
-          })
-        }
-      } else {
-        alert('您的浏览器不支持 WebSocket!')
-      }
     },
     customNet () {
       if (!this.network) {

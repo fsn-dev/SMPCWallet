@@ -39,7 +39,9 @@ import {
   Scrollbar,
   MenuItem,
   Pagination,
-  Option
+  Option,
+  Backtop,
+  Badge,
 } from 'element-ui'
 
 Vue.use(Button)
@@ -70,6 +72,8 @@ Vue.use(Scrollbar)
 Vue.use(MenuItem)
 Vue.use(Pagination)
 Vue.use(Option)
+Vue.use(Backtop)
+Vue.use(Badge)
 
 Vue.use(Vuex)
 
@@ -77,6 +81,14 @@ Vue.config.productionTip = false
 
 Vue.prototype.$$ = $$
 Vue.prototype.$message = Message
+// Vue.prototype.toUrl = (url, params) => {
+//   console.log(this)
+//   console.log(router)
+//   router.push({path: url, query: params})
+// }
+Vue.prototype.toUrl = function(url, params) {
+  this.$router.push({path: url, query: params})
+}
 
 import pwdSure from '@/pages/public/pwdSure'
 

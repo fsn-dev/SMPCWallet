@@ -1,0 +1,9 @@
+@import './base.scss';
+// @import './css.scss';
+
+.c-form-box {
+  width: 600px;margin:30px auto;padding: 60px 25px;background:#fff;border-radius: 6px;
+  .el-form-item__label {
+    line-height: 28px;padding-bottom: 0;
+  }
+}

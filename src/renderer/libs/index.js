@@ -34,6 +34,10 @@ import files from '@/libs/files'
  * @description web3新增通用方法
  */
 import web3Util from '@/libs/web3Util'
+/**
+ * @description mode基本选项
+ */
+import mode from '@etc/js/config/mode'
 
 let $$ = {
   ...tools,
@@ -45,6 +49,7 @@ let $$ = {
   wallet,
   web3,
   coininfo,
+  mode,
   quitApp (that) {
     that.$$.setToken('')
     that.$$.setCookies(config.cookies.address, '')

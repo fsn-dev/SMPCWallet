@@ -2,6 +2,38 @@ import web3 from '@/assets/js/web3'
 // const Tx = require("ethereumjs-tx")
 import Tx from 'ethereumjs-tx'
 export default {
+  getEnode () {
+    let eNode = web3.dcrm.getEnode()
+    return JSON.parse(eNode).Enode
+  },
+  getGroup () {
+    let gArr = web3.dcrm.getSDKGroup(this.getEnode(), 'ALL')
+    gArr = gArr && JSON.parse(gArr).Group ? JSON.parse(gArr).Group : []
+    // console.log(gArr)
+    return gArr
+  },
+  getGroupObj (gID) {
+    let obj = {}
+    let gArr = this.getGroup()
+    // console.log(gArr)
+    for (let obj1 of gArr) {
+      if (gID === obj1.Gid) {
+        obj = obj1
+        break
+      }
+    }
+    return obj
+  },
+  createGroup(name, mode, nodeArr) {
+    let gInfo = web3.dcrm.createSDKGroup(name, mode, nodeArr)
+    // console.log(gInfo)
+    gInfo = gInfo && JSON.parse(gInfo) ? JSON.parse(gInfo) : ''
+    return gInfo
+  },
+  getNonce (addr, coin) {
+    let nonce = web3.dcrm.getNonce(addr, coin)
+    return nonce
+  },
   getBaseInfo (data) {
     return new Promise((resolve, reject) => {
       let batch = web3.createBatch()

@@ -16,25 +16,25 @@ const routers = new Router({
   routes
 })
 
-routers.beforeEach((to, from, next) => {
-  const hideSearchURL = ['/createWallet', '/importWallet']
-  // console.log(to)
-  if ($$.getToken()) {
-    next()
-  } else {
-    let toFlag = false
-    for (let i of hideSearchURL) {
-      if (to.path.toUpperCase().indexOf(i.toUpperCase()) !== -1 || to.path.toUpperCase() === '/') {
-        toFlag = true
-        break
-      }
-    }
-    if (toFlag) {
-      next()
-    } else {
-      next('/')
-    }
-  }
-})
+// routers.beforeEach((to, from, next) => {
+//   const hideSearchURL = ['/createWallet', '/importWallet', '/login', '/register']
+//   // console.log(to)
+//   if ($$.getToken()) {
+//     next()
+//   } else {
+//     let toFlag = false
+//     for (let i of hideSearchURL) {
+//       if (to.path.toUpperCase().indexOf(i.toUpperCase()) !== -1 || to.path.toUpperCase() === '/') {
+//         toFlag = true
+//         break
+//       }
+//     }
+//     if (toFlag) {
+//       next()
+//     } else {
+//       next('/')
+//     }
+//   }
+// })
 
 export default routers

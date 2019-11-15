@@ -1,0 +1,195 @@
+<template>
+  <div class="boxConntent1 container">
+    <!-- <div class="receiveContent_box">
+    </div> -->
+    <div class="receiveAddress_box">
+      <el-form label-position="top" label-width="80px" @submit.native.prevent>
+        <el-form-item :label="addressTitle">
+          <el-input v-model="address" id="walletAdressHide" class="font24" :readonly	="true"></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="receiveAddress_btn flex-c" id="receiveAddressBtn">
+        <button class="btn blue flex-c" @click="qrcode(address)">
+          <div class="icon">
+            <img src="@etc/img/QRcode.svg">
+          </div>
+          {{$t('BTN').SHOW_QR_CODE}}
+        </button>
+        <button class="btn cyan flex-c" @click="copyAddress('walletAdressHide', 'receiveAddressBtn')">
+          <div class="icon"><img src="@etc/img/copy.svg"></div>
+          <el-popover trigger="hover" :content="$t('BTN').COPY_CLIPBOARD">
+            <div class="addreess" slot="reference">{{$t('BTN').COPY_CLIPBOARD}}</div>
+          </el-popover>
+        </button>
+      </div>
+    </div>
+
+    <div class="tableHistory_box" v-if="selectData.isConfirm || selectData.coinType === $$.config.initCoin">
+      <hgroup class="tableHistory_title">
+        <h3 class="title">{{$t('TITLE').HISTORY}}:</h3>
+      </hgroup>
+      <div class="tableHistory_table table-responsive" v-loading="historyLoading" element-loading-text="Loading……">
+        <el-table :data="historyData" style="width: 100%" empty-text="Null">
+          <el-table-column :label="$t('THEAD').PUBLIC.STATUS" width="80">
+            <template slot-scope="scope">
+              <span v-html="scope.row.status" :class="scope.row.status !== 'Success' ? 'red' : ''"></span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('THEAD').COIN" prop="coinType" width="80"></el-table-column>
+          <el-table-column :label="$t('THEAD').PUBLIC.AMOUNT" prop="value" width="120">
+            <template slot-scope="scope">
+              <span>{{scope.row.contractValue ? scope.row.contractValue : scope.row.value}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('THEAD').PUBLIC.DATE" prop="date" width="180"></el-table-column>
+          <el-table-column :label="$t('THEAD').PUBLIC.INFORMATION" min-width="360">
+            <template slot-scope="scope">
+              <el-collapse class="moreInfo_box" accordion v-model="activeNames">
+                <el-collapse-item :title="scope.row.hash">
+                  <ul class="list">
+                    <li>{{$t('LABEL').TXID}}：{{scope.row.hash}}</li>
+                    <li>{{$t('LABEL').ADDRESS}}：{{scope.row.from}}</li>
+                  </ul>
+                </el-collapse-item>
+              </el-collapse>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="flex-ec mt-20" v-if="pageInfo.total > 1">
+          <el-pagination
+            @prev-click="prevClick"
+            @next-click="nextClick"
+            :page-size="pageInfo.pageNum"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="pageInfo.total">
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+
+    <el-dialog :visible.sync="codeViewVisible" width="380px">
+      <div class="qrcodeCont_box">
+        <div id="qrcode" class="flex-c"></div>
+        <div class="qrcodeCont_title">
+          <h3>{{$t('TITLE').YOUR_ADDREAA}}</h3>
+        </div>
+      </div>
+    </el-dialog>
+
+  </div>
+</template>
+
+<style>
+/* .receiveContent_box{width:100%;padding:0 21px 0 0;margin:10px 0 0px;padding-bottom:21px} */
+.receiveAddress_box{width:100%;border-bottom:1px solid #ddd;padding: 20px 20px;}
+.receiveAddress_box .el-form--label-top .el-form-item__label{padding:0;line-height: 24px;}
+.receiveAddress_pwd{width:100%;height:37px;position:relative;}
+.receiveAddress_pwd .input{width:100%;height:100%;text-align:center;font-size:28px;font-weight:bold;border:1px solid #dddddd;}
+.receiveAddress_pwd .amount{width:100%;height:100%;font-size:20px;border:1px solid #dddddd;padding-right:70px;}
+.receiveAddress_pwd .currency{width:70px;height:100%;text-align:center;line-height:37px;position:absolute;top:0;right:0;}
+.receiveAddress_btn{width:100%;padding:0px 0 21px;text-align:center;}
+.receiveAddress_btn .el-button--primary {color: #FFF;background-color: #409EFF;border-color: #409EFF;}
+.receiveAddress_btn .btn{width:160px;height:38px;color:#fff;font-size:16px;padding-left:0;padding-right:0;}
+.receiveAddress_btn .btn .icon{width:16px;height:16px;margin-right:8px;}
+.receiveAddress_btn .btn .icon img{width: 100%;height: 100%;}
+.receiveAddress_btn .blue{background:#3078d7;margin-right:12px;}
+.receiveAddress_btn .cyan{background:#285b7e;}
+</style>
+
+<script>
+import {computedPub} from '@/assets/js/pages/public'
+export default {
+  name: "receive",
+  data () {
+    return {
+      historyData: [],
+      refreshTable: null,
+      codeViewVisible: false,
+      historyLoading: true,
+      activeNames: "",
+      isRefreshStart: true,
+      pageInfo: {
+        pageNum: 1,
+        total: 0,
+        pageSize: 20,
+      }
+      // count: 0
+    }
+  },
+  watch: {
+    selectData (cur, old) {
+      console.log(cur)
+      this.historyLoading = true
+      this.getSendHistory()
+    }
+  },
+  computed: {
+    ...computedPub,
+    addressTitle () {
+      return this.selectData.coinType + " Receiving Address"
+    }
+  },
+  created () {
+    // console.log(this.$route.query)
+    this.selectData = this.$route.query
+  },
+  mounted () {
+    if (this.selectData.coinType) {
+      this.getSendHistory()
+    }
+  },
+  methods: {
+    prevClick () {
+      this.pageInfo --
+      this.getSendHistory()
+    },
+    nextClick () {
+      this.pageInfo ++
+      this.getSendHistory()
+    },
+    qrcode (cont) {
+      this.codeViewVisible = true
+			this.$nextTick(() => {
+        this.$$.qrCode(cont, "qrcode")
+			})
+    },
+    copyAddress (id, textId) {
+      document.getElementById(id).select()
+      document.execCommand("Copy")
+      this.$message({
+        message: this.$t('SUCCESS_TIP').TIP_0,
+        type: 'success'
+      })
+    },
+    getSendHistory () {
+      this.historyLoading = false
+      // if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
+      //   this.historyLoading = false
+      //   return
+      // }
+      // if (!this.address || !this.selectData.coinType) {
+      //   this.historyLoading = false
+      //   return
+      // }
+      // if (!this.selectData.isConfirm && this.selectData.coinType !== this.$$.config.initCoin) {
+      //   this.historyLoading = false
+      //   return
+      // }
+      // this.isRefreshStart = false
+      // this.$socket.emit('receiveHistory', {
+      //   status: 1,
+      //   to: this.address,
+      //   coin: this.selectData.ERC20coin,
+      //   pageSize: this.pageInfo.pageSize,
+      //   pageNum: this.pageInfo.pageNum,
+      //   url: this.$store.state.network.url
+      // })
+    }
+  },
+  beforeDestroy () {
+    clearTimeout(this.refreshTable)
+    this.refreshTable = null
+  }
+}
+</script>

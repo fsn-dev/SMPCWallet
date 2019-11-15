@@ -63,6 +63,8 @@ export default {
 }
 </script>
 
-<style>
-  /* CSS */
+<style lang="scss">
+// @import '@/assets/scss/index.scss'
+/* CSS */
+
 </style>

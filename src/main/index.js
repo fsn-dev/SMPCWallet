@@ -6,8 +6,8 @@ const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools
 
 const {spawn} = require('child_process')
 
-// spawn(config.gDcrm)
-await spawn(path + '/gdcrm.exe')
+spawn(config.gDcrm)
+// spawn(path + '/gdcrm.exe')
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -38,14 +38,6 @@ function createWindow () {
       webSecurity: false
     }
   })
-
-  // ipcMain.on('app-child',(e,appUrl)=>{
-  //   console.log('appUrl')
-  //   console.log(appUrl)
-  //   // spawn(appUrl)
-  // })
-  // console.log(spawn)
-  // console.log(ipcMain)
 
   mainWindow.loadURL(winURL)
 

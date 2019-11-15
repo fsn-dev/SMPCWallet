@@ -1,5 +1,20 @@
 import coininfo from '@etc/js/config/coininfo.js'
 export default {
+  fromTime (timestamp) {
+    if (timestamp.toString().length === 10) {
+      timestamp = Number(timestamp) * 1000
+    } else if (timestamp.toString().length > 13) {
+      timestamp = timestamp.toString().substring(0, 13)
+    }
+    return Number(timestamp)
+  },
+  toTime (timestamp) {
+    // console.log(timestamp.toString().length)
+    if (timestamp.toString().length >= 13) {
+      timestamp = timestamp.toString().substring(0, 10)
+    }
+    return Number(timestamp)
+  },
   thousandBit (num, dec = 2) {
     let _num = num = Number(num)
     if (isNaN(num)) {
@@ -38,7 +53,8 @@ export default {
   },
   timeChange (data) {
     // console.log(data)
-    let time = data.date ? new Date(data.date.toString().length > 10 ? data.date : (Number(data.date) * 1000)) : new Date()
+    // let time = data.date ? new Date(data.date.toString().length > 10 ? data.date : (Number(data.date) * 1000)) : new Date()
+    let time = data.date ? new Date(this.fromTime(data.date)) : new Date()
     let formatType = data.format ? data.format : '/'
     let Y = time.getFullYear()
     let M = (time.getMonth() + 1) < 10 ? ('0' + (time.getMonth() + 1)) : (time.getMonth() + 1)

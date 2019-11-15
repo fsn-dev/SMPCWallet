@@ -1,10 +1,12 @@
-const Main = resolve => require.ensure([], () => resolve(require('@/components/main/index')) )
-// const Main = require('@/components/main/index').default
+// const Main = resolve => require.ensure([], () => resolve(require('@/components/main/index')) )
+const Bg = resolve => require.ensure([], () => resolve(require('@/components/bg/index')) )
+const Content = resolve => require.ensure([], () => resolve(require('@/components/content/index')) )
+
 
 export default [
   {
     path: '/',
-    component: Main,
+    component: Bg,
     meta: {
       notCache: true
     },
@@ -15,14 +17,13 @@ export default [
           title: '首页',
           notCache: true
         },
-        // component: () => import('@/pages/createWallet/index')
-        component: resolve => require.ensure([], () => resolve(require('@/pages/createWallet/index')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/home/enter')) )
       }
     ]
   },
   {
-    path: '/createWallet',
-    component: Main,
+    path: '/login',
+    component: Bg,
     meta: {
       notCache: true
     },
@@ -30,17 +31,16 @@ export default [
       {
         path: '/',
         meta: {
-          title: '创建钱包',
+          title: '登陆',
           notCache: true
         },
-        // component: () => import('@/pages/createWallet/index')
-        component: resolve => require.ensure([], () => resolve(require('@/pages/createWallet/create')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/home/login')) )
       }
     ]
   },
   {
-    path: '/importWallet',
-    component: Main,
+    path: '/register',
+    component: Bg,
     meta: {
       notCache: true
     },
@@ -48,64 +48,113 @@ export default [
       {
         path: '/',
         meta: {
-          title: '导入钱包',
+          title: '注册',
           notCache: true
         },
-        // component: () => import('@/pages/createWallet/index')
-        component: resolve => require.ensure([], () => resolve(require('@/pages/createWallet/import')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/home/register')) )
       }
     ]
   },
   {
-    path: '/myAssets',
-    component: Main,
+    path: '/createGroup',
+    component: Content,
     meta: {
       notCache: true
     },
     children: [
       {
         path: '/',
-        component: resolve => require.ensure([], () => resolve(require('@/pages/myAssets/index')), 'group-assets')
-      },
+        meta: {
+          title: '创建组',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/createGroup')) )
+      }
+    ]
+  },
+  {
+    path: '/group',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
       {
-        path: '/Transfer',
-        component: resolve => require.ensure([], () => resolve(require('@/pages/transfer/index')), 'group-transfer'), 
+        path: '/',
+        meta: {
+          title: '组',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/index')) ),
         children: [
           {
             path: '/',
-            component: resolve => require.ensure([], () => resolve(require('@/pages/transfer/receive')), 'group-transfer')
+            meta: {
+              title: '组',
+              notCache: true
+            },
+            component: resolve => require.ensure([], () => resolve(require('@/pages/group/gDtil')) )
           },
           {
-            path: '/Transfer/tranSend',
-            name: 'tranSend',
-            component: resolve => require.ensure([], () => resolve(require('@/pages/transfer/send')), 'group-transfer')
-          }
+            path: '/group/receive',
+            meta: {
+              title: '组',
+              notCache: true
+            },
+            component: resolve => require.ensure([], () => resolve(require('@/pages/group/receive')) )
+          },
         ]
       },
+    ]
+  },
+  {
+    path: '/sendTxns',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
       {
-        path: '/LILO',
-        component: resolve => require.ensure([], () => resolve(require('@/pages/lilo/index')), 'group-lilo'),
-        children: [
-          {
-            path: '/',
-            component: resolve => require.ensure([], () => resolve(require('@/pages/lilo/lockIn')), 'group-lilo')
-          }, 
-          {
-            path: '/LILO/lockOut',
-            name: 'lockOut',
-            component: resolve => require.ensure([], () => resolve(require('@/pages/lilo/lockOut')), 'group-lilo')
-          }
-        ]
-      },
+        path: '/',
+        meta: {
+          title: '交易',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/index')) )
+      }
+    ]
+  },
+  {
+    path: '/gNewsList',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
       {
-        path: '/DAPP',
-        name: 'DAPP',
-        component: resolve => require.ensure([], () => resolve(require('@/pages/dapp/index')), 'group-dapp')
-      },
+        path: '/',
+        meta: {
+          title: '消息',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/news/gNewsList')) )
+      }
+    ]
+  },
+  {
+    path: '/gValid',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
       {
-        path: '/backupWallet',
-        name: 'backupWallet',
-        component: resolve => require.ensure([], () => resolve(require('@/pages/backupWallet/index')), 'group-backup')
+        path: '/',
+        meta: {
+          title: '组确认',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/gValid')) )
       }
     ]
   },

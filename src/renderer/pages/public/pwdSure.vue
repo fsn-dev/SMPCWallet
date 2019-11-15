@@ -92,6 +92,7 @@ export default {
       }
     },
     toSign (pwd) {
+      console.log(this.sendDataPage)
       this.$$.toSign(this.sendDataPage, pwd, Number(this.$$.getCookies(this.$$.config.cookies.safeMode)))
         .then(res => {
           this.loading.wait = false

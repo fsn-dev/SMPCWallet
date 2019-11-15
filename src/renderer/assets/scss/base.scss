@@ -1,0 +1,19 @@
+$logo-h: 40px;
+
+$doubleSize: 16;
+@function size ($n) {
+  @if unit($n) == '%' {
+    @return $n
+  };
+  @if unit($n) == '' {
+    @return ($n / $doubleSize) + rem
+  }
+}
+
+$header-footer-h: size(56);
+
+$text-promary: #0099ff;
+
+// @function content-h () {
+//   @return 
+// }

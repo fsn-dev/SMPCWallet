@@ -1,4 +1,6 @@
-const config = require('@etc/js/config')
+// const config = require('@etc/js/config')
+import config from '@etc/js/config'
+// console.log(config)
 export default {
 	ERROR_TIP: {
 		TIP_0: "您的密码必须至少9个字符。请确保它是一个强密码。",

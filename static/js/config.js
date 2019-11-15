@@ -28,7 +28,7 @@ let publicSet = {
   /**
    * @description 区块节点请求地址
    */
-  serverRPC: 'http://127.0.0.1:5559',
+  serverRPC: 'http://127.0.0.1:4449',
   /**
    * @description 数据请求时间间隔
    */
@@ -75,11 +75,22 @@ let publicSet = {
   /**
    * @description 启动gdcrm路径
    */
-  gDcrm: path + '/gdcrm.exe'
+  gDcrm: path + '/gdcrm.exe',
+  /**
+   * @description 启动gdcrm路径
+   */
+  rawTx: {
+    to: '0x00000000000000000000000000000000000000dc',
+    gasLimit: 80000,
+    gasPrice: 100000,
+  }
 }
 
-publicSet.appURL = 'http://localhost:8100'
-// publicSet.serverRPC = 'http://192.168.1.104:9012'
+// publicSet.appURL = 'http://localhost:8100'
 // publicSet.appURL = 'http://192.168.1.153:7700'
+// publicSet.serverRPC = 'http://192.168.1.104:9012'
+// publicSet.serverRPC = 'http://192.168.1.187:12391'
+// publicSet.serverRPC = 'http://192.168.1.187:12392'
+publicSet.serverRPC = 'http://192.168.1.187:12393'
 // module.exports = publicSet
 export default publicSet

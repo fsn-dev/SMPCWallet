@@ -35,6 +35,13 @@ web3._extend({
       outputFormatter: null
     }),
     new web3._extend.Method({
+      name: 'accept',
+      call: 'dcrm_accept',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
       name: 'lockOut',
       call: 'dcrm_lockOut',
       params: 1,
@@ -51,6 +58,35 @@ web3._extend({
     new web3._extend.Method({
       name: 'getNonce',
       call: 'dcrm_getNonce',
+      params: 2,
+      inputFormatter: [null, null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'GetReply',
+      call: 'dcrm_GetReply',
+      params: 3,
+      inputFormatter: [null, null, null],
+      outputFormatter: null
+    }),
+    
+    new web3._extend.Method({
+      name: 'getEnode',
+      call: 'dcrm_getEnode',
+      params: 0,
+      inputFormatter: [],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'createSDKGroup',
+      call: 'dcrm_createSDKGroup',
+      params: 3,
+      inputFormatter: [null, null, null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'getSDKGroup',
+      call: 'dcrm_getSDKGroup',
       params: 2,
       inputFormatter: [null, null],
       outputFormatter: null
