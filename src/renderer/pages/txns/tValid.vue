@@ -3,15 +3,15 @@
     <div class="c-form-box">
       <el-form :model="rawTxData" ref="rawTxData" :rules="rules" label-width="100px" label-position="top">
         <el-form-item label="目标地址" prop="to">
-          <el-input v-model="rawTxData.to"></el-input>
+          <el-input v-model="rawTxData.to" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item label="金额" prop="value">
-          <el-input type="number" v-model="rawTxData.value" :min="0.001" :step="0.001"></el-input>
+          <el-input type="number" v-model="rawTxData.value" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('rawTxData')">提交</el-button>
-          <el-button @click="resetForm('rawTxData')">重置</el-button>
-          <el-button @click="toUrl('/group')">返回</el-button>
+          <el-button type="primary" @click="submitForm('rawTxData')">同意</el-button>
+          <el-button @click="resetForm('rawTxData')">拒绝</el-button>
+          <el-button @click="toUrl('/tNewsList')">返回</el-button>
         </el-form-item>
       </el-form>
     </div>

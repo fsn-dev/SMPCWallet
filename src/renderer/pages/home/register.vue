@@ -107,7 +107,9 @@ export default {
     createFile () {
       const walletInit = this.$$.wallet.generate(this.registerObj.password)
       let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
-      this.$$.fs.writeFile(this.$$.config.file.url + '/' + this.registerObj.username + this.$$.config.file.type, JSON.stringify(walletJSON), (err, res) => {
+      let fileUrl = this.$$.config.file.ks.url + this.registerObj.username + this.$$.config.file.ks.type
+      console.log(fileUrl)
+      this.$$.fs.writeFile(fileUrl, JSON.stringify(walletJSON), (err, res) => {
         if (err) {
           this.$message.error(err.toString())
         } else {
@@ -122,7 +124,9 @@ export default {
       })
     },
     changePwd () {
-      this.$$.validFile(this.registerObj.username)
+      let fileUrl = this.$$.config.file.ks.url
+      console.log(fileUrl)
+      this.$$.validFile(this.registerObj.username, fileUrl, this.$$.config.file.ks.type)
       .then(res => {
         if (res.msg === 'Repeat') {
           this.$message.error('账户已存在')

@@ -19,7 +19,7 @@
         <el-form-item>
           <el-button type="primary" @click="agreeGroup('groupForm')">同意</el-button>
           <el-button type="danger" @click="refuseGroup('groupForm')">拒绝</el-button>
-          <el-button @click="toUrl('/group')">返回</el-button>
+          <el-button @click="toUrl('/tNewsList')">返回</el-button>
         </el-form-item>
       </el-form>
     </div>

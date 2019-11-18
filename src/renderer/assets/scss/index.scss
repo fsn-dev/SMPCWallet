@@ -7,3 +7,13 @@
     line-height: 28px;padding-bottom: 0;
   }
 }
+
+.n-list-box {
+  width: 100%;min-height: 80%;padding: 30px 15px; background:#fff;margin:15px 0;
+  .item {
+    width: 100%;border-bottom: 1px solid #eee;padding:8px 0;font-size: 14px;color: #333;cursor: pointer;
+    .p2{
+      color:#999;
+    }
+  }
+}

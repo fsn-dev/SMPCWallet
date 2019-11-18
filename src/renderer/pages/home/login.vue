@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$$.validFile(this.loginObj.username)
+      this.$$.validFile(this.loginObj.username, this.$$.config.file.ks.url, this.$$.config.file.ks.type)
       .then(res => {
         if (res.msg === 'Repeat') {
           this.inputFileBtn()
@@ -75,29 +75,33 @@ export default {
       })
     },
     inputFileBtn () {
-      this.$$.readFile(this.loginObj.username)
-      .then(res => {
-        try{
-          this.walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
-            res.info,
-            this.loginObj.password
-          )
-          // console.log(this.walletInfo)
-          // console.log(this.walletInfo.getPublicKey())
-          // console.log(this.walletInfo.getPublicKeyString())
-          // console.log(this.walletInfo.getPrivateKeyString())
-          let address = this.walletInfo.getChecksumAddressString()
-          this.$$.setToken(this.loginObj.username)
-          this.$$.setCookies(this.$$.config.cookies.address, address)
-          this.$store.commit('storeAddress', address)
-          this.$router.push('/group')
-        } catch (e) {
-          this.$message.error(e.toString())
-        }
-      })
-      .catch(err => {
-        this.$message.error(err.error.toString())
-      })
+      let fileUrl = this.$$.config.file.ks.url + this.loginObj.username + this.$$.config.file.ks.type
+      // console.log(fileUrl)
+      this.$$.readFile(fileUrl)
+        .then(res => {
+          try{
+            if (this.$$.wallet.walletRequirePass(res.info)) {
+              this.walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
+                res.info,
+                this.loginObj.password
+              )
+              let address = this.walletInfo.getChecksumAddressString()
+              this.$$.setToken(this.loginObj.username)
+              this.$$.setCookies(this.$$.config.cookies.address, address)
+              this.$store.commit('storeAddress', address)
+              this.$router.push('/group')
+            } else {
+              this.$message.error('Error')
+            }
+          } catch (e) {
+            console.log(e)
+            this.$message.error(e.toString())
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error(err.error.toString())
+        })
     },
   }
 }

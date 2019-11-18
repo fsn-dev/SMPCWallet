@@ -1,20 +1,19 @@
 import fs from 'fs'
-import wallet from '@/assets/js/wallet'
-import config from '@etc/js/config'
 export default {
   fs,
-  validFile (username) {
+  validFile (username, fileUrl, type) {
     return new Promise((resolve, reject) => {
-      fs.exists(config.file.url, (exists) => {
+      fs.exists(fileUrl, (exists) => {
         if (exists) {
-          fs.readdir(config.file.url + '/', (err, files) => {
+          fs.readdir(fileUrl, (err, files) => {
             if (err) {
               reject({ msg: 'Error', error: err })
             } else {
+              // console.log(files)
               if (files.length > 0) {
                 let _flag = true
                 for (let obj of files) {
-                  if (obj.replace(config.file.type, '') === username) {
+                  if (obj.replace(type, '') === username) {
                     _flag = false
                     break
                   }
@@ -25,34 +24,29 @@ export default {
                   resolve({ msg: 'Success' })
                 }
               } else {
-                resolve({ msg: 'Success' })
+                resolve({ msg: 'Null' })
               }
             }
           })
         } else {
-          fs.mkdir(config.file.url, (err) => {
+          fs.mkdir(fileUrl, (err) => {
             if (err) {
               reject({ msg: 'Error', error: err })
             } else {
-              resolve({ msg: 'Success' })
+              resolve({ msg: 'Null' })
             }
           })
         }
       })
     })
   },
-  readFile (username) {
+  readFile (fileUrl) {
     return new Promise((resolve, reject) => {
-      fs.readFile(config.file.url + '/' + username + config.file.type, (err, res) => {
+      fs.readFile(fileUrl, (err, res) => {
         if (err) {
           reject({ msg: 'Error', error: err })
         } else {
-          if (wallet.walletRequirePass(res.toString())) {
-            // console.log(wallet.walletRequirePass(res.toString()))
-            resolve({ msg: 'Success', info: res.toString() })
-          } else {
-            reject({ msg: 'Error', error: 'Error' })
-          }
+          resolve({ msg: 'Success', info: res.toString() })
         }
       })
     })

@@ -57,8 +57,14 @@ let publicSet = {
    * @description 本地文件存储地址
    */
   file: {
-    url: path + '/data',
-    type: '.json'
+    ks: { // keystore 地址和后缀名
+      url: path + '/data/ks/',
+      type: '.json'
+    },
+    ga: { // keystore 地址和后缀名
+      url: path + '/data/ga/',
+      type: '.json'
+    },
   },
   /**
    * @description 监听页面，超时时间
@@ -89,8 +95,8 @@ let publicSet = {
 // publicSet.appURL = 'http://localhost:8100'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 // publicSet.serverRPC = 'http://192.168.1.104:9012'
-// publicSet.serverRPC = 'http://192.168.1.187:12391'
+publicSet.serverRPC = 'http://192.168.1.187:12391'
 // publicSet.serverRPC = 'http://192.168.1.187:12392'
-publicSet.serverRPC = 'http://192.168.1.187:12393'
+// publicSet.serverRPC = 'http://192.168.1.187:12393'
 // module.exports = publicSet
 export default publicSet

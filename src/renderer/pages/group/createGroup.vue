@@ -57,13 +57,13 @@ export default {
         mode: '3/3',
         eNode: [
           {
-            value: 'enode://d9d6003cd6ee3495e3ad3ff445c514c26919ee83158b9e99a3eb7848517a91352c2a942af0e8bdc6998d90a23ccad6c20ede555961e92f554e81b5de846528b9@127.0.0.1:12341'
+            value: 'enode://5a7e7e449806cb67d412c92cfd3d0ea9cee109f494244c5c4e7cfda00142ae1c4c16f40d104b4b22b62e31827450a708ff281bafaaa58d624e227c81aab65c3c@127.0.0.1:12341'
           },
           {
-            value: 'enode://9ff640ebac7bed2f3d630d00f3b07f2433ee250cd0518b3402d0316757ddb5500698e95b2b2dc35b307798568a13cbb4b5f1737e2ad8efec6a909ddcd09c0306@127.0.0.1:12342'
+            value: 'enode://e84133c51e96cd9d604ccd3627fa0c07262b827390d8a97a516a14193e3b50a9763ef0169a4f198f9ea203e7af66d067d30a7ea15c708cf0c618e709e368a057@127.0.0.1:12342'
           },
           {
-            value: 'enode://c21cd4377dbe6fc3c93bfaa7de101c5339a650921ffab40ffa408abd1d1a67caae54f7b3b0f997735e3401dc5f1b6f60793de88e94bf09c8569f7db3c67849b0@127.0.0.1:12343'
+            value: 'enode://1f9141662d5da3dc8c62dab372db2b682de194a42fe341f4b9ea6e89804129cbdf11a53a882e77c8139390f8ac2a485fcdbc9231ae3f9f130af2552ac7196235@127.0.0.1:12343'
           },
         ],
         name: ''
@@ -89,12 +89,14 @@ export default {
       this.eDialog.pwd = false
     },
     getSignData (data) {
+      console.log(data)
       this.createGroup()
       this.eDialog.pwd = false
     },
     openPwdDialog () {
       try {
-        let nonce = this.$$.getNonce(this.address, 'ALL')
+        // let nonce = this.$$.getNonce(this.address, 'ALL')
+        let nonce = 0
         if (!isNaN(nonce)) {
           this.dataPage = {
             from: this.address,
@@ -108,9 +110,11 @@ export default {
           // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
           console.log(this.dataPage)
         } else {
+          console.log(nonce)
           this.$message.error(nonce)
         }
       } catch (error) {
+        console.log(error)
         this.$message.error(error.toString())
       }
     },
@@ -126,7 +130,8 @@ export default {
       });
     },
     createGroup () {
-      let eNode = this.$$.web3.dcrm.getEnode()
+      // let eNode = this.$$.web3.dcrm.getEnode()
+      let eNode = this.$$.getEnode()
       // let arr = [this.$$.getEnode()]
       let arr = []
       for (let obj of this.groupForm.eNode) {
@@ -138,10 +143,13 @@ export default {
           this.$message({ message: 'Create group success!', type: 'success' })
           this.toUrl('/group')
         } else {
-          this.$message.error(gInfo.Error)
+          console.log(gInfo)
+          let error = gInfo.Error.toString()
+          this.$message.error('123')
         }
       } catch (error) {
         console.log(error)
+        this.$message.error(error)
       }
     },
     resetForm(formName) {

@@ -73,6 +73,23 @@ export default [
     ]
   },
   {
+    path: '/gValid',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '组确认',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/gValid')) )
+      }
+    ]
+  },
+  {
     path: '/group',
     component: Content,
     meta: {
@@ -125,6 +142,40 @@ export default [
     ]
   },
   {
+    path: '/tValid',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '交易',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/tValid')) )
+      }
+    ]
+  },
+  {
+    path: '/tNewsList',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '消息',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/news/tNewsList')) )
+      }
+    ]
+  },
+  {
     path: '/gNewsList',
     component: Content,
     meta: {
@@ -138,23 +189,6 @@ export default [
           notCache: true
         },
         component: resolve => require.ensure([], () => resolve(require('@/pages/news/gNewsList')) )
-      }
-    ]
-  },
-  {
-    path: '/gValid',
-    component: Content,
-    meta: {
-      notCache: true
-    },
-    children: [
-      {
-        path: '/',
-        meta: {
-          title: '组确认',
-          notCache: true
-        },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/group/gValid')) )
       }
     ]
   },

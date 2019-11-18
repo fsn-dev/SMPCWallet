@@ -40,14 +40,18 @@
               <el-popover trigger="hover" :content="$t('BTN').COPY_CLIPBOARD">
                 <div class="address" slot="reference">{{walletAdressTop}}</div>
               </el-popover>
-              <img src="@etc/img/copy2.svg">
+              <!-- <img src="@etc/img/copy2.svg"> -->
+              <i class="el-icon-document"></i>
             </a>
           </li>
-          <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="toUrl('/gNewsList')"><el-badge :is-dot="isHaveNews" class="item"><i class="el-icon-bell"></i></el-badge></a></li>
-          <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="isFaucetModel = true"><img src="@etc/img/faucet.jpg"></a></li>
-          <li :title="'Give me ' + $$.config.initCoin"><a class="setBtn flex-c cursorP" @click="toUrl('createGroup')">+</a></li>
-          <li :title="'Refresh'"><div class="setBtn flex-c cursorP" @click="Refresh"><img src="@etc/img/Refresh.svg"></div></li>
-          <li :title="'Sign out'"><div class="setBtn flex-c cursorP" @click="quitMethod"><img src="@etc/img/Quit.svg"></div></li>
+          <!-- <li><a class="setBtn flex-c cursorP" @click="isFaucetModel = true"><img src="@etc/img/faucet.jpg"></a></li> -->
+          <li><a class="setBtn flex-c cursorP" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :is-dot="isHaveNews" class="item"><i class="el-icon-bell"></i></el-badge></a></li>
+          <li><a class="setBtn flex-c cursorP" @click="toUrl('/gNewsList')" title="共管账户消息"><el-badge :is-dot="isHaveNews" class="item"><i class="el-icon-folder-opened"></i></el-badge></a></li>
+          <li><a class="setBtn flex-c cursorP" @click="toUrl('createGroup')" title="创建共管账户"><i class="el-icon-plus"></i></a></li>
+          <!-- <li :title="'Refresh'"><div class="setBtn flex-c cursorP" @click="Refresh"><img src="@etc/img/Refresh.svg"></div></li> -->
+          <li><div class="setBtn flex-c cursorP" @click="Refresh" title="刷新"><i class="el-icon-refresh-right"></i></div></li>
+          <!-- <li :title="'Sign out'"><div class="setBtn flex-c cursorP" @click="quitMethod"><img src="@etc/img/Quit.svg"></div></li> -->
+          <li><div class="setBtn flex-c cursorP" @click="quitMethod" title="退出"><i class="el-icon-s-unfold"></i></div></li>
           
         </ul>
       </div>
@@ -94,7 +98,6 @@ export default {
       network: this.$$.config.serverRPC,
       networkOPtion: require('@etc/js/config/network').net,
       isRouterAlive: true,
-      childRefresh: true,
       networkVisible: false,
       chainId: '',
       isSelectOrSet: true,
@@ -128,9 +131,9 @@ export default {
   },
   methods: {
     Refresh (data) {
-      this.childRefresh = false
+      this.isRouterAlive = false
 			this.$nextTick(() => {
-				this.childRefresh = true
+				this.isRouterAlive = true
 			})
     },
     reload () {

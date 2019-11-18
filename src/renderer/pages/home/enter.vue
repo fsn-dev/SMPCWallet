@@ -4,7 +4,7 @@
       <h3 class="color_ff center mb-20 font18">Fusion</h3>
       <el-button type="primary" @click="toUrl('login')">{{$t('BTN').LOGIN}}</el-button>
       <el-button type="success" @click="toUrl('register')">{{$t('BTN').REGISTER}}</el-button>
-      <!-- <el-input v-model="test"></el-input> -->
+      <el-input v-model="test"></el-input>
     </div>
   </div>
 </template>
@@ -23,8 +23,8 @@ export default {
   },
   mounted () {
     // console.log(this.$$.web3)
-    // this.test = this.$$.getEnode()
-    // console.log(this.$$.getEnode())
+    this.test = this.$$.getEnode()
+    console.log(this.$$.getEnode())
     // console.log(this.$$.web3.isConnected())
     // let eNode = this.$$.web3.dcrm.getEnode()
     // console.log(JSON.parse(eNode))

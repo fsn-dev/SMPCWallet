@@ -1,7 +1,7 @@
 <template>
   <div class="boxConntent1">
 
-    <div class="g-table-box">
+    <div class="g-table-box" v-if="tableData.length > 0 && gID">
       <el-table :data="tableData" style="width: 100%" empty-text="Null">
         <el-table-column label="币种" width="100">
           <template slot-scope="scope">
@@ -22,11 +22,34 @@
       </el-table>
     </div>
 
+    <div class="flex-c boxConntent1" v-if="tableData.length <= 0 && gID">
+      <el-button type="primary" @click="openPwdDialog">获取共管账户</el-button>
+    </div>
+
+    <div class="flex-c boxConntent1 color_99" v-if="!gID">
+      请选择共管账户
+    </div>
+
     <el-dialog title="人员在线验证" :visible.sync="eDialog.send" width="300" :before-close="modalClick" :close-on-click-modal="false">
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="eDialog.send = false">取 消</el-button>
-        <el-button type="primary" @click="toUrl('sendTxns', sendDataObj)">确 定</el-button>
+      <div>
+        <el-checkbox-group v-model="gMemberSelect" :min="1" class="pl-20">
+          <el-checkbox v-for="(groupID, index) in gMemberInit" :label="groupID" :key="index">
+            <div class="flex-bc">
+              {{$$.cutOut(groupID, 22, 24)}}
+              <span class="color_green flex-bc ml-20" v-if="$$.getEnodeState(groupID).Status === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
+              <span class="color_red flex-bc ml-20" v-if="$$.getEnodeState(groupID).Status !== 'OnLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
+            </div>
+          </el-checkbox>
+        </el-checkbox-group>
       </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">取 消</el-button>
+        <el-button type="primary" @click="toUrl('sendTxns', sendDataObj)" :disabled="gMemberSelect.length <= 0">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
   </div>
 </template>
@@ -38,51 +61,165 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: '',
   data () {
     return {
       eDialog: {
-        send: false
+        send: false,
+        pwd: false
       },
       loading: {
 
       },
+      gMemberInit: [],
+      gMemberSelect: [],
+      dataPage: {},
       sendDataObj: {},
       gID: '',
-      tableData: [ {
-        coinType: 'FSN',
-        address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
-        isERC20: 0,
-        ERC20Coin: 'FSN'
-      }, {
-        coinType: 'BTC',
-        address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
-        isERC20: 0,
-        ERC20Coin: 'BTC'
-      }, {
-        coinType: 'ETH',
-        address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
-        isERC20: 0,
-        ERC20Coin: 'ETH'
-      }, {
-        coinType: 'BNB',
-        address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
-        isERC20: 0,
-        ERC20Coin: 'BNB'
-      }]
+      tableData: [
+        // {
+        //   coinType: 'FSN',
+        //   address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
+        //   isERC20: 0,
+        //   ERC20Coin: 'FSN'
+        // }, {
+        //   coinType: 'BTC',
+        //   address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
+        //   isERC20: 0,
+        //   ERC20Coin: 'BTC'
+        // }, {
+        //   coinType: 'ETH',
+        //   address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
+        //   isERC20: 0,
+        //   ERC20Coin: 'ETH'
+        // }, {
+        //   coinType: 'BNB',
+        //   address: '0x006654AAe27394f0C78d2c642Eb46c28B367bc6F',
+        //   isERC20: 0,
+        //   ERC20Coin: 'BNB'
+        // }
+      ],
+      signTx: ''
+    }
+  },
+  computed: {
+    ...computedPub,
+  },
+  watch: {
+    '$route' (cur) {
+      if (cur.query.gID) {
+        this.gID = this.$route.query.gID
+      } else {
+        this.gID = ''
+      }
+      // this.refreshPage()
     }
   },
   mounted () {
-
+    console.log(this.$route.query)
+    this.gID = this.$route.query.gID
   },
   methods: {
     modalClick () {
       this.eDialog.send = false
+      this.eDialog.pwd = false
+      this.gMemberInit = []
+      this.gMemberSelect = []
     },
-    openReceive (index, itemindex, item) {
-      console.log(index)
-      console.log(item)
+    /**
+     * 初始获取账号
+     */
+    getAccounts () {
+      let fileUrl = this.$$.config.file.ga.url + this.gID + this.$$.config.file.ga.type
+      // console.log(fileUrl)
+      this.$$.readFile(fileUrl)
+        .then(res => {
+
+        })
+    },
+    /**
+     * 初始未获取到手动获取
+     */
+    getSignData (data) {
+      console.log(data)
+      if (data.signTx) {
+        this.signTx = data.signTx
+        this.validGa()
+      } else {
+        this.signTx = ''
+        this.$message.error('Error')
+      }
+    },
+    validGa () {
+      let fileUrl = this.$$.config.file.ga.url
+      console.log(fileUrl)
+      this.$$.validFile(this.gID, fileUrl, this.$$.config.file.ga.type)
+      .then(res => {
+        if (res.msg === 'Repeat') {
+          this.$message.error('账户已存在')
+          this.getAccounts()
+        } else {
+          this.createGaFile()
+        }
+      })
+      .catch(err => {
+        this.$message.error(err.error)
+      })
+    },
+    createGaFile () {
+      let fileUrl = this.$$.config.file.ga.url + this.gID + this.$$.config.file.ga.type
+      let account = this.$$.getAccount(this.signTx, '0')
+      this.$$.fs.writeFile(fileUrl, JSON.stringify(account), (err, res) => {
+        if (err) {
+          this.$message.error(err.toString())
+        } else {
+          this.getAccounts()
+          this.$message({
+            message: '获取成功！',
+            type: 'success'
+          })
+        }
+      })
+    },
+    openPwdDialog () {
+      if (!this.gID) {
+        this.$message.error('请选择公共账户！')
+        return
+      }
+      try {
+        let groupData = this.$$.getGroupObj(this.gID)
+        // console.log(groupData)
+        // let nonce = this.$$.getNonce(this.address, 'ALL')
+        let nonce = 1
+        console.log(this.address)
+        if (!isNaN(nonce)) {
+          this.dataPage = {
+            from: this.address,
+            to: this.$$.config.rawTx.to,
+            gasLimit: this.$$.config.rawTx.gasLimit,
+            gasPrice: this.$$.config.rawTx.gasPrice,
+            nonce: nonce,
+            value: 0,
+            data: 'REQDCRMADDR:' + groupData.Gid + groupData.Mode
+          }
+          this.eDialog.pwd = true
+          // this.dataPage = this.$$.config.rawTx
+          // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
+          console.log(this.dataPage)
+        } else {
+          console.log(nonce)
+          this.$message.error(nonce)
+        }
+      } catch (error) {
+        console.log(error)
+        this.$message.error(error.toString())
+      }
+    },
+    openReceive (index, item) {
+      // console.log(index)
+      // console.log(item)
       this.toUrl('/group/receive', {
         address: item.address,
         coinType: item.coinType,
@@ -91,9 +228,16 @@ export default {
       })
     },
     openSendDialog (index, item) {
-      this.eDialog.send = true
       this.sendDataObj = item
       this.sendDataObj.gID = this.gID
+      let eNode = this.$$.getGroupObj(this.gID).Enodes
+      this.gMemberInit = []
+      for (let obj of eNode) {
+        if (obj !== this.$$.getEnode()) {
+          this.gMemberInit.push(obj)
+        }
+      }
+      this.eDialog.send = true
     },
   }
 }

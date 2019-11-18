@@ -62,21 +62,27 @@ export default {
     inputFileBtn () {
       let username = this.$$.getToken()
       this.loading.wait = true
-      console.log(username)
+      // console.log(username)
       if (!username) {
         this.$message.error('登陆超时，请重新登陆！')
         this.$$.quitApp(this)
         this.sureForm.password = ''
         this.loading.wait = false
       } else {
-        this.$$.readFile(username)
+        let fileUrl = this.$$.config.file.ks.url + username + this.$$.config.file.ks.type
+        this.$$.readFile(fileUrl)
           .then(res => {
             try{
-              let walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
-                res.info,
-                this.sureForm.password
-              )
-              this.toSign(walletInfo.getPrivateKeyString())
+              // console.log(res)
+              if (this.$$.wallet.walletRequirePass(res.info)) {
+                let walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
+                  res.info,
+                  this.sureForm.password
+                )
+                this.toSign(walletInfo.getPrivateKeyString())
+              } else {
+                this.$message.error('Error')
+              }
               // console.log(walletInfo.getPrivateKeyString())
             } catch (e) {
               console.log(e)
@@ -87,18 +93,20 @@ export default {
           .catch(err => {
             console.log(err)
             this.elDialogView()
-            this.$message.error(err.error.toString())
+            this.$message.error(err.toString())
           })
       }
     },
     toSign (pwd) {
-      console.log(this.sendDataPage)
-      this.$$.toSign(this.sendDataPage, pwd, Number(this.$$.getCookies(this.$$.config.cookies.safeMode)))
+      // console.log(this.sendDataPage)
+      let type = Number(this.$$.getCookies(this.$$.config.cookies.safeMode))
+      this.$$.toSign(this.sendDataPage, pwd, type)
         .then(res => {
           this.loading.wait = false
           this.$emit("sendSignData", res)
         })
         .catch(err => {
+          console.log(err)
           this.loading.wait = false
           this.$emit("sendSignData", {error: err})
           this.$message.error(err.toString())
