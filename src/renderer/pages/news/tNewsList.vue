@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container">
+  <div class="boxConntent1 container" v-loading="loading.list" element-loading-text="数据获取中……">
     <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15">
       <el-breadcrumb-item :to="{ path: '/group' }">账户列表</el-breadcrumb-item>
       <el-breadcrumb-item>任务列表</el-breadcrumb-item>
@@ -27,12 +27,25 @@ export default {
       newsList: [
         {Gname: '组一', time: '1573788143592'},
         {Gname: '组2', time: '1573788143592'},
-      ]
+      ],
+      loading: {
+        list: true
+      },
     }
   },
   mounted () {
-    this.newsList = this.$$.getGroup()
-    // console.log(this.newsList)
+    this.initTxnsList()
+  },
+  methods: {
+    initTxnsList () {
+      this.$$.getTxnsList().then(res => {
+        // console.log(res)
+        this.loading.list = false
+      }).catch(err => {
+        this.$message.error(err.error)
+        this.loading.list = false
+      })
+    }
   }
 }
 </script>

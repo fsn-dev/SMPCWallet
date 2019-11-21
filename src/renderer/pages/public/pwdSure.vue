@@ -39,6 +39,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: "pwdSure",
   // props: ["sendDataPage"],
@@ -55,12 +56,15 @@ export default {
       }
     }
   },
+  computed: {
+    ...computedPub
+  },
   mounted () {
     console.log(this.sendDataPage)
   },
   methods: {
     inputFileBtn () {
-      let username = this.$$.getToken()
+      let username = this.token
       this.loading.wait = true
       // console.log(username)
       if (!username) {
@@ -73,7 +77,7 @@ export default {
         this.$$.readFile(fileUrl)
           .then(res => {
             try{
-              // console.log(res)
+              console.log(res)
               if (this.$$.wallet.walletRequirePass(res.info)) {
                 let walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
                   res.info,
@@ -98,8 +102,9 @@ export default {
       }
     },
     toSign (pwd) {
-      // console.log(this.sendDataPage)
-      let type = Number(this.$$.getCookies(this.$$.config.cookies.safeMode))
+      console.log(this.sendDataPage)
+      // let type = Number(this.$$.getCookies(this.$$.config.cookies.safeMode))
+      let type = 1
       this.$$.toSign(this.sendDataPage, pwd, type)
         .then(res => {
           this.loading.wait = false

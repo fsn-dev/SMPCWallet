@@ -1,22 +1,53 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+/**
+ * @description cookies设置
+ */
+import cookies from '@/libs/cookies'
+/**
+ * @description 配置文件
+ */
+import config from '@etc/js/config'
 // import wallet from './store-wallet.js'
 // import exchange from './store-exchange.js'
 Vue.use(Vuex)
-
+console.log(cookies)
 // let langEn = require('@/assets/js/language/en')
 
 const store = new Vuex.Store({
   state: {
     address: '',
+    token: '',
+    safeMode: '',
     coininfoArr: [],
     network: {},
     coinDollarArr: '',
   },
+  modules: {
+    // wallet,
+    // exchange
+  },
   mutations: {
-    storeAddress (state, address) {
-      state.address = address
+    setAddress (state, data) {
+      let info = data.info ? data.info.toString() : ''
+      state.address = info
+      if (!data.type) {
+        cookies.setCookies(config.cookies.address, info)
+      }
+    },
+    setToken (state, data) {
+      let info = data.info ? data.info.toString() : ''
+      state.token = info
+      if (!data.type) {
+        cookies.setCookies(config.cookies.token, info)
+      }
+    },
+    setSafeMode (state, data) {
+      let info = data.info ? data.info.toString() : ''
+      state.safeMode = info
+      if (!data.type) {
+        cookies.setCookies(config.cookies.safeMode, info)
+      }
     },
     storeCoininfoArr (state, data) {
       state.coininfoArr = data
@@ -28,9 +59,28 @@ const store = new Vuex.Store({
       state.coinDollarArr = data
     },
   },
-  modules: {
-    // wallet,
-    // exchange
+  actions: {
+    getAddress ({commit}) {
+      cookies.getCookies(config.cookies.address).then(res => {
+        console.log(res)
+        let data = { type: 1, info: res}
+        commit('setAddress', data)
+      })
+    },
+    getToken ({commit}) {
+      cookies.getCookies(config.cookies.token).then(res => {
+        console.log(res)
+        let data = { type: 1, info: res}
+        commit('setToken', data)
+      })
+    },
+    getSafeMode ({commit}) {
+      cookies.getCookies(config.cookies.safeMode).then(res => {
+        console.log(res)
+        let data = { type: 1, info: res}
+        commit('setSafeMode', data)
+      })
+    },
   }
 })
 

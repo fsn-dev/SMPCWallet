@@ -17,8 +17,8 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="agreeGroup('groupForm')">同意</el-button>
-          <el-button type="danger" @click="refuseGroup('groupForm')">拒绝</el-button>
+          <el-button type="primary" @click="applyGroup('AGREE')" v-if="isApply">同意</el-button>
+          <el-button type="danger" @click="applyGroup('DISAGREE')" v-if="isApply">拒绝</el-button>
           <el-button @click="toUrl('/tNewsList')">返回</el-button>
         </el-form-item>
       </el-form>
@@ -37,14 +37,18 @@ export default {
     return {
       groupForm: {},
       modeArr: this.$$.mode,
+      // initGroupData: {},
+      gID: this.$$.getEnode(),
+      isApply: false
     }
   },
   mounted () {
+    // this.initGroupData = this.$route.query
+    // console.log(this.initGroupData)
     this.showGroupData()
-    // console.log(this.$$.getGroupObj(this.groupForm.gID))
   },
   methods: {
-    showGroupData () {
+    async showGroupData () {
       let urlParams = this.$route.query
       let arr = []
       for (let obj of urlParams.Enodes) {
@@ -58,12 +62,26 @@ export default {
         eNode: arr,
         gID: urlParams.Gid,
       }
+      // console.log(urlParams)
+      // let status = this.$$.getGroupStatus()
+      if (urlParams.Status && urlParams.Status === 'NEW') {
+        this.isApply = true
+      } else {
+        this.isApply = false
+      }
     },
-    agreeGroup () {
-
-    },
-    refuseGroup () {
-
+    async applyGroup (type) {
+      this.$$.validGroup(this.groupForm.name, this.gID, type).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && !res.info.Error) {
+          this.$message({ message: 'Confirm group success!', type: 'success' })
+          this.toUrl('/group')
+        } else {
+          this.$message.error(res.info.Error)
+        }
+      }).catch(err => {
+        this.$message.error(err.error)
+      })
     }
   }
 }

@@ -109,7 +109,10 @@ export default {
       let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
       let fileUrl = this.$$.config.file.ks.url + this.registerObj.username + this.$$.config.file.ks.type
       console.log(fileUrl)
+      // alert(fileUrl)
       this.$$.fs.writeFile(fileUrl, JSON.stringify(walletJSON), (err, res) => {
+        // alert(err)
+        // alert(res)
         if (err) {
           this.$message.error(err.toString())
         } else {

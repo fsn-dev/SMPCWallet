@@ -40,6 +40,7 @@ export default {
         to: '',
         value: ''
       },
+      initTxnsData: {},
       rules: {
         to: [
           { required: true, message: '请输入目标地址', trigger: 'blur' }
@@ -54,8 +55,7 @@ export default {
     ...computedPub,
   },
   mounted () {
-    // console.log(mode)
-    this.$$.getGroup()
+    this.initTxnsData = this.$route.query
   },
   methods: {
     modalClick () {
@@ -74,7 +74,21 @@ export default {
             to: this.$$.config.rawTx.to,
             gasLimit: this.$$.config.rawTx.gasLimit,
             gasPrice: this.$$.config.rawTx.gasPrice,
-            nonce: nonce
+            nonce: nonce,
+            data: 'ACCEPTDCRM:' 
+                  + this.initTxnsData.gID 
+                  + ':' 
+                  + this.initTxnsData.nonce 
+                  + ':' 
+                  + this.initTxnsData.address 
+                  + ':' 
+                  + this.initTxnsData.to 
+                  + ':' 
+                  + this.initTxnsData.value 
+                  + ':' 
+                  + this.initTxnsData.coinType 
+                  + ':' 
+                  + this.initTxnsData.mode
           }
           this.eDialog.pwd = true
           // this.dataPage = this.$$.config.rawTx

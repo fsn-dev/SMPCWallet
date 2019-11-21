@@ -86,9 +86,10 @@ export default {
                 this.loginObj.password
               )
               let address = this.walletInfo.getChecksumAddressString()
-              this.$$.setToken(this.loginObj.username)
-              this.$$.setCookies(this.$$.config.cookies.address, address)
-              this.$store.commit('storeAddress', address)
+              // this.$$.setToken(this.loginObj.username)
+              // this.$$.setCookies(this.$$.config.cookies.address, address)
+              this.$store.commit('setAddress', {info: address})
+              this.$store.commit('setToken', {info: this.loginObj.username})
               this.$router.push('/group')
             } else {
               this.$message.error('Error')

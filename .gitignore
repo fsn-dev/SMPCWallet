@@ -16,3 +16,4 @@ key-house-win32-x64/*
 *.key
 *.log
 test.js
+*.lock

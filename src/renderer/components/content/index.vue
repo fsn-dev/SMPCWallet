@@ -2,7 +2,7 @@
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="headerTop_box flex-bc">
       <div class="logo flex-c">
-        <router-link :to="$$.getToken() ? '/group' : '/'" class="logoImg flex-c">
+        <router-link :to="token ? '/group' : '/'" class="logoImg flex-c">
           <img src="@etc/img/logo.svg" class="logoImgVisibleLg">
           <img src="@etc/img/logoxs.svg" class="logoImgVisibleXs">
         </router-link>
@@ -52,7 +52,6 @@
           <li><div class="setBtn flex-c cursorP" @click="Refresh" title="刷新"><i class="el-icon-refresh-right"></i></div></li>
           <!-- <li :title="'Sign out'"><div class="setBtn flex-c cursorP" @click="quitMethod"><img src="@etc/img/Quit.svg"></div></li> -->
           <li><div class="setBtn flex-c cursorP" @click="quitMethod" title="退出"><i class="el-icon-s-unfold"></i></div></li>
-          
         </ul>
       </div>
     </header>
@@ -85,6 +84,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+// import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
   name: 'index',
   data () {
@@ -106,6 +106,7 @@ export default {
   },
   watch: {
     address (cur, old) {
+      console.log(cur)
       if (cur) {
         this.faucetVal = cur
         this.walletAdressTop = this.$$.cutOut(cur, 6, 5)

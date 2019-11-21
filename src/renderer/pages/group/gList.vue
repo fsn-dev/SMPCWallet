@@ -61,20 +61,14 @@ export default {
   },
   methods: {
     initGroup () {
-      try {
-        this.groupList = this.$$.getGroup()
-      } catch (error) {
+      this.$$.getGroup().then(res => {
+        this.groupList = res.info
+        if (this.$route.query.gID) {
+          this.gID = this.$route.query.gID
+        }
+      }).catch(err => {
         this.$message.error(error.toString())
-      }
-      if (this.$route.query.gID) {
-        this.gID = this.$route.query.gID
-      } else {
-        // this.gID = this.groupList[0].Gid
-      }
-      // this.$router.push({path: this.$route.path, query: this.$route.query })
-      console.log(this.$route)
-      // this.groupList = []
-      console.log(this.groupList)
+      })
     },
     changeGroup (item) {
       console.log(item)

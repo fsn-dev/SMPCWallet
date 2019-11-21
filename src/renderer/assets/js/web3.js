@@ -13,20 +13,20 @@ try {
 web3._extend({
   property: 'dcrm',
   methods: [
-    new web3._extend.Method({
-      name: 'genPubkey',
-      call: 'dcrm_genPubkey',
-      params: 0,
-      inputFormatter: [],
-      outputFormatter: null
-    }),
-    new web3._extend.Method({
-      name: 'sign',
-      call: 'dcrm_sign',
-      params: 2,
-      inputFormatter: [null, null],
-      outputFormatter: null
-    }),
+    // new web3._extend.Method({
+    //   name: 'genPubkey',
+    //   call: 'dcrm_genPubkey',
+    //   params: 0,
+    //   inputFormatter: [],
+    //   outputFormatter: null
+    // }),
+    // new web3._extend.Method({
+    //   name: 'sign',
+    //   call: 'dcrm_sign',
+    //   params: 2,
+    //   inputFormatter: [null, null],
+    //   outputFormatter: null
+    // }),
     new web3._extend.Method({
       name: 'reqDcrmAddr',
       call: 'dcrm_reqDcrmAddr',
@@ -35,8 +35,8 @@ web3._extend({
       outputFormatter: null
     }),
     new web3._extend.Method({
-      name: 'accept',
-      call: 'dcrm_accept',
+      name: 'acceptLockOut',
+      call: 'dcrm_acceptLockOut',
       params: 1,
       inputFormatter: [null],
       outputFormatter: null
@@ -49,26 +49,33 @@ web3._extend({
       outputFormatter: null
     }),
     new web3._extend.Method({
+      name: 'getCurNodeLockOutInfo',
+      call: 'dcrm_getCurNodeLockOutInfo',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
       name: 'getBalance',
       call: 'dcrm_getBalance',
-      params: 2,
-      inputFormatter: [null, null],
+      params: 3,
+      inputFormatter: [null, null, null],
       outputFormatter: null
     }),
     new web3._extend.Method({
       name: 'getNonce',
       call: 'dcrm_getNonce',
-      params: 2,
-      inputFormatter: [null, null],
-      outputFormatter: null
-    }),
-    new web3._extend.Method({
-      name: 'GetReply',
-      call: 'dcrm_GetReply',
       params: 3,
       inputFormatter: [null, null, null],
       outputFormatter: null
     }),
+    // new web3._extend.Method({
+    //   name: 'GetReply',
+    //   call: 'dcrm_GetReply',
+    //   params: 3,
+    //   inputFormatter: [null, null, null],
+    //   outputFormatter: null
+    // }),
     
     new web3._extend.Method({
       name: 'getEnode',
@@ -92,10 +99,24 @@ web3._extend({
       outputFormatter: null
     }),
     new web3._extend.Method({
+      name: 'setGroupNodeStatus',
+      call: 'dcrm_setGroupNodeStatus',
+      params: 3,
+      inputFormatter: [null, null, null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'getGroupNodeStatus',
+      call: 'dcrm_getGroupNodeStatus',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
       name: 'getSDKGroup',
       call: 'dcrm_getSDKGroup',
-      params: 2,
-      inputFormatter: [null, null],
+      params: 1,
+      inputFormatter: [null],
       outputFormatter: null
     }),
   ]

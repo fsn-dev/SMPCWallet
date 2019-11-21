@@ -51,9 +51,12 @@ let $$ = {
   coininfo,
   mode,
   quitApp (that) {
-    that.$$.setToken('')
-    that.$$.setCookies(config.cookies.address, '')
-    that.$store.commit('storeAddress', '')
+    cookies.clearCookies()
+    // that.$$.setToken('')
+    // that.$$.setCookies(config.cookies.address, '')
+    that.$store.commit('setAddress', '')
+    that.$store.commit('setToken', '')
+    that.$store.commit('setSafeMode', '')
     that.$router.push('/')
   }
 }

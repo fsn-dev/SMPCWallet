@@ -1,11 +1,26 @@
+const path = require('path')
 import fs from 'fs'
+
+function mkdirsSync(dirname) {
+  if (fs.existsSync(dirname)) {
+    return true;
+  } else {
+    if (mkdirsSync(path.dirname(dirname))) {
+      fs.mkdirSync(dirname);
+      return true;
+    }
+  }
+}
 export default {
   fs,
   validFile (username, fileUrl, type) {
+    // alert(fileUrl)
     return new Promise((resolve, reject) => {
       fs.exists(fileUrl, (exists) => {
+        // alert(exists)
         if (exists) {
           fs.readdir(fileUrl, (err, files) => {
+            // alert(files)
             if (err) {
               reject({ msg: 'Error', error: err })
             } else {
@@ -29,13 +44,20 @@ export default {
             }
           })
         } else {
-          fs.mkdir(fileUrl, (err) => {
-            if (err) {
-              reject({ msg: 'Error', error: err })
-            } else {
-              resolve({ msg: 'Null' })
-            }
-          })
+          let data = mkdirsSync(fileUrl)
+          // console.log(data)
+          if (data) {
+            resolve({ msg: 'Null' })
+          } else {
+            reject({ msg: 'Error', error: 'Create error!' })
+          }
+          // fs.mkdir(fileUrl, (err) => {
+          //   if (err) {
+          //     reject({ msg: 'Error', error: err })
+          //   } else {
+          //     resolve({ msg: 'Null' })
+          //   }
+          // })
         }
       })
     })

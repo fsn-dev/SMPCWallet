@@ -40,6 +40,7 @@ export default {
         to: '',
         value: ''
       },
+      initTxnsData: {},
       rules: {
         to: [
           { required: true, message: '请输入目标地址', trigger: 'blur' }
@@ -54,27 +55,45 @@ export default {
     ...computedPub,
   },
   mounted () {
-    // console.log(mode)
-    this.$$.getGroup()
+    this.initTxnsData = this.$route.query
+    console.log(this.initTxnsData)
   },
   methods: {
     modalClick () {
       this.eDialog.pwd = false
     },
     getSignData (data) {
-      this.createGroup()
+      console.log(data)
+      // this.createGroup()
+      if (data.signTx) {
+        let hash = this.$$.web3.dcrm.lockOut(data.signTx)
+        console.log(hash)
+      }
       this.eDialog.pwd = false
     },
     openPwdDialog () {
       try {
-        let nonce = this.$$.getNonce(this.address, 'ALL')
+        let nonce = this.$$.getNonce(this.address, this.initTxnsData.ERC20Coin, this.initTxnsData.address)
         if (!isNaN(nonce)) {
           this.dataPage = {
             from: this.address,
             to: this.$$.config.rawTx.to,
             gasLimit: this.$$.config.rawTx.gasLimit,
             gasPrice: this.$$.config.rawTx.gasPrice,
-            nonce: nonce
+            value: 0,
+            nonce: nonce,
+            data: 'LOCKOUT:' 
+                  + this.initTxnsData.address
+                  + ':' 
+                  + this.rawTxData.to
+                  + ':'
+                  + this.rawTxData.value
+                  + ':'
+                  + this.initTxnsData.ERC20Coin
+                  + ':'
+                  + this.initTxnsData.gID
+                  + ':'
+                  + this.initTxnsData.mode
           }
           this.eDialog.pwd = true
           // this.dataPage = this.$$.config.rawTx
@@ -97,25 +116,6 @@ export default {
           return false;
         }
       });
-    },
-    createGroup () {
-      let eNode = this.$$.web3.dcrm.getEnode()
-      // let arr = [this.$$.getEnode()]
-      let arr = []
-      for (let obj of this.rawTxData.eNode) {
-        arr.push(obj.value)
-      }
-      try {
-        let gInfo = this.$$.createGroup(this.rawTxData.name, this.rawTxData.mode, arr)
-        if (gInfo && !gInfo.Error) {
-          this.$message({ message: 'Create group success!', type: 'success' })
-          this.toUrl('/group')
-        } else {
-          this.$message.error(gInfo.Error)
-        }
-      } catch (error) {
-        console.log(error)
-      }
     },
     resetForm(formName) {
       this.rawTxData = {

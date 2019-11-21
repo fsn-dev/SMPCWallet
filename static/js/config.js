@@ -94,9 +94,19 @@ let publicSet = {
 
 // publicSet.appURL = 'http://localhost:8100'
 // publicSet.appURL = 'http://192.168.1.153:7700'
+// publicSet.serverRPC = 'http://192.168.1.104:9010'
+// publicSet.serverRPC = 'http://192.168.1.104:9011'
 // publicSet.serverRPC = 'http://192.168.1.104:9012'
 publicSet.serverRPC = 'http://192.168.1.187:12391'
 // publicSet.serverRPC = 'http://192.168.1.187:12392'
 // publicSet.serverRPC = 'http://192.168.1.187:12393'
 // module.exports = publicSet
 export default publicSet
+
+
+// data: {
+//   code: 0, // 'Success' 'Error' 'Null' 'Repeat' 'Pending'
+//   tip: 'offline',
+//   error: '',
+//   info: ''
+// }

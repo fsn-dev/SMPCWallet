@@ -3,48 +3,161 @@ import web3 from '@/assets/js/web3'
 import Tx from 'ethereumjs-tx'
 export default {
   getEnode () {
-    let eNode = web3.dcrm.getEnode()
-    return JSON.parse(eNode).Enode
+    try {
+      let eNode = web3.dcrm.getEnode()
+      return JSON.parse(eNode).Enode
+    } catch (error) {
+      return error
+    }
   },
   getEnodeState (eNode) {
     let status = web3.dcrm.getEnodeStatus(eNode)
     status = JSON.parse(status)
-    // console.log(status)
     return status
   },
-  getGroup () {
-    let gArr = web3.dcrm.getSDKGroup(this.getEnode(), 'ALL')
-    gArr = gArr && JSON.parse(gArr).Group ? JSON.parse(gArr).Group : []
-    // console.log(gArr)
-    return gArr
-  },
-  getGroupObj (gID) {
-    let obj = {}
-    let gArr = this.getGroup()
-    // console.log(gArr)
-    for (let obj1 of gArr) {
-      if (gID === obj1.Gid) {
-        obj = obj1
-        break
-      }
-    }
-    return obj
-  },
-  createGroup(name, mode, nodeArr) {
-    let gInfo = web3.dcrm.createSDKGroup(name, mode, nodeArr)
-    // console.log(gInfo)
-    gInfo = gInfo && JSON.parse(gInfo) ? JSON.parse(gInfo) : ''
-    return gInfo
+  
+  getNonce (addr, coinType, dcrmAddr) {
+    let nonce = web3.dcrm.getNonce(addr, coinType, dcrmAddr)
+    return nonce
   },
 
-  getAccount (signTx, mode) {
-    let account = web3.dcrm.reqDcrmAddr(signTx, mode)
-    console.log(account)
-    return account
+  async getBalance (addr, coinType, dcrmAddr) {
+    let data = {msg: '', info: ''}
+    try {
+      let balance = web3.dcrm.getBalance(addr, coinType, dcrmAddr)
+      // console.log(coinType)
+      if (isNaN(balance)) {
+        balance = 0
+      }
+      // console.log(balance)
+      data = {msg: 'Success', info: balance}
+    } catch (error) {
+      // console.log()
+      data = {msg: 'Error', error: error}
+    }
+    // console.log(data)
+    return data
   },
-  getNonce (addr, coinType) {
-    let nonce = web3.dcrm.getNonce(addr, coinType)
-    return nonce
+
+  async getPendingGroup () {
+    let eNode = this.getEnode()
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let arr = []
+        let status = web3.dcrm.getGroupNodeStatus(eNode)
+        status = JSON.parse(status)
+        arr = status.GroupList && status.GroupList.length > 0 ? status.GroupList : []
+        console.log(status)
+        data = {msg: 'Success', info: arr}
+        resolve(data)
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async getGroup () {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let gArr = web3.dcrm.getSDKGroup(this.getEnode())
+        // console.log(gArr)
+        gArr = gArr && JSON.parse(gArr).Group ? JSON.parse(gArr).Group : []
+        console.log(gArr)
+        data = {msg: 'Success', info: gArr}
+        resolve(data)
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async getGroupObj (gID) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let obj = {}
+        // let gArr = this.getGroup()
+        let gArr = []
+        this.getGroup().then(res => {
+          gArr = res.info
+          for (let obj1 of gArr) {
+            if (gID === obj1.Gid) {
+              obj = obj1
+              break
+            }
+          }
+          data = {msg: 'Success', info: obj}
+          resolve(data)
+        }).catch(err => {
+          data = err
+          reject(data)
+        })
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async createGroup(name, mode, nodeArr) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let gInfo = web3.dcrm.createSDKGroup(name, mode, nodeArr)
+        gInfo = gInfo && JSON.parse(gInfo) ? JSON.parse(gInfo) : ''
+        console.log(gInfo)
+        data = {msg: 'Success', info: gInfo}
+        resolve(data)
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async validGroup (name, eNode, type) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let cbData = web3.dcrm.setGroupNodeStatus(name, eNode, type)
+        cbData = JSON.parse(cbData)
+        console.log(cbData)
+        data = {msg: 'Success', info: cbData}
+        resolve(data)
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async getAccount (signTx, mode) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let account = web3.dcrm.reqDcrmAddr(signTx, mode)
+        account = JSON.parse(account)
+        console.log(account)
+        data = {msg: 'Success', info: account}
+        resolve(data)
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async getTxnsList () {
+    let eNode = this.getEnode()
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let list = web3.dcrm.getCurNodeLockOutInfo(eNode)
+        data = {msg: 'Success', info: list}
+        resolve(data)
+      } catch (error) {
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
   },
   getBaseInfo (data, coinType) {
     coinType = coinType ? coinType : 'BTC'

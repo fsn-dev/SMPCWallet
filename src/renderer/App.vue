@@ -6,6 +6,7 @@
 
 <script>
 // import {StartPoint} from '@/assets/js/refresh'
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
   name: 'key-house',
   data () {
@@ -20,12 +21,19 @@ export default {
   },
   created () {
     // console.log(StartPoint)
+    this.initData()
     this.StartPoint()
     document.body.onmousemove = () => {
       this.GetXYPosition()
     }
   },
   methods: {
+    ...mapActions(['getToken', 'getAddress', 'getSafeMode']),
+    initData () {
+      this.getToken()
+      this.getAddress()
+      this.getSafeMode()
+    },
     mousePos (e) {
       let x, y
       e = e || window.event
@@ -59,6 +67,7 @@ export default {
     }
   },
   beforeDestroy () {
+    this.$$.quitApp(this)
   }
 }
 </script>

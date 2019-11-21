@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container">
+  <div class="boxConntent1 container" v-loading="loading.creat" element-loading-text="账户建立中……">
     <div class="c-form-box">
       <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top">
         <el-form-item label="账户名" prop="name">
@@ -22,6 +22,10 @@
           <div class="flex-bc">
             <el-input v-model="eNode.value"></el-input>
             <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button>
+          </div>
+          <div class="flex-sc">
+            <span class="color_green" v-if="eNode.value && $$.getEnodeState(eNode.value).Status === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
+            <span class="color_red" v-if="eNode.value && $$.getEnodeState(eNode.value).Status !== 'OnLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
           </div>
         </el-form-item>
         <el-form-item>
@@ -52,18 +56,21 @@ export default {
       eDialog: {
         pwd: false
       },
+      loading: {
+        creat: false
+      },
       dataPage: {},
       groupForm: {
         mode: '3/3',
         eNode: [
           {
-            value: 'enode://5a7e7e449806cb67d412c92cfd3d0ea9cee109f494244c5c4e7cfda00142ae1c4c16f40d104b4b22b62e31827450a708ff281bafaaa58d624e227c81aab65c3c@127.0.0.1:12341'
+            value: this.$$.getEnode()
           },
           {
-            value: 'enode://e84133c51e96cd9d604ccd3627fa0c07262b827390d8a97a516a14193e3b50a9763ef0169a4f198f9ea203e7af66d067d30a7ea15c708cf0c618e709e368a057@127.0.0.1:12342'
+            value: 'enode://0129d164529f8806aa584cea39bbc2465f30dfbe3f223f80f9d489f77f8adddcb8e2f93abd7dd58f74bf4e16b1946960ce8187dc7e0931177eb8fdd2835c7f14@127.0.0.1:12342'
           },
           {
-            value: 'enode://1f9141662d5da3dc8c62dab372db2b682de194a42fe341f4b9ea6e89804129cbdf11a53a882e77c8139390f8ac2a485fcdbc9231ae3f9f130af2552ac7196235@127.0.0.1:12343'
+            value: 'enode://2c33f740deea9110359741f3da41612a81c156e7e19cc1e805d274642ad07f85226aa1741ea629978e0b9d9c3b86d6cc8b6b5ffc065392a9a1a28aa65a36175a@127.0.0.1:12343'
           },
         ],
         name: ''
@@ -81,8 +88,6 @@ export default {
     ...computedPub,
   },
   mounted () {
-    // console.log(mode)
-    this.$$.getGroup()
   },
   methods: {
     modalClick () {
@@ -90,8 +95,9 @@ export default {
     },
     getSignData (data) {
       console.log(data)
+      this.modalClick()
+      this.loading.creat = true
       this.createGroup()
-      this.eDialog.pwd = false
     },
     openPwdDialog () {
       try {
@@ -106,8 +112,6 @@ export default {
             nonce: nonce
           }
           this.eDialog.pwd = true
-          // this.dataPage = this.$$.config.rawTx
-          // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
           console.log(this.dataPage)
         } else {
           console.log(nonce)
@@ -121,7 +125,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // this.createGroup()
           this.openPwdDialog()
         } else {
           console.log('error submit!!');
@@ -129,28 +132,27 @@ export default {
         }
       });
     },
-    createGroup () {
-      // let eNode = this.$$.web3.dcrm.getEnode()
+    async createGroup () {
       let eNode = this.$$.getEnode()
-      // let arr = [this.$$.getEnode()]
       let arr = []
       for (let obj of this.groupForm.eNode) {
         arr.push(obj.value)
       }
-      try {
-        let gInfo = this.$$.createGroup(this.groupForm.name, this.groupForm.mode, arr)
+      this.$$.createGroup(this.groupForm.name, this.groupForm.mode, arr).then(res => {
+        let gInfo = res.info
+        console.log(gInfo)
         if (gInfo && !gInfo.Error) {
           this.$message({ message: 'Create group success!', type: 'success' })
           this.toUrl('/group')
         } else {
-          console.log(gInfo)
           let error = gInfo.Error.toString()
-          this.$message.error('123')
+          this.$message.error(error)
         }
-      } catch (error) {
-        console.log(error)
+        this.loading.creat = false
+      }).catch(err => {
         this.$message.error(error)
-      }
+        this.loading.creat = false
+      })
     },
     resetForm(formName) {
       this.groupForm = {

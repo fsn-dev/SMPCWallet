@@ -2,7 +2,7 @@
   <div class="boxContent">
     <header class="headerTop_box flex-bc">
       <div class="logo flex-c">
-        <router-link :to="$$.getToken() ? '/myAssets' : '/'" class="logoImg flex-c">
+        <router-link :to="token ? '/myAssets' : '/'" class="logoImg flex-c">
           <img src="@etc/img/logo.svg" class="logoImgVisibleLg">
           <img src="@etc/img/logoxs.svg" class="logoImgVisibleXs">
         </router-link>
