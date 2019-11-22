@@ -9,8 +9,8 @@
           <el-input type="number" v-model="rawTxData.value" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('rawTxData')">同意</el-button>
-          <el-button @click="resetForm('rawTxData')">拒绝</el-button>
+          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')">同意</el-button>
+          <el-button @click="submitForm('rawTxData', 'DISAGREE')">拒绝</el-button>
           <el-button @click="toUrl('/tNewsList')">返回</el-button>
         </el-form-item>
       </el-form>
@@ -56,16 +56,24 @@ export default {
   },
   mounted () {
     this.initTxnsData = this.$route.query
+    this.rawTxData = {
+      to: this.initTxnsData.DcrmTo,
+      value: this.initTxnsData.Value 
+    }
+    console.log(this.initTxnsData)
   },
   methods: {
     modalClick () {
       this.eDialog.pwd = false
     },
     getSignData (data) {
-      this.createGroup()
+      // this.createGroup()
+      if (data && data.signTx) {
+        this.$$.sendTxnsValid(data.signTx)
+      }
       this.eDialog.pwd = false
     },
-    openPwdDialog () {
+    openPwdDialog (type) {
       try {
         let nonce = this.$$.getNonce(this.address, 'ALL')
         if (!isNaN(nonce)) {
@@ -76,19 +84,21 @@ export default {
             gasPrice: this.$$.config.rawTx.gasPrice,
             nonce: nonce,
             data: 'ACCEPTDCRM:' 
-                  + this.initTxnsData.gID 
+                  + this.initTxnsData.GroupId 
                   + ':' 
-                  + this.initTxnsData.nonce 
+                  + this.initTxnsData.Nonce 
                   + ':' 
-                  + this.initTxnsData.address 
+                  + this.initTxnsData.DcrmFrom 
                   + ':' 
-                  + this.initTxnsData.to 
+                  + this.initTxnsData.DcrmTo 
                   + ':' 
-                  + this.initTxnsData.value 
+                  + this.initTxnsData.Value 
                   + ':' 
-                  + this.initTxnsData.coinType 
+                  + this.initTxnsData.Cointype 
                   + ':' 
-                  + this.initTxnsData.mode
+                  + this.initTxnsData.LimitNum
+                  + ':' 
+                  + type
           }
           this.eDialog.pwd = true
           // this.dataPage = this.$$.config.rawTx
@@ -101,36 +111,36 @@ export default {
         this.$message.error(error.toString())
       }
     },
-    submitForm(formName) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // this.createGroup()
-          this.openPwdDialog()
+          this.openPwdDialog(type)
         } else {
           console.log('error submit!!');
           return false;
         }
       });
     },
-    createGroup () {
-      let eNode = this.$$.web3.dcrm.getEnode()
-      // let arr = [this.$$.getEnode()]
-      let arr = []
-      for (let obj of this.rawTxData.eNode) {
-        arr.push(obj.value)
-      }
-      try {
-        let gInfo = this.$$.createGroup(this.rawTxData.name, this.rawTxData.mode, arr)
-        if (gInfo && !gInfo.Error) {
-          this.$message({ message: 'Create group success!', type: 'success' })
-          this.toUrl('/group')
-        } else {
-          this.$message.error(gInfo.Error)
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
+    // createGroup () {
+    //   let eNode = this.$$.web3.dcrm.getEnode()
+    //   // let arr = [this.$$.getEnode()]
+    //   let arr = []
+    //   for (let obj of this.rawTxData.eNode) {
+    //     arr.push(obj.value)
+    //   }
+    //   try {
+    //     let gInfo = this.$$.createGroup(this.rawTxData.name, this.rawTxData.mode, arr)
+    //     if (gInfo && !gInfo.Error) {
+    //       this.$message({ message: 'Create group success!', type: 'success' })
+    //       this.toUrl('/group')
+    //     } else {
+    //       this.$message.error(gInfo.Error)
+    //     }
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
     resetForm(formName) {
       this.rawTxData = {
         to: '',

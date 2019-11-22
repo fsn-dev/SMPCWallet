@@ -11,7 +11,7 @@ import config from '@etc/js/config'
 // import wallet from './store-wallet.js'
 // import exchange from './store-exchange.js'
 Vue.use(Vuex)
-console.log(cookies)
+// console.log(cookies)
 // let langEn = require('@/assets/js/language/en')
 
 const store = new Vuex.Store({
@@ -19,9 +19,9 @@ const store = new Vuex.Store({
     address: '',
     token: '',
     safeMode: '',
-    coininfoArr: [],
-    network: {},
-    coinDollarArr: '',
+    // coininfoArr: [],
+    // network: {},
+    // coinDollarArr: '',
   },
   modules: {
     // wallet,
@@ -62,21 +62,21 @@ const store = new Vuex.Store({
   actions: {
     getAddress ({commit}) {
       cookies.getCookies(config.cookies.address).then(res => {
-        console.log(res)
+        // console.log(res)
         let data = { type: 1, info: res}
         commit('setAddress', data)
       })
     },
     getToken ({commit}) {
       cookies.getCookies(config.cookies.token).then(res => {
-        console.log(res)
+        // console.log(res)
         let data = { type: 1, info: res}
         commit('setToken', data)
       })
     },
     getSafeMode ({commit}) {
       cookies.getCookies(config.cookies.safeMode).then(res => {
-        console.log(res)
+        // console.log(res)
         let data = { type: 1, info: res}
         commit('setSafeMode', data)
       })

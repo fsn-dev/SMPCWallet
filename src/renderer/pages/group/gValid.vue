@@ -38,7 +38,7 @@ export default {
       groupForm: {},
       modeArr: this.$$.mode,
       // initGroupData: {},
-      gID: this.$$.getEnode(),
+      gID: this.$$.eNode,
       isApply: false
     }
   },

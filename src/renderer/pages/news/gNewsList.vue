@@ -39,6 +39,7 @@ export default {
         this.newsList = res.info
         this.loading.list = false
       }).catch(err => {
+        this.newsList = []
         this.$message.error(err.error)
         this.loading.list = false
       })

@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container">
+  <div class="boxConntent1 container bgff">
     <!-- <div class="receiveContent_box">
     </div> -->
     <div class="receiveAddress_box">

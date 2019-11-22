@@ -1,7 +1,8 @@
 // const Main = resolve => require.ensure([], () => resolve(require('@/components/main/index')) )
 const Bg = resolve => require.ensure([], () => resolve(require('@/components/bg/index')) )
 const Content = resolve => require.ensure([], () => resolve(require('@/components/content/index')) )
-
+const Account = resolve => require.ensure([], () => resolve(require('@/components/account/index')) )
+const Receive = resolve => require.ensure([], () => resolve(require('@/components/account/receive')) )
 
 export default [
   {
@@ -90,6 +91,41 @@ export default [
     ]
   },
   {
+    path: '/person',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '个人账户',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/person/index')) ),
+        children: [
+          {
+            path: '/',
+            meta: {
+              title: '个人账户',
+              notCache: true
+            },
+            component: Account,
+          },
+          {
+            path: '/person/receive',
+            meta: {
+              title: '接收',
+              notCache: true
+            },
+            component: Receive
+          },
+        ]
+      }
+    ]
+  },
+  {
     path: '/group',
     component: Content,
     meta: {
@@ -99,7 +135,7 @@ export default [
       {
         path: '/',
         meta: {
-          title: '组',
+          title: '共管账户',
           notCache: true
         },
         component: resolve => require.ensure([], () => resolve(require('@/pages/group/index')) ),
@@ -107,18 +143,18 @@ export default [
           {
             path: '/',
             meta: {
-              title: '组',
+              title: '共管账户',
               notCache: true
             },
-            component: resolve => require.ensure([], () => resolve(require('@/pages/group/gDtil')) )
+            component: Account
           },
           {
             path: '/group/receive',
             meta: {
-              title: '组',
+              title: '接收',
               notCache: true
             },
-            component: resolve => require.ensure([], () => resolve(require('@/pages/group/receive')) )
+            component: Receive
           },
         ]
       },

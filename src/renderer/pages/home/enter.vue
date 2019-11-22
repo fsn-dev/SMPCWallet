@@ -29,7 +29,7 @@ export default {
     ...computedPub
   },
   mounted () {
-    this.test = this.$$.getEnode()
+    this.test = this.$$.eNode
   },
   methods: {
     // test0 () {

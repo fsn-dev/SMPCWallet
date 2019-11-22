@@ -73,7 +73,7 @@ export default {
     changeGroup (item) {
       console.log(item)
       this.gID = item.Gid
-      this.toUrl('/group', {gID: item.Gid})
+      this.toUrl('/group', {gID: item.Gid, mode: item.Mode})
     }
   }
 }

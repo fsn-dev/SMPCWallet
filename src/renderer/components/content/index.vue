@@ -7,7 +7,7 @@
           <img src="@etc/img/logoxs.svg" class="logoImgVisibleXs">
         </router-link>
       </div>
-      <div id="topSearchView" v-if="isSelectOrSet">
+      <!-- <div id="topSearchView" v-if="isSelectOrSet">
         <div class="flex-ec">
           <div class="headerTop_langBox">
             <el-select v-model="language" size="mini" @change="changLanguage">
@@ -26,8 +26,12 @@
             </el-select>
           </div>
         </div>
+      </div> -->
+      <div class="flex-c headerTop_account">
+        <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">个人账户</p>
+        <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">共管账户</p>
       </div>
-      <div class="headerTop_setBox flex-ec" id="topSetView" v-if="!isSelectOrSet">
+      <div class="headerTop_setBox flex-ec" id="topSetView">
         <div class="headerTop_langBox">
           <el-select v-model="language" size="mini" @change="changLanguage">
             <el-option v-for="item in languageOption" :key="item.value" :label="item.label" :value="item.value" >
@@ -44,13 +48,10 @@
               <i class="el-icon-document"></i>
             </a>
           </li>
-          <!-- <li><a class="setBtn flex-c cursorP" @click="isFaucetModel = true"><img src="@etc/img/faucet.jpg"></a></li> -->
-          <li><a class="setBtn flex-c cursorP" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :is-dot="isHaveNews" class="item"><i class="el-icon-bell"></i></el-badge></a></li>
-          <li><a class="setBtn flex-c cursorP" @click="toUrl('/gNewsList')" title="共管账户消息"><el-badge :is-dot="isHaveNews" class="item"><i class="el-icon-folder-opened"></i></el-badge></a></li>
+          <li><a class="setBtn flex-c cursorP" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :is-dot="news.t" class="item"><i class="el-icon-bell"></i></el-badge></a></li>
+          <li><a class="setBtn flex-c cursorP" @click="toUrl('/gNewsList')" title="共管账户消息"><el-badge :is-dot="news.g" class="item"><i class="el-icon-folder-opened"></i></el-badge></a></li>
           <li><a class="setBtn flex-c cursorP" @click="toUrl('createGroup')" title="创建共管账户"><i class="el-icon-plus"></i></a></li>
-          <!-- <li :title="'Refresh'"><div class="setBtn flex-c cursorP" @click="Refresh"><img src="@etc/img/Refresh.svg"></div></li> -->
           <li><div class="setBtn flex-c cursorP" @click="Refresh" title="刷新"><i class="el-icon-refresh-right"></i></div></li>
-          <!-- <li :title="'Sign out'"><div class="setBtn flex-c cursorP" @click="quitMethod"><img src="@etc/img/Quit.svg"></div></li> -->
           <li><div class="setBtn flex-c cursorP" @click="quitMethod" title="退出"><i class="el-icon-s-unfold"></i></div></li>
         </ul>
       </div>
@@ -64,22 +65,20 @@
       </transition>
     </section>
 
-    <el-dialog :title="$t('TITLE').CUSTOM_NODE" :visible.sync="networkVisible" :close-on-click-modal="false" width="30%" center>
-      <el-input placeholder="HTTPS://" v-model="network" clearable> </el-input>
-      <div class="H20"></div>
-      <el-input placeholder="chainId" v-model="chainId" clearable> </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelCustomNet">{{$t('BTN').CANCEL}}</el-button>
-        <el-button type="primary" @click="customNet">{{$t('BTN').CONFIRM}}</el-button>
-      </span>
-    </el-dialog>
-
     <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
   </div>
 </template>
 
-<style>
-
+<style lang="scss">
+.headerTop_account {
+  font-size: 14px;
+  .item {
+    padding: 0 10px;cursor: pointer;
+    &.active {
+      background: #0099ff;color:#fff;border-radius: 5px;
+    }
+  }
+}
 </style>
 
 <script>
@@ -95,24 +94,19 @@ export default {
         {value: 'en-US', label: 'English'},
         {value: 'zh-CN', label: '中文简体'}
       ],
-      network: this.$$.config.serverRPC,
-      networkOPtion: require('@etc/js/config/network').net,
       isRouterAlive: true,
-      networkVisible: false,
-      chainId: '',
-      isSelectOrSet: true,
-      isHaveNews: false
+      news: {
+        g: false,
+        t: false
+      },
+      intervalSwitch: ''
     }
   },
   watch: {
     address (cur, old) {
       console.log(cur)
       if (cur) {
-        this.faucetVal = cur
         this.walletAdressTop = this.$$.cutOut(cur, 6, 5)
-        this.isSelectOrSet = false
-      } else {
-        this.isSelectOrSet = true
       }
     }
   },
@@ -121,16 +115,36 @@ export default {
   },
   mounted () {
     if (this.address) {
-      this.faucetVal = this.address
-      
       this.walletAdressTop = this.$$.cutOut(this.address, 6, 5)
-      this.isSelectOrSet = false
-    } else {
-      this.isSelectOrSet = true
     }
-    this.setNetwort(this.network)
+    this.intervalNews()
+    this.intervalSwitch = setInterval(() => {
+      this.intervalNews()
+    }, 1000 * 5)
   },
   methods: {
+    intervalNews () {
+      this.$$.getPendingGroup().then(res => {
+        if (res.info.length > 0) {
+          this.news.g = true
+        } else {
+          this.news.g = false
+        }
+      }).catch(err => {
+        console.log(err)
+        this.news.g = false
+      })
+      this.$$.getTxnsList().then(res => {
+        if (res.info.length > 0) {
+          this.news.t = true
+        } else {
+          this.news.t = false
+        }
+      }).catch(err => {
+        console.log(err)
+        this.news.t = false
+      })
+    },
     Refresh (data) {
       this.isRouterAlive = false
 			this.$nextTick(() => {
@@ -143,48 +157,13 @@ export default {
 				this.isRouterAlive = true
 			})
     },
-    customNet () {
-      if (!this.network) {
-        this.$message({
-          message: 'The URL cannot be null',
-          type: 'warning'
-        })
-        return
-      }
-      this.$store.commit("storeNetwork", {
-        name: "Custom",
-        url: this.network,
-        chainId: this.chainId
-      })
-      this.$message({
-        message: 'Success',
-        type: 'success'
-      })
-      this.networkVisible = false
-    },
-    cancelCustomNet () {
-      this.networkVisible = false
-      this.network = this.$$.config.serverRPC
-      this.setNetwort(this.network)
-    },
-    changNetwork() {
-      if (this.network === "https://") {
-        this.networkVisible = true
-      } else if (this.network === "offLine") {
-        this.$$.setCookies(this.$$.config.cookies.safeMode, 1)
+    changeMode (type) {
+      if (Number(type)) {
+        this.toUrl('/person')
       } else {
-        this.setNetwort(this.network)
+        this.toUrl('/group')
       }
-    },
-    setNetwort (val) {
-      let _net = this.networkOPtion
-      for (let i = 0; i < _net.length; i++) {
-        if (_net[i].url === val) {
-          this.$store.commit("storeNetwork", _net[i])
-          break
-        }
-      }
-      // console.log(web3.isConnected())
+      this.$store.commit('setSafeMode', {info: type})
     },
     copyAddress (id, textId) {
       document.getElementById(id).select()
@@ -203,17 +182,13 @@ export default {
       // this.changeLang(this.language)
       this.reload()
     },
-    tobackupWallet () {
-      this.$router.push({
-        path: '/importWallet',
-        query: {
-          isBackup: true
-        }
-      })
-    },
     quitMethod () {
       this.$$.quitApp(this)
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.intervalSwitch)
+    this.intervalSwitch = null
   }
 }
 

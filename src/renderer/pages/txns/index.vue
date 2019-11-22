@@ -64,6 +64,7 @@ export default {
     },
     getSignData (data) {
       console.log(data)
+      console.log(data.signTx)
       // this.createGroup()
       if (data.signTx) {
         let hash = this.$$.web3.dcrm.lockOut(data.signTx)
@@ -73,14 +74,14 @@ export default {
     },
     openPwdDialog () {
       try {
-        let nonce = this.$$.getNonce(this.address, this.initTxnsData.ERC20Coin, this.initTxnsData.address)
+        let nonce = this.$$.getNonce(this.address, this.initTxnsData.coinType, this.initTxnsData.address)
         if (!isNaN(nonce)) {
           this.dataPage = {
             from: this.address,
             to: this.$$.config.rawTx.to,
             gasLimit: this.$$.config.rawTx.gasLimit,
             gasPrice: this.$$.config.rawTx.gasPrice,
-            value: 0,
+            value: this.rawTxData.value,
             nonce: nonce,
             data: 'LOCKOUT:' 
                   + this.initTxnsData.address
@@ -89,7 +90,7 @@ export default {
                   + ':'
                   + this.rawTxData.value
                   + ':'
-                  + this.initTxnsData.ERC20Coin
+                  + this.initTxnsData.coinType
                   + ':'
                   + this.initTxnsData.gID
                   + ':'

@@ -1,53 +1,108 @@
 import web3 from '@/assets/js/web3'
 // const Tx = require("ethereumjs-tx")
 import Tx from 'ethereumjs-tx'
+
+let getEnode = () => {
+  try {
+    let data = web3.dcrm.getEnode()
+    data = JSON.parse(data)
+    console.log(data)
+    if (data.Status === "Success") {
+      return data.Data.Enode
+    } else {
+      console.log(data.Error)
+      setTimeout(() => {
+        getEnode()
+      }, 1000 * 3)
+      // return data.Error
+    }
+  } catch (error) {
+    console.log(error)
+    setTimeout(() => {
+      getEnode()
+    }, 1000 * 3)
+    // return error
+  }
+}
+let eNode = getEnode()
+
 export default {
-  getEnode () {
-    try {
-      let eNode = web3.dcrm.getEnode()
-      return JSON.parse(eNode).Enode
-    } catch (error) {
-      return error
-    }
-  },
+  eNode: eNode,
   getEnodeState (eNode) {
-    let status = web3.dcrm.getEnodeStatus(eNode)
-    status = JSON.parse(status)
-    return status
-  },
-  
-  getNonce (addr, coinType, dcrmAddr) {
-    let nonce = web3.dcrm.getNonce(addr, coinType, dcrmAddr)
-    return nonce
-  },
-
-  async getBalance (addr, coinType, dcrmAddr) {
-    let data = {msg: '', info: ''}
     try {
-      let balance = web3.dcrm.getBalance(addr, coinType, dcrmAddr)
-      // console.log(coinType)
-      if (isNaN(balance)) {
-        balance = 0
+      let data = web3.dcrm.getEnodeStatus(eNode)
+      data = JSON.parse(data)
+      console.log(data)
+      if (data.Status === 'Success') {
+        return 'OnLine'
+      } else {
+        return 'OffLine'
       }
-      // console.log(balance)
-      data = {msg: 'Success', info: balance}
     } catch (error) {
-      // console.log()
-      data = {msg: 'Error', error: error}
+      console.log(error)
+      return 'OffLine'
     }
-    // console.log(data)
-    return data
+  },
+  getNonce (addr, coinType, dcrmAddr) {
+    try {
+      let nonce = web3.dcrm.getNonce(addr, coinType, dcrmAddr)
+      console.log(nonce)
+      if (nonce.Status !== 'Error') {
+        nonce = nonce.Data.result
+      } else {
+        nonce = 0
+      }
+      return nonce
+    } catch (error) {
+      console.log(error)
+      return 0
+    }
   },
 
+  async getBalance (addr, coinObj) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      let batch = web3.createBatch()
+      for (let obj in coinObj) {
+        batch.add(web3.dcrm.getBalance.request(addr, obj, coinObj[obj]))
+      }
+      batch.requestManager.sendBatch(batch.requests, (err, res) => {
+        if (err) {
+          data = {msg: 'Error', error: err}
+          reject(data)
+        } else {
+          let i = 0
+          let arr = []
+          for (let obj in coinObj) {
+            let balance = res[i].result ? res[i].result : 0
+            if (balance && (balance.Status === 'Error' || isNaN(balance.Data.result)) ) {
+              balance = 0
+            } else {
+              balance = balance.Data.result
+            }
+            arr.push({
+              coinType: obj,
+              address: coinObj[obj],
+              balance: balance
+            })
+          }
+          data = {msg: 'Success', info: arr}
+          resolve(data)
+        }
+      })
+    })
+  },
   async getPendingGroup () {
-    let eNode = this.getEnode()
+    // let eNode = this.getEnode()
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let arr = []
         let status = web3.dcrm.getGroupNodeStatus(eNode)
         status = JSON.parse(status)
-        arr = status.GroupList && status.GroupList.length > 0 ? status.GroupList : []
+        if (status.Status !== 'Error') {
+          arr = status.Data.GroupList && status.Data.GroupList.length > 0 ? status.Data.GroupList : []
+        }
         console.log(status)
         data = {msg: 'Success', info: arr}
         resolve(data)
@@ -57,17 +112,45 @@ export default {
       }
     })
   },
-  async getGroup () {
+  async getGroupPerson () {
+    // let eNode = this.getEnode()
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let gArr = web3.dcrm.getSDKGroup(this.getEnode())
-        // console.log(gArr)
-        gArr = gArr && JSON.parse(gArr).Group ? JSON.parse(gArr).Group : []
+        let gArr = web3.dcrm.getSDKGroupPerson(eNode)
+        gArr = JSON.parse(gArr)
         console.log(gArr)
-        data = {msg: 'Success', info: gArr}
-        resolve(data)
+        if (gArr.Status !== 'Error') {
+          data = {msg: 'Success', info: gArr.Data.GroupList[0]}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: gArr.Tip}
+          reject(data)
+        }
       } catch (error) {
+        console.log(error)
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async getGroup () {
+    // let eNode = this.getEnode()
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let gArr = web3.dcrm.getSDKGroup(eNode)
+        gArr = JSON.parse(gArr)
+        console.log(gArr)
+        if (gArr.Status !== 'Error') {
+          data = {msg: 'Success', info: gArr.Data.GroupList}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: gArr.Tip}
+          reject(data)
+        }
+      } catch (error) {
+        console.log(error)
         data = {msg: 'Error', error: error}
         reject(data)
       }
@@ -95,6 +178,7 @@ export default {
           reject(data)
         })
       } catch (error) {
+        console.log(error)
         data = {msg: 'Error', error: error}
         reject(data)
       }
@@ -107,9 +191,15 @@ export default {
         let gInfo = web3.dcrm.createSDKGroup(name, mode, nodeArr)
         gInfo = gInfo && JSON.parse(gInfo) ? JSON.parse(gInfo) : ''
         console.log(gInfo)
-        data = {msg: 'Success', info: gInfo}
-        resolve(data)
+        if (gInfo.Status !== 'Error') {
+          data = {msg: 'Success', info: gInfo.data}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: gInfo.Tip}
+          reject(data)
+        }
       } catch (error) {
+        console.log(error)
         data = {msg: 'Error', error: error}
         reject(data)
       }
@@ -122,9 +212,15 @@ export default {
         let cbData = web3.dcrm.setGroupNodeStatus(name, eNode, type)
         cbData = JSON.parse(cbData)
         console.log(cbData)
-        data = {msg: 'Success', info: cbData}
-        resolve(data)
+        if (cbData.Status !== 'Error') {
+          data = {msg: 'Success', info: cbData.Data}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: cbData.Tip}
+          reject(data)
+        }
       } catch (error) {
+        console.log(error)
         data = {msg: 'Error', error: error}
         reject(data)
       }
@@ -135,64 +231,61 @@ export default {
     return new Promise((resolve, reject) => {
       try {
         let account = web3.dcrm.reqDcrmAddr(signTx, mode)
-        account = JSON.parse(account)
-        console.log(account)
-        data = {msg: 'Success', info: account}
-        resolve(data)
+        if (account.Status !== 'Error') {
+          let obj = JSON.parse(account.Data.result)
+          console.log(obj)
+          data = {msg: 'Success', info: obj}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: cbData.Tip}
+          reject(data)
+        }
       } catch (error) {
-        data = {msg: 'Error', error: error}
+        console.log(error)
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
   },
   async getTxnsList () {
-    let eNode = this.getEnode()
+    // let eNode = this.getEnode()
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
+        let arr = []
         let list = web3.dcrm.getCurNodeLockOutInfo(eNode)
-        data = {msg: 'Success', info: list}
-        resolve(data)
+        if (list.Status !== 'Error') {
+          list = list.Data
+          // console.log(list)
+          for (let obj in list) {
+            let obj1 = list[obj]
+            obj1 = JSON.parse(obj1)
+            // console.log(obj1)
+            // console.log(JSON.parse(obj1))
+            arr.push(obj1)
+          }
+          data = {msg: 'Success', info: arr}
+          resolve(data)
+        }
       } catch (error) {
+        console.log(error)
         data = {msg: 'Error', error: error}
         reject(data)
       }
     })
   },
-  getBaseInfo (data, coinType) {
-    coinType = coinType ? coinType : 'BTC'
-    return new Promise((resolve, reject) => {
-      let batch = web3.createBatch()
-      batch.add(web3.eth.getGasPrice.request())
-      batch.add(web3.eth.estimateGas.request({to: data.to}))
-      // batch.add(web3.eth.getTransactionCount.request(data.from, 'pending'))
-      batch.add(web3.dcrm.getNonce.request(data.from, coinType))
-      batch.requestManager.sendBatch(batch.requests, (err, res) => {
-        if (err) {
-          reject(err.toString())
-        } else {
-          // console.log(res)
-          if (res[0].result || Number(res[0].result) === 0) {
-            data.gasPrice = parseInt(res[0].result)
-          } else {
-            data.gasPrice = 8000000
-          }
-          if (res[1].result || Number(res[1].result) === 0) {
-            data.gasLimit = parseInt(res[1].result)
-          } else {
-            data.gasLimit = 800000
-          }
-          if ((res[2].result || Number(res[2].result) === 0) && !isNaN(res[2].result)) {
-            data.nonce = parseInt(res[2].result)
-          } else {
-            data.nonce = 0
-          }
-          resolve(data)
-        }
-      })
-    })
+  sendTxnsValid (signTx) {
+    let data = {msg: '', info: ''}
+    try {
+      let cb = web3.dcrm.acceptLockOut(signTx)
+      console.log(cb)
+      data = {msg: 'Success', info: cb}
+    } catch (error) {
+      data = {msg: 'Error', error: error}
+    }
+    return data
   },
-  toSign (data, pwd, type) {
+  toSign (data, pwd) {
     pwd = pwd.indexOf("0x") === 0 ? pwd.substr(2) : pwd
     pwd = new Buffer(pwd, "hex")
     // console.log(data)
@@ -205,45 +298,13 @@ export default {
       value: Number(data.value),
       data: data.data ? data.data : ''
     }
-    if (type) {
-      return new Promise((resolve, reject) => {
-        let tx = new Tx(rawTx)
-        tx.sign(pwd)
-        let signTx = tx.serialize().toString("hex")
-        signTx = signTx.indexOf("0x") === 0 ? signTx : ("0x" + signTx)
-        rawTx.signTx = signTx
-        resolve(rawTx)
-      })
-    } else {
-      return new Promise((resolve, reject) => {
-        this.getBaseInfo(rawTx, data.coinType)
-          .then(res => {
-            rawTx.nonce = res.nonce
-            rawTx.gasPrice = res.gasPrice
-            rawTx.gasLimit = res.gasLimit
-            // console.log(rawTx)
-            let tx = new Tx(rawTx)
-            tx.sign(pwd)
-            let signTx = tx.serialize().toString("hex")
-            signTx = signTx.indexOf("0x") === 0 ? signTx : ("0x" + signTx)
-            rawTx.signTx = signTx
-            resolve(rawTx)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
-    }
-  },
-  sendTxns (signTx) {
     return new Promise((resolve, reject) => {
-      web3.eth.sendRawTransaction(signTx, (err, hash) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(hash)
-        }
-      })
+      let tx = new Tx(rawTx)
+      tx.sign(pwd)
+      let signTx = tx.serialize().toString("hex")
+      signTx = signTx.indexOf("0x") === 0 ? signTx : ("0x" + signTx)
+      rawTx.signTx = signTx
+      resolve(rawTx)
     })
   }
 }

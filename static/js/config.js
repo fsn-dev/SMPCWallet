@@ -66,6 +66,7 @@ let publicSet = {
       type: '.json'
     },
   },
+  personFilename: 'Person',
   /**
    * @description 监听页面，超时时间
    */

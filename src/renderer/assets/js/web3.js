@@ -85,6 +85,13 @@ web3._extend({
       outputFormatter: null
     }),
     new web3._extend.Method({
+      name: 'getSDKGroupPerson',
+      call: 'dcrm_getSDKGroupPerson',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
       name: 'getEnodeStatus',
       call: 'dcrm_getEnodeStatus',
       params: 1,
