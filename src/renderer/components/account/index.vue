@@ -38,7 +38,7 @@
     </div>
 
     <el-dialog title="人员在线验证" :visible.sync="eDialog.send" width="300" :before-close="modalClick" :close-on-click-modal="false">
-      <div>
+      <div v-if="eDialog.send">
         <el-checkbox-group v-model="gMemberSelect" :min="1" class="pl-20">
           <el-checkbox v-for="(eNode, index) in gMemberInit" :label="eNode" :key="index">
             <div class="flex-bc">
@@ -97,14 +97,17 @@ export default {
   },
   watch: {
     '$route' (cur) {
+      console.log(cur)
       if (cur.query.gID) {
         this.loading.account = true
         this.gID = this.$route.query.gID ? this.$route.query.gID : ''
         this.gMode = this.$route.query.mode ? this.$route.query.mode : ''
+        this.gMemberInit = this.$route.query.eNodes ? this.$route.query.eNodes : []
         this.getAccounts()
       } else {
         this.gID = ''
         this.gMode = ''
+        this.gMemberInit = []
         this.loading.account = false
       }
       // this.refreshPage()
@@ -113,14 +116,15 @@ export default {
   mounted () {
     this.gID = this.$route.query.gID ? this.$route.query.gID : ''
     this.gMode = this.$route.query.mode ? this.$route.query.mode : ''
-    if (this.gID && !Number(this.safeMode)) {
+    this.gMemberInit = this.$route.query.eNodes ? this.$route.query.eNodes : []
+    if (!Number(this.safeMode)) {
       this.loading.account = true
       this.getAccounts()
     } else {
       this.getGroupPersonId()
     }
-
-    // console.log(this.$$.eNode)
+    // console.log(this.$route.query)
+    // console.log(this.safeMode)
   },
   methods: {
     toSendTxnsUrl (obj) {
@@ -129,7 +133,6 @@ export default {
     modalClick () {
       this.eDialog.send = false
       this.eDialog.pwd = false
-      this.gMemberInit = []
       this.gMemberSelect = []
     },
     getGroupPersonId () {
@@ -137,6 +140,7 @@ export default {
         console.log(res)
         this.gID = res.info.Gid
         this.gMode = res.info.Mode
+        this.gMemberInit = res.info.Enodes
         this.loading.account = true
         this.getAccounts()
       }).catch(err => {
@@ -148,6 +152,10 @@ export default {
      * 初始获取账号
      */
     getAccounts () {
+      if (!this.gID) {
+        this.loading.account = false
+        return
+      }
       let fileUrl = this.$$.config.file.ga.url + this.gID + this.$$.config.file.ga.type
       // console.log(fileUrl)
       this.$$.readFile(fileUrl).then(res => {
@@ -232,7 +240,7 @@ export default {
     },
     openPwdDialog () {
       if (!this.gID) {
-        this.$message.error('请选择公共账户！')
+        this.$message.error('账户为空！')
         return
       }
       this.gMode = '3/3'
@@ -246,6 +254,7 @@ export default {
         value: 0,
         data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
       }
+      // alert(JSON.stringify(this.dataPage))
       this.eDialog.pwd = true
     },
     openReceive (index, item) {
@@ -261,22 +270,26 @@ export default {
       })
     },
     openSendDialog (index, item) {
-      this.eDialog.send = true
-      this.$$.getGroupObj(this.gID).then(res => {
-        console.log(res.info)
-        this.sendDataObj = item
-        this.sendDataObj.gID = this.gID
-        this.sendDataObj.mode = res.info.Mode
-        let eNode = res.info.Enodes
-        this.gMemberInit = []
-        for (let obj of eNode) {
-          if (obj !== this.$$.eNode) {
-            this.gMemberInit.push(obj)
-          }
-        }
-      }).catch(err => {
-        this.$message.error(err.error)
-      })
+      this.sendDataObj = item
+      this.sendDataObj.gID = this.gID
+      this.sendDataObj.mode = this.gMode
+      if (!Number(this.safeMode)) {
+        this.eDialog.send = true
+        // this.$$.getGroupObj(this.gID).then(res => {
+        //   console.log(res.info)
+        //   let eNode = res.info.Enodes
+        //   this.gMemberInit = []
+        //   for (let obj of eNode) {
+        //     if (obj !== this.$$.eNode) {
+        //       this.gMemberInit.push(obj)
+        //     }
+        //   }
+        // }).catch(err => {
+        //   this.$message.error(err.error)
+        // })
+      } else {
+        this.toSendTxnsUrl()
+      }
     },
   }
 }

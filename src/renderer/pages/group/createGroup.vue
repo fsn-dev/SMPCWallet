@@ -65,10 +65,10 @@ export default {
         mode: '3/3',
         eNode: [
           { value: this.$$.eNode },
-          { value: 'enode://52140e582170c0f9b45aed6d12c0dbe6394eaf52b8f74f7e1d509c2f38c5efeb94ec2678216f5f29e13ae9e0aff920dcb8c0ce85b0397e2efb5de61e4f91ddf7@127.0.0.1:12342' },
-          { value: 'enode://85d920b1fe3a515c3af5f78794c13c686a684515216cffcf379df6839706ad7209589238050608dd27e47500ec6c384f66848f25a82de4cb7e5b228a8a2a30ec@127.0.0.1:12343' },
-          // { value: 'enode://e84133c51e96cd9d604ccd3627fa0c07262b827390d8a97a516a14193e3b50a9763ef0169a4f198f9ea203e7af66d067d30a7ea15c708cf0c618e709e368a057@127.0.0.1:12342' },
-          // { value: 'enode://1f9141662d5da3dc8c62dab372db2b682de194a42fe341f4b9ea6e89804129cbdf11a53a882e77c8139390f8ac2a485fcdbc9231ae3f9f130af2552ac7196235@127.0.0.1:12343' },
+          // { value: 'enode://52140e582170c0f9b45aed6d12c0dbe6394eaf52b8f74f7e1d509c2f38c5efeb94ec2678216f5f29e13ae9e0aff920dcb8c0ce85b0397e2efb5de61e4f91ddf7@127.0.0.1:12342' },
+          // { value: 'enode://85d920b1fe3a515c3af5f78794c13c686a684515216cffcf379df6839706ad7209589238050608dd27e47500ec6c384f66848f25a82de4cb7e5b228a8a2a30ec@127.0.0.1:12343' },
+          { value: 'enode://e84133c51e96cd9d604ccd3627fa0c07262b827390d8a97a516a14193e3b50a9763ef0169a4f198f9ea203e7af66d067d30a7ea15c708cf0c618e709e368a057@127.0.0.1:12342' },
+          { value: 'enode://1f9141662d5da3dc8c62dab372db2b682de194a42fe341f4b9ea6e89804129cbdf11a53a882e77c8139390f8ac2a485fcdbc9231ae3f9f130af2552ac7196235@127.0.0.1:12343' },
         ],
         name: ''
       },
@@ -137,7 +137,6 @@ export default {
       });
     },
     async createGroup () {
-      let eNode = this.$$.getEnode()
       let arr = []
       for (let obj of this.groupForm.eNode) {
         arr.push(obj.value)

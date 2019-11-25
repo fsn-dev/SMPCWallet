@@ -2,31 +2,12 @@
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="headerTop_box flex-bc">
       <div class="logo flex-c">
-        <router-link :to="token ? '/group' : '/'" class="logoImg flex-c">
+        <router-link :to="token ? (Number(this.safeMode) ? 'person' : 'group') : '/'" class="logoImg flex-c">
           <img src="@etc/img/logo.svg" class="logoImgVisibleLg">
           <img src="@etc/img/logoxs.svg" class="logoImgVisibleXs">
         </router-link>
       </div>
-      <!-- <div id="topSearchView" v-if="isSelectOrSet">
-        <div class="flex-ec">
-          <div class="headerTop_langBox">
-            <el-select v-model="language" size="mini" @change="changLanguage">
-              <el-option v-for="item in languageOption" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="headerTop_serBox">
-            <img src="@etc/img/wifi.png" class="wifi">
-            <i class="arrow"></i>
-            <el-select v-model="network" @change="changNetwork" class="select">
-              <el-option v-for="item in networkOPtion" :key="item.url" :label="item.name" :value="item.url" no-data-text="Custom" >
-              </el-option>
-              <el-option value="https://" label="Custom" ></el-option>
-              <el-option value="offLine" label="off-line" ></el-option>
-            </el-select>
-          </div>
-        </div>
-      </div> -->
+
       <div class="flex-c headerTop_account">
         <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">个人账户</p>
         <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">共管账户</p>
@@ -117,10 +98,12 @@ export default {
     if (this.address) {
       this.walletAdressTop = this.$$.cutOut(this.address, 6, 5)
     }
-    this.intervalNews()
-    this.intervalSwitch = setInterval(() => {
-      this.intervalNews()
-    }, 1000 * 5)
+    // console.log(this.safeMode)
+    // console.log(this.$store.state.safeMode)
+    // this.intervalNews()
+    // this.intervalSwitch = setInterval(() => {
+    //   this.intervalNews()
+    // }, 1000 * 5)
   },
   methods: {
     intervalNews () {

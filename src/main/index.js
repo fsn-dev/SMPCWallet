@@ -1,9 +1,5 @@
-const path = require('path').resolve('.')
-// import Cookies from 'js-cookie'
-// import cookies from '../renderer/libs/cookies'
-// import config from '../../static/js/config'
-import { app, BrowserWindow, Menu , ipcMain } from 'electron'
-const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
+import { app, BrowserWindow, Menu } from 'electron'
+// const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
 
 /**
  * @description 打开其他应用程序

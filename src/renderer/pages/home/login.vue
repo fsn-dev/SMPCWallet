@@ -46,6 +46,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: '',
   data () {
@@ -55,6 +56,9 @@ export default {
         file: false
       },
     }
+  },
+  computed: {
+    ...computedPub
   },
   mounted () {
     
@@ -90,7 +94,11 @@ export default {
               // this.$$.setCookies(this.$$.config.cookies.address, address)
               this.$store.commit('setAddress', {info: address})
               this.$store.commit('setToken', {info: this.loginObj.username})
-              this.$router.push('/group')
+              if (Number(this.safeMode)) {
+                this.$router.push('/person')
+              } else {
+                this.$router.push('/group')
+              }
             } else {
               this.$message.error('Error')
             }

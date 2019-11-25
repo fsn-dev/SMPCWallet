@@ -13,12 +13,12 @@ import config from '@etc/js/config'
 Vue.use(Vuex)
 // console.log(cookies)
 // let langEn = require('@/assets/js/language/en')
-
+console.log(config.modeInit)
 const store = new Vuex.Store({
   state: {
     address: '',
     token: '',
-    safeMode: '',
+    safeMode: config.modeInit,
     // coininfoArr: [],
     // network: {},
     // coinDollarArr: '',
@@ -43,7 +43,7 @@ const store = new Vuex.Store({
       }
     },
     setSafeMode (state, data) {
-      let info = data.info ? data.info.toString() : ''
+      let info = data.info ? data.info.toString() : config.modeInit
       state.safeMode = info
       if (!data.type) {
         cookies.setCookies(config.cookies.safeMode, info)

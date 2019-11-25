@@ -4,17 +4,16 @@ import Tx from 'ethereumjs-tx'
 
 let getEnode = () => {
   try {
-    let data = web3.dcrm.getEnode()
-    data = JSON.parse(data)
-    console.log(data)
-    if (data.Status === "Success") {
-      return data.Data.Enode
+    let cbData = web3.dcrm.getEnode()
+    cbData = JSON.parse(cbData)
+    // console.log(cbData)
+    if (cbData.Status === "Success") {
+      return cbData.Data.Enode
     } else {
-      console.log(data.Error)
+      console.log(cbData)
       setTimeout(() => {
         getEnode()
       }, 1000 * 3)
-      // return data.Error
     }
   } catch (error) {
     console.log(error)
@@ -30,10 +29,10 @@ export default {
   eNode: eNode,
   getEnodeState (eNode) {
     try {
-      let data = web3.dcrm.getEnodeStatus(eNode)
-      data = JSON.parse(data)
-      console.log(data)
-      if (data.Status === 'Success') {
+      let cbData = web3.dcrm.getEnodeStatus(eNode)
+      cbData = JSON.parse(cbData)
+      console.log(cbData)
+      if (cbData.Status === 'Success') {
         return 'OnLine'
       } else {
         return 'OffLine'
@@ -45,14 +44,14 @@ export default {
   },
   getNonce (addr, coinType, dcrmAddr) {
     try {
-      let nonce = web3.dcrm.getNonce(addr, coinType, dcrmAddr)
-      console.log(nonce)
-      if (nonce.Status !== 'Error') {
-        nonce = nonce.Data.result
+      let cbData = web3.dcrm.getNonce(addr, coinType, dcrmAddr)
+      console.log(cbData)
+      if (cbData.Status !== 'Error') {
+        cbData = cbData.Data.result
       } else {
-        nonce = 0
+        cbData = 0
       }
-      return nonce
+      return cbData
     } catch (error) {
       console.log(error)
       return 0
@@ -98,12 +97,12 @@ export default {
     return new Promise((resolve, reject) => {
       try {
         let arr = []
-        let status = web3.dcrm.getGroupNodeStatus(eNode)
-        status = JSON.parse(status)
-        if (status.Status !== 'Error') {
-          arr = status.Data.GroupList && status.Data.GroupList.length > 0 ? status.Data.GroupList : []
+        let cbData = web3.dcrm.getGroupNodeStatus(eNode)
+        cbData = JSON.parse(cbData)
+        if (cbData.Status !== 'Error') {
+          arr = cbData.Data.GroupList && cbData.Data.GroupList.length > 0 ? cbData.Data.GroupList : []
         }
-        console.log(status)
+        console.log(cbData)
         data = {msg: 'Success', info: arr}
         resolve(data)
       } catch (error) {
@@ -117,14 +116,14 @@ export default {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let gArr = web3.dcrm.getSDKGroupPerson(eNode)
-        gArr = JSON.parse(gArr)
-        console.log(gArr)
-        if (gArr.Status !== 'Error') {
-          data = {msg: 'Success', info: gArr.Data.GroupList[0]}
+        let cbData = web3.dcrm.getSDKGroupPerson(eNode)
+        cbData = JSON.parse(cbData)
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          data = {msg: 'Success', info: cbData.Data.GroupList[0]}
           resolve(data)
         } else {
-          data = {msg: 'Error', error: gArr.Tip}
+          data = {msg: 'Error', error: cbData.Tip}
           reject(data)
         }
       } catch (error) {
@@ -139,14 +138,14 @@ export default {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let gArr = web3.dcrm.getSDKGroup(eNode)
-        gArr = JSON.parse(gArr)
-        console.log(gArr)
-        if (gArr.Status !== 'Error') {
-          data = {msg: 'Success', info: gArr.Data.GroupList}
+        let cbData = web3.dcrm.getSDKGroup(eNode)
+        cbData = JSON.parse(cbData)
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          data = {msg: 'Success', info: cbData.Data.GroupList}
           resolve(data)
         } else {
-          data = {msg: 'Error', error: gArr.Tip}
+          data = {msg: 'Error', error: cbData.Tip}
           reject(data)
         }
       } catch (error) {
@@ -188,14 +187,14 @@ export default {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let gInfo = web3.dcrm.createSDKGroup(name, mode, nodeArr)
-        gInfo = gInfo && JSON.parse(gInfo) ? JSON.parse(gInfo) : ''
-        console.log(gInfo)
-        if (gInfo.Status !== 'Error') {
-          data = {msg: 'Success', info: gInfo.data}
+        let cbData = web3.dcrm.createSDKGroup(name, mode, nodeArr)
+        cbData = cbData && JSON.parse(cbData) ? JSON.parse(cbData) : ''
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          data = {msg: 'Success', info: cbData.data}
           resolve(data)
         } else {
-          data = {msg: 'Error', error: gInfo.Tip}
+          data = {msg: 'Error', error: cbData.Tip}
           reject(data)
         }
       } catch (error) {
@@ -230,9 +229,9 @@ export default {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let account = web3.dcrm.reqDcrmAddr(signTx, mode)
-        if (account.Status !== 'Error') {
-          let obj = JSON.parse(account.Data.result)
+        let cbData = web3.dcrm.reqDcrmAddr(signTx, mode)
+        if (cbData.Status !== 'Error') {
+          let obj = JSON.parse(cbData.Data.result)
           console.log(obj)
           data = {msg: 'Success', info: obj}
           resolve(data)
@@ -248,20 +247,16 @@ export default {
     })
   },
   async getTxnsList () {
-    // let eNode = this.getEnode()
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let arr = []
-        let list = web3.dcrm.getCurNodeLockOutInfo(eNode)
-        if (list.Status !== 'Error') {
-          list = list.Data
-          // console.log(list)
-          for (let obj in list) {
-            let obj1 = list[obj]
+        let cbData = web3.dcrm.getCurNodeLockOutInfo(eNode)
+        if (cbData.Status !== 'Error') {
+          cbData = cbData.Data
+          for (let obj in cbData) {
+            let obj1 = cbData[obj]
             obj1 = JSON.parse(obj1)
-            // console.log(obj1)
-            // console.log(JSON.parse(obj1))
             arr.push(obj1)
           }
           data = {msg: 'Success', info: arr}
@@ -277,9 +272,9 @@ export default {
   sendTxnsValid (signTx) {
     let data = {msg: '', info: ''}
     try {
-      let cb = web3.dcrm.acceptLockOut(signTx)
-      console.log(cb)
-      data = {msg: 'Success', info: cb}
+      let cbData = web3.dcrm.acceptLockOut(signTx)
+      console.log(cbData)
+      data = {msg: 'Success', info: cbData}
     } catch (error) {
       data = {msg: 'Error', error: error}
     }

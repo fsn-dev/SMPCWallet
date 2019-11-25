@@ -90,7 +90,11 @@ let publicSet = {
     to: '0x00000000000000000000000000000000000000dc',
     gasLimit: 80000,
     gasPrice: 100000,
-  }
+  },
+  /**
+   * @description 初始模式设置
+   */
+  modeInit: '1' // '0': 共管模式；'1'：个人模式
 }
 
 // publicSet.appURL = 'http://localhost:8100'

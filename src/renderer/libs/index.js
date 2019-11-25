@@ -56,7 +56,7 @@ let $$ = {
     // that.$$.setCookies(config.cookies.address, '')
     that.$store.commit('setAddress', '')
     that.$store.commit('setToken', '')
-    that.$store.commit('setSafeMode', '')
+    that.$store.commit('setSafeMode', {info: config.modeInit})
     that.$router.push('/')
   }
 }

@@ -75,7 +75,7 @@ export default {
     },
     openPwdDialog (type) {
       try {
-        let nonce = this.$$.getNonce(this.address, 'ALL')
+        let nonce = this.$$.getNonce(this.address, this.initTxnsData.Cointype, this.initTxnsData.DcrmFrom)
         if (!isNaN(nonce)) {
           this.dataPage = {
             from: this.address,
@@ -83,7 +83,9 @@ export default {
             gasLimit: this.$$.config.rawTx.gasLimit,
             gasPrice: this.$$.config.rawTx.gasPrice,
             nonce: nonce,
-            data: 'ACCEPTDCRM:' 
+            data: 'ACCEPTLOCKOUT:' 
+                  + this.address
+                  + ':'
                   + this.initTxnsData.GroupId 
                   + ':' 
                   + this.initTxnsData.Nonce 
