@@ -20,7 +20,7 @@
 
 <style lang="scss">
 .g-list-box {
-  width: 100%;height: 100%;background: #e6e5e5;padding: 5px 0;overflow: auto;
+  width: 100%;height: 100%;background: #fff;padding: 5px 0;overflow: auto;border-right:size(1) solid #f2f2f2;
   .item {
     width: 100%;padding: 8px 10px; cursor: pointer;
     $label-h: 30px;
@@ -28,7 +28,7 @@
       background: #c7c6c6;
     }
     &.active {
-      background: #c7c6c6;
+      background: #e6e5e5;
     }
     .label {
       width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;

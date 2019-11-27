@@ -6,13 +6,12 @@
       </div>
       <h3 class="title"><span>SMPC</span> Wallet</h3>
       <p class="tip">欢迎使用SMPC Wallet 1.0<br>请创建一个钱包或者导入一个钱包</p>
-      <div class="flex-c btn-box">
-        <!-- <el-button type="primary" @click="toUrl('login')">{{$t('BTN').LOGIN}}</el-button>
-        <el-button type="success" @click="toUrl('register')">{{$t('BTN').REGISTER}}</el-button> -->
+      <!-- <div class="flex-c btn-box">
         <router-link to="login" class="btn flex-c login">{{$t('BTN').LOGIN}}</router-link>
         <router-link to="register" class="btn flex-c register">{{$t('BTN').REGISTER}}</router-link>
         <div class="obliqueLine"></div>
-      </div>
+      </div> -->
+      <w-button :ok="$t('BTN').LOGIN" :cancel="$t('BTN').REGISTER" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
       <el-input v-model="test" class="mt-30"></el-input>
       <!-- <el-button type="primary" @click="test0">{{$t('BTN').LOGIN}}</el-button>
       <el-button type="success" @click="test1">{{$t('BTN').REGISTER}}</el-button> -->
@@ -39,25 +38,11 @@
   .tip {
     font-size: $text-normal;color:$color-gray;line-height: size(21);
   }
-  .btn-box {
-    width: size(240);margin: size(40) auto 0;position: relative;overflow:hidden;
-    .btn {
-      width: 50%;height: size(45);font-size: $text-md;font-weight: 600;border-radius:size(3);
-    }
-    .login {
-      background: $color-primary;color: #fff;padding-right: size(15);
-    }
-    .register {
-      border: size(1) solid $color-primary;color: $color-primary;padding-left: size(15);
-    }
-    .obliqueLine {
-      width: size(20);height: size(240);position: absolute;background: #fff;transform: skew(-10deg);border-right: size(1) solid $color-primary;border-left: size(1) solid $color-primary;
-    }
-  }
 }
 </style>
 
 <script>
+import wButton from '@/components/btn/index'
 import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: '',
@@ -66,6 +51,7 @@ export default {
       test: ''
     }
   },
+  components: {wButton},
   computed: {
     ...computedPub
   },
@@ -76,9 +62,11 @@ export default {
     // test0 () {
     //   this.$store.commit('setAddress', {info: '457487s8fg'})
     // },
-    // test1 () {
-    //   alert(this.address)
-    // }
+    test1 (data) {
+      // alert(this.address)
+      console.log(data)
+      alert(123)
+    }
   }
 }
 </script>

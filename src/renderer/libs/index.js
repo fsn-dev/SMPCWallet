@@ -50,6 +50,15 @@ let $$ = {
   web3,
   coininfo,
   mode,
+  setDollar (coin) {
+    for (let obj in coininfo) {
+      if (obj === coin) {
+        console.log(coininfo[obj])
+        return coininfo[obj]
+      }
+    }
+    return ''
+  },
   quitApp (that) {
     cookies.clearCookies()
     // that.$$.setToken('')

@@ -4,18 +4,26 @@
     <div class="g-table-box" v-if="tableData.length > 0">
       <el-table :data="tableData" style="width: 100%" empty-text="Null">
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column label="币种" width="150">
+        <el-table-column label="币种" width="180">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.coinType).coinType }}</span>
-            <i v-if="$$.cutERC20(scope.row.coinType).type" class="isErc20">ERC20</i>
+            <div class="flex-sc">
+              <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(scope.row.coinType).coinType)">
+                <img :src="$$.setDollar($$.cutERC20(scope.row.coinType).coinType).logo">
+              </div>
+              <div class="coinTxt flex-c" v-else>
+                {{$$.cutERC20(scope.row.coinType).coinType.substr(0, 1).toUpperCase()}}
+              </div>
+              <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.coinType).coinType }}</span>
+              <i v-if="$$.cutERC20(scope.row.coinType).type" class="isErc20">ERC20</i>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="地址">
           <template slot-scope="scope">
-            {{ scope.row.address }}
+            <div class="WW100 ellipsis" :title="scope.row.address">{{ scope.row.address }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="余额" width="150" align="right">
+        <el-table-column label="余额" width="120" align="right">
           <template slot-scope="scope">
             {{ scope.row.balance}}
           </template>
@@ -64,6 +72,22 @@
 <style lang="scss">
 .g-table-box {
   width: 100%;padding: 15px 20px;
+  $coinSize: 25;
+  .coinImg {
+    width: size($coinSize);height: size($coinSize);
+    img {
+      max-width: 100%;max-height: 100%;
+    }
+  }
+  .coinTxt {
+    width: size($coinSize);height: size($coinSize);border:size(1) solid $color-primary;border-radius: 100%;color: $color-primary;
+  }
+  .el-table {
+    background: none;
+    th, tr {
+      background: none;
+    }
+  }
 }
 .isErc20 {position:absolute;top:5px;right: 0;font-size: 10px;color:#fff;font-style: italic;padding:0 5px;background: #004a7c;border-radius: 5px;transform: scale(0.6);}
 .isErc20_1{top: 0px;}

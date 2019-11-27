@@ -12,7 +12,8 @@ $doubleSize: 16;
 
 $header-footer-h: size(56);
 
-$color-primary: #1b55d1;
+$color-primary: rgba(27, 85, 209, 1);
+$color-primary-sm: rgba(27, 85, 209, .1);
 $color-info: #1ca261;
 $color-info-sm: #bbe3cf;
 $color-danger: #de5549;
@@ -20,6 +21,7 @@ $color-danger-sn: #f4c9c6;
 $color-warning: #ffaa00;
 $color-black: #252525;
 $color-gray: #666666;
+$color-gray-sm: #999;
 
 $text-lg: size(28);
 $text-md: size(18);
