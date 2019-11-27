@@ -251,6 +251,7 @@ export default {
     return new Promise((resolve, reject) => {
       try {
         let arr = []
+        // let cbData = web3.dcrm.getCurNodeLockOutInfo(eNode)
         let cbData = web3.dcrm.getCurNodeLockOutInfo(eNode)
         if (cbData.Status !== 'Error') {
           cbData = cbData.Data

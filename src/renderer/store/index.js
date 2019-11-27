@@ -13,12 +13,13 @@ import config from '@etc/js/config'
 Vue.use(Vuex)
 // console.log(cookies)
 // let langEn = require('@/assets/js/language/en')
-console.log(config.modeInit)
+// console.log(config.modeInit)
 const store = new Vuex.Store({
   state: {
     address: '',
     token: '',
     safeMode: config.modeInit,
+    dayAndNight: ''
     // coininfoArr: [],
     // network: {},
     // coinDollarArr: '',
@@ -49,15 +50,22 @@ const store = new Vuex.Store({
         cookies.setCookies(config.cookies.safeMode, info)
       }
     },
-    storeCoininfoArr (state, data) {
-      state.coininfoArr = data
-    },
-    storeNetwork (state, data) {
-      state.network = data
-    },
-    storeCoinDollarArr (state, data) {
-      state.coinDollarArr = data
-    },
+    setDayAndNight (state, data) {
+      let info = data.info ? data.info.toString() : config.dayAndNight
+      state.dayAndNight = info
+      if (!data.type) {
+        cookies.setCookies('dayAndNight', info, 7)
+      }
+    }
+    // storeCoininfoArr (state, data) {
+    //   state.coininfoArr = data
+    // },
+    // storeNetwork (state, data) {
+    //   state.network = data
+    // },
+    // storeCoinDollarArr (state, data) {
+    //   state.coinDollarArr = data
+    // },
   },
   actions: {
     getAddress ({commit}) {
@@ -79,6 +87,13 @@ const store = new Vuex.Store({
         // console.log(res)
         let data = { type: 1, info: res}
         commit('setSafeMode', data)
+      })
+    },
+    getDayAndNight ({commit}) {
+      cookies.getCookies('dayAndNight').then(res => {
+        // console.log(res)
+        let data = { type: 1, info: res}
+        commit('setDayAndNight', data)
       })
     },
   }

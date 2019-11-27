@@ -23,7 +23,7 @@
 </template>
 
 <style lang="scss">
-@import '@/assets/scss/index';
+// @import '@/assets/scss/index';
 </style>
 
 <script>
@@ -68,6 +68,8 @@ export default {
     },
     getSignData (data) {
       // this.createGroup()
+      console.log(data)
+      console.log(data.signTx)
       if (data && data.signTx) {
         this.$$.sendTxnsValid(data.signTx)
       }
@@ -85,6 +87,7 @@ export default {
             nonce: nonce,
             data: 'ACCEPTLOCKOUT:' 
                   + this.address
+                  // + this.initTxnsData.DcrmFrom
                   + ':'
                   + this.initTxnsData.GroupId 
                   + ':' 

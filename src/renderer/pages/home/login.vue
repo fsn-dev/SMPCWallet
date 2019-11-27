@@ -1,12 +1,17 @@
 <template>
   <div class="flex-c bg">
-    <div class="register_box">
-      <div class="register_title flex-c">
-        <h3 class="title">{{$t('IMPORT_WALLET')}}</h3>
+    <div class="user-form-box">
+      <div class="user-form-title">
+        <div class="logo flex-sc">
+          <img src="@etc/img/logo/logo.svg">
+          <p class="appTitle ml-10"><span>SMPC</span>Wallet</p>
+        </div>
+        <router-link to="/" class="back">&lt;返回</router-link>
+        <h3 class="title">登陆账户</h3>
       </div>
 
-      <div class="createInfo_box" v-loading="loading.file">
-        <div class="W300" style="margin:auto;">
+      <div class="user-form-input" v-loading="loading.file">
+        <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :model="loginObj" label-width="120px" label-position="top">
             <el-form-item label="用户名：">
               <el-input v-model="loginObj.username"></el-input>
@@ -15,27 +20,14 @@
               <el-input type="password" v-model="loginObj.password"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm" :disabled="loading.file">{{$t('BTN').YES_SURE}}</el-button>
+              <el-button type="primary" @click="submitForm" :disabled="loading.file" class="btn mt-30">登陆</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
-              <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button>
+              <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
           </el-form>
         </div>
       </div>
 
-      <hgroup class="createInfo_tip">
-        <h1 class="h1">{{$t('CREATE_TIP').CREATE_TIP_0}}</h1>
-        <h2 class="h2">{{$t('CREATE_TIP').CREATE_TIP_1}}</h2>
-        <h3 class="h3">
-          {{$t('CREATE_TIP').CREATE_TIP_2}}
-          <br/>
-          {{$t('CREATE_TIP').CREATE_TIP_3}}
-        </h3>
-      </hgroup>
-
-      <!-- <div class="createInfo_tip pb-20">
-        <h3 class="h3" v-html="$t('IMPORT_WALLET_TIP')" > </h3>
-      </div> -->
     </div>
     
   </div>

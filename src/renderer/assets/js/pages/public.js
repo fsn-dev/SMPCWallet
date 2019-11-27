@@ -7,5 +7,8 @@ export const computedPub = {
   },
   safeMode () {
     return this.$store.state.safeMode
+  },
+  dayAndNight () {
+    return this.$store.state.dayAndNight
   }
 } 

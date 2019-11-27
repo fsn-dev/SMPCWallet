@@ -67,7 +67,7 @@ export default {
           this.gID = this.$route.query.gID
         }
       }).catch(err => {
-        this.$message.error(error.toString())
+        this.$message.error(err.toString())
       })
     },
     changeGroup (item) {

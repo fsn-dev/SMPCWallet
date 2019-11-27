@@ -1,6 +1,7 @@
 @import './base.scss';
 // @import './css.scss';
 
+
 .c-form-box {
   width: 600px;margin:30px auto;padding: 60px 25px;background:#fff;border-radius: 6px;
   .el-form-item__label {
@@ -14,6 +15,39 @@
     width: 100%;border-bottom: 1px solid #eee;padding:8px 0;font-size: 14px;color: #333;cursor: pointer;
     .p2{
       color:#999;
+    }
+  }
+}
+
+.appTitle {
+  font-size: $text-normal;color:$color-black;font-weight:bold;
+  span {
+    color: $color-primary;margin-right: size(5);
+  }
+}
+.user-form-box {
+  width: size(300);
+  .user-form-title {
+    .logo{
+      height: size(30);
+      img {
+        height: 100%;
+      }
+    }
+    .back {
+      font-size: $text-normal;color: $color-gray;margin: size(20) 0;display: block;
+    }
+    .title {
+      font-size:$text-lg;color: $color-black;font-weight: bold;margin-bottom: size(20);
+    }
+  }
+  .user-form-input {
+    width: 100%;
+    .el-form-item__label {
+      padding-bottom: 0;line-height: size(35);font-size: $text-normal;color: $color-gray;
+    }
+    .btn {
+      width: 100%;height: size(50);font-size: $text-md;font-weight: bold;
     }
   }
 }

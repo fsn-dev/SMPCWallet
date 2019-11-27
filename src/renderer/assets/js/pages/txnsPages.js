@@ -52,23 +52,39 @@ export const methods = {
     event.preventDefault()
     this.loading.btn = true
     if (!this.rawTx.to) {
-      this.$message.error(this.selectData.coinType + this.$t('ERROR_TIP').TIP_2)
+      this.$message({
+        showClose: true,
+        message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_2,
+        type: 'error'
+      })
       this.loading.btn = false
       return
     }
     if (this.rawTx.to.toLowerCase() === this.selectData.address.toLowerCase()) {
-      this.$message.error(this.selectData.coinType + this.$t('ERROR_TIP').TIP_4)
+      this.$message({
+        showClose: true,
+        message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_4,
+        type: 'error'
+      })
       this.loading.btn = false
       return
     }
     if (this.selectData.coinType !== "BTC" && this.rawTx.to.indexOf("0x") !== 0) {
-      this.$message.error(this.selectData.coinType + this.$t('ERROR_TIP').TIP_5)
+      this.$message({
+        showClose: true,
+        message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_5,
+        type: 'error'
+      })
       this.loading.btn = false
       return
     }
     let getAmountTip = this.$$.limitCoin(this.sendAmound, this.selectData.limit, this.selectData.number)
     if (getAmountTip.flag) {
-      this.$message.error(getAmountTip.msg)
+      this.$message({
+        showClose: true,
+        message: getAmountTip.msg,
+        type: 'error'
+      })
       this.loading.btn = false
       return
     }
@@ -98,7 +114,11 @@ export const methods = {
       this.maxFee = this.$$.fromWei(Number(data.gasPrice) * Number(data.gasLimit), "ether")
     } else {
       this.sendInfoVisible = false
-      this.$message.error(this.selectData.coinType + this.$t('ERROR_TIP').TIP_6)
+      this.$message({
+        showClose: true,
+        message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_6,
+        type: 'error'
+      })
     }
     this.privateSureVisible = false
   },
@@ -106,9 +126,17 @@ export const methods = {
     // console.log(signTx)
     this.sendBtnFlag = true
     this.$$.sendTxns(this.signTx).then(res => {
-      this.$message({ message: 'Success', type: 'success' })
+      this.$message({
+        showClose: true,
+        message: 'Success',
+        type: 'success'
+      })
     }).catch(err => {
-      this.$message.error(res.error)
+      this.$message({
+        showClose: true,
+        message: res.error,
+        type: 'error'
+      })
     })
   },
 }

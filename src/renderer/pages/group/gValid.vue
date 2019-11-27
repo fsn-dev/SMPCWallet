@@ -19,7 +19,7 @@
         <el-form-item>
           <el-button type="primary" @click="applyGroup('AGREE')" v-if="isApply">同意</el-button>
           <el-button type="danger" @click="applyGroup('DISAGREE')" v-if="isApply">拒绝</el-button>
-          <el-button @click="toUrl('/tNewsList')">返回</el-button>
+          <el-button @click="toUrl('/gNewsList')">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -27,7 +27,7 @@
 </template>
 
 <style lang="scss">
-@import '@/assets/scss/index';
+// @import '@/assets/scss/index';
 </style>
 
 <script>

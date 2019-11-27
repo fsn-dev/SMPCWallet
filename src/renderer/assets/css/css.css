@@ -2,7 +2,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {display: block;}
-body {line-height:150%; width:100%; margin:0;padding:0;font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; background:#eeeeee;}
+body {line-height:150%; width:100%; margin:0;padding:0;font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; background:#ffffff;}
 html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;font-size: 16px;}
 a{text-decoration:none!important;color:#000}
 ol, ul {list-style: none;}

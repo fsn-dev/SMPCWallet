@@ -145,7 +145,11 @@ export default {
         this.getAccounts()
       }).catch(err => {
         console.log(err)
-        this.$message.error(err.error.toString())
+        this.$message({
+          showClose: true,
+          message: err.error.toString(),
+          type: 'error'
+        })
       })
     },
     /**
@@ -162,18 +166,26 @@ export default {
         // console.log(res)
         let data = JSON.parse(res.info)
         // console.log(data)
-        this.$$.getBalance(data.Account, data.Address).then(res => {
+        this.$$.getBalance(data.Account, data.DcrmAddress).then(res => {
           // console.log(res)
           this.tableData = res.info
           this.loading.account = false
         }).catch(err => {
           console.log(err)
-          this.$message.error(err.error.toString())
+          this.$message({
+            showClose: true,
+            message: err.error.toString(),
+            type: 'error'
+          })
           this.loading.account = false
         })
       }).catch(err => {
         console.log(err)
-        this.$message.error('请获取账户')
+        this.$message({
+          showClose: true,
+          message: '请获取账户',
+          type: 'error'
+        })
         this.loading.account = false
       })
     },
@@ -190,7 +202,11 @@ export default {
         this.validGa()
       } else {
         this.signTx = ''
-        this.$message.error('Error')
+        this.$message({
+          showClose: true,
+          message: 'Error',
+          type: 'error'
+        })
         this.loading.account = false
       }
     },

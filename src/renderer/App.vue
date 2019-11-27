@@ -28,11 +28,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getToken', 'getAddress', 'getSafeMode']),
+    ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight']),
     initData () {
       this.getToken()
       this.getAddress()
       this.getSafeMode()
+      this.getDayAndNight()
     },
     mousePos (e) {
       let x, y
@@ -53,7 +54,11 @@ export default {
           this.currentSecond = this.currentSecond + 1000
           if(this.currentSecond > this.timeout){
             clearInterval(this.eventID)
-            this.$message.error('你已经超过3分钟没有操作，页面自动跳转至首页')
+            this.$message({
+              showClose: true,
+              message: '你已经超过3分钟没有操作，页面自动跳转至首页',
+              type: 'error'
+            })
             this.$$.quitApp(this)
             setTimeout(() => {
               history.go(0)
@@ -73,7 +78,8 @@ export default {
 </script>
 
 <style lang="scss">
-// @import '@/assets/scss/index.scss'
-/* CSS */
-
+// @import '@/assets/scss/index.scss';
+// #app {
+//   width: $test;
+// }
 </style>

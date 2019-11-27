@@ -12,8 +12,20 @@ $doubleSize: 16;
 
 $header-footer-h: size(56);
 
-$text-promary: #0099ff;
+$color-primary: #1b55d1;
+$color-info: #1ca261;
+$color-info-sm: #bbe3cf;
+$color-danger: #de5549;
+$color-danger-sn: #f4c9c6;
+$color-warning: #ffaa00;
+$color-black: #252525;
+$color-gray: #666666;
 
+$text-lg: size(28);
+$text-md: size(18);
+$text-normal: size(14);
+$text-sm: size(12);
+$text-xs: size(10);
 // @function content-h () {
 //   @return 
 // }
