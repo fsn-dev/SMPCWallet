@@ -19,7 +19,8 @@ const store = new Vuex.Store({
     address: '',
     token: '',
     safeMode: config.modeInit,
-    dayAndNight: ''
+    dayAndNight: '',
+    wallet: ''
     // coininfoArr: [],
     // network: {},
     // coinDollarArr: '',
@@ -56,6 +57,9 @@ const store = new Vuex.Store({
       if (!data.type) {
         cookies.setCookies('dayAndNight', info, 7)
       }
+    },
+    setWallet (state, data) {
+      state.wallet = data
     }
     // storeCoininfoArr (state, data) {
     //   state.coininfoArr = data

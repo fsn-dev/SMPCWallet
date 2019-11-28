@@ -86,6 +86,8 @@ export default {
             data: 'LOCKOUT:' 
                   + this.initTxnsData.address
                   + ':' 
+                  + this.initTxnsData.dcrmAddr
+                  + ':' 
                   + this.rawTxData.to
                   + ':'
                   + this.rawTxData.value

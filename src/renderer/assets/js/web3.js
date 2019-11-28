@@ -126,6 +126,20 @@ web3._extend({
       inputFormatter: [null],
       outputFormatter: null
     }),
+    new web3._extend.Method({
+      name: 'getAccounts',
+      call: 'dcrm_getAccounts',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
+    new web3._extend.Method({
+      name: 'getAccountsBalance',
+      call: 'dcrm_getAccountsBalance',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    }),
   ]
 })
 

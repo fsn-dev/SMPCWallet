@@ -2,7 +2,7 @@
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="header-top-box flex-bc">
       <div class="header-logo flex-c">
-        <router-link :to="token ? (Number(this.safeMode) ? 'person' : 'group') : '/'" class="logoImg flex-sc">
+        <router-link :to="typeof token !== 'undefined' ? (Number(this.safeMode) ? 'person' : 'group') : '/'" class="logoImg flex-sc">
           <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
           <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
         </router-link>
@@ -15,8 +15,8 @@
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/gNewsList')" title="共管账户消息"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">活动任务</el-badge></li>
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">消息通知</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/gNewsList')" title="共管账户消息"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">任务</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li>
           </ul>
         </div>
         <div class="header-top-lang">
@@ -36,7 +36,7 @@
         <div class="header-top-user">
           <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div>
           <ul class="user-list box_Wshadow1" v-show="isUserView">
-            <li class="item" @click="toUrl('createGroup')" title="创建共管账户"><i class="el-icon-plus mr-5"></i>创建共管账户</li>
+            <li class="item" @click="toUrl('createGroup');changeUserView()" title="创建共管账户"><i class="el-icon-plus mr-5"></i>创建共管账户</li>
             <li class="item" @click="changeMode('1')" title="个人账户"><i class="el-icon-user mr-5"></i>个人账户</li>
             <li class="item" @click="changeMode('0')" title="共管账户"><i class="el-icon-money mr-5"></i>共管账户</li>
             <li class="item" @click="quitMethod" title="安全退出"><i class="el-icon-s-unfold mr-5"></i>安全退出</li>
@@ -140,9 +140,13 @@ import {computedPub} from '@/assets/js/pages/public'
 // import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
   name: 'index',
+  provide () {
+    return {
+      reload: this.Refresh
+    }
+  },
   data () {
     return {
-      walletAdressTop: '',
       language: this.$i18n.locale,
       languageOption: [
         {value: 'en-US', label: 'English'},
@@ -163,12 +167,6 @@ export default {
       // console.log(cur)
       this.newsView(cur)
     },
-    address (cur, old) {
-      // console.log(cur)
-      if (cur) {
-        this.walletAdressTop = this.$$.cutOut(cur, 6, 5)
-      }
-    }
   },
   computed: {
     ...computedPub
@@ -176,9 +174,6 @@ export default {
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
-    if (this.address) {
-      this.walletAdressTop = this.$$.cutOut(this.address, 6, 5)
-    }
     // console.log(this.dayAndNight)
     // console.log(this.safeMode)
     // console.log(this.$store.state.safeMode)
@@ -249,6 +244,7 @@ export default {
       } else {
         this.toUrl('/group')
       }
+      this.changeUserView()
       this.$store.commit('setSafeMode', {info: type})
     },
     copyAddress (id, textId) {

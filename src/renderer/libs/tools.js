@@ -157,6 +157,7 @@ export default {
     return hexCharCode.join('')
   },
   cutOut (str, start, end) {
+    // console.log(str)
     if (!str) return ''
     var str1 = str.substr(0, start)
     var str2 = str.substr(str.length - end)
@@ -197,5 +198,10 @@ export default {
         coinType: str.replace('ERC20', '')
       }
     }
+  },
+  titleCase (str) {
+    if (!str) return
+    str = str.substr(0, 1).toUpperCase()
+    return str
   }
 }

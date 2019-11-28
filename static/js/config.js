@@ -107,6 +107,7 @@ let publicSet = {
 // publicSet.serverRPC = 'http://192.168.1.104:9011'
 // publicSet.serverRPC = 'http://192.168.1.104:9012'
 publicSet.serverRPC = 'http://192.168.1.187:12391'
+// publicSet.serverRPC = 'http://192.168.1.187:9991'
 // publicSet.serverRPC = 'http://192.168.1.187:12392'
 // publicSet.serverRPC = 'http://192.168.1.187:12393'
 // module.exports = publicSet

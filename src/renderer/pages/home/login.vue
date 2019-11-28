@@ -86,6 +86,7 @@ export default {
               // this.$$.setCookies(this.$$.config.cookies.address, address)
               this.$store.commit('setAddress', {info: address})
               this.$store.commit('setToken', {info: this.loginObj.username})
+              this.$store.commit('setWallet', this.walletInfo)
               if (Number(this.safeMode)) {
                 this.$router.push('/person')
               } else {

@@ -13,25 +13,25 @@
         <el-table-column label="币种" width="180">
           <template slot-scope="scope">
             <div class="flex-sc">
-              <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(scope.row.Cointype).coinType)">
-                <img :src="$$.setDollar($$.cutERC20(scope.row.Cointype).coinType).logo">
+              <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(scope.row.coinType).coinType)">
+                <img :src="$$.setDollar($$.cutERC20(scope.row.coinType).coinType).logo">
               </div>
               <div class="coinTxt flex-c" v-else>
-                {{$$.titleCase($$.cutERC20(scope.row.Cointype).coinType)}}
+                {{$$.titleCase($$.cutERC20(scope.row.coinType).coinType)}}
               </div>
-              <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.Cointype).coinType }}</span>
-              <i v-if="$$.cutERC20(scope.row.Cointype).type" class="isErc20">ERC20</i>
+              <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.coinType).coinType }}</span>
+              <i v-if="$$.cutERC20(scope.row.coinType).type" class="isErc20">ERC20</i>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="地址">
           <template slot-scope="scope">
-            <div class="WW100 ellipsis" :title="scope.row.DcrmAddr">{{ scope.row.DcrmAddr }}</div>
+            <div class="WW100 ellipsis" :title="scope.row.address">{{ scope.row.address }}</div>
           </template>
         </el-table-column>
         <el-table-column label="余额" width="120" align="right">
           <template slot-scope="scope">
-            {{ isNaN(scope.row.Balance) ? 0 : scope.row.Balance}}
+            {{ scope.row.balance}}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="150" align="center">
@@ -154,7 +154,6 @@ import {computedPub} from '@/assets/js/pages/public'
 import wDrawer from '@/components/drawer/index'
 export default {
   name: '',
-  inject: ['reload'],
   data () {
     return {
       eDialog: {
@@ -173,7 +172,6 @@ export default {
       publicKey: '',
       gMode: '',
       tableData: [],
-      dcrmAddr: '',
       signTx: '',
       drawer: {
         member: false,
@@ -191,7 +189,13 @@ export default {
     '$route' (cur) {
       // console.log(cur)
       if (cur.query.gID) {
-        this.initGroupData()
+        this.loading.account = true
+        this.gID = this.$route.query.gID ? this.$route.query.gID : ''
+        this.publicKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
+        this.gMode = this.$route.query.mode ? this.$route.query.mode : ''
+        let gMlist = this.$route.query.eNodes ? this.$route.query.eNodes : []
+        this.setMemberList(gMlist)
+        this.getAccounts()
       } else {
         this.gID = ''
         this.gMode = ''
@@ -204,27 +208,22 @@ export default {
   },
   mounted () {
     if (!Number(this.safeMode)) {
-      setTimeout(() => {
-        this.initGroupData()
-      }, 50)
-    } else {
-      this.getGroupPersonId()
-    }
-  },
-  methods: {
-    initGroupData () {
       this.loading.account = true
       this.gID = this.$route.query.gID ? this.$route.query.gID : ''
       this.publicKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
+      this.gMode = this.$route.query.mode ? this.$route.query.mode : ''
+      let gMlist = this.$route.query.eNodes ? this.$route.query.eNodes : []
       this.getGroupData()
+      this.setMemberList(gMlist)
       this.getAccounts()
-    },
-    modalClick () {
-      this.eDialog.send = false
-      this.eDialog.pwd = false
-      this.eDialog.group = false
-      this.gMemberSelect = []
-    },
+    } else {
+      this.getGroupPersonId()
+    }
+    console.log(this.$$.web3.dcrm.getAccounts())
+    // console.log(this.$route.query)
+    // console.log(this.safeMode)
+  },
+  methods: {
     getGroupData () {
       this.$$.getGroup().then(res => {
         console.log(res)
@@ -232,19 +231,17 @@ export default {
         if (this.$route.query.gID) {
           this.gID = this.$route.query.gID
         }
-        this.getMemberList()
       }).catch(err => {
         this.$message.error(err.toString())
       })
     },
-    getMemberList () {
-      for (let obj of this.getGroup) {
-        if (this.gID === obj.Gid) {
-          this.gMode = obj.Mode
-          this.setMemberList(obj.Enodes)
-          break
-        }
-      }
+    toSendTxnsUrl (obj) {
+      this.toUrl('sendTxns', this.sendDataObj)
+    },
+    modalClick () {
+      this.eDialog.send = false
+      this.eDialog.pwd = false
+      this.gMemberSelect = []
     },
     setMemberList (arr) {
       this.gMemberInit = []
@@ -282,13 +279,25 @@ export default {
         this.loading.account = false
         return
       }
+      let fileUrl = this.$$.config.file.ga.url + this.gID + this.$$.config.file.ga.type
       // console.log(fileUrl)
-      console.log(this.publicKey)
-      this.$$.getAccountsBalance(this.publicKey).then(res => {
-        console.log(res)
-        this.tableData = res.info
-        this.dcrmAddr = res.address
-        this.loading.account = false
+      this.$$.readFile(fileUrl).then(res => {
+        // console.log(res)
+        let data = JSON.parse(res.info)
+        // console.log(data)
+        this.$$.getBalance(data.Account, data.DcrmAddress).then(res => {
+          // console.log(res)
+          this.tableData = res.info
+          this.loading.account = false
+        }).catch(err => {
+          console.log(err)
+          this.$message({
+            showClose: true,
+            message: err.error.toString(),
+            type: 'error'
+          })
+          this.loading.account = false
+        })
       }).catch(err => {
         console.log(err)
         this.$message({
@@ -299,26 +308,17 @@ export default {
         this.loading.account = false
       })
     },
+    /**
+     * 初始未获取到手动获取
+     */
     getSignData (data) {
-      // console.log(data)
-      // console.log(data.signTx)
+      console.log(data)
+      console.log(data.signTx)
       this.modalClick()
       this.loading.account = true
       if (data.signTx) {
-        this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
-          console.log(res)
-          if (Number(this.safeMode)) {
-            this.toUrl('/person', {gID: this.gID, publicKey: res.info.PubKey})
-          } else {
-            this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
-          }
-          this.reload()
-          // this.getAccounts()
-        }).catch(err => {
-          console.log(err)
-          this.$message.error(err.error)
-          this.loading.account = false
-        })
+        this.signTx = data.signTx
+        this.validGa()
       } else {
         this.signTx = ''
         this.$message({
@@ -329,8 +329,50 @@ export default {
         this.loading.account = false
       }
     },
-    toSendTxnsUrl (obj) {
-      this.toUrl('sendTxns', this.sendDataObj)
+    validGa () {
+      let fileUrl = this.$$.config.file.ga.url
+      // let filename = this.publicKey || this.$$.config.personFilename
+      let filename = this.publicKey
+      // console.log(fileUrl)
+      this.$$.validFile(filename, fileUrl, this.$$.config.file.ga.type)
+      .then(res => {
+        console.log(res)
+        if (res.msg === 'Repeat') {
+          this.$message.error('账户已存在')
+          this.getAccounts()
+        } else {
+          this.createGaFile()
+        }
+      })
+      .catch(err => {
+        this.$message.error(err.error)
+        this.loading.account = false
+      })
+    },
+    createGaFile () {
+      // let filename = this.gID || this.$$.config.personFilename
+      // let account = this.$$.getAccount(this.signTx, '0')
+      this.$$.reqAccount(this.signTx, this.safeMode).then(res => {
+        let account = res.info
+        console.log(account)
+        let fileUrl = this.$$.config.file.ga.url + account.Address + this.$$.config.file.ga.type
+        this.$$.fs.writeFile(fileUrl, JSON.stringify(account), (err, res) => {
+          if (err) {
+            this.$message.error(err.toString())
+            this.loading.account = false
+          } else {
+            this.getAccounts()
+            this.$message({
+              message: '获取成功！',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(err => {
+        console.log(err)
+        this.$message.error(err.error)
+        this.loading.account = false
+      })
     },
     openPwdDialog () {
       if (!this.gID) {
@@ -357,23 +399,16 @@ export default {
         url = '/person/receive'
       }
       this.toUrl(url, {
-        address: item.DcrmAddr,
-        coinType: item.Cointype,
-        ERC20Coin: item.Cointype,
+        address: item.address,
+        coinType: item.coinType,
+        ERC20Coin: item.ERC20Coin,
         gID: this.gID
       })
     },
     openSendDialog (index, item) {
-      this.sendDataObj = {
-        address: this.dcrmAddr,
-        dcrmAddr: item.DcrmAddr,
-        coinType: item.Cointype,
-        gID: this.gID,
-        mode: this.gMode
-      }
-      // this.sendDataObj = item
-      // this.sendDataObj.gID = this.gID
-      // this.sendDataObj.mode = this.gMode
+      this.sendDataObj = item
+      this.sendDataObj.gID = this.gID
+      this.sendDataObj.mode = this.gMode
       if (!Number(this.safeMode)) {
         this.eDialog.send = true
       } else {

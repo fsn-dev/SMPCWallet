@@ -105,7 +105,7 @@ export default {
       console.log(this.sendDataPage)
       // let type = Number(this.$$.getCookies(this.$$.config.cookies.safeMode))
       let type = 1
-      this.$$.toSign(this.sendDataPage, pwd, type)
+      this.$$.toSign(this.sendDataPage, pwd)
         .then(res => {
           this.loading.wait = false
           this.$emit("sendSignData", res)

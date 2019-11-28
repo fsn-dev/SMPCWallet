@@ -133,12 +133,59 @@ export default {
       }
     })
   },
+  async getAccounts () {
+    // let eNode = this.getEnode()
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        // let cbData = web3.dcrm.getSDKGroup(eNode)
+        let cbData = web3.dcrm.getAccounts(eNode)
+        cbData = JSON.parse(cbData)
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          data = {msg: 'Success', info: cbData.Data.Group}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: cbData.Tip}
+          reject(data)
+        }
+      } catch (error) {
+        console.log(error)
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
+  async getAccountsBalance (pubk) {
+    // let eNode = this.getEnode()
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        // let cbData = web3.dcrm.getSDKGroup(eNode)
+        let cbData = web3.dcrm.getAccountsBalance(pubk)
+        cbData = JSON.parse(cbData)
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          data = {msg: 'Success', info: cbData.Data.Balances, address: cbData.Data.Address}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: cbData.Tip}
+          reject(data)
+        }
+      } catch (error) {
+        console.log(error)
+        data = {msg: 'Error', error: error}
+        reject(data)
+      }
+    })
+  },
   async getGroup () {
     // let eNode = this.getEnode()
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let cbData = web3.dcrm.getSDKGroup(eNode)
+        // let cbData = web3.dcrm.getAccounts(eNode)
         cbData = JSON.parse(cbData)
         console.log(cbData)
         if (cbData.Status !== 'Error') {
@@ -225,7 +272,7 @@ export default {
       }
     })
   },
-  async getAccount (signTx, mode) {
+  async reqAccount (signTx, mode) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {

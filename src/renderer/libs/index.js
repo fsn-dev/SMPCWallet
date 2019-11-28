@@ -51,9 +51,10 @@ let $$ = {
   coininfo,
   mode,
   setDollar (coin) {
+    if (!coin) return
     for (let obj in coininfo) {
       if (obj === coin) {
-        console.log(coininfo[obj])
+        // console.log(coininfo[obj])
         return coininfo[obj]
       }
     }
