@@ -59,7 +59,12 @@ const store = new Vuex.Store({
       }
     },
     setWallet (state, data) {
-      state.wallet = data
+      // state.wallet = data
+      let info = data.info ? data.info : ''
+      state.wallet = info
+      if (!data.type) {
+        cookies.setCookies('wallet', info, 0.1)
+      }
     }
     // storeCoininfoArr (state, data) {
     //   state.coininfoArr = data
@@ -98,6 +103,13 @@ const store = new Vuex.Store({
         // console.log(res)
         let data = { type: 1, info: res}
         commit('setDayAndNight', data)
+      })
+    },
+    getWallet ({commit}) {
+      cookies.getCookies('wallet').then(res => {
+        // console.log(res)
+        let data = { type: 1, info: res}
+        commit('setWallet', data)
       })
     },
   }

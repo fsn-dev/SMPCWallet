@@ -28,12 +28,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight']),
+    ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet']),
     initData () {
       this.getToken()
       this.getAddress()
       this.getSafeMode()
       this.getDayAndNight()
+      this.getWallet()
     },
     mousePos (e) {
       let x, y

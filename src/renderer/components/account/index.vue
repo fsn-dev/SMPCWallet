@@ -244,6 +244,7 @@ export default {
       } else {
         this.gID = ''
         this.gMode = ''
+        this.publicKey = ''
         this.gMemberInit = []
         this.tableData = []
         this.loading.account = false
@@ -259,6 +260,9 @@ export default {
     } else {
       this.getGroupPersonId()
     }
+    
+    // console.log(this.$store.state.wallet)
+    // console.log(this.$store.state.wallet)
   },
   methods: {
     initGroupData () {
@@ -313,6 +317,7 @@ export default {
         if (res.msg === 'Success' && res.info) {
           this.gID = res.info.Gid
           this.gMode = res.info.Mode
+          this.publicKey = res.info.PubKey ? res.info.PubKey : ''
           this.setMemberList(res.info.Enodes)
           this.loading.account = true
         }
@@ -336,24 +341,28 @@ export default {
       }
       // console.log(fileUrl)
       console.log(this.publicKey)
-      this.$$.getAccountsBalance(this.publicKey).then(res => {
-        console.log(res)
-        if (res.msg === 'Success') {
-          this.tableData = res.info
-          this.dcrmAddr = res.address
-        } else if (Number(this.safeMode)) {
-          this.reqPersonAccount()
-        }
-        this.loading.account = false
-      }).catch(err => {
-        console.log(err)
-        this.$message({
-          showClose: true,
-          message: '请获取账户',
-          type: 'error'
+      if (this.publicKey) {
+        this.$$.getAccountsBalance(this.publicKey).then(res => {
+          console.log(res)
+          if (res.msg === 'Success') {
+            this.tableData = res.info
+            this.dcrmAddr = res.address
+          } else if (Number(this.safeMode)) {
+            this.reqPersonAccount()
+          }
+          this.loading.account = false
+        }).catch(err => {
+          console.log(err)
+          this.$message({
+            showClose: true,
+            message: '请获取账户',
+            type: 'error'
+          })
+          this.loading.account = false
         })
-        this.loading.account = false
-      })
+      } else if (Number(this.safeMode)) {
+        this.reqPersonAccount()
+      }
     },
     reqPersonAccount () {
       let nonce = this.$$.getNonce(this.address, '', '')
@@ -366,10 +375,17 @@ export default {
         value: 0,
         data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
       }
-      this.$$.toSign(rawTx, this.$store.state.wallet.getPrivateKeyString()).then(res => {
-        console.log(res)
-        this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
+      this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
+        // console.log(res)
+        this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
           console.log(res)
+          if (res.msg === 'Success') {
+            this.publicKey = res.info.PubKey
+            this.getAccounts()
+          } else {
+            this.loading.account = false
+          }
+          // this.reload()
         })
       })
     },

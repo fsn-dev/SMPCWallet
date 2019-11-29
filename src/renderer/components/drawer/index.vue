@@ -26,7 +26,7 @@ $animationTime: 0.4s;
   overflow: hidden;width:100%;height:100%;position: relative;
 }
 .d-bg-box {
-  overflow: hidden;width:100%;height:100%;position: fixed;top:0;right:0;bottom:0;left: 0;z-index: 2000;
+  overflow: hidden;width:100%;height:100%;position: fixed;top:0;right:0;bottom:0;left: 0;z-index: 2002;
   .d-bg {
     width:100%;height:100%;background: rgba(0,0,0,.5);animation: drawerBg $animationTime;
   }

@@ -59,7 +59,7 @@
 
 <style lang="scss">
 .header-top-box {
-  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 9;
+  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2001;
   .header-logo {
     min-width:40px;max-width:350px;height: size(35);
     .logoImg{
