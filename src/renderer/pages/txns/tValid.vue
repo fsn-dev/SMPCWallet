@@ -71,7 +71,12 @@ export default {
       console.log(data)
       console.log(data.signTx)
       if (data && data.signTx) {
-        this.$$.sendTxnsValid(data.signTx)
+        let cbData = this.$$.sendTxnsValid(data.signTx)
+        if (cbData.msg === 'Success') {
+          this.$message({ message: 'Success!', type: 'success' })
+        } else {
+          this.$message.error('Error')
+        }
       }
       this.eDialog.pwd = false
     },
@@ -86,7 +91,7 @@ export default {
             gasPrice: this.$$.config.rawTx.gasPrice,
             nonce: nonce,
             data: 'ACCEPTLOCKOUT:' 
-                  + this.address
+                  + this.initTxnsData.Address
                   // + this.initTxnsData.DcrmFrom
                   + ':'
                   + this.initTxnsData.GroupId 
@@ -106,9 +111,6 @@ export default {
                   + type
           }
           this.eDialog.pwd = true
-          // this.dataPage = this.$$.config.rawTx
-          // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
-          console.log(this.dataPage)
         } else {
           this.$message.error(nonce)
         }

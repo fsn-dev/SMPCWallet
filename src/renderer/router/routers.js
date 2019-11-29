@@ -195,6 +195,23 @@ export default [
     ]
   },
   {
+    path: '/waitNews',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '消息',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/news/index')) )
+      }
+    ]
+  },
+  {
     path: '/tNewsList',
     component: Content,
     meta: {

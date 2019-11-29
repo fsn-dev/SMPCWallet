@@ -45,6 +45,8 @@ import {
   Badge,
   Breadcrumb,
   BreadcrumbItem,
+  Tabs,
+  TabPane,
 } from 'element-ui'
 
 Vue.use(Button)
@@ -80,6 +82,8 @@ Vue.use(Backtop)
 Vue.use(Badge)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.use(Vuex)
 

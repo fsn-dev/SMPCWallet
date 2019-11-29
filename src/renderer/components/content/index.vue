@@ -8,15 +8,15 @@
         </router-link>
       </div>
 
-      <!-- <div class="flex-c headerTop_account">
+      <div class="flex-c headerTop_account">
         <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">个人账户</p>
         <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">共管账户</p>
-      </div> -->
+      </div>
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/gNewsList')" title="共管账户消息"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">任务</el-badge></li>
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" title="共管账户消息"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">待办</el-badge></li>
+            <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
         <div class="header-top-lang">
@@ -184,7 +184,7 @@ export default {
   },
   methods: {
     newsView (cur) {
-      if (cur.path.indexOf('gNewsList') !== -1) {
+      if (cur.path.indexOf('waitNews') !== -1) {
         this.newsActive = 1
       } else if (cur.path.indexOf('tNewsList') !== -1) {
         this.newsActive = 2

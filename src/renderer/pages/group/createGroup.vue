@@ -6,14 +6,14 @@
           <el-input v-model="groupForm.name"></el-input>
         </el-form-item>
         <el-form-item label="模式">
-          <el-select v-model="groupForm.mode" placeholder="请选择模式" class="WW100">
+          <el-select v-model="groupForm.mode" placeholder="请选择模式" class="WW100" @change="changeMode">
             <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item
           v-for="(eNode, index) in groupForm.eNode"
-          :label="'用户' + index"
-          :key="eNode.key"
+          :label="'用户 ' + (index + 1)"
+          :key="index"
           :prop="'eNode.' + index + '.value'"
           :rules="{
             required: true, message: '用户不能为空', trigger: 'blur'
@@ -21,7 +21,7 @@
         >
           <div class="flex-bc">
             <el-input v-model="eNode.value" @blur="changeState(eNode, index)"></el-input>
-            <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button>
+            <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
           </div>
           <div class="flex-sc" v-if="reload">
             <span class="color_green" v-if="eNode.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
@@ -30,21 +30,49 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('groupForm')">提交</el-button>
-          <el-button @click="addDomain">新增用户</el-button>
+          <!-- <el-button @click="addDomain">新增用户</el-button> -->
           <el-button @click="resetForm('groupForm')">重置</el-button>
           <el-button @click="toUrl('/group')">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+    <!-- <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
+    </el-dialog> -->
+
+    <el-dialog title="创建确认" :visible.sync="eDialog.confirm" width="300" :before-close="modalClick">
+      <div class="confirm-list-box">
+        <ul class="list-box">
+          <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupForm.name}}</p> </li>
+          <li class="item flex-ai-fs"> <p class="label">模式:</p> <p class="info">{{groupForm.mode}}模式</p> </li>
+          <li class="item flex-ai-fs" v-for="(item, index) in groupForm.eNode" :key="index"> <p class="label">用户 {{index + 1}}:</p> <p class="info">{{item.value}}</p> </li>
+        </ul>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">取 消</el-button>
+        <el-button type="primary" @click="createGroup">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <style lang="scss">
-@import '@/assets/scss/index';
+.confirm-list-box {
+  width: 100%;
+  .list-box {
+    width: 100%;
+    .item {
+      padding: size(8) size(0);color: $color-gray;
+      .label {
+        width: 20%;text-align: right;padding-right: size(10);font-weight: bold;
+      }
+      .info {
+        width: 80%;word-break: break-all;
+      }
+    }
+  }
+}
 </style>
 
 <script>
@@ -55,7 +83,8 @@ export default {
     return {
       reload: true,
       eDialog: {
-        pwd: false
+        // pwd: false,
+        confirm: false
       },
       loading: {
         creat: false
@@ -89,6 +118,7 @@ export default {
   methods: {
     modalClick () {
       this.eDialog.pwd = false
+      this.eDialog.confirm = false
     },
     changeState (item, index) {
       this.groupForm.eNode[index].state = this.$$.getEnodeState(item.value)
@@ -97,39 +127,40 @@ export default {
         this.reload = true
       })
     },
-    getSignData (data) {
-      console.log(data)
-      this.modalClick()
-      this.loading.creat = true
-      this.createGroup()
-    },
-    openPwdDialog () {
-      try {
-        // let nonce = this.$$.getNonce(this.address, 'ALL')
-        let nonce = 0
-        if (!isNaN(nonce)) {
-          this.dataPage = {
-            from: this.address,
-            to: this.$$.config.rawTx.to,
-            gasLimit: this.$$.config.rawTx.gasLimit,
-            gasPrice: this.$$.config.rawTx.gasPrice,
-            nonce: nonce
-          }
-          this.eDialog.pwd = true
-          console.log(this.dataPage)
-        } else {
-          console.log(nonce)
-          this.$message.error(nonce)
-        }
-      } catch (error) {
-        console.log(error)
-        this.$message.error(error.toString())
-      }
-    },
+    // getSignData (data) {
+    //   console.log(data)
+    //   this.modalClick()
+    //   this.loading.creat = true
+    //   this.createGroup()
+    // },
+    // openPwdDialog () {
+    //   try {
+    //     // let nonce = this.$$.getNonce(this.address, 'ALL')
+    //     let nonce = 0
+    //     if (!isNaN(nonce)) {
+    //       this.dataPage = {
+    //         from: this.address,
+    //         to: this.$$.config.rawTx.to,
+    //         gasLimit: this.$$.config.rawTx.gasLimit,
+    //         gasPrice: this.$$.config.rawTx.gasPrice,
+    //         nonce: nonce
+    //       }
+    //       this.eDialog.pwd = true
+    //       console.log(this.dataPage)
+    //     } else {
+    //       console.log(nonce)
+    //       this.$message.error(nonce)
+    //     }
+    //   } catch (error) {
+    //     console.log(error)
+    //     this.$message.error(error.toString())
+    //   }
+    // },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.openPwdDialog()
+          // this.openPwdDialog()
+          this.eDialog.confirm = true
         } else {
           console.log('error submit!!');
           return false;
@@ -160,24 +191,21 @@ export default {
     resetForm(formName) {
       this.groupForm = {
         mode: '3/3',
-        eNode: [
-          { value: '' },
-        ],
+        eNode: [],
         name: ''
       }
+      this.changeMode()
     },
-    removeDomain(item) {
-      var index = this.groupForm.eNode.indexOf(item)
-      if (index > 0) {
-        this.groupForm.eNode.splice(index, 1)
+    changeMode () {
+      let num = Number(this.groupForm.mode.split('/')[0])
+      this.groupForm.eNode = []
+      for (let i = 0; i < num; i++) {
+        this.groupForm.eNode.push({
+          value: '',
+          key: Date.now()
+        })
       }
     },
-    addDomain() {
-      this.groupForm.eNode.push({
-        value: '',
-        key: Date.now()
-      });
-    }
   }
 }
 </script>

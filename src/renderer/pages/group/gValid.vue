@@ -23,6 +23,18 @@
         </el-form-item>
       </el-form>
     </div>
+
+    <el-dialog title="创建确认" :visible.sync="eDialog.confirm" width="300" :before-close="modalClick">
+      <div>
+        <ul>
+          <li></li>
+        </ul>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">取 消</el-button>
+        <el-button type="primary" @click="confirmGroup">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -35,11 +47,14 @@ export default {
   name: '',
   data () {
     return {
+      eDialog: {
+        confirm: false
+      },
       groupForm: {},
       modeArr: this.$$.mode,
-      // initGroupData: {},
       gID: this.$$.eNode,
-      isApply: false
+      isApply: false,
+      applyType: ''
     }
   },
   mounted () {
@@ -48,6 +63,10 @@ export default {
     this.showGroupData()
   },
   methods: {
+    modalClick () {
+      this.eDialog.confirm = false
+      this.applyType = ''
+    },
     async showGroupData () {
       let urlParams = this.$route.query
       let arr = []
@@ -70,8 +89,12 @@ export default {
         this.isApply = false
       }
     },
-    async applyGroup (type) {
-      this.$$.validGroup(this.groupForm.name, this.gID, type).then(res => {
+    applyGroup (type) {
+      this.applyType = type
+      this.eDialog.confirm = true
+    },
+    confirmGroup () {
+      this.$$.validGroup(this.groupForm.name, this.gID, this.applyType).then(res => {
         console.log(res)
         if (res.msg === 'Success' && !res.info.Error) {
           this.$message({ message: 'Confirm group success!', type: 'success' })

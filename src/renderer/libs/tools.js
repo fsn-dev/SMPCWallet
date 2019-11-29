@@ -187,6 +187,12 @@ export default {
     return val.replace(str, '')
   },
   cutERC20 (str) {
+    if (!str) {
+      return {
+        type: 0,
+        coinType: ''
+      }
+    }
     if (str.indexOf('ERC20') === 0) {
       return {
         type: 1,

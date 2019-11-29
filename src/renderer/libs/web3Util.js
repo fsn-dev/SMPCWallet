@@ -322,7 +322,12 @@ export default {
     try {
       let cbData = web3.dcrm.acceptLockOut(signTx)
       console.log(cbData)
-      data = {msg: 'Success', info: cbData}
+      if (cbData.Status !== 'Error') {
+        cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+        data = {msg: 'Success', info: cbData}
+      } else {
+        data = {msg: 'Error', error: cbData.Tip}
+      }
     } catch (error) {
       data = {msg: 'Error', error: error}
     }

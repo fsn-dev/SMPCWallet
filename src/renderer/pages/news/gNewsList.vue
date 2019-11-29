@@ -1,10 +1,10 @@
 <template>
   <div class="boxConntent1 container" v-loading="loading.list" element-loading-text="数据获取中……">
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15">
       <el-breadcrumb-item :to="{ path: '/group' }">账户列表</el-breadcrumb-item>
       <el-breadcrumb-item>消息列表</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="g-news-list-box">
+    </el-breadcrumb> -->
+    <div class="g-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item flex-bc" v-for="(item, index) in newsList" :key="index">
           <div class="left">
@@ -19,6 +19,9 @@
           <el-button @click="toUrl('/gValid', item)">Approval</el-button>
         </li>
       </ul>
+    </div>
+    <div v-if="newsList.length <= 0" class="boxConntent1 container flex-c font14 color_99">
+      No data!
     </div>
   </div>
 </template>

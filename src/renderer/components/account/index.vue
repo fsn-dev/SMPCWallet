@@ -43,53 +43,32 @@
       </el-table>
     </div>
 
-    <div class="flex-c boxConntent1" v-if="tableData.length <= 0 && gID || Number(safeMode)">
-      <el-button type="primary" @click="openPwdDialog">获取账户</el-button>
-    </div>
-
     <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">
       请选择账户
     </div>
-
-    <el-dialog title="组成员选择" :visible.sync="eDialog.send" width="300" :before-close="modalClick" :close-on-click-modal="false">
-      <div v-if="eDialog.send">
-        <el-checkbox-group v-model="gMemberSelect" :min="1" class="pl-20">
-          <el-checkbox v-for="(eNode, index) in gMemberInit" :label="eNode" :key="index">
-            <div class="flex-bc">
-              {{$$.cutOut(eNode, 22, 24)}}
-              <span class="color_green flex-bc ml-20" v-if="$$.getEnodeState(eNode) === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
-              <span class="color_red flex-bc ml-20" v-if="$$.getEnodeState(eNode) !== 'OnLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
-            </div>
-          </el-checkbox>
-        </el-checkbox-group>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="modalClick">取 消</el-button>
-        <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0">确 定</el-button>
-      </div>
-    </el-dialog>
 
     <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
 
     <el-dialog :title="'选择组'" :visible.sync="eDialog.group">
-      <el-select v-model="gID">
+      <el-select v-model="gID" @change="changeGroup">
           <el-option v-for="(item, index) in getGroup" :key="index" :label="item.Gname" :value="item.Gid"></el-option>
         </el-select>
         <div slot="footer" class="dialog-footer">
           <el-button @click="modalClick">取 消</el-button>
-          <el-button type="primary" @click="openPwdDialog" :disabled="!gID">确 定</el-button>
+          <el-button type="primary" @click="openPwdDialog(1)" :disabled="!gID">确 定</el-button>
         </div>
     </el-dialog>
 
     <!-- 查看组成员 start -->
     <w-drawer v-model="drawer.member" v-if="drawer.member">
-      <div class="g-member-list-box">
+      <div class="d-content-view g-member-list-box">
+        <h3 class="h3">当前组成员</h3>
         <ul class="">
           <li class="item">
             <p class="label flex-sc">
-              组成员 - 1 (<span class="color_green flex-sc font14">自己</span>)
+              组成员 - 1 (<span class="color_green flex-sc font14"><i class="el-icon-user mr-5"></i>自己</span>)
             </p>
             {{$$.cutOut($$.eNode, 14, 20)}}
           </li>
@@ -106,13 +85,68 @@
     </w-drawer>
     <!-- 查看组成员 end -->
 
-    <!-- 选择组成员 start -->
-    <w-drawer v-model="drawer.select" v-if="drawer.select">
-      <div>
-        
+    <!-- 节点选择 start -->
+    <w-drawer v-model="drawer.select" v-if="drawer.select" @on-close="modalClick">
+      <div class="d-content-view node-select-box">
+        <h3 class="h3">节点选择</h3>
+        <div v-if="drawer.select">
+          <el-checkbox-group v-model="gMemberSelect" :min="1" class="">
+            <el-checkbox :label="$$.eNode">
+              <div class="flex-bc">
+                {{$$.cutOut($$.eNode, 14, 20)}}
+                <span class="color_green flex-bc ml-20"><i class="el-icon-user mr-5"></i>自己</span>
+              </div>
+            </el-checkbox>
+            <el-checkbox v-for="(eNode, index) in gMemberInit" :label="eNode" :key="index">
+              <div class="flex-bc">
+                {{$$.cutOut(eNode, 14, 20)}}
+                <span class="color_green flex-bc ml-20" v-if="$$.getEnodeState(eNode) === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
+                <span class="color_red flex-bc ml-20" v-if="$$.getEnodeState(eNode) !== 'OnLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
+              </div>
+            </el-checkbox>
+          </el-checkbox-group>
+        </div>
+        <div class="node-select-btn">
+          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16">确定</el-button>
+        </div>
       </div>
     </w-drawer>
-    <!-- 选择组成员 end -->
+    <!-- 节点选择 end -->
+
+    <!-- 发送交易 start -->
+    <w-drawer v-model="drawer.send" v-if="drawer.send">
+      <div class="d-content-view">
+        <h3 class="h3">发送{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
+        <el-form ref="userInfoForm" :model="rawTx" label-width="120px" label-position="top">
+          <el-form-item label="发送地址：">
+            <el-input v-model="rawTx.to"></el-input>
+          </el-form-item>
+          <el-form-item label="资产：">
+            <el-select v-model="sendDataObj.coinType" placeholder="" class="WW100" @change="changeAccount">
+              <el-option v-for="(item, index) in tableData" :key="index" :label="$$.cutERC20(item.Cointype).coinType" :value="item.Cointype">
+                <div class="flex-sc relative">
+                  <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(item.Cointype).coinType)">
+                    <img :src="$$.setDollar($$.cutERC20(item.Cointype).coinType).logo">
+                  </div>
+                  <div class="coinTxt flex-c" v-else>
+                    {{$$.titleCase($$.cutERC20(item.Cointype).coinType)}}
+                  </div>
+                  <span style="margin-left: 10px">{{ $$.cutERC20(item.Cointype).coinType }}</span>
+                  <i v-if="$$.cutERC20(item.Cointype).type" class="isErc20 isErc20_1">ERC20</i>
+                </div>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="数量：">
+            <el-input type="number" v-model="rawTx.value"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16">发送</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </w-drawer>
+    <!-- 发送交易 end -->
   </div>
 </template>
 
@@ -120,18 +154,18 @@
 .a-header-box {
   width: 100%;padding: size(12) size(20);border-bottom: size(1) solid #eee;
 }
+$coinSize: 25;
+.coinImg {
+  width: size($coinSize);height: size($coinSize);
+  img {
+    max-width: 100%;max-height: 100%;
+  }
+}
+.coinTxt {
+  width: size($coinSize);height: size($coinSize);border:size(1) solid $color-primary;border-radius: 100%;color: $color-primary;
+}
 .a-table-box {
   width: 100%;padding: size(0) size(20);
-  $coinSize: 25;
-  .coinImg {
-    width: size($coinSize);height: size($coinSize);
-    img {
-      max-width: 100%;max-height: 100%;
-    }
-  }
-  .coinTxt {
-    width: size($coinSize);height: size($coinSize);border:size(1) solid $color-primary;border-radius: 100%;color: $color-primary;
-  }
   .el-table {
     background: none;
     th, tr {
@@ -139,10 +173,22 @@
     }
   }
 }
-.g-member-list-box {
+.d-content-view {
   width: 100%;
+  .h3 {
+    font-size: $text-lg;line-height: size(36);margin-bottom: size(20);
+  }
+}
+.g-member-list-box {
   .item {
     width: 100%;padding: size(10) size(0);color:$color-gray-sm;
+  }
+}
+.node-select-box {
+  .el-checkbox-group {
+    .el-checkbox {
+      margin-bottom: size(20);
+    }
   }
 }
 .isErc20 {position:absolute;top:5px;right: 0;font-size: 10px;color:#fff;font-style: italic;padding:0 5px;background: #004a7c;border-radius: 5px;transform: scale(0.6);}
@@ -168,7 +214,9 @@ export default {
       gMemberInit: [],
       gMemberSelect: [],
       dataPage: {},
+      rawTx: {},
       sendDataObj: {},
+      sendType: '',
       gID: '',
       publicKey: '',
       gMode: '',
@@ -180,7 +228,8 @@ export default {
         select: false,
         send: false
       },
-      getGroup: []
+      getGroup: [],
+
     }
   },
   components: {wDrawer},
@@ -255,6 +304,9 @@ export default {
       }
       // console.log(this.gMemberSelect)
     },
+    changeGroup () {
+      this.getMemberList()
+    },
     getGroupPersonId () {
       this.$$.getGroupPerson().then(res => {
         console.log(res)
@@ -286,8 +338,12 @@ export default {
       console.log(this.publicKey)
       this.$$.getAccountsBalance(this.publicKey).then(res => {
         console.log(res)
-        this.tableData = res.info
-        this.dcrmAddr = res.address
+        if (res.msg === 'Success') {
+          this.tableData = res.info
+          this.dcrmAddr = res.address
+        } else if (Number(this.safeMode)) {
+          this.reqPersonAccount()
+        }
         this.loading.account = false
       }).catch(err => {
         console.log(err)
@@ -299,26 +355,50 @@ export default {
         this.loading.account = false
       })
     },
+    reqPersonAccount () {
+      let nonce = this.$$.getNonce(this.address, '', '')
+      let rawTx = {
+        from: this.address,
+        to: this.$$.config.rawTx.to,
+        gasLimit: this.$$.config.rawTx.gasLimit,
+        gasPrice: this.$$.config.rawTx.gasPrice,
+        nonce: nonce,
+        value: 0,
+        data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
+      }
+      this.$$.toSign(rawTx, this.$store.state.wallet.getPrivateKeyString()).then(res => {
+        console.log(res)
+        this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
+          console.log(res)
+        })
+      })
+    },
     getSignData (data) {
       // console.log(data)
       // console.log(data.signTx)
       this.modalClick()
       this.loading.account = true
       if (data.signTx) {
-        this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
-          console.log(res)
-          if (Number(this.safeMode)) {
-            this.toUrl('/person', {gID: this.gID, publicKey: res.info.PubKey})
-          } else {
-            this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
-          }
-          this.reload()
-          // this.getAccounts()
-        }).catch(err => {
-          console.log(err)
-          this.$message.error(err.error)
-          this.loading.account = false
-        })
+        if (this.sendType === 1) {
+          this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
+            console.log(res)
+            if (Number(this.safeMode)) {
+              this.toUrl('/person', {gID: this.gID, publicKey: res.info.PubKey})
+            } else {
+              this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
+            }
+            this.reload()
+            // this.getAccounts()
+          }).catch(err => {
+            console.log(err)
+            this.$message.error(err.error)
+          })
+        } else {
+          let hash = this.$$.web3.dcrm.lockOut(data.signTx)
+          console.log(hash)
+        }
+        this.loading.account = false
+        this.drawer.send = false
       } else {
         this.signTx = ''
         this.$message({
@@ -330,25 +410,47 @@ export default {
       }
     },
     toSendTxnsUrl (obj) {
-      this.toUrl('sendTxns', this.sendDataObj)
+      // this.toUrl('sendTxns', this.sendDataObj)
+      this.drawer.select = false
+      this.drawer.send = true
     },
-    openPwdDialog () {
+    openPwdDialog (type) {
       if (!this.gID) {
         this.$message.error('账户为空！')
         return
       }
-      this.gMode = '3/3'
-      let nonce = this.$$.getNonce(this.address, '', '')
+      // this.gMode = '3/3'
       this.dataPage = {
         from: this.address,
         to: this.$$.config.rawTx.to,
         gasLimit: this.$$.config.rawTx.gasLimit,
         gasPrice: this.$$.config.rawTx.gasPrice,
-        nonce: nonce,
-        value: 0,
-        data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
       }
-      // alert(JSON.stringify(this.dataPage))
+      this.sendType = type
+      if (type === 1) {
+        let nonce = this.$$.getNonce(this.address, '', '')
+        this.dataPage.nonce = nonce
+        this.dataPage.value = 0
+        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.gMode
+      } else if (type === 2) {
+        let nonce = this.$$.getNonce(this.dcrmAddr, this.sendDataObj.coinType, this.sendDataObj.address)
+        this.dataPage.nonce = nonce
+        this.dataPage.value = this.rawTx.value
+        this.dataPage.data = 'LOCKOUT:' 
+                              + this.dcrmAddr
+                              + ':' 
+                              + this.sendDataObj.address
+                              + ':' 
+                              + this.rawTx.to
+                              + ':'
+                              + this.rawTx.value
+                              + ':'
+                              + this.sendDataObj.coinType
+                              + ':'
+                              + this.gID
+                              + ':'
+                              + this.gMode
+      }
       this.eDialog.pwd = true
     },
     openReceive (index, item) {
@@ -363,7 +465,7 @@ export default {
         gID: this.gID
       })
     },
-    openSendDialog (index, item) {
+    setTxnsData (item) {
       this.sendDataObj = {
         address: this.dcrmAddr,
         dcrmAddr: item.DcrmAddr,
@@ -371,11 +473,22 @@ export default {
         gID: this.gID,
         mode: this.gMode
       }
-      // this.sendDataObj = item
-      // this.sendDataObj.gID = this.gID
-      // this.sendDataObj.mode = this.gMode
+    },
+    changeAccount (value) {
+      for (let obj of this.tableData) {
+        if (obj.Cointype === value) {
+          // this.sendDataObj = obj
+          this.setTxnsData(obj)
+          break
+        }
+      }
+    },
+    openSendDialog (index, item) {
+      this.setTxnsData(item)
+      // console.log(this.sendDataObj)
       if (!Number(this.safeMode)) {
-        this.eDialog.send = true
+        // this.eDialog.send = true
+        this.drawer.select = true
       } else {
         this.toSendTxnsUrl()
       }
