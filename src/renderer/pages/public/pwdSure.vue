@@ -6,9 +6,9 @@
 
         <div class="selectType_content">
           <!-- <div class="selectType_keystore" id="keystore" data-view="keystore"> -->
-            <hgroup class="selectType_contTitle">
+            <!-- <hgroup class="selectType_contTitle">
               <h3 class="title">{{$t('PLACEHOLDER').ENTER_PASSWORD}}</h3>
-            </hgroup>
+            </hgroup> -->
             <div class="selectType_contentBox">
               <el-form ref="userInfoForm" :model="sureForm" label-width="120px" label-position="top">
                 <el-form-item label="密码：">

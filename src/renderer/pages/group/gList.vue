@@ -65,18 +65,20 @@ export default {
   },
   watch: {
     '$route' (cur) {
+      console.log(cur)
       if (cur.query.gID) {
         this.gID = this.$route.query.gID
         this.publicKey = this.$route.query.publicKey
       } else {
         this.gID = ''
+        this.publicKey = ''
       }
       // this.refreshPage()
     }
   },
   mounted () {
     this.publicKey = this.$route.query.publicKey
-    console.log(this.publicKey)
+    // console.log(this.publicKey)
     this.initGroup()
   },
   methods: {

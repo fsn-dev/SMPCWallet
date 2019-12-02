@@ -1,10 +1,10 @@
 <template>
-  <div class="boxConntent1 container">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="用户管理" name="first">
+  <div class="boxConntent1 container pt-30">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tab-pane label="建组消息" name="first">
         <g-news-list></g-news-list>
       </el-tab-pane>
-      <el-tab-pane label="配置管理" name="second">
+      <el-tab-pane label="交易消息" name="second">
         <t-news-list></t-news-list>
       </el-tab-pane>
     </el-tabs>

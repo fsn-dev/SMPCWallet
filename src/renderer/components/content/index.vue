@@ -8,7 +8,7 @@
         </router-link>
       </div>
 
-      <div class="flex-c headerTop_account">
+      <div class="flex-c header-top-account">
         <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">个人账户</p>
         <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">共管账户</p>
       </div>
@@ -29,7 +29,6 @@
           <i class="el-icon-refresh-right"></i>
         </div>
         <div class="header-top-dn cursorP" @click="changeDn">
-          <el-input v-model="dayAndNight" v-show="false"></el-input>
           <span class="round" :class="Number(dayAndNight) ? 'el-icon-sunny day' : 'el-icon-moon night'"></span>
         </div>
         
@@ -53,7 +52,7 @@
       </transition>
     </section>
 
-    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
+    <!-- <w-drawer></w-drawer> -->
   </div>
 </template>
 
@@ -66,6 +65,15 @@
       width:100%;height: 100%;
       img {
         height: 100%
+      }
+    }
+  }
+  .header-top-account {
+    font-size: 14px;
+    .item {
+      padding: 0 10px;cursor: pointer;
+      &.active {
+        background: #0099ff;color:#fff;border-radius: 5px;
       }
     }
   }
@@ -121,23 +129,22 @@
   }
 }
 
+// .headerTop_account {
+//   font-size: 14px;
+//   .item {
+//     padding: 0 10px;cursor: pointer;
+//     &.active {
+//       background: #0099ff;color:#fff;border-radius: 5px;
+//     }
+//   }
+// }
 
 
-.headerTop_account {
-  font-size: 14px;
-  .item {
-    padding: 0 10px;cursor: pointer;
-    &.active {
-      background: #0099ff;color:#fff;border-radius: 5px;
-    }
-  }
-}
 
 </style>
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-// import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
   name: 'index',
   provide () {
@@ -202,7 +209,8 @@ export default {
       } else {
         this.$store.commit('setDayAndNight', {info: '1'})
       }
-      this.Refresh()
+      console.log(this.dayAndNight)
+      // this.Refresh()
     },
     intervalNews () {
       this.$$.getPendingGroup().then(res => {

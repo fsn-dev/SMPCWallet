@@ -26,6 +26,13 @@ $btn-h: 45;
     width: size($btn-h / 2);height: size($btn-w);position: absolute;background: #fff;transform: skew(-10deg);border-right: size(1) solid $color-primary;border-left: size(1) solid $color-primary;
   }
 }
+.night {
+  .btn-box {
+    .obliqueLine {
+      background: $night-bg-color;
+    }
+  }
+}
 </style>
 
 <script>

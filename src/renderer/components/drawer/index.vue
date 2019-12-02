@@ -1,15 +1,15 @@
 <template>
   <div class="d-bg-box">
     <div class="d-relative">
-      <div class="d-bg cursorP" @click="closeDrawer"></div>
+      <div class="d-bg cursorP" :class="closeFlag ? 'd-bg-leave' : 'd-bg-enter'" @click="closeDrawer"></div>
       <!-- <div class="d-close flex-c" @click="closeDrawer"><i class="el-icon-close"></i></div> -->
-      <div class="d-content">
+      <div class="d-content" :class="closeFlag ? 'd-content-leave' : 'd-content-enter'">
         <div class="d-relative d-content-bg">
           <router-link :to="token ? (Number(this.safeMode) ? 'person' : 'group') : '/'" class="logoImg flex-sc">
             <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
             <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
           </router-link>
-          <div class="d-back" @click="closeDrawer"> &lt; Back</div>
+          <div class="d-back"> <span @click="closeDrawer">&lt; Back</span></div>
           <div class="d-relative d-content-info" style="overflow:auto;">
             <slot></slot>
           </div>
@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $drawerW: 400;
 $animationTime: 0.4s;
 .d-relative {
@@ -28,14 +28,14 @@ $animationTime: 0.4s;
 .d-bg-box {
   overflow: hidden;width:100%;height:100%;position: fixed;top:0;right:0;bottom:0;left: 0;z-index: 2002;
   .d-bg {
-    width:100%;height:100%;background: rgba(0,0,0,.5);animation: drawerBg $animationTime;
+    width:100%;height:100%;background: rgba(0,0,0,.5);
   }
   .d-close {
     $closeSize: 30;
     width: size($closeSize);height: size($closeSize);position: absolute;top:0;right: size($drawerW);z-index: 2;background: rgba(255,255,255,.5);cursor:pointer;
   }
   .d-content {
-    width: size($drawerW);height: 100%;background: #fff;position: absolute;top:0;bottom: 0;right: size(0);animation: drawerEnter $animationTime;overflow: auto;
+    width: size($drawerW);height: 100%;background: #fff;position: absolute;top:0;bottom: 0;right: size(0);overflow: auto;
     .d-content-bg {
       $topImgH: 60;
       $topBackH: 40;
@@ -56,13 +56,34 @@ $animationTime: 0.4s;
     }
   }
 }
-@keyframes drawerBg {
+.d-bg-enter {
+  animation: drawerBgEnter $animationTime;
+}
+@keyframes drawerBgEnter {
   from {background: none;}
   to {background: rgba(0,0,0,.5);}
 }
-@keyframes drawerEnter {
+.d-content-enter {
+  animation: drawerContentEnter $animationTime;
+}
+@keyframes drawerContentEnter {
   from {right: size(-$drawerW)}
   to {right: 0}
+}
+
+.d-bg-leave {
+  animation: drawerBgLeave $animationTime;
+}
+@keyframes drawerBgLeave {
+  from {background: rgba(0,0,0,.5);}
+  to {background: none;}
+}
+.d-content-leave {
+  animation: drawerContentLeave $animationTime;
+}
+@keyframes drawerContentLeave {
+  from {right: 0}
+  to {right: size(-$drawerW)}
 }
 </style>
 
@@ -71,23 +92,24 @@ import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: 'drawer',
   props: {
-
   },
   data () {
     return {
-      
+      closeFlag: false
     }
   },
   computed: {
     ...computedPub
   },
   mounted () {
-
   },
   methods: {
     closeDrawer () {
-      this.$emit('input', false)
-      this.$emit('on-close')
+      this.closeFlag = true
+      setTimeout(() => {
+        this.$emit('input', false)
+        this.$emit('on-close')
+      }, 400)
     }
   }
 }

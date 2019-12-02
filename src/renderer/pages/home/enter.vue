@@ -2,7 +2,9 @@
   <div class="bg flex-c">
     <div class="e-box">
       <div class="line-block logo">
-        <img src="@etc/img/logo/logo-white.svg">
+        <!-- <img :src="dayAndNight ? '~@etc/img/logo/logo-white.svg' : '~@etc/img/logo/logo-black.svg'"> -->
+        <img src="@etc/img/logo/logo-white.svg" v-if="!dayAndNight">
+        <img src="@etc/img/logo/logo-black.svg" v-else>
       </div>
       <h3 class="title"><span>SMPC</span> Wallet</h3>
       <p class="tip">欢迎使用SMPC Wallet 1.0<br>请创建一个钱包或者导入一个钱包</p>
@@ -37,6 +39,13 @@
   }
   .tip {
     font-size: $text-normal;color:$color-gray;line-height: size(21);
+  }
+}
+.night {
+  .e-box {
+    .title {
+      color: #fff;
+    }
   }
 }
 </style>

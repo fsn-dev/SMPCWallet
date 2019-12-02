@@ -51,3 +51,25 @@
     }
   }
 }
+
+// 夜间模式
+.night {
+  .appTitle {
+    color: #fff;
+  }
+  .user-form-box {
+    .user-form-title {
+      .back, .title  {
+        color: #fff;
+      }
+    }
+    .user-form-input {
+      .el-form-item__label {
+        color: #999;
+      }
+      .btn {
+        background: $color-primary;border-color: $color-primary;
+      }
+    }
+  }
+}

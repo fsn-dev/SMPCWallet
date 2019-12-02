@@ -53,8 +53,11 @@ const store = new Vuex.Store({
     },
     setDayAndNight (state, data) {
       let info = data.info ? data.info.toString() : config.dayAndNight
+      // console.log(data)
+      // console.log(info)
       state.dayAndNight = info
       if (!data.type) {
+        // console.log(info)
         cookies.setCookies('dayAndNight', info, 7)
       }
     },

@@ -61,11 +61,14 @@ let $$ = {
     return ''
   },
   quitApp (that) {
+    let dayAndNight = that.$store.state.dayAndNight
     cookies.clearCookies()
     // that.$$.setToken('')
     // that.$$.setCookies(config.cookies.address, '')
     that.$store.commit('setAddress', '')
     that.$store.commit('setToken', '')
+    that.$store.commit('setWallet', '')
+    that.$store.commit('setDayAndNight', {info: dayAndNight})
     that.$store.commit('setSafeMode', {info: config.modeInit})
     that.$router.push('/')
   }

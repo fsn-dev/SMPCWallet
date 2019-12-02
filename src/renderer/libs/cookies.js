@@ -11,7 +11,7 @@ const url = config.url || 'http://127.0.0.1'
  * @param expires 过期时间
  */
 let setCookie = (name, value, expires) => {
-  let Days = expires || 1
+  let Days = Number(expires) || 1
   let exp = new Date()
   let date = Math.round(exp.getTime() / 1000) + Days * 24 * 60 * 60
   const cookie = {

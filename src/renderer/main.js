@@ -101,8 +101,9 @@ Vue.prototype.toUrl = function(url, params) {
 }
 
 import pwdSure from '@/pages/public/pwdSure'
-
+import wDrawer from '@/components/drawer/index'
 Vue.component('pwdSure', pwdSure)
+Vue.component('wDrawer', wDrawer)
 
 /* eslint-disable no-new */
 new Vue({

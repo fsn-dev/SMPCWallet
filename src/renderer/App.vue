@@ -1,11 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" :class="Number(dayAndNight) ? '' : 'night'">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 // import {StartPoint} from '@/assets/js/refresh'
+import {computedPub} from '@/assets/js/pages/public'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
   name: 'key-house',
@@ -19,6 +20,9 @@ export default {
       currentSecond: 0
     }
   },
+  computed: {
+    ...computedPub,
+  },
   created () {
     // console.log(StartPoint)
     this.initData()
@@ -26,6 +30,9 @@ export default {
     document.body.onmousemove = () => {
       this.GetXYPosition()
     }
+  },
+  mounted () {
+    // console.log(this.dayAndNight)
   },
   methods: {
     ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet']),

@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.account" element-loading-text="账户获取中……">
+  <div class="boxConntent1 bgff" v-loading="loading.account" element-loading-text="账户获取中……">
     <div class="flex-bc a-header-box" v-if="!Number(safeMode)">
       <div>
         <el-button type="primary" @click="eDialog.group = true">生成账户</el-button>
@@ -197,7 +197,6 @@ $coinSize: 25;
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import wDrawer from '@/components/drawer/index'
 export default {
   name: '',
   inject: ['reload'],
@@ -232,7 +231,6 @@ export default {
 
     }
   },
-  components: {wDrawer},
   computed: {
     ...computedPub,
   },
