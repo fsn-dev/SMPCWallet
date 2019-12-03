@@ -100,6 +100,24 @@ Vue.prototype.toUrl = function(url, params) {
   this.$router.push({path: url, query: params})
 }
 
+Vue.prototype.copyTxt = function(txt, isShowCont) {
+  let status = $$.setCopyTxt(txt)
+  let cont = isShowCont ? (' ' + txt + ' ') : ''
+  if (status === 'Success') {
+    this.$message({
+      showClose: true,
+      message: 'Copy ' + cont + ' succeeded!',
+      type: 'success'
+    })
+  } else {
+    this.$message({
+      showClose: true,
+      message: 'Copy ' + cont + ' failed!',
+      type: 'error'
+    })
+  }
+}
+
 import pwdSure from '@/pages/public/pwdSure'
 import wDrawer from '@/components/drawer/index'
 Vue.component('pwdSure', pwdSure)

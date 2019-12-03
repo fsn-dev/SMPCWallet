@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-c bg">
+  <div class="flex-c bg" v-loading="loading.wait" element-loading-text="账户生成中……">
     <div class="user-form-box">
 
       <div class="user-form-title">
@@ -11,11 +11,11 @@
         <h3 class="title">创建用户</h3>
       </div>
 
-      <div class="user-form-input" v-loading="loading.file">
+      <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :rules="rules" :model="registerObj" label-width="120px" label-position="top">
             <el-form-item label="用户名：" prop="username">
-              <el-input v-model="registerObj.username"></el-input>
+              <el-input v-model="registerObj.username" @input="validInfo"></el-input>
             </el-form-item>
             <el-form-item label="密码：" prop="newpwd">
               <el-input type="password" v-model="registerObj.password"></el-input>
@@ -24,7 +24,7 @@
               <el-input type="password" v-model="registerObj.password2"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30">创建</el-button>
+              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">创建</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
@@ -41,10 +41,12 @@
 
 <script>
 import regExp from '@etc/js/config/RegExp'
+import headerImg from './headerImg'
 export default {
   name: '',
   data () {
     const validatePass = (rule, value, callback) => {
+      this.validInfo()
       if (this.registerObj.password) {
         if (!regExp.pwd.test(this.registerObj.password)) {
           callback(new Error('密码只能输入6-20个字母、数字、下划线'))
@@ -56,6 +58,7 @@ export default {
       }
     };
     const validatePass2 = (rule, value, callback) => {
+      this.validInfo()
       if (!this.registerObj.password2) {
         callback(new Error('请再次输入密码'))
       } else if (this.registerObj.password2 !== this.registerObj.password) {
@@ -67,7 +70,8 @@ export default {
     return {
       registerObj: {},
       loading: {
-        file: false
+        file: true,
+        wait: false
       },
       rules: {
         username: [
@@ -84,15 +88,25 @@ export default {
     }
   },
   mounted () {
-    
+    // console.log(headerImg)
   },
   methods: {
+    ...headerImg,
+    validInfo () {
+      if (this.registerObj.username && this.registerObj.password && this.registerObj.password2 && (this.registerObj.password === this.registerObj.password2)) {
+        this.loading.file = false
+      } else {
+        this.loading.file = true
+      }
+    },
     submitForm(formName) {
       if (this.loading.file) return
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.loading.file = true
-          this.changePwd()
+          this.loading.wait = true
+          setTimeout(() => {
+            this.changePwd()
+          }, 300)
         } else {
           console.log('error submit!!')
           return false;
@@ -103,37 +117,49 @@ export default {
       const walletInit = this.$$.wallet.generate(this.registerObj.password)
       let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
       let fileUrl = this.$$.config.file.ks.url + this.registerObj.username + this.$$.config.file.ks.type
-      console.log(fileUrl)
-      // alert(fileUrl)
       this.$$.fs.writeFile(fileUrl, JSON.stringify(walletJSON), (err, res) => {
-        // alert(err)
-        // alert(res)
         if (err) {
-          this.$message.error(err.toString())
+          console.log(err)
+          this.$message({
+            showClose: true,
+            message: err.toString(),
+            type: 'error'
+          })
         } else {
           this.$message({
+            showClose: true,
             message: '创建成功！',
             type: 'success'
           })
+          this.createHeader(walletInit.getPublicKeyString(), walletInit.getAddressString())
         }
         this.registerObj = {}
-        this.loading.file = false
+        this.loading.wait = false
         this.toUrl('/')
       })
     },
     changePwd () {
       let fileUrl = this.$$.config.file.ks.url
-      console.log(fileUrl)
       this.$$.validFile(this.registerObj.username, fileUrl, this.$$.config.file.ks.type)
       .then(res => {
         if (res.msg === 'Repeat') {
-          this.$message.error('账户已存在')
+          this.$message({
+            showClose: true,
+            message: '账户已存在',
+            type: 'error'
+          })
+          this.loading.wait = false
         } else {
           this.createFile()
         }
       })
       .catch(err => {
-        this.$message.error(err.error)
+        this.$message({
+          showClose: true,
+          message: err.error,
+          type: 'error'
+        })
+        this.loading.wait = false
       })
     }
   }

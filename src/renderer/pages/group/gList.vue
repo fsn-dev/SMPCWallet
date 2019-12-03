@@ -24,7 +24,7 @@
         </li>
       </ul>
       <div class="flex-c boxConntent1" v-else>
-        <el-button type="primary" @click="toUrl('createGroup')">创建共管账户</el-button>
+        <el-button type="primary" @click="toUrl('createGroup')" class="btn-primary">创建共管账户</el-button>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
 
 <style lang="scss">
 .g-list-box {
-  width: 100%;height: 100%;background: #fff;padding: size(0) 0;overflow: auto;border-right:size(1) solid #f2f2f2;
+  width: 100%;height: 100%;padding: size(0) 0;overflow: auto;border-right:size(1) solid #f2f2f2;
   .item {
     width: 100%; cursor: pointer;padding: size(8) size(12);
     $label-h: 30px;
@@ -49,6 +49,21 @@
     // .el-collapse-item__header {
     //   background: none;
     // }
+  }
+}
+
+.night {
+  .g-list-box {
+    border-right:size(1) solid $night-line-color;
+    .item {
+      color: $night-text-color;
+      &:hover{
+        background: $night-line-color;
+      }
+      &.active {
+        background: $night-line-color;
+      }
+    }
   }
 }
 </style>
@@ -99,7 +114,11 @@ export default {
           this.gID = this.$route.query.gID
         }
       }).catch(err => {
-        this.$message.error(err.toString())
+        this.$message({
+          showClose: true,
+          message: err.toString(),
+          type: 'error'
+        })
       })
     },
     changeGroup (item) {

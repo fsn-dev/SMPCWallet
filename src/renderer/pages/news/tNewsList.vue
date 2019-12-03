@@ -35,7 +35,7 @@
 <style lang="scss">
 // @import '@/assets/scss/index';
 .t-news-list-box {
-  width: 100%;min-height: 80%;padding: size(10) size(0); background:#fff;margin:size(15) 0;
+  width: 100%;min-height: 80%;padding: size(10) size(0); margin:size(15) 0;
   .item {
     width: 100%;border: size(1) solid $color-primary-sm;border-radius: size(8);font-size: $text-normal;color: #333;cursor: pointer;padding:size(30) size(20) size(20);margin-bottom: size(25);
     .address-box {
@@ -44,7 +44,7 @@
       .addr {
         width: 50%;text-align: center;color:$color-primary;font-size:$text-normal;
         .label {
-          color: $color-black;margin-right: size(5);font-weight: bold;
+          color: $color-gray;margin-right: size(5);font-weight: bold;
         }
       }
       .round {
@@ -57,7 +57,7 @@
       .amt {
         width: 50%;text-align: center;font-size:$text-normal;color: $color-gray;
         .label {
-          color: $color-black;margin-right: size(5);font-weight: bold;
+          color: $color-gray;margin-right: size(5);font-weight: bold;
         }
       }
     }
@@ -66,7 +66,7 @@
       .at {
         width: 50%;text-align: center;font-size:$text-normal;color: $color-gray;
         .label {
-          color: $color-black;margin-right: size(5);font-weight: bold;
+          color: $color-gray;margin-right: size(5);font-weight: bold;
         }
       }
       .el-button {
@@ -103,7 +103,11 @@ export default {
         this.newsList = res.info
         this.loading.list = false
       }).catch(err => {
-        this.$message.error(err.error)
+        this.$message({
+          showClose: true,
+          message: err.error,
+          type: 'error'
+        })
         this.loading.list = false
       })
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="boxConntent1 container pt-30">
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="n-tab-box">
       <el-tab-pane label="建组消息" name="first">
         <g-news-list></g-news-list>
       </el-tab-pane>
@@ -12,7 +12,14 @@
 </template>
 
 <style lang="scss">
-
+.n-tab-box {
+  .el-tabs__item {
+    color: $color-gray;
+    &.is-active {
+      color: $color-primary;
+    }
+  }
+}
 </style>
 
 <script>

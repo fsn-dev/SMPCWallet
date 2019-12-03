@@ -127,35 +127,6 @@ export default {
         this.reload = true
       })
     },
-    // getSignData (data) {
-    //   console.log(data)
-    //   this.modalClick()
-    //   this.loading.creat = true
-    //   this.createGroup()
-    // },
-    // openPwdDialog () {
-    //   try {
-    //     // let nonce = this.$$.getNonce(this.address, 'ALL')
-    //     let nonce = 0
-    //     if (!isNaN(nonce)) {
-    //       this.dataPage = {
-    //         from: this.address,
-    //         to: this.$$.config.rawTx.to,
-    //         gasLimit: this.$$.config.rawTx.gasLimit,
-    //         gasPrice: this.$$.config.rawTx.gasPrice,
-    //         nonce: nonce
-    //       }
-    //       this.eDialog.pwd = true
-    //       console.log(this.dataPage)
-    //     } else {
-    //       console.log(nonce)
-    //       this.$message.error(nonce)
-    //     }
-    //   } catch (error) {
-    //     console.log(error)
-    //     this.$message.error(error.toString())
-    //   }
-    // },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -176,15 +147,27 @@ export default {
         let gInfo = res
         console.log(gInfo)
         if (gInfo.msg === 'Success') {
-          this.$message({ message: 'Create group success!', type: 'success' })
+          this.$message({
+            showClose: true,
+            message: 'Create group success!',
+            type: 'success'
+          })
           this.toUrl('/group')
         } else {
           let error = gInfo.info.toString()
-          this.$message.error(error)
+          this.$message({
+            showClose: true,
+            message: error,
+            type: 'error'
+          })
         }
         this.loading.creat = false
       }).catch(err => {
-        this.$message.error(err)
+        this.$message({
+          showClose: true,
+          message: err,
+          type: 'error'
+        })
         this.loading.creat = false
       })
     },

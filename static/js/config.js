@@ -61,10 +61,14 @@ let publicSet = {
       url: path + '/data/ks/',
       type: '.json'
     },
-    ga: { // keystore 地址和后缀名
+    ga: { // 账户 地址和后缀名
       url: path + '/data/ga/',
       type: '.json'
     },
+    img: {
+      url: path + '/data/img/',
+      type: '.jpg'
+    }
   },
   personFilename: 'Person',
   /**

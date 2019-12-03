@@ -12,7 +12,7 @@
 
 <style lang="scss">
 .i-g-box {
-  width: 100%;height: 100%;background: #f5f5f5;position: relative;
+  width: 100%;height: 100%;position: relative;
   .i-g-nav {
     width: 30%;max-width: 300px;min-height: 200px;height: 100%;
   }

@@ -17,6 +17,12 @@ const routers = new Router({
 })
 
 // routers.beforeEach((to, from, next) => {
+//   console.log(to)
+//   if (to.path === '/person') {
+//     next()
+//   } else {
+//     next()
+//   }
 //   const hideSearchURL = ['/createWallet', '/importWallet', '/login', '/register']
 //   // console.log(to)
 //   if ($$.getToken()) {

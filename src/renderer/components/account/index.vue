@@ -1,8 +1,8 @@
 <template>
-  <div class="boxConntent1 bgff" v-loading="loading.account" element-loading-text="账户获取中……">
+  <div class="boxConntent1" v-loading="loading.account" element-loading-text="账户获取中……">
     <div class="flex-bc a-header-box" v-if="!Number(safeMode)">
       <div>
-        <el-button type="primary" @click="eDialog.group = true">生成账户</el-button>
+        <el-button type="primary" @click="eDialog.group = true" class="btn-primary">生成账户</el-button>
       </div>
       <div @click="gID ? drawer.member = true : ''"><i class="el-icon-menu cursorP"></i></div>
     </div>
@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column label="地址">
           <template slot-scope="scope">
-            <div class="WW100 ellipsis" :title="scope.row.DcrmAddr">{{ scope.row.DcrmAddr }}</div>
+            <div class="WW100 ellipsis cursorP" :title="scope.row.DcrmAddr" @click="copyTxt(scope.row.DcrmAddr)">{{ scope.row.DcrmAddr }}</div>
           </template>
         </el-table-column>
         <el-table-column label="余额" width="120" align="right">
@@ -37,7 +37,7 @@
         <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">转入</el-button>
-            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)">转出</el-button>
+            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">转出</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,12 +52,12 @@
     </el-dialog>
 
     <el-dialog :title="'选择组'" :visible.sync="eDialog.group">
-      <el-select v-model="gID" @change="changeGroup">
+      <el-select v-model="gID" @change="changeGroup" no-match-text="Null" no-data-text="Null" placeholder="Null">
           <el-option v-for="(item, index) in getGroup" :key="index" :label="item.Gname" :value="item.Gid"></el-option>
         </el-select>
         <div slot="footer" class="dialog-footer">
           <el-button @click="modalClick">取 消</el-button>
-          <el-button type="primary" @click="openPwdDialog(1)" :disabled="!gID">确 定</el-button>
+          <el-button type="primary" @click="openPwdDialog(1)" :disabled="!gID" class="btn-primary">确 定</el-button>
         </div>
     </el-dialog>
 
@@ -107,7 +107,7 @@
           </el-checkbox-group>
         </div>
         <div class="node-select-btn">
-          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16">确定</el-button>
+          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">确定</el-button>
         </div>
       </div>
     </w-drawer>
@@ -141,7 +141,7 @@
             <el-input type="number" v-model="rawTx.value"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16">发送</el-button>
+            <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16 btn-primary">发送</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -193,9 +193,32 @@ $coinSize: 25;
 }
 .isErc20 {position:absolute;top:5px;right: 0;font-size: 10px;color:#fff;font-style: italic;padding:0 5px;background: #004a7c;border-radius: 5px;transform: scale(0.6);}
 .isErc20_1{top: 0px;}
+
+.night {
+  .a-header-box {
+    border-bottom:size(1) solid $night-line-color;color: $night-text-color;
+  }
+  .a-table-box {
+    .el-table::before {
+      border: none;height: 0;
+    }
+    .el-table td, .el-table th {
+      border-bottom:size(1) solid $night-line-color;color: $night-text-color;
+    }
+    .el-table__body tr.hover-row > td, .el-table__body tr:hover > td {
+      background: $night-bg-color-sm;
+    }
+  }
+  .d-content-view {
+    .h3 {
+      color: $night-text-color;
+    }
+  }
+}
 </style>
 
 <script>
+// import Identicon from 'identicon.js'
 import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: '',
@@ -258,6 +281,7 @@ export default {
     } else {
       this.getGroupPersonId()
     }
+
     
     // console.log(this.$store.state.wallet)
     // console.log(this.$store.state.wallet)
@@ -285,7 +309,12 @@ export default {
         }
         this.getMemberList()
       }).catch(err => {
-        this.$message.error(err.toString())
+        console.log(err)
+        this.$message({
+          showClose: true,
+          message: err.toString(),
+          type: 'error'
+        })
       })
     },
     getMemberList () {
@@ -314,7 +343,7 @@ export default {
         console.log(res)
         if (res.msg === 'Success' && res.info) {
           this.gID = res.info.Gid
-          this.gMode = res.info.Mode
+          this.gMode = res.info.Mode ? res.info.Mode : '3/3'
           this.publicKey = res.info.PubKey ? res.info.PubKey : ''
           this.setMemberList(res.info.Enodes)
           this.loading.account = true
@@ -327,6 +356,7 @@ export default {
           message: err.error.toString(),
           type: 'error'
         })
+        this.loading.account = false
       })
     },
     /**
@@ -338,7 +368,7 @@ export default {
         return
       }
       // console.log(fileUrl)
-      console.log(this.publicKey)
+      // console.log(this.publicKey)
       if (this.publicKey) {
         this.$$.getAccountsBalance(this.publicKey).then(res => {
           console.log(res)
@@ -373,6 +403,7 @@ export default {
         value: 0,
         data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
       }
+      console.log(rawTx)
       this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
         // console.log(res)
         this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
@@ -405,11 +436,19 @@ export default {
             // this.getAccounts()
           }).catch(err => {
             console.log(err)
-            this.$message.error(err.error)
+            this.$message({
+              showClose: true,
+              message: err.error.toString(),
+              type: 'error'
+            })
           })
         } else {
-          let hash = this.$$.web3.dcrm.lockOut(data.signTx)
-          console.log(hash)
+          try {
+            let hash = this.$$.web3.dcrm.lockOut(data.signTx)
+            console.log(hash)
+          } catch (error) {
+            console.log(error)
+          }
         }
         this.loading.account = false
         this.drawer.send = false
@@ -430,7 +469,11 @@ export default {
     },
     openPwdDialog (type) {
       if (!this.gID) {
-        this.$message.error('账户为空！')
+        this.$message({
+          showClose: true,
+          message: '账户为空！',
+          type: 'error'
+        })
         return
       }
       // this.gMode = '3/3'
@@ -464,7 +507,10 @@ export default {
                               + this.gID
                               + ':'
                               + this.gMode
+                              + ':'
+                              + this.safeMode
       }
+      this.drawer.send = false
       this.eDialog.pwd = true
     },
     openReceive (index, item) {

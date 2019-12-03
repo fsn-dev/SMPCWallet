@@ -68,7 +68,11 @@ export default {
       this.loading.wait = true
       // console.log(username)
       if (!username) {
-        this.$message.error('登陆超时，请重新登陆！')
+        this.$message({
+          showClose: true,
+          message: '登陆超时，请重新登陆！',
+          type: 'error'
+        })
         this.$$.quitApp(this)
         this.sureForm.password = ''
         this.loading.wait = false
@@ -85,19 +89,31 @@ export default {
                 )
                 this.toSign(walletInfo.getPrivateKeyString())
               } else {
-                this.$message.error('Error')
+                this.$message({
+                  showClose: true,
+                  message: 'Error',
+                  type: 'error'
+                })
               }
               // console.log(walletInfo.getPrivateKeyString())
             } catch (e) {
               console.log(e)
               this.elDialogView()
-              this.$message.error(e.toString())
+              this.$message({
+                showClose: true,
+                message: e.toString(),
+                type: 'error'
+              })
             }
           })
           .catch(err => {
             console.log(err)
             this.elDialogView()
-            this.$message.error(err.toString())
+            this.$message({
+              showClose: true,
+              message: err.toString(),
+              type: 'error'
+            })
           })
       }
     },
@@ -114,7 +130,11 @@ export default {
           console.log(err)
           this.loading.wait = false
           this.$emit("sendSignData", {error: err})
-          this.$message.error(err.toString())
+          this.$message({
+            showClose: true,
+            message: err.toString(),
+            type: 'error'
+          })
         })
       this.sureForm.password = ''
     },

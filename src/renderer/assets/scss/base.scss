@@ -23,8 +23,14 @@ $color-black: #252525;
 $color-gray: #666666;
 $color-gray-sm: #999;
 
-$night-bg-color: #152131;
 
+// 夜间模式
+$night-bg-color: #152131;
+$night-bg-color-sm: #1a2940;
+
+$night-line-color: #0b1723;
+
+$night-text-color: #727983;
 
 $text-lg: size(28);
 $text-md: size(18);

@@ -52,10 +52,26 @@
   }
 }
 
+.btn-primary {
+  background: $color-primary;color: #fff;border: size(1) solid $color-primary;
+  &:hover {
+    background: $color-primary;border: size(1) solid $color-primary;
+  }
+  &:focus {
+    background: $color-primary;border: size(1) solid $color-primary;
+  }
+  &.is-disabled {
+    opacity: .5;
+  }
+}
+
 // 夜间模式
 .night {
   .appTitle {
     color: #fff;
+  }
+  .btn-primary {
+    
   }
   .user-form-box {
     .user-form-title {

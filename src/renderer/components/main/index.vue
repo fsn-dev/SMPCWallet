@@ -188,7 +188,11 @@ export default {
     },
     faucetModelBtn () {
       if (!this.faucetVal) {
-        this.$message.error('Address is null!')
+        this.$message({
+          showClose: true,
+          message: 'Address is null!',
+          type: 'error'
+        })
         return
       }
       this.faucetVal = this.faucetVal.replace(/\s/g, '')
@@ -205,9 +209,17 @@ export default {
           ws.onmessage = (res) => {
             let data = JSON.parse(res.data)
             if (data.state && data.state === 'ERR') {
-              this.$message.error(data.msg)
+              this.$message({
+                showClose: true,
+                message: data.msg,
+                type: 'error'
+              })
             } else if (data.state && data.state === 'OK') {
-              this.$message({ message: data.msg, type: 'success' })
+              this.$message({
+                showClose: true,
+                message: data.msg,
+                type: 'error'
+              })
               setTimeout(() => {
                 this.reload()
               }, 3000)
@@ -231,6 +243,7 @@ export default {
           this.isFaucetModel = false
           console.log(error)
           this.$message({
+            showClose: true,
             message: error.toString(),
             type: 'warning'
           })
@@ -242,6 +255,7 @@ export default {
     customNet () {
       if (!this.network) {
         this.$message({
+          showClose: true,
           message: 'The URL cannot be null',
           type: 'warning'
         })
@@ -253,6 +267,7 @@ export default {
         chainId: this.chainId
       })
       this.$message({
+        showClose: true,
         message: 'Success',
         type: 'success'
       })
@@ -286,6 +301,7 @@ export default {
       document.getElementById(id).select()
       document.execCommand('Copy')
       this.$message({
+        showClose: true,
         message: this.$t('SUCCESS_TIP').TIP_0,
         type: 'success'
       })

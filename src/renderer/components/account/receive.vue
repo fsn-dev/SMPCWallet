@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container bgff">
+  <div class="boxConntent1 container">
     <!-- <div class="receiveContent_box">
     </div> -->
     <div class="receiveAddress_box">
@@ -157,7 +157,9 @@ export default {
     copyAddress (id, textId) {
       document.getElementById(id).select()
       document.execCommand("Copy")
+      
       this.$message({
+        showClose: true,
         message: this.$t('SUCCESS_TIP').TIP_0,
         type: 'success'
       })

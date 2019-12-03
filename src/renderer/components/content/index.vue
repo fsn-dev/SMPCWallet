@@ -2,7 +2,7 @@
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="header-top-box flex-bc">
       <div class="header-logo flex-c">
-        <router-link :to="typeof token !== 'undefined' ? (Number(this.safeMode) ? 'person' : 'group') : '/'" class="logoImg flex-sc">
+        <router-link :to="typeof token !== 'undefined' ? (Number(this.safeMode) ? '/person' : '/group') : '/'" class="logoImg flex-sc">
           <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
           <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
         </router-link>
@@ -29,11 +29,12 @@
           <i class="el-icon-refresh-right"></i>
         </div>
         <div class="header-top-dn cursorP" @click="changeDn">
-          <span class="round" :class="Number(dayAndNight) ? 'el-icon-sunny day' : 'el-icon-moon night'"></span>
+          <span class="round" :class="Number(dayAndNight) ? 'el-icon-sunny day' : 'el-icon-moon moon'"></span>
         </div>
         
         <div class="header-top-user">
-          <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div>
+          <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
+          <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img :src="headerImg"></div>
           <ul class="user-list box_Wshadow1" v-show="isUserView">
             <li class="item" @click="toUrl('createGroup');changeUserView()" title="创建共管账户"><i class="el-icon-plus mr-5"></i>创建共管账户</li>
             <li class="item" @click="changeMode('1')" title="个人账户"><i class="el-icon-user mr-5"></i>个人账户</li>
@@ -45,20 +46,22 @@
     </header>
     <input type="text" v-model="address" id="addressCopy" class="fixedHide">
     
-    <!-- <section id="boxContent_box" v-if="!address"> -->
     <section id="boxContent_box" @click="changeUserView">
       <transition name="fade">
         <router-view v-if="isRouterAlive" ref="nav"></router-view>
       </transition>
     </section>
 
-    <!-- <w-drawer></w-drawer> -->
+    
+    <w-drawer v-model="drawer.user" v-if="drawer.user">
+
+    </w-drawer>
   </div>
 </template>
 
 <style lang="scss">
 .header-top-box {
-  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2001;
+  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2000;
   .header-logo {
     min-width:40px;max-width:350px;height: size(35);
     .logoImg{
@@ -73,7 +76,7 @@
     .item {
       padding: 0 10px;cursor: pointer;
       &.active {
-        background: #0099ff;color:#fff;border-radius: 5px;
+        background: $color-primary;color:#fff;border-radius: 5px;
       }
     }
   }
@@ -94,7 +97,7 @@
     .header-top-lang {
       width: 80px;
       .el-input__inner{
-        border:none;padding-left: 0;background: none;
+        border:none;padding-left: 0;background: none;color: $color-gray-sm;
       }
     }
     .header-top-dn {
@@ -106,7 +109,7 @@
       .day {
         left: 0;
       }
-      .night {
+      .moon {
         right: 0;
       }
     }
@@ -114,7 +117,10 @@
       $hImg: 30;
       position: relative;
       .headImg {
-        width: size($hImg);height: size($hImg);border-radius: 100%;cursor: pointer;
+        width: size($hImg);height: size($hImg);border-radius: 100%;cursor: pointer;overflow: hidden;
+        img {
+          height: 100%;
+        }
       }
       .user-list {
         width: size(200);position: absolute;top: size($hImg + 10);right: size(8);background: #fff;padding: size(8) size(0);border-radius: size(3);
@@ -129,18 +135,24 @@
   }
 }
 
-// .headerTop_account {
-//   font-size: 14px;
-//   .item {
-//     padding: 0 10px;cursor: pointer;
-//     &.active {
-//       background: #0099ff;color:#fff;border-radius: 5px;
-//     }
-//   }
-// }
+#boxContent_box{width:100%;position:absolute;top:70px;right:0;bottom:0px;left:0;overflow: auto;overflow-x: hidden;background: #fff;}
 
-
-
+.night {
+  .header-top-box {
+    background: $night-bg-color-sm;
+    .header-top-account {
+      color: #fff;
+    }
+    .header-top-set-box {
+      .header-top-nav {
+        color: #fff;
+      }
+    }
+  }
+  #boxContent_box {
+    background: $night-bg-color;
+  }
+}
 </style>
 
 <script>
@@ -167,6 +179,10 @@ export default {
       intervalSwitch: '',
       isUserView: false,
       newsActive: 0,
+      drawer: {
+        user: false
+      },
+      headerImg: ''
     }
   },
   watch: {
@@ -181,6 +197,9 @@ export default {
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
+  // console.log(require(this.$$.config.file.img.url + this.address + this.$$.config.file.img.type))
+    // console.log(this.$$.config.file.img.url + this.address + this.$$.config.file.img.type)
+    this.headerImg = this.$$.config.file.img.url + this.address + this.$$.config.file.img.type
     // console.log(this.dayAndNight)
     // console.log(this.safeMode)
     // console.log(this.$store.state.safeMode)
@@ -259,6 +278,7 @@ export default {
       document.getElementById(id).select()
       document.execCommand('Copy')
       this.$message({
+        showClose: true,
         message: this.$t('SUCCESS_TIP').TIP_0,
         type: 'success'
       })

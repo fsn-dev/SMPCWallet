@@ -97,13 +97,21 @@ export default {
       this.$$.validGroup(this.groupForm.name, this.gID, this.applyType).then(res => {
         console.log(res)
         if (res.msg === 'Success' && !res.info.Error) {
-          this.$message({ message: 'Confirm group success!', type: 'success' })
+          this.$message({ showClose: true, message: 'Confirm group success!', type: 'success' })
           this.toUrl('/group')
         } else {
-          this.$message.error(res.info.Error)
+          this.$message({
+            showClose: true,
+            message: res.info.Error.toString(),
+            type: 'error'
+          })
         }
       }).catch(err => {
-        this.$message.error(err.error)
+        this.$message({
+          showClose: true,
+          message: err.error.toString(),
+          type: 'error'
+        })
       })
     }
   }

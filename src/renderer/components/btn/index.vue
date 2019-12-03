@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex-c btn-box">
-      <span class="btn flex-c left" @click="onOk">{{ok}}</span>
+      <span class="btn flex-c left btn-primary" @click="onOk">{{ok}}</span>
       <span class="btn flex-c right" @click="onCancel">{{cancel}}</span>
       <div class="obliqueLine"></div>
     </div>
@@ -17,7 +17,7 @@ $btn-h: 45;
     width: 50%;height: size(45);font-size: $text-md;font-weight: 600;border-radius:size(3);cursor: pointer;
   }
   .left {
-    background: $color-primary;color: #fff;padding-right: size(15);
+    padding-right: size(15);
   }
   .right {
     border: size(1) solid $color-primary;color: $color-primary;padding-left: size(15);

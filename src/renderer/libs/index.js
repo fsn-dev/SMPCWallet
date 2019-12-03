@@ -38,6 +38,10 @@ import web3Util from '@/libs/web3Util'
  * @description mode基本选项
  */
 import mode from '@etc/js/config/mode'
+/**
+ * @description 复制粘贴
+ */
+import clipboard from '@/libs/clipboard'
 
 let $$ = {
   ...tools,
@@ -45,6 +49,7 @@ let $$ = {
   ...qrCode,
   ...files,
   ...web3Util,
+  ...clipboard,
   config,
   wallet,
   web3,

@@ -71,7 +71,11 @@ export default {
         this.loading.list = false
       }).catch(err => {
         this.newsList = []
-        this.$message.error(err.error)
+        this.$message({
+          showClose: true,
+          message: err.error,
+          type: 'error'
+        })
         this.loading.list = false
       })
     }

@@ -73,9 +73,13 @@ export default {
       if (data && data.signTx) {
         let cbData = this.$$.sendTxnsValid(data.signTx)
         if (cbData.msg === 'Success') {
-          this.$message({ message: 'Success!', type: 'success' })
+          this.$message({ showClose: true, message: 'Success!', type: 'success' })
         } else {
-          this.$message.error('Error')
+          this.$message({
+            showClose: true,
+            message: 'Error',
+            type: 'error'
+          })
         }
       }
       this.eDialog.pwd = false
@@ -112,10 +116,18 @@ export default {
           }
           this.eDialog.pwd = true
         } else {
-          this.$message.error(nonce)
+          this.$message({
+            showClose: true,
+            message: nonce,
+            type: 'error'
+          })
         }
       } catch (error) {
-        this.$message.error(error.toString())
+        this.$message({
+          showClose: true,
+          message: error.toString(),
+          type: 'error'
+        })
       }
     },
     submitForm(formName, type) {
@@ -129,25 +141,6 @@ export default {
         }
       });
     },
-    // createGroup () {
-    //   let eNode = this.$$.web3.dcrm.getEnode()
-    //   // let arr = [this.$$.getEnode()]
-    //   let arr = []
-    //   for (let obj of this.rawTxData.eNode) {
-    //     arr.push(obj.value)
-    //   }
-    //   try {
-    //     let gInfo = this.$$.createGroup(this.rawTxData.name, this.rawTxData.mode, arr)
-    //     if (gInfo && !gInfo.Error) {
-    //       this.$message({ message: 'Create group success!', type: 'success' })
-    //       this.toUrl('/group')
-    //     } else {
-    //       this.$message.error(gInfo.Error)
-    //     }
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
     resetForm(formName) {
       this.rawTxData = {
         to: '',

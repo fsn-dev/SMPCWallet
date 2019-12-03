@@ -103,10 +103,18 @@ export default {
           // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
           console.log(this.dataPage)
         } else {
-          this.$message.error(nonce)
+          this.$message({
+            showClose: true,
+            message: nonce,
+            type: 'error'
+          })
         }
       } catch (error) {
-        this.$message.error(error.toString())
+        this.$message({
+          showClose: true,
+          message: error.toString(),
+          type: 'error'
+        })
       }
     },
     submitForm(formName) {

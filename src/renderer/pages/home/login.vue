@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-c bg">
+  <div class="flex-c bg"  v-loading="loading.wait" element-loading-text="账户验证中……">
     <div class="user-form-box">
       <div class="user-form-title">
         <div class="logo flex-sc">
@@ -10,17 +10,17 @@
         <h3 class="title">登陆账户</h3>
       </div>
 
-      <div class="user-form-input" v-loading="loading.file">
+      <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
-          <el-form ref="userInfoForm" :model="loginObj" label-width="120px" label-position="top">
-            <el-form-item label="用户名：">
-              <el-input v-model="loginObj.username"></el-input>
+          <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top">
+            <el-form-item label="用户名：" prop="username">
+              <el-input v-model="loginObj.username" @input="validInfo"></el-input>
             </el-form-item>
-            <el-form-item label="密码：">
-              <el-input type="password" v-model="loginObj.password"></el-input>
+            <el-form-item label="密码：" prop="password">
+              <el-input type="password" v-model="loginObj.password" @input="validInfo"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm" :disabled="loading.file" class="btn mt-30">登陆</el-button>
+              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">登陆</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
@@ -39,14 +39,26 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import headerImg from './headerImg'
 export default {
   name: '',
   data () {
     return {
       loginObj: {},
       loading: {
-        file: false
+        file: true,
+        wait: false
       },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 20, message: '密码只能输入6-20个字母、数字、下划线', trigger: 'blur' }
+        ],
+      }
     }
   },
   computed: {
@@ -56,54 +68,99 @@ export default {
     
   },
   methods: {
-    submitForm () {
+    ...headerImg,
+    validInfo () {
+      if (this.loginObj.username && this.loginObj.username.length > 3 && this.loginObj.password && this.loginObj.password.length > 5) {
+        this.loading.file = false
+      } else {
+        this.loading.file = true
+      }
+    },
+    submitForm(formName) {
+      if (this.loading.file) return
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.loading.wait = true
+          setTimeout(() => {
+            this.validForm()
+          }, 300)
+        } else {
+          console.log('error submit!!')
+          return false;
+        }
+      });
+    },
+    validForm () {
+      this.loading.wait = true
       this.$$.validFile(this.loginObj.username, this.$$.config.file.ks.url, this.$$.config.file.ks.type)
       .then(res => {
         if (res.msg === 'Repeat') {
           this.inputFileBtn()
         } else {
-          this.$message.error('账户不存在')
+          this.$message({
+            showClose: true,
+            message: '账户不存在',
+            type: 'error'
+          })
+          this.loading.wait = false
         }
       })
       .catch(err => {
         console.log(err)
-        this.$message.error(err.error.toString())
+        this.$message({
+          showClose: true,
+          message: err.error.toString(),
+          type: 'error'
+        })
+        this.loading.wait = false
       })
     },
     inputFileBtn () {
       let fileUrl = this.$$.config.file.ks.url + this.loginObj.username + this.$$.config.file.ks.type
       // console.log(fileUrl)
-      this.$$.readFile(fileUrl)
-        .then(res => {
-          try{
-            if (this.$$.wallet.walletRequirePass(res.info)) {
-              this.walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
-                res.info,
-                this.loginObj.password
-              )
-              let address = this.walletInfo.getChecksumAddressString()
-              // this.$$.setToken(this.loginObj.username)
-              // this.$$.setCookies(this.$$.config.cookies.address, address)
-              this.$store.commit('setAddress', {info: address})
-              this.$store.commit('setToken', {info: this.loginObj.username})
-              this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})
-              if (Number(this.safeMode)) {
-                this.$router.push('/person')
-              } else {
-                this.$router.push('/group')
-              }
+      this.$$.readFile(fileUrl).then(res => {
+        try{
+          if (this.$$.wallet.walletRequirePass(res.info)) {
+            this.walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
+              res.info,
+              this.loginObj.password
+            )
+            let address = this.walletInfo.getChecksumAddressString()
+            this.createHeader(this.walletInfo.getPublicKeyString(), address)
+            this.$store.commit('setAddress', {info: address})
+            this.$store.commit('setToken', {info: this.loginObj.username})
+            this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})
+            if (Number(this.safeMode)) {
+              this.$router.push('/person')
             } else {
-              this.$message.error('Error')
+              this.$router.push('/group')
             }
-          } catch (e) {
-            console.log(e)
-            this.$message.error(e.toString())
+          } else {
+            this.$message({
+              showClose: true,
+              message: 'Error',
+              type: 'error'
+            })
+            this.loading.wait = false
           }
+        } catch (e) {
+          console.log(e)
+          this.$message({
+            showClose: true,
+            message: e.toString(),
+            type: 'error'
+          })
+          this.loading.wait = false
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message({
+          showClose: true,
+          message: err.error.toString(),
+          type: 'error'
         })
-        .catch(err => {
-          console.log(err)
-          this.$message.error(err.error.toString())
-        })
+        this.loading.wait = false
+      })
     },
   }
 }

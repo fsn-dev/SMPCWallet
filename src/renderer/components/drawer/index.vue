@@ -85,6 +85,19 @@ $animationTime: 0.4s;
   from {right: 0}
   to {right: size(-$drawerW)}
 }
+
+.night {
+  .d-bg-box {
+    .d-content {
+      background: $night-bg-color-sm;
+      .d-content-bg {
+        .d-back {
+          color: $night-text-color;
+        }
+      }
+    }
+  }
+}
 </style>
 
 <script>
