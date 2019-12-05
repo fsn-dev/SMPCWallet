@@ -15,8 +15,8 @@
                   <el-input type="password" v-model="sureForm.password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="inputFileBtn">{{$t('BTN').YES_SURE}}</el-button>
-                  <el-button @click="elDialogView">{{$t('BTN').CANCEL}}</el-button>
+                  <el-button type="primary" @click="inputFileBtn">{{$t('btn').unlock}}</el-button>
+                  <el-button @click="elDialogView">{{$t('btn').cancel}}</el-button>
                 </el-form-item>
               </el-form>
               <!-- <div class="selectType_contTnput">

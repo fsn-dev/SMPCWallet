@@ -4,18 +4,19 @@
       <div class="header-logo flex-c">
         <router-link :to="typeof token !== 'undefined' ? (Number(this.safeMode) ? '/person' : '/group') : '/'" class="logoImg flex-sc">
           <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
-          <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
+          <p class="appTitle ml-10 flex-c font18" v-html="$t('title').walletTitle"></p>
         </router-link>
       </div>
 
       <div class="flex-c header-top-account">
-        <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">个人账户</p>
-        <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">共管账户</p>
+        <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('btn').person}}</p>
+        <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('btn').group}}</p>
       </div>
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" title="共管账户消息"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">待办</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" title="待办"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">待办</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/createGroup')" title="创建共管账户">创建共管账户</li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
@@ -61,7 +62,7 @@
 
 <style lang="scss">
 .header-top-box {
-  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2000;
+  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2001;
   .header-logo {
     min-width:40px;max-width:350px;height: size(35);
     .logoImg{
@@ -212,7 +213,7 @@ export default {
     newsView (cur) {
       if (cur.path.indexOf('waitNews') !== -1) {
         this.newsActive = 1
-      } else if (cur.path.indexOf('tNewsList') !== -1) {
+      } else if (cur.path.indexOf('createGroup') !== -1) {
         this.newsActive = 2
       } else {
         this.newsActive = 0
@@ -228,7 +229,7 @@ export default {
       } else {
         this.$store.commit('setDayAndNight', {info: '1'})
       }
-      console.log(this.dayAndNight)
+      // console.log(this.dayAndNight)
       // this.Refresh()
     },
     intervalNews () {

@@ -5,23 +5,23 @@
       <div class="user-form-title">
         <div class="logo flex-sc">
           <img src="@etc/img/logo/logo.svg">
-          <p class="appTitle ml-10"><span>SMPC</span>Wallet</p>
+          <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
         </div>
-        <router-link to="/" class="back">&lt;返回</router-link>
-        <h3 class="title">创建用户</h3>
+        <router-link to="/" class="back" v-html="$t('btn').back"></router-link>
+        <h3 class="title">{{$t('title').register}}</h3>
       </div>
 
       <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :rules="rules" :model="registerObj" label-width="120px" label-position="top">
-            <el-form-item label="用户名：" prop="username">
+            <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="registerObj.username" @input="validInfo"></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="newpwd">
-              <el-input type="password" v-model="registerObj.password"></el-input>
+            <el-form-item :label="$t('label').password" prop="newpwd">
+              <el-input type="password" v-model="registerObj.password" @input="validInfo"></el-input>
             </el-form-item>
-            <el-form-item label="确认密码：" prop="renewpwd">
-              <el-input type="password" v-model="registerObj.password2"></el-input>
+            <el-form-item :label="$t('label').password2" prop="renewpwd">
+              <el-input type="password" v-model="registerObj.password2" @input="validInfo"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">创建</el-button>
@@ -46,26 +46,26 @@ export default {
   name: '',
   data () {
     const validatePass = (rule, value, callback) => {
-      this.validInfo()
       if (this.registerObj.password) {
         if (!regExp.pwd.test(this.registerObj.password)) {
-          callback(new Error('密码只能输入6-20个字母、数字、下划线'))
+          callback(new Error(this.$t('error').err_4))
         } else {
           callback()
         }
       } else {
-        callback(new Error('请输入密码'))
+        callback(new Error(this.$t('error').err_3))
       }
+      this.validInfo()
     };
     const validatePass2 = (rule, value, callback) => {
-      this.validInfo()
       if (!this.registerObj.password2) {
-        callback(new Error('请再次输入密码'))
+        callback(new Error(this.$t('error').err_5))
       } else if (this.registerObj.password2 !== this.registerObj.password) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error(this.$t('error').err_6))
       } else {
         callback()
       }
+      this.validInfo()
     }
     return {
       registerObj: {},
@@ -75,8 +75,8 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: this.$t('error').err_1, trigger: 'blur' },
+          { min: 3, max: 20, message: this.$t('error').err_2, trigger: 'blur' }
         ],
         newpwd: [
           { required: true, validator: validatePass, trigger: 'blur' }
@@ -128,7 +128,7 @@ export default {
         } else {
           this.$message({
             showClose: true,
-            message: '创建成功！',
+            message: this.$t('success').s_1,
             type: 'success'
           })
           this.createHeader(walletInit.getPublicKeyString(), walletInit.getAddressString())
@@ -145,7 +145,7 @@ export default {
         if (res.msg === 'Repeat') {
           this.$message({
             showClose: true,
-            message: '账户已存在',
+            message: this.$t('error').err_7,
             type: 'error'
           })
           this.loading.wait = false

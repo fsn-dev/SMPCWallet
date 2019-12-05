@@ -16,7 +16,7 @@
             </div>
           </div>
           <!-- <p class="p2">{{$$.timeChange({date: item.time, type: 'yyyy-mm-dd hh:mm:ss'})}}</p> -->
-          <el-button @click="toUrl('/gValid', item)">Approval</el-button>
+          <el-button @click="toUrl('/gValid', item)" class="btn-primary">Approval</el-button>
         </li>
       </ul>
     </div>
@@ -29,7 +29,7 @@
 <style lang="scss">
 // @import '@/assets/scss/index';
 .g-news-list-box {
-  width: 100%;min-height: 80%;padding: size(10) size(0); background:#fff;margin:size(15) 0;
+  width: 100%;min-height: 80%;padding: size(10) size(0); margin:size(15) 0;
   .item {
     width: 100%;border: size(1) solid $color-primary-sm;border-radius: size(8);font-size: $text-normal;color: #333;cursor: pointer;padding:size(20) size(20) size(20);margin-bottom: size(25);
     .left {

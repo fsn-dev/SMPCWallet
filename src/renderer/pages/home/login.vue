@@ -4,23 +4,23 @@
       <div class="user-form-title">
         <div class="logo flex-sc">
           <img src="@etc/img/logo/logo.svg">
-          <p class="appTitle ml-10"><span>SMPC</span>Wallet</p>
+          <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
         </div>
-        <router-link to="/" class="back">&lt;返回</router-link>
-        <h3 class="title">登陆账户</h3>
+        <router-link to="/" class="back" v-html="$t('btn').back"></router-link>
+        <h3 class="title">{{$t('title').login}}</h3>
       </div>
 
       <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top">
-            <el-form-item label="用户名：" prop="username">
+            <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="loginObj.username" @input="validInfo"></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="password">
+            <el-form-item :label="$t('label').password" prop="password">
               <el-input type="password" v-model="loginObj.password" @input="validInfo"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">登陆</el-button>
+              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').login}}</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
@@ -51,12 +51,12 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: this.$t('error').err_1, trigger: 'blur' },
+          { min: 3, max: 20, message: this.$t('error').err_2, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 20, message: '密码只能输入6-20个字母、数字、下划线', trigger: 'blur' }
+          { required: true, message: this.$t('error').err_3, trigger: 'blur' },
+          { min: 6, max: 20, message: this.$t('error').err_4, trigger: 'blur' }
         ],
       }
     }
@@ -70,7 +70,7 @@ export default {
   methods: {
     ...headerImg,
     validInfo () {
-      if (this.loginObj.username && this.loginObj.username.length > 3 && this.loginObj.password && this.loginObj.password.length > 5) {
+      if (this.loginObj.username && this.loginObj.username.length >= 3 && this.loginObj.password && this.loginObj.password.length > 5) {
         this.loading.file = false
       } else {
         this.loading.file = true

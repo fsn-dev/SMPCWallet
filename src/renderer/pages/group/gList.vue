@@ -69,6 +69,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: '',
   data () {
@@ -77,6 +78,9 @@ export default {
       publicKey: '',
       gID: ''
     }
+  },
+  computed: {
+    ...computedPub,
   },
   watch: {
     '$route' (cur) {
@@ -98,7 +102,7 @@ export default {
   },
   methods: {
     initGroup () {
-      this.$$.getAccounts().then(res => {
+      this.$$.getAccounts(this.safeMode).then(res => {
         console.log(res)
         this.groupList = []
         let arr = res.info ? res.info : []
@@ -114,11 +118,13 @@ export default {
           this.gID = this.$route.query.gID
         }
       }).catch(err => {
-        this.$message({
-          showClose: true,
-          message: err.toString(),
-          type: 'error'
-        })
+        if (err.error) {
+          this.$message({
+            showClose: true,
+            message: err.error,
+            type: 'error'
+          })
+        }
       })
     },
     changeGroup (item) {

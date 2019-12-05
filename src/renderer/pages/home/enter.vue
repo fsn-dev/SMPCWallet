@@ -6,18 +6,11 @@
         <img src="@etc/img/logo/logo-white.svg" v-if="!dayAndNight">
         <img src="@etc/img/logo/logo-black.svg" v-else>
       </div>
-      <h3 class="title"><span>SMPC</span> Wallet</h3>
-      <p class="tip">欢迎使用SMPC Wallet 1.0<br>请创建一个钱包或者导入一个钱包</p>
-      <!-- <div class="flex-c btn-box">
-        <router-link to="login" class="btn flex-c login">{{$t('BTN').LOGIN}}</router-link>
-        <router-link to="register" class="btn flex-c register">{{$t('BTN').REGISTER}}</router-link>
-        <div class="obliqueLine"></div>
-      </div> -->
-      <w-button :ok="$t('BTN').LOGIN" :cancel="$t('BTN').REGISTER" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
+      <h3 class="title" v-html="$t('title').walletTitle"></h3>
+      <p class="tip" v-html="$t('tip').walletTip"></p>
+
+      <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
       <el-input v-model="test" class="mt-30"></el-input>
-      <!-- <el-button type="primary" @click="test0">{{$t('BTN').LOGIN}}</el-button>
-      <el-button type="success" @click="test1">{{$t('BTN').REGISTER}}</el-button> -->
-      <!-- {{$$.getEnode().toString()}} -->
     </div>
   </div>
 </template>

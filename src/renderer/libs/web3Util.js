@@ -10,7 +10,6 @@ let getEnode = () => {
     if (cbData.Status === "Success") {
       return cbData.Data.Enode
     } else {
-      console.log(cbData)
       setTimeout(() => {
         getEnode()
       }, 1000 * 3)
@@ -31,7 +30,7 @@ export default {
     try {
       let cbData = web3.dcrm.getEnodeStatus(eNode)
       cbData = JSON.parse(cbData)
-      console.log(cbData)
+      // console.log(cbData)
       if (cbData.Status === 'Success') {
         return 'OnLine'
       } else {
@@ -45,7 +44,7 @@ export default {
   getNonce (addr, coinType, dcrmAddr) {
     try {
       let cbData = web3.dcrm.getNonce(addr, coinType, dcrmAddr)
-      console.log(cbData)
+      // console.log(cbData)
       if (cbData.Status !== 'Error') {
         cbData = cbData.Data.result
       } else {
@@ -67,7 +66,7 @@ export default {
       }
       batch.requestManager.sendBatch(batch.requests, (err, res) => {
         if (err) {
-          data = {msg: 'Error', error: err}
+          data = {msg: 'Error', error: err.toString()}
           reject(data)
         } else {
           let i = 0
@@ -102,11 +101,12 @@ export default {
         if (cbData.Status !== 'Error') {
           arr = cbData.Data.GroupList && cbData.Data.GroupList.length > 0 ? cbData.Data.GroupList : []
         }
-        console.log(cbData)
+        // console.log(cbData)
         data = {msg: 'Success', info: arr}
         resolve(data)
       } catch (error) {
-        data = {msg: 'Error', error: error}
+        console.log(error)
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -118,7 +118,7 @@ export default {
       try {
         let cbData = web3.dcrm.getSDKGroupPerson(eNode)
         cbData = JSON.parse(cbData)
-        console.log(cbData)
+        // console.log(cbData)
         if (cbData.Status !== 'Error') {
           data = {msg: 'Success', info: cbData.Data.GroupList[0]}
           resolve(data)
@@ -128,18 +128,18 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
   },
-  async getAccounts () {
+  async getAccounts (mode) {
     // let eNode = this.getEnode()
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         // let cbData = web3.dcrm.getSDKGroup(eNode)
-        let cbData = web3.dcrm.getAccounts(eNode)
+        let cbData = web3.dcrm.getAccounts(mode)
         cbData = JSON.parse(cbData)
         console.log(cbData)
         if (cbData.Status !== 'Error') {
@@ -151,7 +151,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -164,7 +164,7 @@ export default {
         // let cbData = web3.dcrm.getSDKGroup(eNode)
         let cbData = web3.dcrm.getAccountsBalance(pubk)
         cbData = JSON.parse(cbData)
-        console.log(cbData)
+        // console.log(cbData)
         if (cbData.Status !== 'Error') {
           data = {msg: 'Success', info: cbData.Data.Balances, address: cbData.Data.Address}
           resolve(data)
@@ -174,7 +174,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -187,7 +187,7 @@ export default {
         let cbData = web3.dcrm.getSDKGroup(eNode)
         // let cbData = web3.dcrm.getAccounts(eNode)
         cbData = JSON.parse(cbData)
-        console.log(cbData)
+        // console.log(cbData)
         if (cbData.Status !== 'Error') {
           data = {msg: 'Success', info: cbData.Data.GroupList}
           resolve(data)
@@ -197,7 +197,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -225,7 +225,7 @@ export default {
         })
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -236,7 +236,7 @@ export default {
       try {
         let cbData = web3.dcrm.createSDKGroup(name, mode, nodeArr)
         cbData = cbData && JSON.parse(cbData) ? JSON.parse(cbData) : ''
-        console.log(cbData)
+        // console.log(cbData)
         if (cbData.Status !== 'Error') {
           data = {msg: 'Success', info: cbData.data}
           resolve(data)
@@ -246,7 +246,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -257,7 +257,7 @@ export default {
       try {
         let cbData = web3.dcrm.setGroupNodeStatus(name, eNode, type)
         cbData = JSON.parse(cbData)
-        console.log(cbData)
+        // console.log(cbData)
         if (cbData.Status !== 'Error') {
           data = {msg: 'Success', info: cbData.Data}
           resolve(data)
@@ -267,7 +267,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
@@ -312,16 +312,32 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        data = {msg: 'Error', error: error}
+        data = {msg: 'Error', error: error.toString()}
         reject(data)
       }
     })
+  },
+  lockout (signTx) {
+    let data = {msg: '', info: ''}
+    try {
+      let cbData = web3.dcrm.lockOut(signTx)
+      // console.log(cbData)
+      if (cbData.Status !== 'Error') {
+        cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+        data = {msg: 'Success', info: cbData}
+      } else {
+        data = {msg: 'Error', error: cbData.Error}
+      }
+    } catch (error) {
+      data = {msg: 'Error', error: error.toString()}
+    }
+    return data
   },
   sendTxnsValid (signTx) {
     let data = {msg: '', info: ''}
     try {
       let cbData = web3.dcrm.acceptLockOut(signTx)
-      console.log(cbData)
+      // console.log(cbData)
       if (cbData.Status !== 'Error') {
         cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
         data = {msg: 'Success', info: cbData}
@@ -329,7 +345,7 @@ export default {
         data = {msg: 'Error', error: cbData.Tip}
       }
     } catch (error) {
-      data = {msg: 'Error', error: error}
+      data = {msg: 'Error', error: error.toString()}
     }
     return data
   },

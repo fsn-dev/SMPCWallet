@@ -3,18 +3,27 @@
 
 
 .c-form-box {
-  width: 600px;margin:30px auto;padding: 60px 25px;background:#fff;border-radius: 6px;
+  width: 600px;margin:30px auto;padding: 60px 25px;border-radius: 6px;
   .el-form-item__label {
     line-height: 28px;padding-bottom: 0;
   }
 }
 
 .n-list-box {
-  width: 100%;min-height: 80%;padding: 30px 15px; background:#fff;margin:15px 0;
+  width: 100%;min-height: 80%;padding: 30px 15px; margin:15px 0;
   .item {
     width: 100%;border-bottom: 1px solid #eee;padding:8px 0;font-size: 14px;color: #333;cursor: pointer;
     .p2{
       color:#999;
+    }
+  }
+}
+
+.tab-box {
+  .el-tabs__item {
+    color: $color-gray;
+    &.is-active {
+      color: $color-primary;
     }
   }
 }

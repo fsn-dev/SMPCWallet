@@ -53,12 +53,12 @@
 
     <el-dialog :title="'选择组'" :visible.sync="eDialog.group">
       <el-select v-model="gID" @change="changeGroup" no-match-text="Null" no-data-text="Null" placeholder="Null">
-          <el-option v-for="(item, index) in getGroup" :key="index" :label="item.Gname" :value="item.Gid"></el-option>
-        </el-select>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="modalClick">取 消</el-button>
-          <el-button type="primary" @click="openPwdDialog(1)" :disabled="!gID" class="btn-primary">确 定</el-button>
-        </div>
+        <el-option v-for="(item, index) in getGroup" :key="index" :label="item.Gname" :value="item.Gid"></el-option>
+      </el-select>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">取 消</el-button>
+        <el-button type="primary" @click="openPwdDialog(1)" :disabled="!gID" class="btn-primary">确 定</el-button>
+      </div>
     </el-dialog>
 
     <!-- 查看组成员 start -->
@@ -279,7 +279,9 @@ export default {
         this.initGroupData()
       }, 50)
     } else {
-      this.getGroupPersonId()
+      setTimeout(() => {
+        this.getPersonAccount()
+      }, 50)
     }
 
     
@@ -312,7 +314,7 @@ export default {
         console.log(err)
         this.$message({
           showClose: true,
-          message: err.toString(),
+          message: err.error,
           type: 'error'
         })
       })
@@ -338,6 +340,29 @@ export default {
     changeGroup () {
       this.getMemberList()
     },
+    getPersonAccount () {
+      this.$$.getAccounts(this.safeMode).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && res.info.length > 0) {
+          this.gID = res.info[0].GroupID
+          this.gMode = res.info.Mode ? res.info.Mode : '3/3'
+          this.publicKey = res.info[0].Accounts[0] ? res.info[0].Accounts[0] : ''
+          this.getAccounts()
+        } else {
+          this.getGroupPersonId()
+        }
+      }).catch(err => {
+        console.log(err)
+        this.getGroupPersonId()
+        if (err.error) {
+          this.$message({
+            showClose: true,
+            message: err.error,
+            type: 'error'
+          })
+        }
+      })
+    },
     getGroupPersonId () {
       this.$$.getGroupPerson().then(res => {
         console.log(res)
@@ -353,7 +378,7 @@ export default {
         console.log(err)
         this.$message({
           showClose: true,
-          message: err.error.toString(),
+          message: err.error,
           type: 'error'
         })
         this.loading.account = false
@@ -438,13 +463,22 @@ export default {
             console.log(err)
             this.$message({
               showClose: true,
-              message: err.error.toString(),
+              message: err.error,
               type: 'error'
             })
           })
         } else {
           try {
-            let hash = this.$$.web3.dcrm.lockOut(data.signTx)
+            let cbData = this.$$.lockout(data.signTx)
+            if (cbData.msg === 'Success') {
+              this.$message({ showClose: true, message: 'Success!', type: 'success' })
+            } else {
+              this.$message({
+                showClose: true,
+                message: cbData.error,
+                type: 'error'
+              })
+            }
             console.log(hash)
           } catch (error) {
             console.log(error)

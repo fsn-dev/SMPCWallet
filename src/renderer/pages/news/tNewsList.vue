@@ -18,7 +18,7 @@
           </div>
           <div class="action-box flex-bc">
             <p class="at" :title="item.GroupId"><span class="label">Source:</span> {{$$.cutOut(item.GroupId, 16, 14)}}</p>
-            <el-button @click="toUrl('/tValid', item)">Approval</el-button>
+            <el-button @click="toUrl('/tValid', item)" class="btn-primary">Approval</el-button>
           </div>
           <!-- <p class="p1">{{item.Account}}</p>
           <p class="p2">{{$$.thousandBit(item.Value, 2)}}</p> -->
