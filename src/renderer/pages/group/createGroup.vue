@@ -1,70 +1,63 @@
 <template>
   <div class="boxConntent1 container pt-30" v-loading="loading.creat" element-loading-text="账户建立中……">
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box c-form-box mt-0">
-      <el-tab-pane label="选择已有组" name="first">
-        <div class="WW100">
-          <el-form label-width="100px" label-position="top">
-            <el-form-item label="组名" prop="name">
-              <el-select v-model="gID" @change="changeGroup" no-match-text="Null" no-data-text="Null" placeholder="Null" class="WW100">
-                <el-option v-for="(item, index) in getGroup" :key="index" :label="item.Gname" :value="item.Gid"></el-option>
-              </el-select>
-            </el-form-item>
-            <div class="confirm-list-box" v-if="groupMember">
+
+    <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
+      <el-radio-group v-model="gID" class="WW100 flex-sc flex-wrap" @change="changeGroup">
+        <el-radio class="WW100 mr-0" v-for="(item, index) in getGroup" :key="index" :label="item.Gid" border>
+          <!-- {{item.Gname}} -->
+          <el-popover placement="left-start" width="500" trigger="hover">
+            <div class="confirm-list-box">
               <ul class="list-box">
-                <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupMember.Gname}}</p> </li>
-                <li class="item flex-ai-fs"> <p class="label">模式:</p> <p class="info">{{groupMember.Mode}}模式</p> </li>
-                <li class="item flex-ai-fs" v-for="(item, index) in groupMember.Enodes" :key="index"> <p class="label">用户 {{index + 1}}:</p> <p class="info">{{item}}</p> </li>
+                <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{item.Gname}}</p> </li>
+                <li class="item flex-ai-fs"> <p class="label">模式:</p> <p class="info">{{item.Mode}}模式</p> </li>
+                <li class="item flex-ai-fs" v-for="(eNode, index) in item.Enodes" :key="index"> <p class="label">用户 {{index + 1}}:</p> <p class="info">{{eNode}}</p> </li>
               </ul>
             </div>
-            <el-form-item class="mt-30">
-              <el-button type="primary" @click="openPwdDialog" :disabled="!gID">创建</el-button>
-              <el-button @click="toUrl('/group')">返回</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="创建新组" name="second">
-        <div class="WW100">
-          <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top">
-            <el-form-item label="账户名" prop="name">
-              <el-input v-model="groupForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="模式">
-              <el-select v-model="groupForm.mode" placeholder="请选择模式" class="WW100" @change="changeMode">
-                <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              v-for="(eNode, index) in groupForm.eNode"
-              :label="'用户 ' + (index + 1)"
-              :key="index"
-              :prop="'eNode.' + index + '.value'"
-              :rules="{
-                required: true, message: '用户不能为空', trigger: 'blur'
-              }"
-            >
-              <div class="flex-bc">
-                <el-input v-model="eNode.value" @blur="changeState(eNode, index)"></el-input>
-              </div>
-              <div class="flex-sc" v-if="reload">
-                <span class="color_green" v-if="eNode.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
-                <span class="color_red" v-if="eNode.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
-              </div>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('groupForm')">创建</el-button>
-              <el-button @click="resetForm('groupForm')">重置</el-button>
-              <el-button @click="toUrl('/group')">返回</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+            <span slot="reference" class="line-block">{{item.Gname}}</span>
+          </el-popover>
+        </el-radio>
+        <el-radio :label="1" border class="WW100 ml-0 mt-15">新建</el-radio>
+      </el-radio-group>
 
+      <div class="WW100 mt-15" v-if="gID === 1">
+        <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top">
+          <el-form-item label="账户名" prop="name">
+            <el-input v-model="groupForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="模式">
+            <el-select v-model="groupForm.mode" placeholder="请选择模式" class="WW100" @change="changeMode">
+              <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            v-for="(eNode, index) in groupForm.eNode" :label="'用户 ' + (index + 1)" :key="index" :prop="'eNode.' + index + '.value'"
+            :rules="{
+              required: true, message: '用户不能为空', trigger: 'blur'
+            }"
+          >
+            <div class="flex-bc">
+              <el-input v-model="eNode.value" @blur="changeState(eNode, index)"></el-input>
+            </div>
+            <div class="flex-sc" v-if="reload">
+              <span class="color_green" v-if="eNode.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
+              <span class="color_red" v-if="eNode.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
+            </div>
+          </el-form-item>
+          <el-form-item class="mt-30">
+            <el-button type="primary" @click="submitForm('groupForm')">创建</el-button>
+            <el-button @click="resetForm('groupForm')">重置</el-button>
+            <el-button @click="toUrl('/group')">返回</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
 
-    
+      <div class="mt-30" v-else>
+        <el-button type="primary" @click="openPwdDialog" :disabled="!gID">创建</el-button>
+        <el-button @click="toUrl('/group')">返回</el-button>
+      </div>
+    </div>
 
-    <el-dialog title="创建确认" :visible.sync="eDialog.confirm" width="300" :before-close="modalClick">
+    <el-dialog title="创建确认" :visible.sync="eDialog.confirm" width="300" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false">
       <div class="confirm-list-box">
         <ul class="list-box">
           <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupForm.name}}</p> </li>
@@ -78,13 +71,16 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="解锁" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+    <el-dialog title="解锁" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick"  :close-on-click-modal="false" :modal-append-to-body='false'>
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
   </div>
 </template>
 
 <style lang="scss">
+// .v-modal {
+//   display: none;
+// }
 .confirm-list-box {
   width: 100%;
   .list-box {
@@ -105,7 +101,13 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 export default {
-  name: '',
+  name: 'createAccount',
+  props: {
+    formBoxClass: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       activeName: 'first',
@@ -253,7 +255,7 @@ export default {
             message: 'Create group success!',
             type: 'success'
           })
-          this.toUrl('/group')
+          // this.toUrl('/group')
         } else {
           let error = gInfo.info.toString()
           this.$message({
@@ -263,6 +265,7 @@ export default {
           })
         }
         this.loading.creat = false
+        this.eDialog.confirm = false
       }).catch(err => {
         this.$message({
           showClose: true,
@@ -270,6 +273,7 @@ export default {
           type: 'error'
         })
         this.loading.creat = false
+        this.eDialog.confirm = false
       })
     },
     resetForm(formName) {

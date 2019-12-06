@@ -245,6 +245,9 @@ body,th,td,button,input,select,textarea{font-family:"Microsoft Yahei","Hiragino 
 .flex-bc{display: flex;justify-content:space-between;-webkit-justify-content:space-between;-moz-justify-content:space-between;-ms-justify-content:space-between;align-items:center;-webkit-align-items:center;-moz-align-items:center;-ms-align-items:center;}
 .flex-sc{display: flex;justify-content:flex-start;-webkit-justify-content:flex-start;-moz-justify-content:flex-start;-ms-justify-content:flex-start;align-items:center;-webkit-align-items:center;-moz-align-items:center;-ms-align-items:center;}
 
+/*  */
+.flex-wrap {flex-wrap: wrap}
+
 /*file input*/
 .fileUpload{width:100%;height:100%;position:absolute;top:0;left: 0;opacity: 0;}
 

@@ -9,6 +9,16 @@
   }
 }
 
+.c-form-box-sm {
+  width: 100%;
+  .el-form-item {
+    margin-bottom: size(10);
+    .el-form-item__label {
+      height: size(30);
+    }
+  }
+}
+
 .n-list-box {
   width: 100%;min-height: 80%;padding: 30px 15px; margin:15px 0;
   .item {

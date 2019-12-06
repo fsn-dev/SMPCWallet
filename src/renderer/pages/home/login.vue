@@ -94,6 +94,7 @@ export default {
       this.loading.wait = true
       this.$$.validFile(this.loginObj.username, this.$$.config.file.ks.url, this.$$.config.file.ks.type)
       .then(res => {
+        console.log(res)
         if (res.msg === 'Repeat') {
           this.inputFileBtn()
         } else {
@@ -119,6 +120,7 @@ export default {
       let fileUrl = this.$$.config.file.ks.url + this.loginObj.username + this.$$.config.file.ks.type
       // console.log(fileUrl)
       this.$$.readFile(fileUrl).then(res => {
+        console.log(res)
         try{
           if (this.$$.wallet.walletRequirePass(res.info)) {
             this.walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(

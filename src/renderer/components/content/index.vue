@@ -16,7 +16,8 @@
         <div class="header-top-nav">
           <ul class="flex-c HH100">
             <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" title="待办"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">待办</el-badge></li>
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/createGroup')" title="创建共管账户">创建共管账户</li>
+            <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/createGroup')" title="创建共管账户">创建共管账户</li> -->
+            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="drawer.create = true" title="创建共管账户">创建共管账户</li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
@@ -54,6 +55,9 @@
     </section>
 
     
+    <w-drawer v-model="drawer.create" v-if="drawer.create">
+      <create-account :formBoxClass="false"></create-account>
+    </w-drawer>
     <w-drawer v-model="drawer.user" v-if="drawer.user">
 
     </w-drawer>
@@ -61,6 +65,7 @@
 </template>
 
 <style lang="scss">
+
 .header-top-box {
   width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2001;
   .header-logo {
@@ -158,6 +163,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import createAccount from '@/pages/group/createGroup'
 export default {
   name: 'index',
   provide () {
@@ -181,7 +187,8 @@ export default {
       isUserView: false,
       newsActive: 0,
       drawer: {
-        user: false
+        user: false,
+        create: false
       },
       headerImg: ''
     }
@@ -195,6 +202,7 @@ export default {
   computed: {
     ...computedPub
   },
+  components: {createAccount},
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)

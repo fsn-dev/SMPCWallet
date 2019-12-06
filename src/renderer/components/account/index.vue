@@ -2,7 +2,6 @@
   <div class="boxConntent1" v-loading="loading.account" element-loading-text="账户获取中……">
     <div class="flex-bc a-header-box" v-if="!Number(safeMode)">
       <div>
-        <el-button type="primary" @click="eDialog.group = true" class="btn-primary">生成账户</el-button>
       </div>
       <div @click="gID ? drawer.member = true : ''"><i class="el-icon-menu cursorP"></i></div>
     </div>
@@ -49,16 +48,6 @@
 
     <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
-    </el-dialog>
-
-    <el-dialog :title="'选择组'" :visible.sync="eDialog.group">
-      <el-select v-model="gID" @change="changeGroup" no-match-text="Null" no-data-text="Null" placeholder="Null">
-        <el-option v-for="(item, index) in getGroup" :key="index" :label="item.Gname" :value="item.Gid"></el-option>
-      </el-select>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="modalClick">取 消</el-button>
-        <el-button type="primary" @click="openPwdDialog(1)" :disabled="!gID" class="btn-primary">确 定</el-button>
-      </div>
     </el-dialog>
 
     <!-- 查看组成员 start -->
@@ -228,7 +217,6 @@ export default {
       eDialog: {
         send: false,
         pwd: false,
-        group: false
       },
       loading: {
         account: false
@@ -238,13 +226,11 @@ export default {
       dataPage: {},
       rawTx: {},
       sendDataObj: {},
-      sendType: '',
       gID: '',
       publicKey: '',
       gMode: '',
       tableData: [],
       dcrmAddr: '',
-      signTx: '',
       drawer: {
         member: false,
         select: false,
@@ -284,9 +270,6 @@ export default {
       }, 50)
     }
 
-    
-    // console.log(this.$store.state.wallet)
-    // console.log(this.$store.state.wallet)
   },
   methods: {
     initGroupData () {
@@ -299,7 +282,6 @@ export default {
     modalClick () {
       this.eDialog.send = false
       this.eDialog.pwd = false
-      this.eDialog.group = false
       this.gMemberSelect = []
     },
     getGroupData () {
@@ -444,50 +426,27 @@ export default {
       })
     },
     getSignData (data) {
-      // console.log(data)
-      // console.log(data.signTx)
       this.modalClick()
       this.loading.account = true
       if (data.signTx) {
-        if (this.sendType === 1) {
-          this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
-            console.log(res)
-            if (Number(this.safeMode)) {
-              this.toUrl('/person', {gID: this.gID, publicKey: res.info.PubKey})
-            } else {
-              this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
-            }
-            this.reload()
-            // this.getAccounts()
-          }).catch(err => {
-            console.log(err)
+        try {
+          let cbData = this.$$.lockout(data.signTx)
+          if (cbData.msg === 'Success') {
+            this.$message({ showClose: true, message: 'Success!', type: 'success' })
+          } else {
             this.$message({
               showClose: true,
-              message: err.error,
+              message: cbData.error,
               type: 'error'
             })
-          })
-        } else {
-          try {
-            let cbData = this.$$.lockout(data.signTx)
-            if (cbData.msg === 'Success') {
-              this.$message({ showClose: true, message: 'Success!', type: 'success' })
-            } else {
-              this.$message({
-                showClose: true,
-                message: cbData.error,
-                type: 'error'
-              })
-            }
-            console.log(hash)
-          } catch (error) {
-            console.log(error)
           }
+          console.log(hash)
+        } catch (error) {
+          console.log(error)
         }
         this.loading.account = false
         this.drawer.send = false
       } else {
-        this.signTx = ''
         this.$message({
           showClose: true,
           message: 'Error',
@@ -501,7 +460,7 @@ export default {
       this.drawer.select = false
       this.drawer.send = true
     },
-    openPwdDialog (type) {
+    openPwdDialog () {
       if (!this.gID) {
         this.$message({
           showClose: true,
@@ -517,33 +476,25 @@ export default {
         gasLimit: this.$$.config.rawTx.gasLimit,
         gasPrice: this.$$.config.rawTx.gasPrice,
       }
-      this.sendType = type
-      if (type === 1) {
-        let nonce = this.$$.getNonce(this.address, '', '')
-        this.dataPage.nonce = nonce
-        this.dataPage.value = 0
-        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.gMode
-      } else if (type === 2) {
-        let nonce = this.$$.getNonce(this.dcrmAddr, this.sendDataObj.coinType, this.sendDataObj.address)
-        this.dataPage.nonce = nonce
-        this.dataPage.value = this.rawTx.value
-        this.dataPage.data = 'LOCKOUT:' 
-                              + this.dcrmAddr
-                              + ':' 
-                              + this.sendDataObj.address
-                              + ':' 
-                              + this.rawTx.to
-                              + ':'
-                              + this.rawTx.value
-                              + ':'
-                              + this.sendDataObj.coinType
-                              + ':'
-                              + this.gID
-                              + ':'
-                              + this.gMode
-                              + ':'
-                              + this.safeMode
-      }
+      let nonce = this.$$.getNonce(this.dcrmAddr, this.sendDataObj.coinType, this.sendDataObj.address)
+      this.dataPage.nonce = nonce
+      this.dataPage.value = this.rawTx.value
+      this.dataPage.data = 'LOCKOUT:' 
+                            + this.dcrmAddr
+                            + ':' 
+                            + this.sendDataObj.address
+                            + ':' 
+                            + this.rawTx.to
+                            + ':'
+                            + this.rawTx.value
+                            + ':'
+                            + this.sendDataObj.coinType
+                            + ':'
+                            + this.gID
+                            + ':'
+                            + this.gMode
+                            + ':'
+                            + this.safeMode
       this.drawer.send = false
       this.eDialog.pwd = true
     },
