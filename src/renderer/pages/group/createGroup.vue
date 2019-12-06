@@ -19,7 +19,7 @@
         <el-radio :label="1" border class="WW100 ml-0 mt-15">新建</el-radio>
       </el-radio-group>
 
-      <div class="WW100 mt-15" v-if="gID === 1">
+      <div class="WW100 mt-15" v-if="gID === 1 || getGroup.length <= 0">
         <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top">
           <el-form-item label="账户名" prop="name">
             <el-input v-model="groupForm.name"></el-input>
@@ -183,6 +183,7 @@ export default {
       this.$$.getGroup().then(res => {
         console.log(res)
         this.getGroup = res.info ? res.info : []
+        // this.getGroup = []
       }).catch(err => {
         console.log(err)
         this.$message({
