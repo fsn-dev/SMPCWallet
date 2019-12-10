@@ -16,12 +16,12 @@
             </div>
           </div>
           <!-- <p class="p2">{{$$.timeChange({date: item.time, type: 'yyyy-mm-dd hh:mm:ss'})}}</p> -->
-          <el-button @click="toUrl('/gValid', item)" class="btn-primary">Approval</el-button>
+          <el-button @click="toUrl('/gValid', item)" class="btn-primary">{{$t('btn').approval}}</el-button>
         </li>
       </ul>
     </div>
     <div v-if="newsList.length <= 0" class="boxConntent1 container flex-c font14 color_99">
-      No data!
+      {{$t('warn').w_12}}
     </div>
   </div>
 </template>

@@ -1,10 +1,10 @@
 <template>
   <div class="boxConntent1 container pt-30">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box">
-      <el-tab-pane label="建组消息" name="first">
+      <el-tab-pane :label="$t('title').groupNews" name="first">
         <g-news-list></g-news-list>
       </el-tab-pane>
-      <el-tab-pane label="交易消息" name="second">
+      <el-tab-pane :label="$t('title').txnsNews" name="second">
         <t-news-list></t-news-list>
       </el-tab-pane>
     </el-tabs>

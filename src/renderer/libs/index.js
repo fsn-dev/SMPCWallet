@@ -67,6 +67,7 @@ let $$ = {
   },
   quitApp (that) {
     let dayAndNight = that.$store.state.dayAndNight
+    let language = that.$store.state.language
     cookies.clearCookies()
     // that.$$.setToken('')
     // that.$$.setCookies(config.cookies.address, '')
@@ -75,6 +76,7 @@ let $$ = {
     that.$store.commit('setWallet', '')
     that.$store.commit('setDayAndNight', {info: dayAndNight})
     that.$store.commit('setSafeMode', {info: config.modeInit})
+    that.$store.commit('setLanguage', {info: language})
     that.$router.push('/')
   }
 }

@@ -9,7 +9,7 @@
             <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
             <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
           </router-link>
-          <div class="d-back"> <span @click="closeDrawer">&lt; Back</span></div>
+          <div class="d-back"> <span @click="closeDrawer">&lt;{{$t('btn').back}}</span></div>
           <div class="d-relative d-content-info" style="overflow:auto;">
             <slot></slot>
           </div>
@@ -26,7 +26,7 @@ $animationTime: 0.4s;
   overflow: hidden;width:100%;height:100%;position: relative;
 }
 .d-bg-box {
-  overflow: hidden;width:100%;height:100%;position: fixed;top:0;right:0;bottom:0;left: 0;z-index: 2002;
+  overflow: hidden;width:100%;height:100%;position: fixed;top:0;right:0;bottom:0;left: 0;z-index: 2000;
   .d-bg {
     width:100%;height:100%;background: rgba(0,0,0,.5);
   }

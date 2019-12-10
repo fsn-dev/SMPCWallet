@@ -11,7 +11,7 @@
             </hgroup> -->
             <div class="selectType_contentBox">
               <el-form ref="userInfoForm" :model="sureForm" label-width="120px" label-position="top">
-                <el-form-item label="密码：">
+                <el-form-item :label="$t('label').password">
                   <el-input type="password" v-model="sureForm.password"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -70,7 +70,7 @@ export default {
       if (!username) {
         this.$message({
           showClose: true,
-          message: '登陆超时，请重新登陆！',
+          message: this.$t('warn').w_13,
           type: 'error'
         })
         this.$$.quitApp(this)

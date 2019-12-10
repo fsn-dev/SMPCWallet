@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.account" element-loading-text="账户获取中……">
+  <div class="boxConntent1" v-loading="loading.account" :element-loading-text="$t('loading').l_1">
     <div class="flex-bc a-header-box" v-if="!Number(safeMode)">
       <div>
       </div>
@@ -9,7 +9,7 @@
     <div class="a-table-box" v-if="tableData.length > 0">
       <el-table :data="tableData" style="width: 100%" empty-text="Null">
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column label="币种" width="180">
+        <el-table-column :label="$t('label').coinType" width="180">
           <template slot-scope="scope">
             <div class="flex-sc">
               <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(scope.row.Cointype).coinType)">
@@ -23,51 +23,49 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="地址">
+        <el-table-column :label="$t('label').address">
           <template slot-scope="scope">
             <div class="WW100 ellipsis cursorP" :title="scope.row.DcrmAddr" @click="copyTxt(scope.row.DcrmAddr)">{{ scope.row.DcrmAddr }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="余额" width="120" align="right">
+        <el-table-column :label="$t('label').balance" width="120" align="right">
           <template slot-scope="scope">
             {{ isNaN(scope.row.Balance) ? 0 : scope.row.Balance}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" align="center">
+        <el-table-column :label="$t('label').action" width="150" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">转入</el-button>
-            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">转出</el-button>
+            <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">{{$t('btn').enter}}</el-button>
+            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">{{$t('btn').out}}</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">
-      请选择账户
-    </div>
+    <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">{{$t('warn').w_1}}</div>
 
-    <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+    <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
 
     <!-- 查看组成员 start -->
     <w-drawer v-model="drawer.member" v-if="drawer.member">
       <div class="d-content-view g-member-list-box">
-        <h3 class="h3">当前组成员</h3>
+        <h3 class="h3">{{$t('title').gMember}}</h3>
         <ul class="">
           <li class="item">
             <p class="label flex-sc">
-              组成员 - 1 (<span class="color_green flex-sc font14"><i class="el-icon-user mr-5"></i>自己</span>)
+              {{$t('label').admins}} - 1 (<span class="color_green flex-sc font14"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>)
             </p>
             {{$$.cutOut($$.eNode, 14, 20)}}
           </li>
-          <li class="item" v-for="(eNode, index) in gMemberInit" :key="index" :title="eNode">
+          <li class="item" v-for="(item, index) in gMemberInit" :key="index" :title="item.eNode">
             <p class="label flex-sc">
-              组成员 - {{index + 2}}
-              (<span class="color_green flex-sc font14" v-if="$$.getEnodeState(eNode) === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
-              <span class="color_red flex-sc font14" v-if="$$.getEnodeState(eNode) !== 'OnLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>)
+              {{$t('label').admins}} - {{index + 2}}
+              (<span class="color_green flex-bc" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+              <span class="color_red flex-bc" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>)
             </p>
-            {{$$.cutOut(eNode, 14, 20)}}
+            {{$$.cutOut(item.eNode, 14, 20)}}
           </li>
         </ul>
       </div>
@@ -77,26 +75,26 @@
     <!-- 节点选择 start -->
     <w-drawer v-model="drawer.select" v-if="drawer.select" @on-close="modalClick">
       <div class="d-content-view node-select-box">
-        <h3 class="h3">节点选择</h3>
+        <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
           <el-checkbox-group v-model="gMemberSelect" :min="1" class="">
             <el-checkbox :label="$$.eNode">
               <div class="flex-bc">
                 {{$$.cutOut($$.eNode, 14, 20)}}
-                <span class="color_green flex-bc ml-20"><i class="el-icon-user mr-5"></i>自己</span>
+                <span class="color_green flex-bc ml-20"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
               </div>
             </el-checkbox>
-            <el-checkbox v-for="(eNode, index) in gMemberInit" :label="eNode" :key="index">
+            <el-checkbox v-for="(item, index) in gMemberInit" :label="item.eNode" :key="index">
               <div class="flex-bc">
-                {{$$.cutOut(eNode, 14, 20)}}
-                <span class="color_green flex-bc ml-20" v-if="$$.getEnodeState(eNode) === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>在线</span>
-                <span class="color_red flex-bc ml-20" v-if="$$.getEnodeState(eNode) !== 'OnLine'"><i class="el-icon-circle-close mr-5"></i>离线</span>
+                {{$$.cutOut(item.eNode, 14, 20)}}
+                <span class="color_green flex-bc ml-20" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                <span class="color_red flex-bc ml-20" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
               </div>
             </el-checkbox>
           </el-checkbox-group>
         </div>
         <div class="node-select-btn">
-          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">确定</el-button>
+          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
         </div>
       </div>
     </w-drawer>
@@ -105,12 +103,12 @@
     <!-- 发送交易 start -->
     <w-drawer v-model="drawer.send" v-if="drawer.send">
       <div class="d-content-view">
-        <h3 class="h3">发送{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
+        <h3 class="h3">{{$t('label').send}}{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
         <el-form ref="userInfoForm" :model="rawTx" label-width="120px" label-position="top">
-          <el-form-item label="发送地址：">
+          <el-form-item :label="$t('label').sendAddr">
             <el-input v-model="rawTx.to"></el-input>
           </el-form-item>
-          <el-form-item label="资产：">
+          <!-- <el-form-item :label="$t('label').assets">
             <el-select v-model="sendDataObj.coinType" placeholder="" class="WW100" @change="changeAccount">
               <el-option v-for="(item, index) in tableData" :key="index" :label="$$.cutERC20(item.Cointype).coinType" :value="item.Cointype">
                 <div class="flex-sc relative">
@@ -125,12 +123,12 @@
                 </div>
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="数量：">
+          </el-form-item> -->
+          <el-form-item :label="$t('label').amount">
             <el-input type="number" v-model="rawTx.value"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16 btn-primary">发送</el-button>
+            <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -276,8 +274,8 @@ export default {
       this.loading.account = true
       this.gID = this.$route.query.gID ? this.$route.query.gID : ''
       this.publicKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
-      this.getGroupData()
       this.getAccounts()
+      this.getGroupData()
     },
     modalClick () {
       this.eDialog.send = false
@@ -315,9 +313,12 @@ export default {
       // console.log(arr)
       for (let obj of arr) {
         if (obj === this.$$.eNode) continue
-        this.gMemberInit.push(obj)
+        this.gMemberInit.push({
+          eNode: obj,
+          status: this.$$.getEnodeState(obj) === 'OnLine' ? 1 : 0
+        })
       }
-      // console.log(this.gMemberSelect)
+      console.log(this.gMemberInit)
     },
     changeGroup () {
       this.getMemberList()
@@ -390,7 +391,7 @@ export default {
           console.log(err)
           this.$message({
             showClose: true,
-            message: '请获取账户',
+            message: this.$t('warn').w_2, // 请获取账户
             type: 'error'
           })
           this.loading.account = false
@@ -425,6 +426,33 @@ export default {
         })
       })
     },
+    saveTxnsDB (txnId) {
+      let data = {
+        from: this.sendDataObj.address,
+        to: this.rawTx.to,
+        value: this.rawTx.value,
+        nonce: this.dataPage.nonce,
+        coinType: this.sendDataObj.coinType,
+        hash: '',
+        status: 0,
+      }
+      let dataUrl = 'GroupAddTxns'
+      if (Number(this.safeMode) === 1) {
+        dataUrl = 'PersonAddTxns'
+        data.kId = this.address
+        data.eNode = this.$$.eNode
+      } else {
+        data.gArr = [
+          {eNode: this.$$.eNode, kId: this.address, status: 4, timestamp: Date.now(), initiate: 1}
+        ]
+        for (let obj of this.gMemberInit) {
+          data.gArr.push({eNode: obj, kId: '', status: 0, timestamp: '', initiate: 0})
+        }
+        data.gId = this.gID
+        data.txnId = txnId
+      }
+      this.$socket.emit(dataUrl, data)
+    },
     getSignData (data) {
       this.modalClick()
       this.loading.account = true
@@ -433,6 +461,7 @@ export default {
           let cbData = this.$$.lockout(data.signTx)
           if (cbData.msg === 'Success') {
             this.$message({ showClose: true, message: 'Success!', type: 'success' })
+            this.saveTxnsDB()
           } else {
             this.$message({
               showClose: true,
@@ -455,16 +484,11 @@ export default {
         this.loading.account = false
       }
     },
-    toSendTxnsUrl (obj) {
-      // this.toUrl('sendTxns', this.sendDataObj)
-      this.drawer.select = false
-      this.drawer.send = true
-    },
     openPwdDialog () {
       if (!this.gID) {
         this.$message({
           showClose: true,
-          message: '账户为空！',
+          message: this.$t('warn').w_1, // 账户为空！
           type: 'error'
         })
         return
@@ -522,7 +546,6 @@ export default {
     changeAccount (value) {
       for (let obj of this.tableData) {
         if (obj.Cointype === value) {
-          // this.sendDataObj = obj
           this.setTxnsData(obj)
           break
         }
@@ -530,13 +553,18 @@ export default {
     },
     openSendDialog (index, item) {
       this.setTxnsData(item)
-      // console.log(this.sendDataObj)
       if (!Number(this.safeMode)) {
-        // this.eDialog.send = true
         this.drawer.select = true
+        setTimeout(() => {
+          this.getMemberList()
+        }, 500)
       } else {
         this.toSendTxnsUrl()
       }
+    },
+    toSendTxnsUrl (obj) {
+      this.drawer.select = false
+      this.drawer.send = true
     },
   }
 }

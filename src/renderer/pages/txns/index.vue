@@ -2,21 +2,21 @@
   <div class="boxConntent1 container">
     <div class="c-form-box">
       <el-form :model="rawTxData" ref="rawTxData" :rules="rules" label-width="100px" label-position="top">
-        <el-form-item label="目标地址" prop="to">
+        <el-form-item :label="$t('label').to" prop="to">
           <el-input v-model="rawTxData.to"></el-input>
         </el-form-item>
-        <el-form-item label="金额" prop="value">
-          <el-input type="number" v-model="rawTxData.value" :min="0.001" :step="0.001"></el-input>
+        <el-form-item :label="$t('label').value" prop="value">
+          <el-input type="number" v-model="rawTxData.value" min="0" :step="0.001"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('rawTxData')">提交</el-button>
-          <el-button @click="resetForm('rawTxData')">重置</el-button>
-          <el-button @click="toUrl('/group')">返回</el-button>
+          <el-button type="primary" @click="submitForm('rawTxData')">{{$t('label').send}}</el-button>
+          <el-button @click="resetForm('rawTxData')">{{$t('btn').restart}}</el-button>
+          <el-button @click="toUrl('/group')">{{$t('btn').back}}</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+    <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
   </div>

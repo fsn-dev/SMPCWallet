@@ -2,21 +2,21 @@
   <div class="boxConntent1 container">
     <div class="c-form-box">
       <el-form :model="rawTxData" ref="rawTxData" :rules="rules" label-width="100px" label-position="top">
-        <el-form-item label="目标地址" prop="to">
+        <el-form-item :label="$t('label').to" prop="to">
           <el-input v-model="rawTxData.to" disabled="disabled"></el-input>
         </el-form-item>
-        <el-form-item label="金额" prop="value">
+        <el-form-item :label="$t('label').value" prop="value">
           <el-input type="number" v-model="rawTxData.value" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')">同意</el-button>
-          <el-button @click="submitForm('rawTxData', 'DISAGREE')">拒绝</el-button>
-          <el-button @click="toUrl('/tNewsList')">返回</el-button>
+          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')">{{$t('btn').agree}}</el-button>
+          <el-button @click="submitForm('rawTxData', 'DISAGREE')">{{$t('btn').refuse}}</el-button>
+          <el-button @click="toUrl('/tNewsList')">{{$t('btn').back}}</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-dialog :title="$t('BTN').UNLOCK" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+    <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
   </div>
@@ -43,16 +43,21 @@ export default {
       initTxnsData: {},
       rules: {
         to: [
-          { required: true, message: '请输入目标地址', trigger: 'blur' }
+          { required: true, message: this.$t('warn').w_14, trigger: 'blur' }
         ],
         value: [
-          { required: true, message: '请输入金额', trigger: 'blur' }
+          { required: true, message: this.$t('warn').w_15, trigger: 'blur' }
         ],
       }
     }
   },
   computed: {
     ...computedPub,
+  },
+  sockets: {
+    GroupFindTxns (res) {
+      console.log(res)
+    }
   },
   mounted () {
     this.initTxnsData = this.$route.query

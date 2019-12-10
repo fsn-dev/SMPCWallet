@@ -8,17 +8,17 @@
       <ul>
         <li class="item" v-for="(item, index) in newsList" :key="index">
           <div class="address-box flex-bc">
-            <p class="addr" :title="item.DcrmFrom"><span class="label">From:</span> {{$$.cutOut(item.DcrmFrom, 12, 10)}}</p>
-            <p class="addr" :title="item.DcrmTo"><span class="label">To:</span> {{$$.cutOut(item.DcrmTo, 12, 10)}}</p>
+            <p class="addr" :title="item.DcrmFrom"><span class="label">{{$t('label').from}}:</span> {{$$.cutOut(item.DcrmFrom, 12, 10)}}</p>
+            <p class="addr" :title="item.DcrmTo"><span class="label">{{$t('label').to}}:</span> {{$$.cutOut(item.DcrmTo, 12, 10)}}</p>
             <div class="round flex-c"><i class="el-icon-right"></i></div>
           </div>
           <div class="amount-box flex-bc">
-            <p class="amt"><span class="label">Value:</span> {{$$.thousandBit(item.Value, 'no')}}</p>
-            <p class="amt"><span class="label">CoinType:</span> {{item.Cointype}}</p>
+            <p class="amt"><span class="label">{{$t('label').value}}:</span> {{$$.thousandBit(item.Value, 'no')}}</p>
+            <p class="amt"><span class="label">{{$t('label').coinType}}:</span> {{item.Cointype}}</p>
           </div>
           <div class="action-box flex-bc">
-            <p class="at" :title="item.GroupId"><span class="label">Source:</span> {{$$.cutOut(item.GroupId, 16, 14)}}</p>
-            <el-button @click="toUrl('/tValid', item)" class="btn-primary">Approval</el-button>
+            <p class="at" :title="item.GroupId"><span class="label">{{$t('label').source}}:</span> {{$$.cutOut(item.GroupId, 16, 14)}}</p>
+            <el-button @click="toUrl('/tValid', item)" class="btn-primary">{{$t('btn').approval}}</el-button>
           </div>
           <!-- <p class="p1">{{item.Account}}</p>
           <p class="p2">{{$$.thousandBit(item.Value, 2)}}</p> -->
@@ -27,7 +27,7 @@
     </div>
 
     <div v-if="newsList.length <= 0" class="boxConntent1 container flex-c font14 color_99">
-      No data!
+      {{$t('warn').w_12}}
     </div>
   </div>
 </template>
@@ -73,9 +73,6 @@
         background: $color-primary;color: #fff;
       }
     }
-    // .p2{
-    //   color:#999;
-    // }
   }
 }
 </style>
@@ -93,6 +90,11 @@ export default {
     }
   },
   components: {wButton},
+  // sockets: {
+  //   GroupFindTxns (res) {
+  //     console.log(res)
+  //   }
+  // },
   mounted () {
     this.initTxnsList()
   },

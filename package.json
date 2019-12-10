@@ -1,5 +1,5 @@
 {
-  "name": "key-house",
+  "name": "SMPC",
   "version": "0.0.1",
   "author": "winter520",
   "description": "An electron-vue project",
@@ -20,7 +20,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "key-house",
+    "productName": "SMPC",
     "appId": "keyHouse.com",
     "directories": {
       "output": "build"

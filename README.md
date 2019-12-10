@@ -1,4 +1,4 @@
-# key-house
+# SMPC
 
 > An electron-vue project
 

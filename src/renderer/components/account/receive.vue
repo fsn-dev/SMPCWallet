@@ -13,12 +13,12 @@
           <div class="icon">
             <img src="@etc/img/QRcode.svg">
           </div>
-          {{$t('BTN').SHOW_QR_CODE}}
+          {{$t('btn').code}}
         </button>
         <button class="btn cyan flex-c" @click="copyAddress('walletAdressHide', 'receiveAddressBtn')">
           <div class="icon"><img src="@etc/img/copy.svg"></div>
-          <el-popover trigger="hover" :content="$t('BTN').COPY_CLIPBOARD">
-            <div class="addreess" slot="reference">{{$t('BTN').COPY_CLIPBOARD}}</div>
+          <el-popover trigger="hover" :content="$t('btn').copy">
+            <div class="addreess" slot="reference">{{$t('btn').copy}}</div>
           </el-popover>
         </button>
       </div>
@@ -26,29 +26,29 @@
 
     <div class="tableHistory_box" v-if="selectData.isConfirm || selectData.coinType === $$.config.initCoin">
       <hgroup class="tableHistory_title">
-        <h3 class="title">{{$t('TITLE').HISTORY}}:</h3>
+        <h3 class="title">{{$t('title').history}}:</h3>
       </hgroup>
       <div class="tableHistory_table table-responsive" v-loading="historyLoading" element-loading-text="Loading……">
         <el-table :data="historyData" style="width: 100%" empty-text="Null">
-          <el-table-column :label="$t('THEAD').PUBLIC.STATUS" width="80">
+          <el-table-column :label="$t('state').state" width="80">
             <template slot-scope="scope">
               <span v-html="scope.row.status" :class="scope.row.status !== 'Success' ? 'red' : ''"></span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('THEAD').COIN" prop="coinType" width="80"></el-table-column>
-          <el-table-column :label="$t('THEAD').PUBLIC.AMOUNT" prop="value" width="120">
+          <el-table-column :label="$t('label').coinType" prop="coinType" width="80"></el-table-column>
+          <el-table-column :label="$t('label').amount" prop="value" width="120">
             <template slot-scope="scope">
               <span>{{scope.row.contractValue ? scope.row.contractValue : scope.row.value}}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('THEAD').PUBLIC.DATE" prop="date" width="180"></el-table-column>
-          <el-table-column :label="$t('THEAD').PUBLIC.INFORMATION" min-width="360">
+          <el-table-column :label="$t('label').date" prop="date" width="180"></el-table-column>
+          <el-table-column :label="$t('label').info" min-width="360">
             <template slot-scope="scope">
               <el-collapse class="moreInfo_box" accordion v-model="activeNames">
                 <el-collapse-item :title="scope.row.hash">
                   <ul class="list">
-                    <li>{{$t('LABEL').TXID}}：{{scope.row.hash}}</li>
-                    <li>{{$t('LABEL').ADDRESS}}：{{scope.row.from}}</li>
+                    <li>{{$t('label').hash}}：{{scope.row.hash}}</li>
+                    <li>{{$t('label').address}}：{{scope.row.from}}</li>
                   </ul>
                 </el-collapse-item>
               </el-collapse>
@@ -72,7 +72,7 @@
       <div class="qrcodeCont_box">
         <div id="qrcode" class="flex-c"></div>
         <div class="qrcodeCont_title">
-          <h3>{{$t('TITLE').YOUR_ADDREAA}}</h3>
+          <h3>{{$t('label').address}}</h3>
         </div>
       </div>
     </el-dialog>
@@ -130,6 +130,11 @@ export default {
       return this.selectData.coinType + " Receiving Address"
     }
   },
+  sockets: {
+    connect () {
+      console.log('success')
+    }
+  },
   created () {
     // console.log(this.$route.query)
     this.selectData = this.$route.query
@@ -160,7 +165,7 @@ export default {
       
       this.$message({
         showClose: true,
-        message: this.$t('SUCCESS_TIP').TIP_0,
+        message: this.$t('success').s_2,
         type: 'success'
       })
     },

@@ -1,12 +1,12 @@
 <template>
-  <div class="flex-c bg"  v-loading="loading.wait" element-loading-text="账户验证中……">
+  <div class="flex-c bg"  v-loading="loading.wait" element-loading-text="Loading……">
     <div class="user-form-box">
       <div class="user-form-title">
         <div class="logo flex-sc">
           <img src="@etc/img/logo/logo.svg">
           <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
         </div>
-        <router-link to="/" class="back" v-html="$t('btn').back"></router-link>
+        <router-link to="/" class="back" v-html="'&lt;' + $t('btn').back"></router-link>
         <h3 class="title">{{$t('title').login}}</h3>
       </div>
 
@@ -100,7 +100,7 @@ export default {
         } else {
           this.$message({
             showClose: true,
-            message: '账户不存在',
+            message: this.$t('error').err_8,
             type: 'error'
           })
           this.loading.wait = false

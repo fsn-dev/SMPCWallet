@@ -87,15 +87,16 @@ Vue.use(TabPane)
 
 Vue.use(Vuex)
 
+import VueSocketIO from 'vue-socket.io'
+Vue.use(new VueSocketIO({
+	connection: $$.config.appURL,
+}))
+
 Vue.config.productionTip = false
 
 Vue.prototype.$$ = $$
 Vue.prototype.$message = Message
-// Vue.prototype.toUrl = (url, params) => {
-//   console.log(this)
-//   console.log(router)
-//   router.push({path: url, query: params})
-// }
+
 Vue.prototype.toUrl = function(url, params) {
   this.$router.push({path: url, query: params})
 }

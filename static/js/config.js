@@ -105,7 +105,8 @@ let publicSet = {
   dayAndNight: '1', // '0': 夜晚； '1': 白天
 }
 
-// publicSet.appURL = 'http://localhost:8100'
+publicSet.appURL = 'http://localhost:8300'
+// publicSet.appURL = 'http://192.168.1.184:8000'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 // publicSet.serverRPC = 'http://192.168.1.104:9010'
 // publicSet.serverRPC = 'http://192.168.1.104:9011'

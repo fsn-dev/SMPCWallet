@@ -10,5 +10,8 @@ export const computedPub = {
   },
   dayAndNight () {
     return this.$store.state.dayAndNight
+  },
+  language () {
+    return this.$store.state.language
   }
 } 

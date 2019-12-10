@@ -15,19 +15,19 @@
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" title="待办"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">待办</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" :title="$t('title').wait"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">{{$t('title').wait}}</el-badge></li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/createGroup')" title="创建共管账户">创建共管账户</li> -->
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="drawer.create = true" title="创建共管账户">创建共管账户</li>
+            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="drawer.create = true" :title="$t('btn').createAccount">{{$t('btn').createAccount}}</li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
         <div class="header-top-lang">
-          <el-select v-model="language" size="mini" @change="changLanguage">
+          <el-select v-model="lang" size="mini" @change="changLanguage">
             <el-option v-for="item in languageOption" :key="item.value" :label="item.label" :value="item.value" >
             </el-option>
           </el-select>
         </div>
-        <div class="header-top-refresh cursorP" @click="Refresh" title="刷新">
+        <div class="header-top-refresh cursorP" @click="Refresh" :title="$t('title').refrsh">
           <i class="el-icon-refresh-right"></i>
         </div>
         <div class="header-top-dn cursorP" @click="changeDn">
@@ -38,10 +38,10 @@
           <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
           <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img :src="headerImg"></div>
           <ul class="user-list box_Wshadow1" v-show="isUserView">
-            <li class="item" @click="toUrl('createGroup');changeUserView()" title="创建共管账户"><i class="el-icon-plus mr-5"></i>创建共管账户</li>
-            <li class="item" @click="changeMode('1')" title="个人账户"><i class="el-icon-user mr-5"></i>个人账户</li>
-            <li class="item" @click="changeMode('0')" title="共管账户"><i class="el-icon-money mr-5"></i>共管账户</li>
-            <li class="item" @click="quitMethod" title="安全退出"><i class="el-icon-s-unfold mr-5"></i>安全退出</li>
+            <li class="item" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus mr-5"></i>{{$t('btn').createAccount}}</li>
+            <li class="item" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user mr-5"></i>{{$t('title').personAccount}}</li>
+            <li class="item" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money mr-5"></i>{{$t('title').groupAccount}}</li>
+            <li class="item" @click="quitMethod" :title="$t('title').quit"><i class="el-icon-s-unfold mr-5"></i>{{$t('title').quit}}</li>
           </ul>
         </div>
       </div>
@@ -67,7 +67,7 @@
 <style lang="scss">
 
 .header-top-box {
-  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2001;
+  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2000;
   .header-logo {
     min-width:40px;max-width:350px;height: size(35);
     .logoImg{
@@ -173,7 +173,7 @@ export default {
   },
   data () {
     return {
-      language: this.$i18n.locale,
+      lang: this.$i18n.locale,
       languageOption: [
         {value: 'en-US', label: 'English'},
         {value: 'zh-CN', label: '中文简体'}
@@ -288,17 +288,18 @@ export default {
       document.execCommand('Copy')
       this.$message({
         showClose: true,
-        message: this.$t('SUCCESS_TIP').TIP_0,
+        message: this.$t('success').s_2,
         type: 'success'
       })
     },
     changLanguage (type) {
       if (type) {
-        this.language = type
+        this.lang = type
       }
-      this.$i18n.locale = this.language
-      localStorage.setItem(this.$$.config.AppName + '_WALLET_LANGUAGE_TYPE', this.language)
-      // this.changeLang(this.language)
+      this.$i18n.locale = this.lang
+      // localStorage.setItem(this.$$.config.AppName + '_WALLET_LANGUAGE_TYPE', this.lang)
+      this.$store.commit('setLanguage', {info: this.lang})
+      // this.changeLang(this.lang)
       this.reload()
     },
     quitMethod () {

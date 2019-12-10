@@ -20,7 +20,8 @@ const store = new Vuex.Store({
     token: '',
     safeMode: config.modeInit,
     dayAndNight: '',
-    wallet: ''
+    wallet: '',
+    language: ''
     // coininfoArr: [],
     // network: {},
     // coinDollarArr: '',
@@ -68,16 +69,14 @@ const store = new Vuex.Store({
       if (!data.type) {
         cookies.setCookies('wallet', info, 0.1)
       }
+    },
+    setLanguage (state, data) {
+      let info = data.info ? data.info : ''
+      state.language = info
+      if (!data.type) {
+        cookies.setCookies('language', info, 30)
+      }
     }
-    // storeCoininfoArr (state, data) {
-    //   state.coininfoArr = data
-    // },
-    // storeNetwork (state, data) {
-    //   state.network = data
-    // },
-    // storeCoinDollarArr (state, data) {
-    //   state.coinDollarArr = data
-    // },
   },
   actions: {
     getAddress ({commit}) {
@@ -115,6 +114,13 @@ const store = new Vuex.Store({
         commit('setWallet', data)
       })
     },
+    getLanguage ({commit}) {
+      cookies.getCookies('language').then(res => {
+        console.log(res)
+        let data = { type: 1, info: res}
+        commit('setLanguage', data)
+      })
+    }
   }
 })
 

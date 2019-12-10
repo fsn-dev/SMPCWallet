@@ -9,7 +9,7 @@
 import {computedPub} from '@/assets/js/pages/public'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
-  name: 'key-house',
+  name: 'SMPC',
   data () {
     return {
       mouse1: '',
@@ -18,6 +18,12 @@ export default {
       // timeout: 20 * 1000,
       timeout: this.$$.config.watchPageTime,
       currentSecond: 0
+    }
+  },
+  watch: {
+    language () {
+      this.$i18n.locale = this.language ? this.language : this.$i18n.locale
+      console.log(this.language)
     }
   },
   computed: {
@@ -35,13 +41,14 @@ export default {
     // console.log(this.dayAndNight)
   },
   methods: {
-    ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet']),
+    ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage']),
     initData () {
       this.getToken()
       this.getAddress()
       this.getSafeMode()
       this.getDayAndNight()
       this.getWallet()
+      this.getLanguage()
     },
     mousePos (e) {
       let x, y

@@ -24,7 +24,7 @@
         </li>
       </ul>
       <div class="flex-c boxConntent1" v-else>
-        <el-button type="primary" @click="toUrl('createGroup')" class="btn-primary">创建共管账户</el-button>
+        <el-button type="primary" @click="toUrl('createGroup')" class="btn-primary">{{$t('btn').createAccount}}</el-button>
       </div>
     </div>
 

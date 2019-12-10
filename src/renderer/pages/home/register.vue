@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-c bg" v-loading="loading.wait" element-loading-text="账户生成中……">
+  <div class="flex-c bg" v-loading="loading.wait" element-loading-text="Loading……">
     <div class="user-form-box">
 
       <div class="user-form-title">
@@ -7,7 +7,7 @@
           <img src="@etc/img/logo/logo.svg">
           <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
         </div>
-        <router-link to="/" class="back" v-html="$t('btn').back"></router-link>
+        <router-link to="/" class="back" v-html="'&lt;' + $t('btn').back"></router-link>
         <h3 class="title">{{$t('title').register}}</h3>
       </div>
 
