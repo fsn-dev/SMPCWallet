@@ -245,4 +245,8 @@ export default [
       }
     ]
   },
+  {
+    path: '*',
+    component: resolve => require.ensure([], () => resolve(require('@/pages/public/error')) )
+  }
 ]

@@ -69,8 +69,6 @@ let $$ = {
     let dayAndNight = that.$store.state.dayAndNight
     let language = that.$store.state.language
     cookies.clearCookies()
-    // that.$$.setToken('')
-    // that.$$.setCookies(config.cookies.address, '')
     that.$store.commit('setAddress', '')
     that.$store.commit('setToken', '')
     that.$store.commit('setWallet', '')

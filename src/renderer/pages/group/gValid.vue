@@ -6,7 +6,7 @@
           <el-input v-model="groupForm.name" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item :label="$t('label').mode">
-          <el-select v-model="groupForm.mode" placeholder="请选择模式" class="WW100" disabled="disabled">
+          <el-select v-model="groupForm.mode" placeholder="" class="WW100" disabled="disabled">
             <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
           </el-select>
         </el-form-item>

@@ -36,7 +36,7 @@ export default {
 		cancel: 'Cancel',
 		login: 'Login',
 		register: 'Register',
-		back: 'Go Back',
+		back: 'Back',
 		unlock: 'Unlock',
 		enter: 'Receive',
 		out: 'Send',
@@ -46,7 +46,8 @@ export default {
 		restart: 'Restart',
 		agree: 'Agree',
 		refuse: 'Refuse',
-		approval: 'Approval'
+		approval: 'Approval',
+		create: 'Create'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -101,6 +102,6 @@ export default {
 		null: 'Null'
 	},
 	tip: {
-		walletTip: 'Welcome to SMPC wallet 1.0 < br > please create a wallet or import a wallet',
+		walletTip: 'Welcome to SMPC wallet 1.0 <br> please create a wallet or import a wallet',
 	}
 }

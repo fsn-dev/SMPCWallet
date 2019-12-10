@@ -48,7 +48,8 @@ export default {
 		restart: '重置',
 		agree: '同意',
 		refuse: '拒绝',
-		approval: '审批'
+		approval: '审批',
+		create: '创建'
 	},
 	loading: {
 		l_1: '账户获取中……'

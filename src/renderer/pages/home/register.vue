@@ -7,7 +7,7 @@
           <img src="@etc/img/logo/logo.svg">
           <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
         </div>
-        <router-link to="/" class="back" v-html="'&lt;' + $t('btn').back"></router-link>
+        <router-link to="/" class="back">&lt;{{$t('btn').back}}</router-link>
         <h3 class="title">{{$t('title').register}}</h3>
       </div>
 
@@ -24,7 +24,7 @@
               <el-input type="password" v-model="registerObj.password2" @input="validInfo"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">创建</el-button>
+              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').create}}</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>

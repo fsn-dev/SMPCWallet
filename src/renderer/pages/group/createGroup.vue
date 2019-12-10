@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container" v-loading="loading.creat" element-loading-text="账户建立中……">
+  <div class="boxConntent1 container" v-loading="loading.creat" element-loading-text="Loading……">
 
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
@@ -18,7 +18,7 @@
               required: true, message: $t('warn').w_5, trigger: 'blur'
             }">
             <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode" :disabled="gID ? true : false">
-              <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
+              <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
@@ -38,7 +38,7 @@
           <el-form-item class="mt-30">
             <el-button type="primary" @click="submitForm('groupForm')">{{$t('btn').createAccount}}</el-button>
             <el-button @click="resetForm('groupForm')">{{$t('btn').restart}}</el-button>
-            <!-- <el-button @click="toUrl('/group')">返回</el-button> -->
+            <el-button @click="toUrl('/fsgsd')">返回</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -48,7 +48,7 @@
       <div class="confirm-list-box">
         <ul class="list-box">
           <!-- <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupForm.name}}</p> </li> -->
-          <li class="item flex-ai-fs"> <p class="label">{{$t('label').mode}}:</p> <p class="info">{{groupForm.mode}}{{$t('label').mode}}</p> </li>
+          <li class="item flex-ai-fs"> <p class="label">{{$t('label').mode}}:</p> <p class="info">{{groupForm.mode}} {{$t('label').mode}}</p> </li>
           <li class="item flex-ai-fs" v-for="(item, index) in groupForm.eNode" :key="index"> <p class="label">{{$t('label').admins}} {{index + 1}}:</p> <p class="info">{{item.value}}</p> </li>
         </ul>
       </div>
