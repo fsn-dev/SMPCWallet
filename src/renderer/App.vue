@@ -23,7 +23,7 @@ export default {
   watch: {
     language () {
       this.$i18n.locale = this.language ? this.language : this.$i18n.locale
-      console.log(this.language)
+      // console.log(this.language)
     }
   },
   computed: {

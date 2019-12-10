@@ -1,19 +1,106 @@
 import config from '@etc/js/config'
 export default {
 	error: {
-
+		err_1: 'Please enter the user name!',
+		err_2: '3 to 5 characters in length.',
+		err_3: 'Please input a password!',
+		err_4: 'Password can only enter 6-20 letters, numbers and underscores.',
+		err_5: 'Please enter the password again!',
+		err_6: 'The two passwords are inconsistent!',
+		err_7: 'Account already exists',
+		err_8: 'Account does not exist',
 	},
 	warn: {
-
+		w_1: 'Please select an account',
+		w_2: 'Please get the account',
+		w_3: 'Account is empty!',
+		w_4: 'Please select mode',
+		w_5: 'Mode cannot be empty',
+		w_6: '',
+		w_7: 'User cannot be empty',
+		w_8: 'Please enter the name of public account',
+		w_9: '3 to 20 characters in length',
+		w_10: '',
+		w_11: 'Group created successfully',
+		w_12: 'Data is empty!',
+		w_13: 'Login timeout, please login again!',
+		w_14: 'Please enter the destination address',
+		w_15: 'Please enter the amount'
 	},
 	success: {
-
+		s_1: 'Created successfully!',
+		s_2: 'Replication success'
 	},
 	btn: {
-		confirm: '确认',
-		cancel: '取消'
+		confirm: 'Confirm',
+		cancel: 'Cancel',
+		login: 'Login',
+		register: 'Register',
+		back: 'Go Back',
+		unlock: 'Unlock',
+		enter: 'Receive',
+		out: 'Send',
+		code: 'QR Code',
+		copy: 'Copy',
+		createAccount: 'Create Managed Account',
+		restart: 'Restart',
+		agree: 'Agree',
+		refuse: 'Refuse',
+		approval: 'Approval'
+	},
+	loading: {
+		l_1: 'Loading……'
 	},
 	title: {
-
+		walletTitle: '<span>SMPC</span> Wallet',
+		login: 'Login',
+		register: 'Create Account',
+		gMember: 'Current group members',
+		selectNode: 'Node selection',
+		history: 'History',
+		wait: 'Waiting',
+		refrsh: 'Refresh',
+		personAccount: 'Private Account',
+		groupAccount: 'Managed Account',
+		quit: 'Exit',
+		createGroup: 'Create validation',
+		groupNews: 'Managed Account News',
+		txnsNews: 'Transaction News'
+	},
+	label: {
+		username: 'User name',
+		password: 'Password',
+		password2: 'Confirm password',
+		coinType: 'Cointype',
+		address: 'Address',
+		balance: 'Balance',
+		action: 'Action',
+		admins: 'Admin',
+		self: 'Own',
+		send: 'Send',
+		sendAddr: 'Send Address',
+		assets: 'Assets',
+		amount: 'Amount',
+		date: 'Date',
+		info: 'Information',
+		hash: 'Hash',
+		mode: 'Mode',
+		to: 'To Address',
+		value: 'Value',
+		source: 'Source',
+		from: 'From',
+		group: 'Group'
+	},
+	state: {
+		name: 'Status',
+		on: 'On-line',
+		off: 'Off-line',
+		success: 'Success',
+		fail: 'Fail',
+		pending: 'Pending',
+		null: 'Null'
+	},
+	tip: {
+		walletTip: 'Welcome to SMPC wallet 1.0 < br > please create a wallet or import a wallet',
 	}
 }

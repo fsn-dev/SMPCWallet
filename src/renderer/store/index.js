@@ -116,7 +116,7 @@ const store = new Vuex.Store({
     },
     getLanguage ({commit}) {
       cookies.getCookies('language').then(res => {
-        console.log(res)
+        // console.log(res)
         let data = { type: 1, info: res}
         commit('setLanguage', data)
       })

@@ -4,10 +4,10 @@
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top">
-          <el-form-item label="账户名" prop="name">
+          <!-- <el-form-item label="账户名" prop="name">
             <el-input v-model="groupForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="组">
+          </el-form-item> -->
+          <el-form-item :label="$t('label').group">
             <el-select v-model="gID" :placeholder="$t('warn').w_4" class="WW100" @change="changeGroup">
               <el-option :label="$t('state').null" :value="0"></el-option>
               <el-option v-for="(item, index) in getGroup" :key="index" :label="item.name" :value="item.Gid"></el-option>
@@ -17,7 +17,7 @@
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
             }">
-            <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_6" class="WW100" @change="changeMode" :disabled="gID ? true : false">
+            <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode" :disabled="gID ? true : false">
               <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
             </el-select>
           </el-form-item>
@@ -47,7 +47,7 @@
     <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="300" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false">
       <div class="confirm-list-box">
         <ul class="list-box">
-          <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupForm.name}}</p> </li>
+          <!-- <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupForm.name}}</p> </li> -->
           <li class="item flex-ai-fs"> <p class="label">{{$t('label').mode}}:</p> <p class="info">{{groupForm.mode}}{{$t('label').mode}}</p> </li>
           <li class="item flex-ai-fs" v-for="(item, index) in groupForm.eNode" :key="index"> <p class="label">{{$t('label').admins}} {{index + 1}}:</p> <p class="info">{{item.value}}</p> </li>
         </ul>
@@ -72,10 +72,10 @@
     .item {
       padding: size(8) size(0);color: $color-gray;
       .label {
-        width: 15%;text-align: right;padding-right: size(10);font-weight: bold;
+        width: 20%;text-align: right;padding-right: size(10);font-weight: bold;white-space: nowrap;
       }
       .info {
-        width: 85%;word-break: break-all;
+        width: 80%;word-break: break-all;
       }
     }
   }
@@ -203,7 +203,7 @@ export default {
       if (!this.gID) {
         this.$message({
           showClose: true,
-          message: this.$t('warn').w_10,
+          message: this.$t('warn').w_3,
           type: 'error'
         })
         return

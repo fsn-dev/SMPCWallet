@@ -33,7 +33,7 @@
             {{ isNaN(scope.row.Balance) ? 0 : scope.row.Balance}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').action" width="150" align="center">
+        <el-table-column :label="$t('label').action" width="200" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">{{$t('btn').enter}}</el-button>
             <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">{{$t('btn').out}}</el-button>
