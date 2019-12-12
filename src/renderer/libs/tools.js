@@ -51,30 +51,27 @@ export default {
     let m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/)
     return num.toFixed(Math.max(0, (m[1] || '').length - m[2]))
   },
-  timeChange (data) {
-    // console.log(data)
-    // let time = data.date ? new Date(data.date.toString().length > 10 ? data.date : (Number(data.date) * 1000)) : new Date()
-    let time = data.date ? new Date(this.fromTime(data.date)) : new Date()
-    let formatType = data.format ? data.format : '/'
+  timeChange (timestamp, type, format) {
+    let time = timestamp ? new Date(this.fromTime(timestamp)) : new Date()
+    let formatType = format ? format : '/'
     let Y = time.getFullYear()
     let M = (time.getMonth() + 1) < 10 ? ('0' + (time.getMonth() + 1)) : (time.getMonth() + 1)
     let D = time.getDate() < 10 ? ('0' + time.getDate()) : time.getDate()
     let h = time.getHours() < 10 ? ('0' + time.getHours()) : time.getHours()
     let m = time.getMinutes() < 10 ? ('0' + time.getMinutes()) : time.getMinutes()
     let s = time.getSeconds() < 10 ? ('0' + time.getSeconds()) : time.getSeconds()
-    // console.log(Date.parse(data.date))
-    // console.log(new Date(Date.parse(data.date)).getDate())
-    if (data.type === 'yyyy-mm-dd') {
+
+    if (type === 'yyyy-mm-dd') {
       time = Y + formatType + M + formatType + D
-    } else if (data.type === 'yyyy-mm-dd hh:mm') {
+    } else if (type === 'yyyy-mm-dd hh:mm') {
       time = Y + formatType + M + formatType + D + ' ' + h + ':' + m
-    } else if (data.type === 'yyyy-mm-dd hh:mm:ss') {
+    } else if (type === 'yyyy-mm-dd hh:mm:ss') {
       time = Y + formatType + M + formatType + D + ' ' + h + ':' + m + ':' + s
-    } else if (data.type === 'yyyy-mm-dd hh') {
+    } else if (type === 'yyyy-mm-dd hh') {
       time = Y + formatType + M + formatType + D + ' ' + h
-    } else if (data.type === 'yyyy-mm') {
+    } else if (type === 'yyyy-mm') {
       time = Y + formatType + M
-    } else if (data.type === 'yyyy') {
+    } else if (type === 'yyyy') {
       time = Y
     }
     return time
@@ -178,6 +175,11 @@ export default {
         break
       case 3:
         status = 'New'
+        break
+      case 4:
+        status = 'Refuse'
+      case 5:
+        status = 'Agree'
         break
     }
     return status

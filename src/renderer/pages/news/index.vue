@@ -5,6 +5,7 @@
         <g-news-list></g-news-list>
       </el-tab-pane>
       <el-tab-pane :label="$t('title').txnsNews" name="second">
+        <div class="flex-sc font14 color_99 cursorP mb-20" @click="toUrl('/history')">查看历史</div>
         <t-news-list></t-news-list>
       </el-tab-pane>
     </el-tabs>

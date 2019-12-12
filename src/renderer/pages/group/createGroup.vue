@@ -38,7 +38,7 @@
           <el-form-item class="mt-30">
             <el-button type="primary" @click="submitForm('groupForm')">{{$t('btn').createAccount}}</el-button>
             <el-button @click="resetForm('groupForm')">{{$t('btn').restart}}</el-button>
-            <el-button @click="toUrl('/fsgsd')">返回</el-button>
+            <!-- <el-button @click="toUrl('/fsgsd')">返回</el-button> -->
           </el-form-item>
         </el-form>
       </div>

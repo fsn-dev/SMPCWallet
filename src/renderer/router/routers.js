@@ -178,6 +178,23 @@ export default [
     ]
   },
   {
+    path: '/history',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '交易历史',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/history')) )
+      }
+    ]
+  },
+  {
     path: '/tValid',
     component: Content,
     meta: {

@@ -1,9 +1,5 @@
 <template>
   <div class="boxConntent1 container" v-loading="loading.list" element-loading-text="数据获取中……">
-    <!-- <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15">
-      <el-breadcrumb-item :to="{ path: '/group' }">账户列表</el-breadcrumb-item>
-      <el-breadcrumb-item>任务列表</el-breadcrumb-item>
-    </el-breadcrumb> -->
     <div class="t-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item" v-for="(item, index) in newsList" :key="index">
@@ -20,8 +16,6 @@
             <p class="at" :title="item.GroupId"><span class="label">{{$t('label').source}}:</span> {{$$.cutOut(item.GroupId, 16, 14)}}</p>
             <el-button @click="toUrl('/tValid', item)" class="btn-primary">{{$t('btn').approval}}</el-button>
           </div>
-          <!-- <p class="p1">{{item.Account}}</p>
-          <p class="p2">{{$$.thousandBit(item.Value, 2)}}</p> -->
         </li>
       </ul>
     </div>
@@ -90,11 +84,11 @@ export default {
     }
   },
   components: {wButton},
-  // sockets: {
-  //   GroupFindTxns (res) {
-  //     console.log(res)
-  //   }
-  // },
+  sockets: {
+    GroupFindTxns (res) {
+      console.log(res)
+    }
+  },
   mounted () {
     this.initTxnsList()
   },

@@ -15,7 +15,6 @@
               </span>
             </div>
           </div>
-          <!-- <p class="p2">{{$$.timeChange({date: item.time, type: 'yyyy-mm-dd hh:mm:ss'})}}</p> -->
           <el-button @click="toUrl('/gValid', item)" class="btn-primary">{{$t('btn').approval}}</el-button>
         </li>
       </ul>

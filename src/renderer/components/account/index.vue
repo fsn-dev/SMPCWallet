@@ -96,6 +96,10 @@
         <div class="node-select-btn">
           <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
         </div>
+        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/history', {
+          coinType: sendDataObj.coinType,
+          address: sendDataObj.address,
+        })">查看历史</div>
       </div>
     </w-drawer>
     <!-- 节点选择 end -->
@@ -131,6 +135,10 @@
             <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
           </el-form-item>
         </el-form>
+        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/history', {
+          coinType: sendDataObj.coinType,
+          address: sendDataObj.address,
+        })">查看历史</div>
       </div>
     </w-drawer>
     <!-- 发送交易 end -->

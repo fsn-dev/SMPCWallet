@@ -92,7 +92,8 @@ export default {
 		value: '数量',
 		source: '发起账户',
 		from: '从',
-		group: '组'
+		group: '组',
+		txnHistory: '交易历史'
 	},
 	state: {
 		name: '状态',

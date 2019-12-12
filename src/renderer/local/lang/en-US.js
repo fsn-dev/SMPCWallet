@@ -90,7 +90,8 @@ export default {
 		value: 'Value',
 		source: 'Source',
 		from: 'From',
-		group: 'Group'
+		group: 'Group',
+		txnHistory: 'History'
 	},
 	state: {
 		name: 'Status',
