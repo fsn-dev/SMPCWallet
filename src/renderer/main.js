@@ -108,13 +108,15 @@ Vue.prototype.copyTxt = function(txt, isShowCont) {
     this.$message({
       showClose: true,
       message: 'Copy ' + cont + ' succeeded!',
-      type: 'success'
+      type: 'success',
+      customClass:'mzindex'
     })
   } else {
     this.$message({
       showClose: true,
       message: 'Copy ' + cont + ' failed!',
-      type: 'error'
+      type: 'error',
+      customClass:'mzindex'
     })
   }
 }

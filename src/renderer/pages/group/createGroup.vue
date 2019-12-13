@@ -13,6 +13,9 @@
               <el-option v-for="(item, index) in getGroup" :key="index" :label="item.name" :value="item.Gid"></el-option>
             </el-select>
           </el-form-item>
+          <!-- <el-form-item label="组名" prop="name">
+            <el-input v-model="groupForm.name"></el-input>
+          </el-form-item> -->
           <el-form-item :label="$t('label').mode"
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
@@ -113,6 +116,7 @@ export default {
       },
       groupMember: '',
       modeArr: this.$$.mode,
+      signTx: '',
       rules: {
         name: [
           { required: true, message: this.$t('warn').w_8, trigger: 'blur' },
@@ -136,22 +140,26 @@ export default {
     getSignData (data) {
       this.modalClick()
       if (data.signTx) {
-        this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
-          this.$store.commit('setSafeMode', {info: '0'})
-          this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
-        }).catch(err => {
-          console.log(err)
-          this.$message({
-            showClose: true,
-            message: err.error,
-            type: 'error'
-          })
-        })
+        this.signTx = data.signTx
+        this.eDialog.confirm = true
+        // this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
+        //   this.$store.commit('setSafeMode', {info: '0'})
+        //   this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
+        // }).catch(err => {
+        //   console.log(err)
+        //   this.$message({
+        //     showClose: true,
+        //     message: err.error,
+        //     type: 'error',
+        //     customClass:'mzindex'
+        //   })
+        // })
       } else {
         this.$message({
           showClose: true,
           message: 'Error',
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
       }
     },
@@ -165,7 +173,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
       })
     },
@@ -177,7 +186,7 @@ export default {
           break
         }
       }
-      // console.log(this.groupMember)
+      console.log(this.groupMember)
       if (this.gID === 0) {
         this.groupForm.mode = '3/3'
         this.changeMode()
@@ -204,7 +213,8 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t('warn').w_3,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         return
       }
@@ -224,8 +234,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // this.openPwdDialog()
-          this.eDialog.confirm = true
+          this.openPwdDialog()
+          // this.eDialog.confirm = true
         } else {
           console.log('error submit!!');
           return false;
@@ -233,38 +243,58 @@ export default {
       });
     },
     async createGroup () {
+      this.loading.creat = true
       let arr = []
       for (let obj of this.groupForm.eNode) {
         arr.push(obj.value)
       }
-      this.$$.createGroup(this.groupForm.name, this.groupForm.mode, arr).then(res => {
+      this.$$.createGroup(this.groupForm.mode, arr).then(res => {
         let gInfo = res
         console.log(gInfo)
         if (gInfo.msg === 'Success') {
           this.$message({
             showClose: true,
             message: this.$t('warn').w_11,
-            type: 'success'
+            type: 'success',
+            customClass:'mzindex'
           })
+          this.reqAccount()
           // this.toUrl('/group')
         } else {
           let error = gInfo.info.toString()
           this.$message({
             showClose: true,
             message: error,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         }
-        this.loading.creat = false
         this.eDialog.confirm = false
       }).catch(err => {
         this.$message({
           showClose: true,
           message: err,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.creat = false
         this.eDialog.confirm = false
+      })
+    },
+    reqAccount () {
+      this.$$.reqAccount(this.signTx, this.safeMode).then(res => {
+        this.$store.commit('setSafeMode', {info: '0'})
+        this.loading.creat = false
+        this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
+      }).catch(err => {
+        console.log(err)
+        this.$message({
+          showClose: true,
+          message: err.error,
+          type: 'error',
+          customClass:'mzindex'
+        })
+        this.loading.creat = false
       })
     },
     resetForm(formName) {

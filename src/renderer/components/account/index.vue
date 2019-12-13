@@ -303,7 +303,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
       })
     },
@@ -349,7 +350,8 @@ export default {
           this.$message({
             showClose: true,
             message: err.error,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         }
       })
@@ -370,7 +372,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.account = false
       })
@@ -400,7 +403,8 @@ export default {
           this.$message({
             showClose: true,
             message: this.$t('warn').w_2, // 请获取账户
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
           this.loading.account = false
         })
@@ -422,7 +426,8 @@ export default {
       console.log(rawTx)
       this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
         // console.log(res)
-        this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+        // this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+        this.$$.reqAccount(res.signTx, '0').then(res => {
           console.log(res)
           if (res.msg === 'Success') {
             this.publicKey = res.info.PubKey
@@ -468,13 +473,19 @@ export default {
         try {
           let cbData = this.$$.lockout(data.signTx)
           if (cbData.msg === 'Success') {
-            this.$message({ showClose: true, message: 'Success!', type: 'success' })
+            this.$message({
+              showClose: true,
+              message: 'Success!',
+              type: 'success',
+              customClass:'mzindex'
+            })
             this.saveTxnsDB()
           } else {
             this.$message({
               showClose: true,
               message: cbData.error,
-              type: 'error'
+              type: 'error',
+              customClass:'mzindex'
             })
           }
           console.log(hash)
@@ -487,7 +498,8 @@ export default {
         this.$message({
           showClose: true,
           message: 'Error',
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.account = false
       }
@@ -497,7 +509,8 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t('warn').w_1, // 账户为空！
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         return
       }

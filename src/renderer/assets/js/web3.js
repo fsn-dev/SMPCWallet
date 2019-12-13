@@ -101,8 +101,8 @@ web3._extend({
     new web3._extend.Method({
       name: 'createSDKGroup',
       call: 'dcrm_createSDKGroup',
-      params: 3,
-      inputFormatter: [null, null, null],
+      params: 2,
+      inputFormatter: [null, null],
       outputFormatter: null
     }),
     new web3._extend.Method({
@@ -129,8 +129,8 @@ web3._extend({
     new web3._extend.Method({
       name: 'getAccounts',
       call: 'dcrm_getAccounts',
-      params: 1,
-      inputFormatter: [null],
+      params: 2,
+      inputFormatter: [null, null],
       outputFormatter: null
     }),
     new web3._extend.Method({

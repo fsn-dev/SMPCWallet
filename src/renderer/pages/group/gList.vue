@@ -122,14 +122,14 @@ export default {
           this.$message({
             showClose: true,
             message: err.error,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         }
       })
     },
     changeGroup (item) {
       console.log(item)
-      // console.log(this.$$.web3.dcrm.getAccountsBalance(item))
       this.gID = item.Gid
       this.publicKey = item.publicKey
       this.toUrl('/group', {gID: item.gID, publicKey: item.publicKey})

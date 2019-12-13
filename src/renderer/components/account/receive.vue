@@ -166,7 +166,8 @@ export default {
       this.$message({
         showClose: true,
         message: this.$t('success').s_2,
-        type: 'success'
+        type: 'success',
+        customClass:'mzindex' 
       })
     },
     getSendHistory () {

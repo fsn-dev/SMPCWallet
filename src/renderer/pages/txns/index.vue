@@ -106,14 +106,16 @@ export default {
           this.$message({
             showClose: true,
             message: nonce,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         }
       } catch (error) {
         this.$message({
           showClose: true,
           message: error.toString(),
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
       }
     },

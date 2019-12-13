@@ -101,7 +101,8 @@ export default {
           this.$message({
             showClose: true,
             message: this.$t('error').err_8,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
           this.loading.wait = false
         }
@@ -111,7 +112,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error.toString(),
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.wait = false
       })
@@ -141,7 +143,8 @@ export default {
             this.$message({
               showClose: true,
               message: 'Error',
-              type: 'error'
+              type: 'error',
+              customClass:'mzindex'
             })
             this.loading.wait = false
           }
@@ -150,7 +153,8 @@ export default {
           this.$message({
             showClose: true,
             message: e.toString(),
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
           this.loading.wait = false
         }
@@ -159,7 +163,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error.toString(),
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.wait = false
       })

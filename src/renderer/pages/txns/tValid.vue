@@ -78,12 +78,18 @@ export default {
       if (data && data.signTx) {
         let cbData = this.$$.sendTxnsValid(data.signTx)
         if (cbData.msg === 'Success') {
-          this.$message({ showClose: true, message: 'Success!', type: 'success' })
+          this.$message({
+            showClose: true,
+            message: 'Success!',
+            type: 'success',
+            customClass:'mzindex'
+          })
         } else {
           this.$message({
             showClose: true,
             message: 'Error',
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         }
       }
@@ -124,14 +130,16 @@ export default {
           this.$message({
             showClose: true,
             message: nonce,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         }
       } catch (error) {
         this.$message({
           showClose: true,
           message: error.toString(),
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
       }
     },

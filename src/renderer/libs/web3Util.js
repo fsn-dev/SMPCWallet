@@ -139,7 +139,7 @@ export default {
     return new Promise((resolve, reject) => {
       try {
         // let cbData = web3.dcrm.getSDKGroup(eNode)
-        let cbData = web3.dcrm.getAccounts(mode)
+        let cbData = web3.dcrm.getAccounts('', mode)
         cbData = JSON.parse(cbData)
         console.log(cbData)
         if (cbData.Status !== 'Error') {
@@ -230,11 +230,11 @@ export default {
       }
     })
   },
-  async createGroup(name, mode, nodeArr) {
+  async createGroup(mode, nodeArr) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let cbData = web3.dcrm.createSDKGroup(name, mode, nodeArr)
+        let cbData = web3.dcrm.createSDKGroup(mode, nodeArr)
         cbData = cbData && JSON.parse(cbData) ? JSON.parse(cbData) : ''
         // console.log(cbData)
         if (cbData.Status !== 'Error') {

@@ -55,7 +55,8 @@ export const methods = {
       this.$message({
         showClose: true,
         message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_2,
-        type: 'error'
+        type: 'error',
+        customClass:'mzindex'
       })
       this.loading.btn = false
       return
@@ -64,7 +65,8 @@ export const methods = {
       this.$message({
         showClose: true,
         message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_4,
-        type: 'error'
+        type: 'error',
+        customClass:'mzindex'
       })
       this.loading.btn = false
       return
@@ -73,7 +75,8 @@ export const methods = {
       this.$message({
         showClose: true,
         message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_5,
-        type: 'error'
+        type: 'error',
+        customClass:'mzindex'
       })
       this.loading.btn = false
       return
@@ -83,7 +86,8 @@ export const methods = {
       this.$message({
         showClose: true,
         message: getAmountTip.msg,
-        type: 'error'
+        type: 'error',
+        customClass:'mzindex'
       })
       this.loading.btn = false
       return
@@ -117,7 +121,8 @@ export const methods = {
       this.$message({
         showClose: true,
         message: this.selectData.coinType + this.$t('ERROR_TIP').TIP_6,
-        type: 'error'
+        type: 'error',
+        customClass:'mzindex'
       })
     }
     this.privateSureVisible = false
@@ -129,13 +134,15 @@ export const methods = {
       this.$message({
         showClose: true,
         message: 'Success',
-        type: 'success'
+        type: 'success',
+        customClass:'mzindex'
       })
     }).catch(err => {
       this.$message({
         showClose: true,
         message: res.error,
-        type: 'error'
+        type: 'error',
+        customClass:'mzindex'
       })
     })
   },

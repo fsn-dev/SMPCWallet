@@ -71,7 +71,8 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t('warn').w_13,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.$$.quitApp(this)
         this.sureForm.password = ''
@@ -92,7 +93,8 @@ export default {
                 this.$message({
                   showClose: true,
                   message: 'Error',
-                  type: 'error'
+                  type: 'error',
+                  customClass:'mzindex'
                 })
               }
               // console.log(walletInfo.getPrivateKeyString())
@@ -102,7 +104,8 @@ export default {
               this.$message({
                 showClose: true,
                 message: e.toString(),
-                type: 'error'
+                type: 'error',
+                customClass:'mzindex'
               })
             }
           })
@@ -112,7 +115,8 @@ export default {
             this.$message({
               showClose: true,
               message: err.toString(),
-              type: 'error'
+              type: 'error',
+              customClass:'mzindex'
             })
           })
       }
@@ -133,7 +137,8 @@ export default {
           this.$message({
             showClose: true,
             message: err.toString(),
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         })
       this.sureForm.password = ''

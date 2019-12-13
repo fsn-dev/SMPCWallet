@@ -66,9 +66,9 @@
 </template>
 
 <style lang="scss">
-.table-box {
+// .table-box {
 
-}
+// }
 </style>
 
 <script>

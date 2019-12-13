@@ -72,7 +72,8 @@ export default {
             this.$message({
               showClose: true,
               message: '你已经超过3分钟没有操作，页面自动跳转至首页',
-              type: 'error'
+              type: 'error',
+              customClass:'mzindex'
             })
             this.$$.quitApp(this)
             setTimeout(() => {

@@ -73,7 +73,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.list = false
       })

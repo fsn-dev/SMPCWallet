@@ -123,13 +123,15 @@ export default {
           this.$message({
             showClose: true,
             message: err.toString(),
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
         } else {
           this.$message({
             showClose: true,
             message: this.$t('success').s_1,
-            type: 'success'
+            type: 'success',
+            customClass:'mzindex'
           })
           this.createHeader(walletInit.getPublicKeyString(), walletInit.getAddressString())
         }
@@ -146,7 +148,8 @@ export default {
           this.$message({
             showClose: true,
             message: this.$t('error').err_7,
-            type: 'error'
+            type: 'error',
+            customClass:'mzindex'
           })
           this.loading.wait = false
         } else {
@@ -157,7 +160,8 @@ export default {
         this.$message({
           showClose: true,
           message: err.error,
-          type: 'error'
+          type: 'error',
+          customClass:'mzindex'
         })
         this.loading.wait = false
       })
