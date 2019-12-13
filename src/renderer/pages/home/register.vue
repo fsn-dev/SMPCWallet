@@ -120,19 +120,9 @@ export default {
       this.$$.fs.writeFile(fileUrl, JSON.stringify(walletJSON), (err, res) => {
         if (err) {
           console.log(err)
-          this.$message({
-            showClose: true,
-            message: err.toString(),
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(err.toString())
         } else {
-          this.$message({
-            showClose: true,
-            message: this.$t('success').s_1,
-            type: 'success',
-            customClass:'mzindex'
-          })
+          this.msgSuccess(this.$t('success').s_1)
           this.createHeader(walletInit.getPublicKeyString(), walletInit.getAddressString())
         }
         this.registerObj = {}
@@ -145,24 +135,14 @@ export default {
       this.$$.validFile(this.registerObj.username, fileUrl, this.$$.config.file.ks.type)
       .then(res => {
         if (res.msg === 'Repeat') {
-          this.$message({
-            showClose: true,
-            message: this.$t('error').err_7,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(this.$t('error').err_7)
           this.loading.wait = false
         } else {
           this.createFile()
         }
       })
       .catch(err => {
-        this.$message({
-          showClose: true,
-          message: err.error,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error)
         this.loading.wait = false
       })
     }

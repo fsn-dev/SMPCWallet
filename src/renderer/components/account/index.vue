@@ -300,12 +300,7 @@ export default {
         this.getMemberList()
       }).catch(err => {
         console.log(err)
-        this.$message({
-          showClose: true,
-          message: err.error,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error)
       })
     },
     getMemberList () {
@@ -329,9 +324,6 @@ export default {
       }
       console.log(this.gMemberInit)
     },
-    changeGroup () {
-      this.getMemberList()
-    },
     getPersonAccount () {
       this.$$.getAccounts(this.safeMode).then(res => {
         console.log(res)
@@ -347,12 +339,7 @@ export default {
         console.log(err)
         this.getGroupPersonId()
         if (err.error) {
-          this.$message({
-            showClose: true,
-            message: err.error,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(err.error)
         }
       })
     },
@@ -369,12 +356,7 @@ export default {
         this.getAccounts()
       }).catch(err => {
         console.log(err)
-        this.$message({
-          showClose: true,
-          message: err.error,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error)
         this.loading.account = false
       })
     },
@@ -386,8 +368,6 @@ export default {
         this.loading.account = false
         return
       }
-      // console.log(fileUrl)
-      // console.log(this.publicKey)
       if (this.publicKey) {
         this.$$.getAccountsBalance(this.publicKey).then(res => {
           console.log(res)
@@ -400,12 +380,7 @@ export default {
           this.loading.account = false
         }).catch(err => {
           console.log(err)
-          this.$message({
-            showClose: true,
-            message: this.$t('warn').w_2, // 请获取账户
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(this.$t('warn').w_2)
           this.loading.account = false
         })
       } else if (Number(this.safeMode)) {
@@ -424,10 +399,10 @@ export default {
         data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
       }
       console.log(rawTx)
-      this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
+      this.$$.toSign(rawTx, this.$store.state.wallet.getPrivateKeyString()).then(res => {
         // console.log(res)
-        // this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
-        this.$$.reqAccount(res.signTx, '0').then(res => {
+        this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+        // this.$$.reqAccount(res.signTx, '0').then(res => {
           console.log(res)
           if (res.msg === 'Success') {
             this.publicKey = res.info.PubKey
@@ -470,48 +445,28 @@ export default {
       this.modalClick()
       this.loading.account = true
       if (data.signTx) {
-        try {
-          let cbData = this.$$.lockout(data.signTx)
-          if (cbData.msg === 'Success') {
-            this.$message({
-              showClose: true,
-              message: 'Success!',
-              type: 'success',
-              customClass:'mzindex'
-            })
+        this.$$.lockout(data.signTx).then(res => {
+          if (res.msg === 'Success') {
+            this.msgSuccess('Success!')
             this.saveTxnsDB()
           } else {
-            this.$message({
-              showClose: true,
-              message: cbData.error,
-              type: 'error',
-              customClass:'mzindex'
-            })
+            this.msgError(res.error)
           }
           console.log(hash)
-        } catch (error) {
-          console.log(error)
-        }
+        }).catch(err => {
+          console.log(err)
+          this.msgError(err.error)
+        })
         this.loading.account = false
         this.drawer.send = false
       } else {
-        this.$message({
-          showClose: true,
-          message: 'Error',
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError('Error')
         this.loading.account = false
       }
     },
     openPwdDialog () {
       if (!this.gID) {
-        this.$message({
-          showClose: true,
-          message: this.$t('warn').w_1, // 账户为空！
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(this.$t('warn').w_1)
         return
       }
       // this.gMode = '3/3'

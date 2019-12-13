@@ -70,12 +70,7 @@ export default {
         this.loading.list = false
       }).catch(err => {
         this.newsList = []
-        this.$message({
-          showClose: true,
-          message: err.error,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error)
         this.loading.list = false
       })
     }

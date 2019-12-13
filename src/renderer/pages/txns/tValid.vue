@@ -78,19 +78,9 @@ export default {
       if (data && data.signTx) {
         let cbData = this.$$.sendTxnsValid(data.signTx)
         if (cbData.msg === 'Success') {
-          this.$message({
-            showClose: true,
-            message: 'Success!',
-            type: 'success',
-            customClass:'mzindex'
-          })
+          this.msgSuccess('Success!')
         } else {
-          this.$message({
-            showClose: true,
-            message: 'Error',
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError('Error')
         }
       }
       this.eDialog.pwd = false
@@ -127,20 +117,10 @@ export default {
           }
           this.eDialog.pwd = true
         } else {
-          this.$message({
-            showClose: true,
-            message: nonce,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(nonce)
         }
       } catch (error) {
-        this.$message({
-          showClose: true,
-          message: error.toString(),
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(error.toString())
       }
     },
     submitForm(formName, type) {

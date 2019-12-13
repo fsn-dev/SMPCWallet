@@ -105,20 +105,37 @@ Vue.prototype.copyTxt = function(txt, isShowCont) {
   let status = $$.setCopyTxt(txt)
   let cont = isShowCont ? (' ' + txt + ' ') : ''
   if (status === 'Success') {
-    this.$message({
-      showClose: true,
-      message: 'Copy ' + cont + ' succeeded!',
-      type: 'success',
-      customClass:'mzindex'
-    })
+    this.msgSuccess('Copy ' + cont + ' succeeded!')
   } else {
-    this.$message({
-      showClose: true,
-      message: 'Copy ' + cont + ' failed!',
-      type: 'error',
-      customClass:'mzindex'
-    })
+    this.msgError('Copy ' + cont + ' failed!')
   }
+}
+
+Vue.prototype.msgError = function(txt) {
+  this.$message({
+    showClose: true,
+    message: txt,
+    type: 'error',
+    customClass:'mzindex'
+  })
+}
+
+Vue.prototype.msgSuccess = function(txt) {
+  this.$message({
+    showClose: true,
+    message: txt,
+    type: 'success',
+    customClass:'mzindex'
+  })
+}
+
+Vue.prototype.msgWarning = function(txt) {
+  this.$message({
+    showClose: true,
+    message: txt,
+    type: 'warning',
+    customClass:'mzindex'
+  })
 }
 
 import pwdSure from '@/pages/public/pwdSure'

@@ -286,12 +286,7 @@ export default {
     copyAddress (id, textId) {
       document.getElementById(id).select()
       document.execCommand('Copy')
-      this.$message({
-        showClose: true,
-        message: this.$t('success').s_2,
-        type: 'success',
-        customClass:'mzindex'
-      })
+      this.msgSuccess(this.$t('success').s_2)
     },
     changLanguage (type) {
       if (type) {

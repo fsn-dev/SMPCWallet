@@ -142,25 +142,8 @@ export default {
       if (data.signTx) {
         this.signTx = data.signTx
         this.eDialog.confirm = true
-        // this.$$.reqAccount(data.signTx, this.safeMode).then(res => {
-        //   this.$store.commit('setSafeMode', {info: '0'})
-        //   this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
-        // }).catch(err => {
-        //   console.log(err)
-        //   this.$message({
-        //     showClose: true,
-        //     message: err.error,
-        //     type: 'error',
-        //     customClass:'mzindex'
-        //   })
-        // })
       } else {
-        this.$message({
-          showClose: true,
-          message: 'Error',
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError('Error')
       }
     },
     getGroupData () {
@@ -170,12 +153,7 @@ export default {
         // this.getGroup = []
       }).catch(err => {
         console.log(err)
-        this.$message({
-          showClose: true,
-          message: err.error,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error)
       })
     },
     changeGroup () {
@@ -210,12 +188,7 @@ export default {
     },
     openPwdDialog () {
       if (!this.gID) {
-        this.$message({
-          showClose: true,
-          message: this.$t('warn').w_3,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(this.$t('warn').w_3)
         return
       }
       // this.gMode = '3/3'
@@ -252,31 +225,15 @@ export default {
         let gInfo = res
         console.log(gInfo)
         if (gInfo.msg === 'Success') {
-          this.$message({
-            showClose: true,
-            message: this.$t('warn').w_11,
-            type: 'success',
-            customClass:'mzindex'
-          })
+          this.msgSuccess(this.$t('warn').w_11)
           this.reqAccount()
           // this.toUrl('/group')
         } else {
-          let error = gInfo.info.toString()
-          this.$message({
-            showClose: true,
-            message: error,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(gInfo.info.toString())
         }
         this.eDialog.confirm = false
       }).catch(err => {
-        this.$message({
-          showClose: true,
-          message: err,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err)
         this.loading.creat = false
         this.eDialog.confirm = false
       })
@@ -288,12 +245,7 @@ export default {
         this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
       }).catch(err => {
         console.log(err)
-        this.$message({
-          showClose: true,
-          message: err.error,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error)
         this.loading.creat = false
       })
     },

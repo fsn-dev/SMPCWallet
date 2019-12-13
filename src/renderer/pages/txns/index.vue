@@ -103,20 +103,10 @@ export default {
           // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
           console.log(this.dataPage)
         } else {
-          this.$message({
-            showClose: true,
-            message: nonce,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(nonce)
         }
       } catch (error) {
-        this.$message({
-          showClose: true,
-          message: error.toString(),
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(error.toString())
       }
     },
     submitForm(formName) {

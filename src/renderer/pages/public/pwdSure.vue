@@ -68,12 +68,7 @@ export default {
       this.loading.wait = true
       // console.log(username)
       if (!username) {
-        this.$message({
-          showClose: true,
-          message: this.$t('warn').w_13,
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(this.$t('warn').w_13)
         this.$$.quitApp(this)
         this.sureForm.password = ''
         this.loading.wait = false
@@ -90,34 +85,19 @@ export default {
                 )
                 this.toSign(walletInfo.getPrivateKeyString())
               } else {
-                this.$message({
-                  showClose: true,
-                  message: 'Error',
-                  type: 'error',
-                  customClass:'mzindex'
-                })
+                this.msgError('Error')
               }
               // console.log(walletInfo.getPrivateKeyString())
             } catch (e) {
               console.log(e)
               this.elDialogView()
-              this.$message({
-                showClose: true,
-                message: e.toString(),
-                type: 'error',
-                customClass:'mzindex'
-              })
+              this.msgError(e.toString())
             }
           })
           .catch(err => {
             console.log(err)
             this.elDialogView()
-            this.$message({
-              showClose: true,
-              message: err.toString(),
-              type: 'error',
-              customClass:'mzindex'
-            })
+            this.msgError(err.toString())
           })
       }
     },
@@ -134,12 +114,7 @@ export default {
           console.log(err)
           this.loading.wait = false
           this.$emit("sendSignData", {error: err})
-          this.$message({
-            showClose: true,
-            message: err.toString(),
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(err.toString())
         })
       this.sureForm.password = ''
     },

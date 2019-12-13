@@ -119,12 +119,7 @@ export default {
         }
       }).catch(err => {
         if (err.error) {
-          this.$message({
-            showClose: true,
-            message: err.error,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(err.error)
         }
       })
     },

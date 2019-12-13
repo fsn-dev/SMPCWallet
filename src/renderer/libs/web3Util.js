@@ -317,21 +317,38 @@ export default {
       }
     })
   },
-  lockout (signTx) {
+  async lockout (signTx) {
     let data = {msg: '', info: ''}
-    try {
-      let cbData = web3.dcrm.lockOut(signTx)
-      // console.log(cbData)
-      if (cbData.Status !== 'Error') {
-        cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
-        data = {msg: 'Success', info: cbData}
-      } else {
-        data = {msg: 'Error', error: cbData.Error}
+    return new Promise(() => {
+      try {
+        let cbData = web3.dcrm.lockOut(signTx)
+        // console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+          data = {msg: 'Success', info: cbData}
+          resolve(data)
+        } else {
+          data = {msg: 'Error', error: cbData.Error}
+          reject(data)
+        }
+      } catch (error) {
+        data = {msg: 'Error', error: error.toString()}
+        reject(data)
       }
-    } catch (error) {
-      data = {msg: 'Error', error: error.toString()}
-    }
-    return data
+    })
+    // try {
+    //   let cbData = web3.dcrm.lockOut(signTx)
+    //   // console.log(cbData)
+    //   if (cbData.Status !== 'Error') {
+    //     cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+    //     data = {msg: 'Success', info: cbData}
+    //   } else {
+    //     data = {msg: 'Error', error: cbData.Error}
+    //   }
+    // } catch (error) {
+    //   data = {msg: 'Error', error: error.toString()}
+    // }
+    // return data
   },
   sendTxnsValid (signTx) {
     let data = {msg: '', info: ''}

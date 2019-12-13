@@ -98,23 +98,13 @@ export default {
         if (res.msg === 'Repeat') {
           this.inputFileBtn()
         } else {
-          this.$message({
-            showClose: true,
-            message: this.$t('error').err_8,
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(this.$t('error').err_8)
           this.loading.wait = false
         }
       })
       .catch(err => {
         console.log(err)
-        this.$message({
-          showClose: true,
-          message: err.error.toString(),
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error.toString())
         this.loading.wait = false
       })
     },
@@ -140,32 +130,17 @@ export default {
               this.$router.push('/group')
             }
           } else {
-            this.$message({
-              showClose: true,
-              message: 'Error',
-              type: 'error',
-              customClass:'mzindex'
-            })
+            this.msgError('Error')
             this.loading.wait = false
           }
         } catch (e) {
           console.log(e)
-          this.$message({
-            showClose: true,
-            message: e.toString(),
-            type: 'error',
-            customClass:'mzindex'
-          })
+          this.msgError(e.toString())
           this.loading.wait = false
         }
       }).catch(err => {
         console.log(err)
-        this.$message({
-          showClose: true,
-          message: err.error.toString(),
-          type: 'error',
-          customClass:'mzindex'
-        })
+        this.msgError(err.error.toString())
         this.loading.wait = false
       })
     },
