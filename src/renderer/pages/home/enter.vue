@@ -16,31 +16,7 @@
 </template>
 
 <style lang="scss">
-.e-box {
-  text-align: center;
-  .logo {
-    height: size(100);
-    img {
-      height: 100%;
-    }
-  }
-  .title {
-    font-size: $text-lg;font-weight: bold;color:$color-black;line-height: size(48);margin: size(40) 0 size(0);
-    span {
-      color:$color-primary;
-    }
-  }
-  .tip {
-    font-size: $text-normal;color:$color-gray;line-height: size(21);
-  }
-}
-.night {
-  .e-box {
-    .title {
-      color: #fff;
-    }
-  }
-}
+@import './scss/enter';
 </style>
 
 <script>
@@ -69,10 +45,10 @@ export default {
     this.test = this.eNode
     // this.$socket.emit('kline', 'CCD/BTC,5m,1576208100,1576208700')
     // this.testWs()
-    setTimeout(() => {
-      console.log(this.$$)
-      this.$$.getGroupPerson()
-    }, 3000)
+    // setTimeout(() => {
+    //   console.log(this.$$)
+    //   this.$$.getGroupPerson()
+    // }, 3000)
 
     // let arr = [
     //   {p1: 'dcrm', p2: 'getEnodeStatus', p3: ['enode://5a7e7e449806cb67d412c92cfd3d0ea9cee109f494244c5c4e7cfda00142ae1c4c16f40d104b4b22b62e31827450a708ff281bafaaa58d624e227c81aab65c3c@127.0.0.1:12341']},

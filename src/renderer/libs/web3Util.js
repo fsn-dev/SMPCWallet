@@ -138,7 +138,7 @@ let web3Utils = {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        console.log(eNodeInit)
+        // console.log(eNodeInit)
         if (eNodeInit) {
           let cbData = ''
           web3.dcrm.getSDKGroupPerson(eNodeInit).then(res => {

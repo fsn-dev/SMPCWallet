@@ -39,7 +39,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import headerImg from './headerImg'
+import headerImg from './js/headerImg'
 export default {
   name: '',
   data () {

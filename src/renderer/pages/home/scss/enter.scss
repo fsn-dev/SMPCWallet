@@ -1,0 +1,25 @@
+.e-box {
+  text-align: center;
+  .logo {
+    height: size(100);
+    img {
+      height: 100%;
+    }
+  }
+  .title {
+    font-size: $text-lg;font-weight: bold;color:$color-black;line-height: size(48);margin: size(40) 0 size(0);
+    span {
+      color:$color-primary;
+    }
+  }
+  .tip {
+    font-size: $text-normal;color:$color-gray;line-height: size(21);
+  }
+}
+.night {
+  .e-box {
+    .title {
+      color: #fff;
+    }
+  }
+}

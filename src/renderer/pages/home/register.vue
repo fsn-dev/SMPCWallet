@@ -41,7 +41,7 @@
 
 <script>
 import regExp from '@etc/js/config/RegExp'
-import headerImg from './headerImg'
+import headerImg from './js/headerImg'
 export default {
   name: '',
   data () {

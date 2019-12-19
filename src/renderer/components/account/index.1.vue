@@ -1,7 +1,8 @@
 <template>
   <div class="boxConntent1" v-loading="loading.account" :element-loading-text="$t('loading').l_1">
     <div class="flex-bc a-header-box" v-if="!Number(safeMode)">
-      <div></div>
+      <div>
+      </div>
       <div @click="gID ? drawer.member = true : ''"><i class="el-icon-menu cursorP"></i></div>
     </div>
 
@@ -111,6 +112,22 @@
           <el-form-item :label="$t('label').sendAddr">
             <el-input v-model="rawTx.to"></el-input>
           </el-form-item>
+          <!-- <el-form-item :label="$t('label').assets">
+            <el-select v-model="sendDataObj.coinType" placeholder="" class="WW100" @change="changeAccount">
+              <el-option v-for="(item, index) in tableData" :key="index" :label="$$.cutERC20(item.Cointype).coinType" :value="item.Cointype">
+                <div class="flex-sc relative">
+                  <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(item.Cointype).coinType)">
+                    <img :src="$$.setDollar($$.cutERC20(item.Cointype).coinType).logo">
+                  </div>
+                  <div class="coinTxt flex-c" v-else>
+                    {{$$.titleCase($$.cutERC20(item.Cointype).coinType)}}
+                  </div>
+                  <span style="margin-left: 10px">{{ $$.cutERC20(item.Cointype).coinType }}</span>
+                  <i v-if="$$.cutERC20(item.Cointype).type" class="isErc20 isErc20_1">ERC20</i>
+                </div>
+              </el-option>
+            </el-select>
+          </el-form-item> -->
           <el-form-item :label="$t('label').amount">
             <el-input type="number" v-model="rawTx.value"></el-input>
           </el-form-item>
@@ -133,6 +150,7 @@
 </style>
 
 <script>
+// import Identicon from 'identicon.js'
 import {computedPub} from '@/assets/js/pages/public'
 import {psMethods} from './js/person'
 import {gMethods} from './js/group'
@@ -187,13 +205,20 @@ export default {
     },
   },
   mounted () {
-    setTimeout(() => {
-      if (!Number(this.safeMode)) {
+    if (!Number(this.safeMode)) {
+      setTimeout(() => {
         this.initGroupData()
-      } else {
+      }, 50)
+    } else {
+      setTimeout(() => {
+        // this.getPersonAccount()
         this.getGroupPersonId()
-      }
-    }, 50)
+      }, 50)
+    }
+
+    // console.log(this.$store.state.wallet)
+    // console.log(JSON.stringify(this.$store.state.wallet))
+    // console.log(this.$store.state.wallet.getPrivateKeyString())
   },
   methods: {
     ...psMethods,
@@ -203,6 +228,68 @@ export default {
       this.eDialog.pwd = false
       this.gMemberSelect = []
     },
+    // initGroupData () {
+    //   this.loading.account = true
+    //   this.gID = this.$route.query.gID ? this.$route.query.gID : ''
+    //   this.pubKey = this.$route.query.pubKey ? this.$route.query.pubKey : ''
+    //   this.getAccounts()
+    //   this.getGroupData()
+    // },
+    // getGroupData () {
+    //   this.$$.getGroup().then(res => {
+    //     console.log(res)
+    //     this.getGroup = res.info ? res.info : []
+    //     if (this.$route.query.gID) {
+    //       this.gID = this.$route.query.gID
+    //     }
+    //     this.getMemberList()
+    //   }).catch(err => {
+    //     console.log(err)
+    //     this.msgError(err.error)
+    //   })
+    // },
+    // getGroupPersonId () {
+    //   this.$$.getGroupPerson().then(res => {
+    //     console.log(res)
+    //     if (res.msg === 'Success' && res.info) {
+    //       this.gID = res.info.Gid
+    //       this.gMode = res.info.Mode ? res.info.Mode : '3/3'
+    //       this.pubKey = res.info.PubKey ? res.info.PubKey : ''
+    //       // this.setMemberList(res.info.Enodes)
+    //       this.getPersonAccount()
+    //       this.loading.account = true
+    //     } else {
+    //       this.getAccounts()
+    //     }
+    //     // this.getAccounts()
+    //   }).catch(err => {
+    //     console.log(err)
+    //     this.msgError(err.error)
+    //     this.loading.account = false
+    //   })
+    // },
+    // getPersonAccount () {
+    //   this.$$.getAccounts(this.gID, this.safeMode).then(res => {
+    //     console.log(res)
+    //     if (res.msg === 'Success' && res.info.length > 0) {
+    //       this.gID = res.info[0].GroupID
+    //       this.gMode = res.info.Mode ? res.info.Mode : '3/3'
+    //       this.pubKey = res.info[0].Accounts[0] ? res.info[0].Accounts[0] : ''
+    //       // return
+    //       this.getAccounts()
+    //     } else {
+    //       // this.getGroupPersonId()
+    //       this.reqPersonAccount()
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //     // this.getGroupPersonId()
+    //     this.reqPersonAccount()
+    //     if (err.error) {
+    //       this.msgError(err.error)
+    //     }
+    //   })
+    // },
     /**
      * 初始获取账号
      */
@@ -230,6 +317,73 @@ export default {
         this.reqPersonAccount()
       }
     },
+    // reqPersonAccount () {
+    //   this.$$.getNonce(this.address, '', '').then(nonce => {
+    //     let rawTx = {
+    //       from: this.address,
+    //       to: this.$$.config.rawTx.to,
+    //       gasLimit: this.$$.config.rawTx.gasLimit,
+    //       gasPrice: this.$$.config.rawTx.gasPrice,
+    //       nonce: nonce,
+    //       value: 0,
+    //       data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
+    //     }
+    //     console.log(rawTx)
+    //     // return
+    //     if (this.$store.state.wallet) {
+    //       this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
+    //         // console.log(res)
+    //         this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+    //         // this.$$.reqAccount(res.signTx, '0').then(res => {
+    //           console.log(res)
+    //           if (res.msg === 'Success') {
+    //             this.pubKey = res.info.PubKey
+    //             this.getAccounts()
+    //           } else {
+    //             this.loading.account = false
+    //           }
+    //           this.$store.commit('setWallet', {info: ''})
+    //           // this.reload()
+    //         })
+    //       })
+    //     } else {
+    //       this.msgError(this.$t('warn').w_13)
+    //       this.loading.account = false
+    //     }
+    //   })
+    //   // let nonce = this.$$.getNonce(this.address, '', '')
+    //   // let rawTx = {
+    //   //   from: this.address,
+    //   //   to: this.$$.config.rawTx.to,
+    //   //   gasLimit: this.$$.config.rawTx.gasLimit,
+    //   //   gasPrice: this.$$.config.rawTx.gasPrice,
+    //   //   nonce: nonce,
+    //   //   value: 0,
+    //   //   data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
+    //   // }
+    //   // console.log(rawTx)
+    //   // // return
+    //   // if (this.$store.state.wallet) {
+    //   //   this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
+    //   //     // console.log(res)
+    //   //     this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+    //   //     // this.$$.reqAccount(res.signTx, '0').then(res => {
+    //   //       console.log(res)
+    //   //       if (res.msg === 'Success') {
+    //   //         this.pubKey = res.info.PubKey
+    //   //         this.getAccounts()
+    //   //       } else {
+    //   //         this.loading.account = false
+    //   //       }
+    //   //       this.$store.commit('setWallet', {info: ''})
+    //   //       // this.reload()
+    //   //     })
+    //   //   })
+    //   // } else {
+    //   //   this.msgError(this.$t('warn').w_13)
+    //   //   this.loading.account = false
+    //   // }
+    // },
     saveTxnsDB (txnId) {
       let data = {
         from: this.sendDataObj.dcrmAccount,
@@ -351,6 +505,44 @@ export default {
       this.drawer.select = false
       this.drawer.send = true
     },
+    // getMemberList () {
+    //   for (let obj of this.getGroup) {
+    //     if (this.gID === obj.Gid) {
+    //       this.gMode = obj.Mode
+    //       this.setMemberList(obj.Enodes)
+    //       break
+    //     }
+    //   }
+    // },
+    // setMemberList (data) {
+    //   this.gMemberInit = []
+    //   // console.log(arr)
+    //   let arr = []
+    //   for (let obj of data) {
+    //     if (obj === this.$$.eNode) continue
+    //     arr.push({
+    //       p1: 'dcrm',
+    //       p2: 'getEnodeStatus',
+    //       p3: [obj]
+    //     })
+    //   }
+    //   this.$$.batchRequest(arr).then(res => {
+    //     console.log(res)
+    //     for (let obj of res) {
+    //       let cbData = JSON.parse(obj), status
+    //       if (cbData.Status === 'Success') {
+    //         status = 'OnLine'
+    //       } else {
+    //         status = 'OffLine'
+    //       }
+    //       this.gMemberInit.push({
+    //         eNode: obj,
+    //         status: status === 'OnLine' ? 1 : 0
+    //       })
+    //     }
+    //   })
+    //   console.log(this.gMemberInit)
+    // },
   }
 }
 </script>
