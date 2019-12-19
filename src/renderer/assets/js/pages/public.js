@@ -1,4 +1,7 @@
 export const computedPub = {
+  eNode () {
+    return this.$store.state.eNode
+  },
   address () {
     return this.$store.state.address
   },

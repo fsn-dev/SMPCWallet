@@ -24,7 +24,6 @@
 
 <script>
 import gList from '@/pages/group/gList'
-// import gDtil from '@/pages/group/gDtil'
 export default {
   name: '',
   data () {

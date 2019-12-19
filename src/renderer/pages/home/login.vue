@@ -114,13 +114,15 @@ export default {
       this.$$.readFile(fileUrl).then(res => {
         console.log(res)
         try{
-          if (this.$$.wallet.walletRequirePass(res.info)) {
-            this.walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
+          if (this.$$.walletRequirePass(res.info)) {
+            this.walletInfo = this.$$.getWalletFromPrivKeyFile(
               res.info,
               this.loginObj.password
             )
             let address = this.walletInfo.getChecksumAddressString()
             this.createHeader(this.walletInfo.getPublicKeyString(), address)
+            console.log(address)
+            console.log(this.walletInfo.getPrivateKeyString())
             this.$store.commit('setAddress', {info: address})
             this.$store.commit('setToken', {info: this.loginObj.username})
             this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})

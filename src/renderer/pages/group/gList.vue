@@ -4,21 +4,8 @@
       <el-button>Create Group</el-button>
     </div> -->
     <div class="g-list-box">
-      <!-- <el-collapse accordion v-if="groupList.length > 0">
-        <el-collapse-item class="item" v-for="(item, index) in groupList" :key="index">
-          <template slot="title">
-            <div class="flex-sc pl-10">
-              <div class="label">{{item.publicKey ? $$.titleCase(item.publicKey) : 'G'}}</div>
-              {{$$.cutOut(item.publicKey, 6,4)}}
-            </div>
-          </template>
-          <ul>
-            <li></li>
-          </ul>
-        </el-collapse-item>
-      </el-collapse> -->
-      <ul class="boxConntent1" v-if="groupList.length > 0">
-        <li class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" v-for="(item, index) in groupList" :key="index" @click="changeGroup(item)">
+      <ul class="boxConntent1" v-if="gList.length > 0">
+        <li class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" v-for="(item, index) in gList" :key="index" @click="changeGroup(item)">
           <div class="label">{{item.publicKey ? $$.titleCase(item.publicKey) : 'G'}}</div>
           {{$$.cutOut(item.publicKey, 10,4)}}
         </li>
@@ -74,7 +61,7 @@ export default {
   name: '',
   data () {
     return {
-      groupList: [],
+      gList: [],
       publicKey: '',
       gID: ''
     }
@@ -102,13 +89,13 @@ export default {
   },
   methods: {
     initGroup () {
-      this.$$.getAccounts(this.safeMode).then(res => {
+      this.$$.getAccounts('', this.safeMode).then(res => {
         console.log(res)
-        this.groupList = []
+        this.gList = []
         let arr = res.info ? res.info : []
         for (let obj1 of arr) {
           for (let obj2 of obj1.Accounts) {
-            this.groupList.push({
+            this.gList.push({
               publicKey: obj2,
               gID: obj1.GroupID
             })

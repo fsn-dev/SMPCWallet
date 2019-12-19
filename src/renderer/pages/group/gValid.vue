@@ -1,16 +1,16 @@
 <template>
   <div class="boxConntent1 container">
     <div class="c-form-box">
-      <el-form :model="groupForm" ref="groupForm" label-width="100px" label-position="top">
+      <el-form :model="gForm" ref="gForm" label-width="100px" label-position="top">
         <el-form-item label="账户名" prop="name">
-          <el-input v-model="groupForm.name" disabled="disabled"></el-input>
+          <el-input v-model="gForm.name" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item :label="$t('label').mode">
-          <el-select v-model="groupForm.mode" placeholder="" class="WW100" disabled="disabled">
+          <el-select v-model="gForm.mode" placeholder="" class="WW100" disabled="disabled">
             <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name" :value="item.val"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-for="(eNode, index) in groupForm.eNode" :label="$t('label').admins + index" :key="eNode.key">
+        <el-form-item v-for="(eNode, index) in gForm.eNode" :label="$t('label').admins + index" :key="eNode.key">
           <div class="flex-bc">
             <el-input v-model="eNode.value" disabled="disabled"></el-input>
             <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
@@ -50,7 +50,7 @@ export default {
       eDialog: {
         confirm: false
       },
-      groupForm: {},
+      gForm: {},
       modeArr: this.$$.mode,
       gID: this.$$.eNode,
       isApply: false,
@@ -75,7 +75,7 @@ export default {
           value: obj
         })
       }
-      this.groupForm = {
+      this.gForm = {
         name: urlParams.Gname,
         mode: urlParams.Mode,
         eNode: arr,
@@ -94,7 +94,7 @@ export default {
       this.eDialog.confirm = true
     },
     confirmGroup () {
-      this.$$.validGroup(this.groupForm.name, this.gID, this.applyType).then(res => {
+      this.$$.validGroup(this.gForm.name, this.gID, this.applyType).then(res => {
         console.log(res)
         if (res.msg === 'Success' && !res.info.Error) {
           this.msgSuccess(this.$t('warn').w_11)

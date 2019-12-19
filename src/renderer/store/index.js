@@ -8,6 +8,10 @@ import cookies from '@/libs/cookies'
  * @description 配置文件
  */
 import config from '@etc/js/config'
+/**
+ * @description web3文件
+ */
+import web3 from '@/libs/web3Util'
 // import wallet from './store-wallet.js'
 // import exchange from './store-exchange.js'
 Vue.use(Vuex)
@@ -16,6 +20,7 @@ Vue.use(Vuex)
 // console.log(config.modeInit)
 const store = new Vuex.Store({
   state: {
+    eNode: '',
     address: '',
     token: '',
     safeMode: config.modeInit,
@@ -31,6 +36,9 @@ const store = new Vuex.Store({
     // exchange
   },
   mutations: {
+    setEnode (state, data) {
+      state.eNode = data
+    },
     setAddress (state, data) {
       let info = data.info ? data.info.toString() : ''
       state.address = info
@@ -79,6 +87,16 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    getEnode ({commit}) {
+      // console.log(this)
+      try {
+        web3.getEnode().then(res => {
+          commit('setEnode', res)
+        })
+      } catch (error) {
+        commit('setEnode', '')
+      }
+    },
     getAddress ({commit}) {
       cookies.getCookies(config.cookies.address).then(res => {
         // console.log(res)

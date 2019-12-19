@@ -98,7 +98,7 @@
         </div>
         <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/history', {
           coinType: sendDataObj.coinType,
-          address: sendDataObj.address,
+          address: sendDataObj.dcrmAccount,
         })">查看历史</div>
       </div>
     </w-drawer>
@@ -137,7 +137,7 @@
         </el-form>
         <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/history', {
           coinType: sendDataObj.coinType,
-          address: sendDataObj.address,
+          address: sendDataObj.dcrmAccount,
         })">查看历史</div>
       </div>
     </w-drawer>
@@ -233,10 +233,10 @@ export default {
       rawTx: {},
       sendDataObj: {},
       gID: '',
-      publicKey: '',
+      pubKey: '',
       gMode: '',
       tableData: [],
-      dcrmAddr: '',
+      dcrmAccount: '',
       drawer: {
         member: false,
         select: false,
@@ -257,7 +257,7 @@ export default {
       } else {
         this.gID = ''
         this.gMode = ''
-        this.publicKey = ''
+        this.pubKey = ''
         this.gMemberInit = []
         this.tableData = []
         this.loading.account = false
@@ -272,23 +272,27 @@ export default {
       }, 50)
     } else {
       setTimeout(() => {
-        this.getPersonAccount()
+        // this.getPersonAccount()
+        this.getGroupPersonId()
       }, 50)
     }
 
+    // console.log(this.$store.state.wallet)
+    // console.log(JSON.stringify(this.$store.state.wallet))
+    // console.log(this.$store.state.wallet.getPrivateKeyString())
   },
   methods: {
-    initGroupData () {
-      this.loading.account = true
-      this.gID = this.$route.query.gID ? this.$route.query.gID : ''
-      this.publicKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
-      this.getAccounts()
-      this.getGroupData()
-    },
     modalClick () {
       this.eDialog.send = false
       this.eDialog.pwd = false
       this.gMemberSelect = []
+    },
+    initGroupData () {
+      this.loading.account = true
+      this.gID = this.$route.query.gID ? this.$route.query.gID : ''
+      this.pubKey = this.$route.query.pubKey ? this.$route.query.pubKey : ''
+      this.getAccounts()
+      this.getGroupData()
     },
     getGroupData () {
       this.$$.getGroup().then(res => {
@@ -303,61 +307,46 @@ export default {
         this.msgError(err.error)
       })
     },
-    getMemberList () {
-      for (let obj of this.getGroup) {
-        if (this.gID === obj.Gid) {
-          this.gMode = obj.Mode
-          this.setMemberList(obj.Enodes)
-          break
-        }
-      }
-    },
-    setMemberList (arr) {
-      this.gMemberInit = []
-      // console.log(arr)
-      for (let obj of arr) {
-        if (obj === this.$$.eNode) continue
-        this.gMemberInit.push({
-          eNode: obj,
-          status: this.$$.getEnodeState(obj) === 'OnLine' ? 1 : 0
-        })
-      }
-      console.log(this.gMemberInit)
-    },
-    getPersonAccount () {
-      this.$$.getAccounts(this.safeMode).then(res => {
-        console.log(res)
-        if (res.msg === 'Success' && res.info.length > 0) {
-          this.gID = res.info[0].GroupID
-          this.gMode = res.info.Mode ? res.info.Mode : '3/3'
-          this.publicKey = res.info[0].Accounts[0] ? res.info[0].Accounts[0] : ''
-          this.getAccounts()
-        } else {
-          this.getGroupPersonId()
-        }
-      }).catch(err => {
-        console.log(err)
-        this.getGroupPersonId()
-        if (err.error) {
-          this.msgError(err.error)
-        }
-      })
-    },
     getGroupPersonId () {
       this.$$.getGroupPerson().then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.info) {
           this.gID = res.info.Gid
           this.gMode = res.info.Mode ? res.info.Mode : '3/3'
-          this.publicKey = res.info.PubKey ? res.info.PubKey : ''
-          this.setMemberList(res.info.Enodes)
+          this.pubKey = res.info.PubKey ? res.info.PubKey : ''
+          // this.setMemberList(res.info.Enodes)
+          this.getPersonAccount()
           this.loading.account = true
+        } else {
+          this.getAccounts()
         }
-        this.getAccounts()
+        // this.getAccounts()
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)
         this.loading.account = false
+      })
+    },
+    getPersonAccount () {
+      this.$$.getAccounts(this.gID, this.safeMode).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && res.info.length > 0) {
+          this.gID = res.info[0].GroupID
+          this.gMode = res.info.Mode ? res.info.Mode : '3/3'
+          this.pubKey = res.info[0].Accounts[0] ? res.info[0].Accounts[0] : ''
+          // return
+          this.getAccounts()
+        } else {
+          // this.getGroupPersonId()
+          this.reqPersonAccount()
+        }
+      }).catch(err => {
+        console.log(err)
+        // this.getGroupPersonId()
+        this.reqPersonAccount()
+        if (err.error) {
+          this.msgError(err.error)
+        }
       })
     },
     /**
@@ -368,12 +357,12 @@ export default {
         this.loading.account = false
         return
       }
-      if (this.publicKey) {
-        this.$$.getAccountsBalance(this.publicKey).then(res => {
+      if (this.pubKey) {
+        this.$$.getAccountsBalance(this.pubKey).then(res => {
           console.log(res)
           if (res.msg === 'Success') {
             this.tableData = res.info
-            this.dcrmAddr = res.address
+            this.dcrmAccount = res.address
           } else if (Number(this.safeMode)) {
             this.reqPersonAccount()
           }
@@ -388,35 +377,75 @@ export default {
       }
     },
     reqPersonAccount () {
-      let nonce = this.$$.getNonce(this.address, '', '')
-      let rawTx = {
-        from: this.address,
-        to: this.$$.config.rawTx.to,
-        gasLimit: this.$$.config.rawTx.gasLimit,
-        gasPrice: this.$$.config.rawTx.gasPrice,
-        nonce: nonce,
-        value: 0,
-        data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
-      }
-      console.log(rawTx)
-      this.$$.toSign(rawTx, this.$store.state.wallet.getPrivateKeyString()).then(res => {
-        // console.log(res)
-        this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
-        // this.$$.reqAccount(res.signTx, '0').then(res => {
-          console.log(res)
-          if (res.msg === 'Success') {
-            this.publicKey = res.info.PubKey
-            this.getAccounts()
-          } else {
-            this.loading.account = false
-          }
-          // this.reload()
-        })
+      this.$$.getNonce(this.address, '', '').then(nonce => {
+        let rawTx = {
+          from: this.address,
+          to: this.$$.config.rawTx.to,
+          gasLimit: this.$$.config.rawTx.gasLimit,
+          gasPrice: this.$$.config.rawTx.gasPrice,
+          nonce: nonce,
+          value: 0,
+          data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
+        }
+        console.log(rawTx)
+        // return
+        if (this.$store.state.wallet) {
+          this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
+            // console.log(res)
+            this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+            // this.$$.reqAccount(res.signTx, '0').then(res => {
+              console.log(res)
+              if (res.msg === 'Success') {
+                this.pubKey = res.info.PubKey
+                this.getAccounts()
+              } else {
+                this.loading.account = false
+              }
+              this.$store.commit('setWallet', {info: ''})
+              // this.reload()
+            })
+          })
+        } else {
+          this.msgError(this.$t('warn').w_13)
+          this.loading.account = false
+        }
       })
+      // let nonce = this.$$.getNonce(this.address, '', '')
+      // let rawTx = {
+      //   from: this.address,
+      //   to: this.$$.config.rawTx.to,
+      //   gasLimit: this.$$.config.rawTx.gasLimit,
+      //   gasPrice: this.$$.config.rawTx.gasPrice,
+      //   nonce: nonce,
+      //   value: 0,
+      //   data: 'REQDCRMADDR:' + this.gID + ':' + this.gMode
+      // }
+      // console.log(rawTx)
+      // // return
+      // if (this.$store.state.wallet) {
+      //   this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
+      //     // console.log(res)
+      //     this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+      //     // this.$$.reqAccount(res.signTx, '0').then(res => {
+      //       console.log(res)
+      //       if (res.msg === 'Success') {
+      //         this.pubKey = res.info.PubKey
+      //         this.getAccounts()
+      //       } else {
+      //         this.loading.account = false
+      //       }
+      //       this.$store.commit('setWallet', {info: ''})
+      //       // this.reload()
+      //     })
+      //   })
+      // } else {
+      //   this.msgError(this.$t('warn').w_13)
+      //   this.loading.account = false
+      // }
     },
     saveTxnsDB (txnId) {
       let data = {
-        from: this.sendDataObj.address,
+        from: this.sendDataObj.dcrmAccount,
         to: this.rawTx.to,
         value: this.rawTx.value,
         nonce: this.dataPage.nonce,
@@ -476,13 +505,13 @@ export default {
         gasLimit: this.$$.config.rawTx.gasLimit,
         gasPrice: this.$$.config.rawTx.gasPrice,
       }
-      let nonce = this.$$.getNonce(this.dcrmAddr, this.sendDataObj.coinType, this.sendDataObj.address)
+      let nonce = this.$$.getNonce(this.dcrmAccount, this.sendDataObj.coinType, this.sendDataObj.dcrmAccount)
       this.dataPage.nonce = nonce
       this.dataPage.value = this.rawTx.value
       this.dataPage.data = 'LOCKOUT:' 
-                            + this.dcrmAddr
+                            + this.dcrmAccount
                             + ':' 
-                            + this.sendDataObj.address
+                            + this.sendDataObj.dcrmAccount
                             + ':' 
                             + this.rawTx.to
                             + ':'
@@ -512,7 +541,7 @@ export default {
     },
     setTxnsData (item) {
       this.sendDataObj = {
-        address: this.dcrmAddr,
+        dcrmAccount: this.dcrmAccount,
         dcrmAddr: item.DcrmAddr,
         coinType: item.Cointype,
         gID: this.gID,
@@ -541,6 +570,44 @@ export default {
     toSendTxnsUrl (obj) {
       this.drawer.select = false
       this.drawer.send = true
+    },
+    getMemberList () {
+      for (let obj of this.getGroup) {
+        if (this.gID === obj.Gid) {
+          this.gMode = obj.Mode
+          this.setMemberList(obj.Enodes)
+          break
+        }
+      }
+    },
+    setMemberList (data) {
+      this.gMemberInit = []
+      // console.log(arr)
+      let arr = []
+      for (let obj of data) {
+        if (obj === this.$$.eNode) continue
+        arr.push({
+          p1: 'dcrm',
+          p2: 'getEnodeStatus',
+          p3: [obj]
+        })
+      }
+      this.$$.batchRequest(arr).then(res => {
+        console.log(res)
+        for (let obj of res) {
+          let cbData = JSON.parse(obj), status
+          if (cbData.Status === 'Success') {
+            status = 'OnLine'
+          } else {
+            status = 'OffLine'
+          }
+          this.gMemberInit.push({
+            eNode: obj,
+            status: status === 'OnLine' ? 1 : 0
+          })
+        }
+      })
+      console.log(this.gMemberInit)
     },
   }
 }

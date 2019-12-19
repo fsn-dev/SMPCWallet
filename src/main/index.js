@@ -1,12 +1,8 @@
+const path = require('path').resolve('.')
 import { app, BrowserWindow, Menu } from 'electron'
 // const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
-
-/**
- * @description 打开其他应用程序
- */
-// const {spawn} = require('child_process')
-// spawn(config.gDcrm)
-
+import config from '../../static/js/config'
+const {spawn} = require('child_process')
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -83,3 +79,13 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+
+ /**
+ * @description 打开其他应用程序
+ */
+try {
+  // console.log(config)
+  // spawn(config.gDcrm)
+} catch (error) {
+  console.error(error)
+}

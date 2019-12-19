@@ -41,8 +41,9 @@ export default {
     // console.log(this.dayAndNight)
   },
   methods: {
-    ...mapActions(['getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage']),
+    ...mapActions(['getEnode', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage']),
     initData () {
+      this.getEnode()
       this.getToken()
       this.getAddress()
       this.getSafeMode()

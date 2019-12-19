@@ -74,37 +74,65 @@ export default {
     },
     openPwdDialog () {
       try {
-        let nonce = this.$$.getNonce(this.address, this.initTxnsData.coinType, this.initTxnsData.address)
-        if (!isNaN(nonce)) {
-          this.dataPage = {
-            from: this.address,
-            to: this.$$.config.rawTx.to,
-            gasLimit: this.$$.config.rawTx.gasLimit,
-            gasPrice: this.$$.config.rawTx.gasPrice,
-            value: this.rawTxData.value,
-            nonce: nonce,
-            data: 'LOCKOUT:' 
-                  + this.initTxnsData.address
-                  + ':' 
-                  + this.initTxnsData.dcrmAddr
-                  + ':' 
-                  + this.rawTxData.to
-                  + ':'
-                  + this.rawTxData.value
-                  + ':'
-                  + this.initTxnsData.coinType
-                  + ':'
-                  + this.initTxnsData.gID
-                  + ':'
-                  + this.initTxnsData.mode
+        this.$$.getNonce(this.address, this.initTxnsData.coinType, this.initTxnsData.address).then(nonce => {
+          if (!isNaN(nonce)) {
+            this.dataPage = {
+              from: this.address,
+              to: this.$$.config.rawTx.to,
+              gasLimit: this.$$.config.rawTx.gasLimit,
+              gasPrice: this.$$.config.rawTx.gasPrice,
+              value: this.rawTxData.value,
+              nonce: nonce,
+              data: 'LOCKOUT:' 
+                    + this.initTxnsData.address
+                    + ':' 
+                    + this.initTxnsData.dcrmAddr
+                    + ':' 
+                    + this.rawTxData.to
+                    + ':'
+                    + this.rawTxData.value
+                    + ':'
+                    + this.initTxnsData.coinType
+                    + ':'
+                    + this.initTxnsData.gID
+                    + ':'
+                    + this.initTxnsData.mode
+            }
+            this.eDialog.pwd = true
+            console.log(this.dataPage)
+          } else {
+            this.msgError(nonce)
           }
-          this.eDialog.pwd = true
-          // this.dataPage = this.$$.config.rawTx
-          // this.dataPage.from = this.$$.getCookies(this.$$.config.cookies.address)
-          console.log(this.dataPage)
-        } else {
-          this.msgError(nonce)
-        }
+        })
+        // let nonce = this.$$.getNonce(this.address, this.initTxnsData.coinType, this.initTxnsData.address)
+        // if (!isNaN(nonce)) {
+        //   this.dataPage = {
+        //     from: this.address,
+        //     to: this.$$.config.rawTx.to,
+        //     gasLimit: this.$$.config.rawTx.gasLimit,
+        //     gasPrice: this.$$.config.rawTx.gasPrice,
+        //     value: this.rawTxData.value,
+        //     nonce: nonce,
+        //     data: 'LOCKOUT:' 
+        //           + this.initTxnsData.address
+        //           + ':' 
+        //           + this.initTxnsData.dcrmAddr
+        //           + ':' 
+        //           + this.rawTxData.to
+        //           + ':'
+        //           + this.rawTxData.value
+        //           + ':'
+        //           + this.initTxnsData.coinType
+        //           + ':'
+        //           + this.initTxnsData.gID
+        //           + ':'
+        //           + this.initTxnsData.mode
+        //   }
+        //   this.eDialog.pwd = true
+        //   console.log(this.dataPage)
+        // } else {
+        //   this.msgError(nonce)
+        // }
       } catch (error) {
         this.msgError(error.toString())
       }

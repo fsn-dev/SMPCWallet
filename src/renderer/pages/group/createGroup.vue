@@ -57,7 +57,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
-        <el-button type="primary" @click="createGroup">{{$t('btn').confirm}}</el-button>
+        <el-button type="primary" @click="reqAccount">{{$t('btn').confirm}}</el-button>
       </div>
     </el-dialog>
 
@@ -114,7 +114,7 @@ export default {
         eNode: [],
         name: ''
       },
-      groupMember: '',
+      gMember: '',
       modeArr: this.$$.mode,
       signTx: '',
       rules: {
@@ -137,15 +137,6 @@ export default {
       this.eDialog.pwd = false
       this.eDialog.confirm = false
     },
-    getSignData (data) {
-      this.modalClick()
-      if (data.signTx) {
-        this.signTx = data.signTx
-        this.eDialog.confirm = true
-      } else {
-        this.msgError('Error')
-      }
-    },
     getGroupData () {
       this.$$.getGroup().then(res => {
         console.log(res)
@@ -156,34 +147,41 @@ export default {
         this.msgError(err.error)
       })
     },
-    changeGroup () {
-      this.groupMember = ''
-      for (let obj of this.getGroup) {
-        if (this.gID === obj.Gid) {
-          this.groupMember = obj
-          break
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.eDialog.confirm = true
+          this.createGroup()
+          // this.openPwdDialog()
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      }
-      console.log(this.groupMember)
-      if (this.gID === 0) {
-        this.groupForm.mode = '3/3'
-        this.changeMode()
-      } else {
-        this.groupForm.mode = this.groupMember.Mode
-        this.groupForm.eNode = []
-        for (let obj of this.groupMember.Enodes) {
-          this.groupForm.eNode.push({
-            value: obj,
-            key: Date.now()
-          })
-        }
-      }
+      });
     },
-    changeState (item, index) {
-      this.groupForm.eNode[index].state = this.$$.getEnodeState(item.value)
-      this.reload = false
-      this.$nextTick(() => {
-        this.reload = true
+    createGroup () {
+      let arr = []
+      for (let obj of this.groupForm.eNode) {
+        arr.push(obj.value)
+      }
+      this.$$.createGroup(this.groupForm.mode, arr).then(res => {
+        let gInfo = res
+        console.log(gInfo)
+        if (gInfo.msg === 'Success') {
+          // this.msgSuccess(this.$t('warn').w_11)
+          // this.reqAccount()
+          // this.toUrl('/group')
+          this.gID = res.info.Gid
+          this.eDialog.confirm = false
+          this.openPwdDialog()
+        } else {
+          this.msgError(gInfo.info.toString())
+          this.eDialog.confirm = false
+        }
+      }).catch(err => {
+        this.msgError(err)
+        this.loading.creat = false
+        this.eDialog.confirm = false
       })
     },
     openPwdDialog () {
@@ -198,45 +196,27 @@ export default {
         gasLimit: this.$$.config.rawTx.gasLimit,
         gasPrice: this.$$.config.rawTx.gasPrice,
       }
-      let nonce = this.$$.getNonce(this.address, '', '')
-      this.dataPage.nonce = nonce
-      this.dataPage.value = 0
-      this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.groupMember.Mode
-      this.eDialog.pwd = true
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.openPwdDialog()
-          // this.eDialog.confirm = true
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
-    async createGroup () {
-      this.loading.creat = true
-      let arr = []
-      for (let obj of this.groupForm.eNode) {
-        arr.push(obj.value)
-      }
-      this.$$.createGroup(this.groupForm.mode, arr).then(res => {
-        let gInfo = res
-        console.log(gInfo)
-        if (gInfo.msg === 'Success') {
-          this.msgSuccess(this.$t('warn').w_11)
-          this.reqAccount()
-          // this.toUrl('/group')
-        } else {
-          this.msgError(gInfo.info.toString())
-        }
-        this.eDialog.confirm = false
-      }).catch(err => {
-        this.msgError(err)
-        this.loading.creat = false
-        this.eDialog.confirm = false
+      this.$$.getNonce(this.address, '', '').then(nonce => {
+        this.dataPage.nonce = nonce
+        this.dataPage.value = 0
+        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.gMember.Mode
+        this.eDialog.pwd = true
       })
+      // let nonce = this.$$.getNonce(this.address, '', '')
+      // this.dataPage.nonce = nonce
+      // this.dataPage.value = 0
+      // this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.gMember.Mode
+      // this.eDialog.pwd = true
+    },
+    getSignData (data) {
+      this.modalClick()
+      // this.loading.creat = true
+      if (data.signTx) {
+        this.signTx = data.signTx
+        this.eDialog.confirm = true
+      } else {
+        this.msgError('Error')
+      }
     },
     reqAccount () {
       this.$$.reqAccount(this.signTx, this.safeMode).then(res => {
@@ -249,14 +229,43 @@ export default {
         this.loading.creat = false
       })
     },
-    resetForm(formName) {
-      this.groupForm = {
-        mode: '3/3',
-        eNode: [],
-        name: ''
+    changeGroup () {
+      this.gMember = ''
+      for (let obj of this.getGroup) {
+        if (this.gID === obj.Gid) {
+          this.gMember = obj
+          break
+        }
       }
-      this.gID = 0
-      this.changeMode()
+      console.log(this.gMember)
+      if (this.gID === 0) {
+        this.groupForm.mode = '3/3'
+        this.changeMode()
+      } else {
+        this.groupForm.mode = this.gMember.Mode
+        this.groupForm.eNode = []
+        for (let obj of this.gMember.Enodes) {
+          this.groupForm.eNode.push({
+            value: obj,
+            key: Date.now()
+          })
+        }
+      }
+    },
+    changeState (item, index) {
+      if (!item.value) return
+      this.$$.getEnodeState(item.value.replace(/\s/, '')).then(res => {
+        this.groupForm.eNode[index].state = res
+        this.reload = false
+        this.$nextTick(() => {
+          this.reload = true
+        })
+      })
+      // this.groupForm.eNode[index].state = this.$$.getEnodeState(item.value.replace(/\s/, ''))
+      // this.reload = false
+      // this.$nextTick(() => {
+      //   this.reload = true
+      // })
     },
     changeMode () {
       let num = Number(this.groupForm.mode.split('/')[1])
@@ -267,6 +276,15 @@ export default {
           key: Date.now()
         })
       }
+    },
+    resetForm(formName) {
+      this.groupForm = {
+        mode: '3/3',
+        eNode: [],
+        name: ''
+      }
+      this.gID = 0
+      this.changeMode()
     },
   }
 }

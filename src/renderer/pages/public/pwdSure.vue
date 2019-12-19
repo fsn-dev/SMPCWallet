@@ -78,8 +78,8 @@ export default {
           .then(res => {
             try{
               console.log(res)
-              if (this.$$.wallet.walletRequirePass(res.info)) {
-                let walletInfo = this.$$.wallet.getWalletFromPrivKeyFile(
+              if (this.$$.walletRequirePass(res.info)) {
+                let walletInfo = this.$$.getWalletFromPrivKeyFile(
                   res.info,
                   this.sureForm.password
                 )

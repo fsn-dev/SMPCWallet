@@ -2,6 +2,8 @@
 dist/electron/*
 dist/web/*
 build/*
+.p2p/*
+data/*
 !build/icons
 coverage
 node_modules/
@@ -9,7 +11,6 @@ npm-debug.log
 npm-debug.log.*
 thumbs.db
 !.gitkeep
-data/*
 key-house-win32-x64/*
 *.zip
 *.exe

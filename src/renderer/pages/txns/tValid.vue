@@ -40,7 +40,7 @@ export default {
         to: '',
         value: ''
       },
-      initTxnsData: {},
+      urlParams: {},
       rules: {
         to: [
           { required: true, message: this.$t('warn').w_14, trigger: 'blur' }
@@ -60,19 +60,18 @@ export default {
     }
   },
   mounted () {
-    this.initTxnsData = this.$route.query
+    this.urlParams = this.$route.query
     this.rawTxData = {
-      to: this.initTxnsData.DcrmTo,
-      value: this.initTxnsData.Value 
+      to: this.urlParams.DcrmTo,
+      value: this.urlParams.Value 
     }
-    console.log(this.initTxnsData)
+    console.log(this.urlParams)
   },
   methods: {
     modalClick () {
       this.eDialog.pwd = false
     },
     getSignData (data) {
-      // this.createGroup()
       console.log(data)
       console.log(data.signTx)
       if (data && data.signTx) {
@@ -87,38 +86,69 @@ export default {
     },
     openPwdDialog (type) {
       try {
-        let nonce = this.$$.getNonce(this.address, this.initTxnsData.Cointype, this.initTxnsData.DcrmFrom)
-        if (!isNaN(nonce)) {
-          this.dataPage = {
-            from: this.address,
-            to: this.$$.config.rawTx.to,
-            gasLimit: this.$$.config.rawTx.gasLimit,
-            gasPrice: this.$$.config.rawTx.gasPrice,
-            nonce: nonce,
-            data: 'ACCEPTLOCKOUT:' 
-                  + this.initTxnsData.Address
-                  // + this.initTxnsData.DcrmFrom
-                  + ':'
-                  + this.initTxnsData.GroupId 
-                  + ':' 
-                  + this.initTxnsData.Nonce 
-                  + ':' 
-                  + this.initTxnsData.DcrmFrom 
-                  + ':' 
-                  + this.initTxnsData.DcrmTo 
-                  + ':' 
-                  + this.initTxnsData.Value 
-                  + ':' 
-                  + this.initTxnsData.Cointype 
-                  + ':' 
-                  + this.initTxnsData.LimitNum
-                  + ':' 
-                  + type
+        this.$$.getNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom).then(nonce => {
+          if (!isNaN(nonce)) {
+            this.dataPage = {
+              from: this.address,
+              to: this.$$.config.rawTx.to,
+              gasLimit: this.$$.config.rawTx.gasLimit,
+              gasPrice: this.$$.config.rawTx.gasPrice,
+              nonce: nonce,
+              data: 'ACCEPTLOCKOUT:' 
+                    + this.urlParams.Account
+                    + ':'
+                    + this.urlParams.GroupId 
+                    + ':' 
+                    + this.urlParams.Nonce 
+                    + ':' 
+                    + this.urlParams.DcrmFrom 
+                    + ':' 
+                    + this.urlParams.DcrmTo 
+                    + ':' 
+                    + this.urlParams.Value 
+                    + ':' 
+                    + this.urlParams.Cointype 
+                    + ':' 
+                    + this.urlParams.LimitNum
+                    + ':' 
+                    + type
+            }
+            this.eDialog.pwd = true
+          } else {
+            this.msgError(nonce)
           }
-          this.eDialog.pwd = true
-        } else {
-          this.msgError(nonce)
-        }
+        })
+        // let nonce = this.$$.getNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom)
+        // if (!isNaN(nonce)) {
+        //   this.dataPage = {
+        //     from: this.address,
+        //     to: this.$$.config.rawTx.to,
+        //     gasLimit: this.$$.config.rawTx.gasLimit,
+        //     gasPrice: this.$$.config.rawTx.gasPrice,
+        //     nonce: nonce,
+        //     data: 'ACCEPTLOCKOUT:' 
+        //           + this.urlParams.Account
+        //           + ':'
+        //           + this.urlParams.GroupId 
+        //           + ':' 
+        //           + this.urlParams.Nonce 
+        //           + ':' 
+        //           + this.urlParams.DcrmFrom 
+        //           + ':' 
+        //           + this.urlParams.DcrmTo 
+        //           + ':' 
+        //           + this.urlParams.Value 
+        //           + ':' 
+        //           + this.urlParams.Cointype 
+        //           + ':' 
+        //           + this.urlParams.LimitNum
+        //           + ':' 
+        //           + type
+        //   }
+        //   this.eDialog.pwd = true
+        // } else {
+        //   this.msgError(nonce)
+        // }
       } catch (error) {
         this.msgError(error.toString())
       }
