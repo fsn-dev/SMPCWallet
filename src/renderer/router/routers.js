@@ -103,28 +103,55 @@ export default [
           title: '个人账户',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/person/index')) ),
-        children: [
-          {
-            path: '/',
-            meta: {
-              title: '个人账户',
-              notCache: true
-            },
-            component: Account,
-          },
-          {
-            path: '/person/receive',
-            meta: {
-              title: '接收',
-              notCache: true
-            },
-            component: Receive
-          },
-        ]
+        component: Account,
+      },
+      {
+        path: '/person/receive',
+        meta: {
+          title: '接收',
+          notCache: true
+        },
+        component: Receive
       }
     ]
   },
+
+
+  // {
+  //   path: '/person',
+  //   component: Content,
+  //   meta: {
+  //     notCache: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '/',
+  //       meta: {
+  //         title: '个人账户',
+  //         notCache: true
+  //       },
+  //       component: resolve => require.ensure([], () => resolve(require('@/pages/person/index')) ),
+  //       children: [
+  //         {
+  //           path: '/',
+  //           meta: {
+  //             title: '个人账户',
+  //             notCache: true
+  //           },
+  //           component: Account,
+  //         },
+  //         {
+  //           path: '/person/receive',
+  //           meta: {
+  //             title: '接收',
+  //             notCache: true
+  //           },
+  //           component: Receive
+  //         },
+  //       ]
+  //     }
+  //   ]
+  // },
   {
     path: '/group',
     component: Content,

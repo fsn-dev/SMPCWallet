@@ -43,9 +43,11 @@
 
     <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">{{$t('warn').w_1}}</div>
 
+    <!-- 输入密码 start -->
     <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
     </el-dialog>
+    <!-- 输入密码 end -->
 
     <!-- 查看组成员 start -->
     <w-drawer v-model="drawer.member" v-if="drawer.member">

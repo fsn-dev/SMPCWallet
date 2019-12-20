@@ -17,7 +17,7 @@
           <ul class="flex-c HH100">
             <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" :title="$t('title').wait"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">{{$t('title').wait}}</el-badge></li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/createGroup')" title="创建共管账户">创建共管账户</li> -->
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="drawer.create = true" :title="$t('btn').createAccount">{{$t('btn').createAccount}}</li>
+            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="openDrawerCreate" :title="$t('btn').createAccount">{{$t('btn').createAccount}}</li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
@@ -65,100 +65,7 @@
 </template>
 
 <style lang="scss">
-
-.header-top-box {
-  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2000;
-  .header-logo {
-    min-width:40px;max-width:350px;height: size(35);
-    .logoImg{
-      width:100%;height: 100%;
-      img {
-        height: 100%
-      }
-    }
-  }
-  .header-top-account {
-    font-size: 14px;
-    .item {
-      padding: 0 10px;cursor: pointer;
-      &.active {
-        background: $color-primary;color:#fff;border-radius: 5px;
-      }
-    }
-  }
-  .header-top-set-box {
-    height: 100%;
-    .header-top-nav {
-      height: 100%;font-size: $text-normal;color: $color-black;font-weight:bold;margin-right:size(100);
-      .item {
-        height: 100%;padding: size(8) size(20);cursor: pointer;
-        &.active {
-          background: $color-primary;color: #fff;
-        }
-        &:hover {
-          background: $color-primary;color: #fff;
-        }
-      }
-    }
-    .header-top-lang {
-      width: 80px;
-      .el-input__inner{
-        border:none;padding-left: 0;background: none;color: $color-gray-sm;
-      }
-    }
-    .header-top-dn {
-      $dn-h: 28;
-      width: size(50);height: size($dn-h);border: size(1) solid #ddd;border-radius: size(15);position: relative;margin: 0 size(15);
-      .round {
-        width: size($dn-h - 2);height: size($dn-h - 2);line-height: size($dn-h - 2);text-align:center;display: inline-block;background: #fff;color: $color-primary;border-radius: 100%;position: absolute;top:size(0);
-      }
-      .day {
-        left: 0;
-      }
-      .moon {
-        right: 0;
-      }
-    }
-    .header-top-user {
-      $hImg: 30;
-      position: relative;
-      .headImg {
-        width: size($hImg);height: size($hImg);border-radius: 100%;cursor: pointer;overflow: hidden;
-        img {
-          height: 100%;
-        }
-      }
-      .user-list {
-        width: size(200);position: absolute;top: size($hImg + 10);right: size(8);background: #fff;padding: size(8) size(0);border-radius: size(3);
-        .item {
-          padding: size(8) size(15);text-align: left;cursor: pointer;font-size: $text-normal;line-height: size(21);
-          &:hover {
-            background: #f1f1f1;
-          }
-        }
-      }
-    }
-  }
-}
-
-#boxContent_box{width:100%;position:absolute;top:70px;right:0;bottom:0px;left:0;overflow: auto;overflow-x: hidden;background: #fff;}
-
-.night {
-  .header-top-box {
-    background: $night-bg-color-sm;
-    .header-top-account {
-      color: #fff;
-    }
-    .header-top-set-box {
-      .header-top-nav {
-        color: #fff;
-      }
-    }
-  }
-  #boxContent_box {
-    background: $night-bg-color;
-  }
-}
+@import './scss/index';
 </style>
 
 <script>
@@ -206,18 +113,18 @@ export default {
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
-  // console.log(require(this.$$.config.file.img.url + this.address + this.$$.config.file.img.type))
-    // console.log(this.$$.config.file.img.url + this.address + this.$$.config.file.img.type)
     this.headerImg = this.$$.config.file.img.url + this.address + this.$$.config.file.img.type
-    // console.log(this.dayAndNight)
-    // console.log(this.safeMode)
-    // console.log(this.$store.state.safeMode)
+
     // this.intervalNews()
     // this.intervalSwitch = setInterval(() => {
     //   this.intervalNews()
     // }, 1000 * 5)
   },
   methods: {
+    openDrawerCreate () {
+      if (this.$route.path.indexOf('createGroup') !== -1) return
+      this.drawer.create = true
+    },
     newsView (cur) {
       if (cur.path.indexOf('waitNews') !== -1) {
         this.newsActive = 1
@@ -231,14 +138,11 @@ export default {
       this.isUserView = false
     },
     changeDn () {
-      // console.log(this.dayAndNight)
       if (Number(this.dayAndNight)) {
         this.$store.commit('setDayAndNight', {info: '0'})
       } else {
         this.$store.commit('setDayAndNight', {info: '1'})
       }
-      // console.log(this.dayAndNight)
-      // this.Refresh()
     },
     intervalNews () {
       this.$$.getPendingGroup().then(res => {
@@ -293,9 +197,7 @@ export default {
         this.lang = type
       }
       this.$i18n.locale = this.lang
-      // localStorage.setItem(this.$$.config.AppName + '_WALLET_LANGUAGE_TYPE', this.lang)
       this.$store.commit('setLanguage', {info: this.lang})
-      // this.changeLang(this.lang)
       this.reload()
     },
     quitMethod () {
