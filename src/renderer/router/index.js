@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routes from './routers'
 import $$ from '@/libs/index'
+import store from '@/store/index'
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(error=> error)
@@ -10,22 +11,17 @@ Router.prototype.push = function push(location) {
 
 Vue.use(Router)
 
-// console.log(routes)
+// console.log(store)
 
 const routers = new Router({
   routes
 })
 
 // routers.beforeEach((to, from, next) => {
-//   console.log(to)
-//   if (to.path === '/person') {
-//     next()
-//   } else {
-//     next()
-//   }
-//   const hideSearchURL = ['/createWallet', '/importWallet', '/login', '/register']
 //   // console.log(to)
-//   if ($$.getToken()) {
+//   const token = store.state.address
+//   const hideSearchURL = ['/login', '/register']
+//   if (token) {
 //     next()
 //   } else {
 //     let toFlag = false
@@ -39,6 +35,7 @@ const routers = new Router({
 //       next()
 //     } else {
 //       next('/')
+//       $$.clearCookies()
 //     }
 //   }
 // })

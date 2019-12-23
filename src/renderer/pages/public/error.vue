@@ -20,7 +20,7 @@ export default {
   name: 'error',
   methods: {
     exit () {
-      this.$$.quitApp(this)
+      this.quitApp()
     }
   }
 }

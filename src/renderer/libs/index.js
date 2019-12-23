@@ -87,18 +87,6 @@ let $$ = {
     else if (jsonArr.publisher == config.AppName && !jsonArr.encrypted) return false;
     else
       throw 'Keystore error!';
-  },
-  quitApp (that) {
-    let dayAndNight = that.$store.state.dayAndNight
-    let language = that.$store.state.language
-    cookies.clearCookies()
-    that.$store.commit('setAddress', '')
-    that.$store.commit('setToken', '')
-    that.$store.commit('setWallet', '')
-    that.$store.commit('setDayAndNight', {info: dayAndNight})
-    that.$store.commit('setSafeMode', {info: config.modeInit})
-    that.$store.commit('setLanguage', {info: language})
-    that.$router.push('/')
   }
 }
 

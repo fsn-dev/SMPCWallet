@@ -71,7 +71,7 @@ export default {
           if(this.currentSecond > this.timeout){
             clearInterval(this.eventID)
             this.msgError('你已经超过3分钟没有操作，页面自动跳转至首页')
-            this.$$.quitApp(this)
+            this.quitApp()
             setTimeout(() => {
               history.go(0)
             }, 1500)
@@ -84,7 +84,7 @@ export default {
     }
   },
   beforeDestroy () {
-    this.$$.quitApp(this)
+    this.quitApp()
   }
 }
 </script>

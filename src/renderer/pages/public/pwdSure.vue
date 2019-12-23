@@ -69,7 +69,7 @@ export default {
       // console.log(username)
       if (!username) {
         this.msgError(this.$t('warn').w_13)
-        this.$$.quitApp(this)
+        this.quitApp()
         this.sureForm.password = ''
         this.loading.wait = false
       } else {

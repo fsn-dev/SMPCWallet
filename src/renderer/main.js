@@ -138,6 +138,22 @@ Vue.prototype.msgWarning = function(txt) {
   })
 }
 
+Vue.prototype.quitApp = function() {
+  // console.log(this)
+  // console.log(this.$store)
+  console.log($$)
+  let dayAndNight = this.$store.state.dayAndNight
+  let language = this.$store.state.language
+  $$.clearCookies()
+  this.$store.commit('setToken', '')
+  this.$store.commit('setWallet', '')
+  this.$store.commit('setAddress', '')
+  this.$store.commit('setDayAndNight', {info: dayAndNight})
+  this.$store.commit('setSafeMode', {info: $$.config.modeInit})
+  this.$store.commit('setLanguage', {info: language})
+  this.$router.push('/')
+}
+
 import pwdSure from '@/pages/public/pwdSure'
 import wDrawer from '@/components/drawer/index'
 Vue.component('pwdSure', pwdSure)

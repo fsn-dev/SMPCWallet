@@ -41,7 +41,7 @@
             <li class="item" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus mr-5"></i>{{$t('btn').createAccount}}</li>
             <li class="item" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user mr-5"></i>{{$t('title').personAccount}}</li>
             <li class="item" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money mr-5"></i>{{$t('title').groupAccount}}</li>
-            <li class="item" @click="quitMethod" :title="$t('title').quit"><i class="el-icon-s-unfold mr-5"></i>{{$t('title').quit}}</li>
+            <li class="item" @click="quitApp()" :title="$t('title').quit"><i class="el-icon-s-unfold mr-5"></i>{{$t('title').quit}}</li>
           </ul>
         </div>
       </div>
@@ -199,9 +199,6 @@ export default {
       this.$i18n.locale = this.lang
       this.$store.commit('setLanguage', {info: this.lang})
       this.reload()
-    },
-    quitMethod () {
-      this.$$.quitApp(this)
     }
   },
   beforeDestroy () {
