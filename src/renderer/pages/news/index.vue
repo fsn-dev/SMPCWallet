@@ -2,10 +2,11 @@
   <div class="boxConntent1 container pt-30">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box">
       <el-tab-pane :label="$t('title').groupNews" name="first">
+        <div class="flex-sc font14 color_99 cursorP mb-20" @click="toUrl('/groupHistory')">查看历史</div>
         <g-news-list></g-news-list>
       </el-tab-pane>
       <el-tab-pane :label="$t('title').txnsNews" name="second">
-        <div class="flex-sc font14 color_99 cursorP mb-20" @click="toUrl('/history')">查看历史</div>
+        <div class="flex-sc font14 color_99 cursorP mb-20" @click="toUrl('/txnsHistory')">查看历史</div>
         <t-news-list></t-news-list>
       </el-tab-pane>
     </el-tabs>

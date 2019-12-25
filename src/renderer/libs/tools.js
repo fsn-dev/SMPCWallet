@@ -181,6 +181,9 @@ export default {
       case 5:
         status = 'Agree'
         break
+      case 6:
+        status = 'Timeout'
+        break
     }
     return status
   },

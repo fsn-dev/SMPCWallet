@@ -50,8 +50,8 @@ web3.extend({
       outputFormatter: null
     },
     {
-      name: 'getNonce',
-      call: 'dcrm_getNonce',
+      name: 'getLockOutNonce',
+      call: 'dcrm_getLockOutNonce',
       params: 3,
       inputFormatter: [null, null, null],
       outputFormatter: null
@@ -115,6 +115,34 @@ web3.extend({
     {
       name: 'getAccountsBalance',
       call: 'dcrm_getAccountsBalance',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    },
+    {
+      name: 'getCurNodeReqAddrInfo',
+      call: 'dcrm_getCurNodeReqAddrInfo',
+      params: 0,
+      inputFormatter: [],
+      outputFormatter: null
+    },
+    {
+      name: 'getReqAddrStatus',
+      call: 'dcrm_getReqAddrStatus',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    },
+    {
+      name: 'acceptReqAddr',
+      call: 'dcrm_acceptReqAddr',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    },
+    {
+      name: 'getReqAddrNonce',
+      call: 'dcrm_getReqAddrNonce',
       params: 1,
       inputFormatter: [null],
       outputFormatter: null

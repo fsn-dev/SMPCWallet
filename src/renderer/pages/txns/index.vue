@@ -74,7 +74,7 @@ export default {
     },
     openPwdDialog () {
       try {
-        this.$$.getNonce(this.address, this.initTxnsData.coinType, this.initTxnsData.address).then(nonce => {
+        this.$$.getLockOutNonce(this.address, this.initTxnsData.coinType, this.initTxnsData.address).then(nonce => {
           if (!isNaN(nonce)) {
             this.dataPage = {
               from: this.address,

@@ -29,7 +29,8 @@ export default {
 	},
 	success: {
 		s_1: 'Created successfully!',
-		s_2: 'Replication success'
+		s_2: 'Replication success',
+		s_3: 'Account creation request sent successfully!'
 	},
 	btn: {
 		confirm: 'Confirm',
@@ -47,7 +48,8 @@ export default {
 		agree: 'Agree',
 		refuse: 'Refuse',
 		approval: 'Approval',
-		create: 'Create'
+		create: 'Create',
+		newBuild: 'Newly build'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -91,7 +93,8 @@ export default {
 		source: 'Source',
 		from: 'From',
 		group: 'Group',
-		txnHistory: 'History'
+		txnHistory: 'History',
+		groupHistory: 'Create history'
 	},
 	state: {
 		name: 'Status',
@@ -100,7 +103,8 @@ export default {
 		success: 'Success',
 		fail: 'Fail',
 		pending: 'Pending',
-		null: 'Null'
+		null: 'Null',
+		new: 'New'
 	},
 	tip: {
 		walletTip: 'Welcome to SMPC wallet 1.0 <br> please create a wallet or import a wallet',

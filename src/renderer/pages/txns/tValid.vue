@@ -86,7 +86,7 @@ export default {
     },
     openPwdDialog (type) {
       try {
-        this.$$.getNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom).then(nonce => {
+        this.$$.getLockOutNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom).then(nonce => {
           if (!isNaN(nonce)) {
             this.dataPage = {
               from: this.address,
@@ -118,37 +118,6 @@ export default {
             this.msgError(nonce)
           }
         })
-        // let nonce = this.$$.getNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom)
-        // if (!isNaN(nonce)) {
-        //   this.dataPage = {
-        //     from: this.address,
-        //     to: this.$$.config.rawTx.to,
-        //     gasLimit: this.$$.config.rawTx.gasLimit,
-        //     gasPrice: this.$$.config.rawTx.gasPrice,
-        //     nonce: nonce,
-        //     data: 'ACCEPTLOCKOUT:' 
-        //           + this.urlParams.Account
-        //           + ':'
-        //           + this.urlParams.GroupId 
-        //           + ':' 
-        //           + this.urlParams.Nonce 
-        //           + ':' 
-        //           + this.urlParams.DcrmFrom 
-        //           + ':' 
-        //           + this.urlParams.DcrmTo 
-        //           + ':' 
-        //           + this.urlParams.Value 
-        //           + ':' 
-        //           + this.urlParams.Cointype 
-        //           + ':' 
-        //           + this.urlParams.LimitNum
-        //           + ':' 
-        //           + type
-        //   }
-        //   this.eDialog.pwd = true
-        // } else {
-        //   this.msgError(nonce)
-        // }
       } catch (error) {
         this.msgError(error.toString())
       }

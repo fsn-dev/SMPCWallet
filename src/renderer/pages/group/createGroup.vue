@@ -9,7 +9,7 @@
           </el-form-item> -->
           <el-form-item :label="$t('label').group">
             <el-select v-model="gID" :placeholder="$t('warn').w_4" class="WW100" @change="changeGroup">
-              <el-option :label="$t('state').null" :value="0"></el-option>
+              <el-option :label="$t('btn').newBuild" :value="0"></el-option>
               <el-option v-for="(item, index) in getGroup" :key="index" :label="item.name" :value="item.Gid"></el-option>
             </el-select>
           </el-form-item>
@@ -31,7 +31,7 @@
             }"
           >
             <div class="flex-bc">
-              <el-input v-model="eNode.value" @blur="changeState(eNode, index)" :disabled="gID ? true : false"></el-input>
+              <el-input v-model="eNode.value" @blur="changeState(eNode, index)" :disabled="gID ? true : false" :title="eNode.value"></el-input>
             </div>
             <div class="flex-sc" v-if="reload">
               <span class="color_green" v-if="eNode.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
@@ -111,7 +111,11 @@ export default {
       dataPage: {},
       groupForm: {
         mode: '3/3',
-        eNode: [],
+        eNode: [
+          { value: 'enode://fbced7f239d5633d25c2afda08e4f00e24c054bd0a9e9055f9f104f53fe1ce331c5431442cb2120ff64010bf7ac9b39af5e3349bba546210b1ab003cd9384014@127.0.0.1:12341'},
+          { value: 'enode://4fa6865eb8fbf9dbe22b4d3188ae67d6f20368400c582ad366a5fd709f789ebda23514bd71548bc4c4cf401690d73cdd62bf5ce785c73cc3fc32d616a80b9e6d@127.0.0.1:12342'},
+          { value: 'enode://6e5cc6f7b953013fd7d5172e347a79f9ff44cc1a0a05d092646134f7fcbea391ea720119e7c9bcc6bb61a15f278bbf97d136fcc7271da42c7823ef0d28b3b947@127.0.0.1:12343'},
+        ],
         name: ''
       },
       gMember: '',
@@ -123,6 +127,11 @@ export default {
           { min: 3, max: 20, message: this.$t('warn').w_9, trigger: 'blur' }
         ],
       }
+    }
+  },
+  sockets: {
+    GroupAccountsAdd (res) {
+      console.log(res)
     }
   },
   computed: {
@@ -150,7 +159,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.eDialog.confirm = true
+          // this.eDialog.confirm = true
           this.createGroup()
           // this.openPwdDialog()
         } else {
@@ -172,16 +181,16 @@ export default {
           // this.reqAccount()
           // this.toUrl('/group')
           this.gID = res.info.Gid
-          this.eDialog.confirm = false
+          // this.eDialog.confirm = false
           this.openPwdDialog()
         } else {
           this.msgError(gInfo.info.toString())
-          this.eDialog.confirm = false
+          // this.eDialog.confirm = false
         }
       }).catch(err => {
         this.msgError(err)
         this.loading.creat = false
-        this.eDialog.confirm = false
+        // this.eDialog.confirm = false
       })
     },
     openPwdDialog () {
@@ -196,10 +205,10 @@ export default {
         gasLimit: this.$$.config.rawTx.gasLimit,
         gasPrice: this.$$.config.rawTx.gasPrice,
       }
-      this.$$.getNonce(this.address, '', '').then(nonce => {
+      this.$$.getReqNonce(this.address).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = 0
-        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.gMember.Mode
+        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + '0'
         this.eDialog.pwd = true
       })
       // let nonce = this.$$.getNonce(this.address, '', '')
@@ -219,10 +228,41 @@ export default {
       }
     },
     reqAccount () {
-      this.$$.reqAccount(this.signTx, this.safeMode).then(res => {
-        this.$store.commit('setSafeMode', {info: '0'})
-        this.loading.creat = false
-        this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
+      this.$$.reqAccount(this.signTx, '0').then(res => {
+        console.log(res)
+        if (res.msg === 'Success') {
+          this.$store.commit('setSafeMode', {info: '0'})
+          this.loading.creat = false
+          this.$emit('closeModal')
+          this.modalClick()
+          let data = {
+            key: res.info,
+            gId: this.gID,
+            mode: this.groupForm.mode,
+            nonce: Number(this.dataPage.nonce),
+            member: []
+          }
+          for (let obj of this.groupForm.eNode) {
+            let obj1 = {
+              eNode: obj.value,
+              kId: '',
+              status: 0,
+              initiate: 0
+            }
+            // console.log(this.eNode.substr(0, this.eNode.indexOf('@')))
+            // console.log(obj.value.substr(0, obj.value.indexOf('@')))
+            // console.log(this.eNode.substr(0, this.eNode.indexOf('@')) === obj.value.substr(0, obj.value.indexOf('@')))
+            if (this.eNode.substr(0, this.eNode.indexOf('@')) === obj.value.substr(0, obj.value.indexOf('@'))) {
+              obj1.kId = this.address
+              obj1.status = 5
+              obj1.initiate = 1
+            }
+            data.member.push(obj1)
+          }
+          this.$socket.emit('GroupAccountsAdd', data)
+          this.msgSuccess(this.$t('success').s_3)
+        }
+        // this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)

@@ -29,7 +29,8 @@ export default {
 	},
 	success: {
 		s_1: '创建成功！',
-		s_2: '复制成功'
+		s_2: '复制成功',
+		s_3: '创建账户请求发送成功！'
 	},
 	btn: {
 		confirm: '确认',
@@ -49,7 +50,8 @@ export default {
 		agree: '同意',
 		refuse: '拒绝',
 		approval: '审批',
-		create: '创建'
+		create: '创建',
+		newBuild: '新建'
 	},
 	loading: {
 		l_1: '账户获取中……'
@@ -93,7 +95,8 @@ export default {
 		source: '发起账户',
 		from: '从',
 		group: '组',
-		txnHistory: '交易历史'
+		txnHistory: '交易历史',
+		groupHistory: '创建历史'
 	},
 	state: {
 		name: '状态',
@@ -102,7 +105,8 @@ export default {
 		success: '成功',
 		fail: '失败',
 		pending: '等待中',
-		null: '无'
+		null: '无',
+		new: '新'
 	},
 	tip: {
 		walletTip: '欢迎使用SMPC Wallet 1.0<br>请创建一个钱包或者导入一个钱包',

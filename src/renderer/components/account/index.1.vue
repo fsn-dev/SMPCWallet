@@ -96,7 +96,7 @@
         <div class="node-select-btn">
           <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
         </div>
-        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/history', {
+        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
           coinType: sendDataObj.coinType,
           address: sendDataObj.dcrmAccount,
         })">查看历史</div>
@@ -135,7 +135,7 @@
             <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
           </el-form-item>
         </el-form>
-        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/history', {
+        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
           coinType: sendDataObj.coinType,
           address: sendDataObj.dcrmAccount,
         })">查看历史</div>
@@ -446,7 +446,7 @@ export default {
         gasLimit: this.$$.config.rawTx.gasLimit,
         gasPrice: this.$$.config.rawTx.gasPrice,
       }
-      this.$$.getNonce(this.dcrmAccount, this.sendDataObj.coinType, this.sendDataObj.dcrmAccount).then(nonce => {
+      this.$$.getLockOutNonce(this.dcrmAccount, this.sendDataObj.coinType, this.sendDataObj.dcrmAccount).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = this.rawTx.value
         this.dataPage.data = 'LOCKOUT:' 

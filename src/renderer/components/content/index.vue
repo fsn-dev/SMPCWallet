@@ -56,7 +56,7 @@
 
     
     <w-drawer v-model="drawer.create" v-if="drawer.create">
-      <create-account :formBoxClass="false"></create-account>
+      <create-account :formBoxClass="false" @closeModal="modalClick"></create-account>
     </w-drawer>
     <w-drawer v-model="drawer.user" v-if="drawer.user">
 
@@ -121,6 +121,9 @@ export default {
     // }, 1000 * 5)
   },
   methods: {
+    modalClick () {
+      this.drawer.create = false
+    },
     openDrawerCreate () {
       if (this.$route.path.indexOf('createGroup') !== -1) return
       this.drawer.create = true
@@ -179,11 +182,11 @@ export default {
 			})
     },
     changeMode (type) {
-      if (Number(type)) {
-        this.toUrl('/person')
-      } else {
-        this.toUrl('/group')
-      }
+      // if (Number(type)) {
+      //   this.toUrl('/person')
+      // } else {
+      //   this.toUrl('/group')
+      // }
       this.changeUserView()
       this.$store.commit('setSafeMode', {info: type})
     },

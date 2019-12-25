@@ -75,6 +75,25 @@ let web3Utils = {
       }
     })
   },
+  async getReqNonce (addr) {
+    let data = 0
+    return new Promise((resolve, reject) => {
+      try {
+        web3.dcrm.getReqAddrNonce(addr).then(res => {
+          let cbData = res
+          if (cbData.Status !== 'Error') {
+            data = cbData.Data.result
+          } else {
+            data = 0
+          }
+          resolve(data)
+        })
+      } catch (error) {
+        data = 0
+        resolve(data)
+      }
+    })
+  },
   async getBalance (addr, coinObj) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
@@ -108,32 +127,32 @@ let web3Utils = {
       })
     })
   },
-  async getPendingGroup () {
-    let data = {msg: '', info: ''}
-    return new Promise((resolve, reject) => {
-      try {
-        if (eNodeInit) {
-          let arr = [], cbData = ''
-          web3.dcrm.getGroupNodeStatus(eNodeInit).then(res => {
-            cbData = JSON.parse(res)
-            if (cbData.Status !== 'Error') {
-              arr = cbData.Data.GroupList && cbData.Data.GroupList.length > 0 ? cbData.Data.GroupList : []
-            }
-            data = {msg: 'Success', info: arr}
-            resolve(data)
-          })
-        } else {
-          setTimeout(() => {
-            this.getPendingGroup()
-          }, this.againTmie)
-        }
-      } catch (error) {
-        console.log(error)
-        data = {msg: 'Error', error: error.toString()}
-        reject(data)
-      }
-    })
-  },
+  // async getPendingGroup () {
+  //   let data = {msg: '', info: ''}
+  //   return new Promise((resolve, reject) => {
+  //     try {
+  //       if (eNodeInit) {
+  //         let arr = [], cbData = ''
+  //         web3.dcrm.getGroupNodeStatus(eNodeInit).then(res => {
+  //           cbData = JSON.parse(res)
+  //           if (cbData.Status !== 'Error') {
+  //             arr = cbData.Data.GroupList && cbData.Data.GroupList.length > 0 ? cbData.Data.GroupList : []
+  //           }
+  //           data = {msg: 'Success', info: arr}
+  //           resolve(data)
+  //         })
+  //       } else {
+  //         setTimeout(() => {
+  //           this.getPendingGroup()
+  //         }, this.againTmie)
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+  //       data = {msg: 'Error', error: error.toString()}
+  //       reject(data)
+  //     }
+  //   })
+  // },
   async getGroupPerson () {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
@@ -219,11 +238,12 @@ let web3Utils = {
             // console.log(cbData)
             if (cbData.Status !== 'Error') {
               data = {msg: 'Success', info: cbData.Data.GroupList}
-              resolve(data)
+              // resolve(data)
             } else {
-              data = {msg: 'Error', error: cbData.Tip}
-              reject(data)
+              data = {msg: 'Success', info: []}
+              // reject(data)
             }
+            resolve(data)
           })
         } else {
           setTimeout(() => {
@@ -319,14 +339,68 @@ let web3Utils = {
         web3.dcrm.reqDcrmAddr(signTx, mode).then(res => {
           cbData = res
           if (cbData.Status !== 'Error') {
-            let obj = JSON.parse(cbData.Data.result)
-            console.log(obj)
-            data = {msg: 'Success', info: obj}
+            // let obj = JSON.parse(cbData.Data.result)
+            // console.log(obj)
+            data = {msg: 'Success', info: cbData.Data.result}
             resolve(data)
           } else {
             data = {msg: 'Error', error: cbData.Tip}
             reject(data)
           }
+        })
+      } catch (error) {
+        console.log(error)
+        data = {msg: 'Error', error: error.toString()}
+        reject(data)
+      }
+    })
+  },
+  async reqAccountList () {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let cbData = ''
+        web3.dcrm.getCurNodeReqAddrInfo().then(res => {
+          cbData = res
+          if (cbData.Status !== 'Error') {
+            let arr = cbData.Data ? cbData.Data : []
+            // console.log(arr)
+            let list = []
+            for (let obj in arr) {
+              list.push(JSON.parse(arr[obj]))
+              // console.log(arr[obj])
+            }
+            data = {msg: 'Success', info: list}
+          } else {
+            data = {msg: 'Error', info: []}
+          }
+          resolve(data)
+        })
+      } catch (error) {
+        console.log(error)
+        data = {msg: 'Error', error: error.toString()}
+        reject(data)
+      }
+    })
+  },
+  async reqAccountStatus (key) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let cbData = ''
+        web3.dcrm.getReqAddrStatus(key).then(res => {
+          console.log(res)
+          cbData = res
+          if (cbData.Status !== 'Error') {
+            // console.log(JSON.parse(cbData.Data.result))
+            let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
+            console.log(status)
+            status = status.Status
+            data = {msg: 'Success', info: status}
+          } else {
+            data = {msg: 'Error', info: 'Failure'}
+          }
+          resolve(data)
         })
       } catch (error) {
         console.log(error)

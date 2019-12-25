@@ -74,6 +74,23 @@ export default [
     ]
   },
   {
+    path: '/groupHistory',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '创建共管账户历史',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/history')) )
+      }
+    ]
+  },
+  {
     path: '/gValid',
     component: Content,
     meta: {
@@ -205,7 +222,7 @@ export default [
     ]
   },
   {
-    path: '/history',
+    path: '/txnsHistory',
     component: Content,
     meta: {
       notCache: true

@@ -98,7 +98,7 @@ let publicSet = {
   /**
    * @description 初始模式设置
    */
-  modeInit: '1', // '0': 共管模式；'1'：个人模式
+  modeInit: '0', // '0': 共管模式；'1'：个人模式
   /**
    * @description 日夜模式设置
    */
@@ -110,12 +110,13 @@ publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 
 // publicSet.serverRPC = 'http://192.168.1.104:9010'
-// publicSet.serverRPC = 'http://192.168.1.104:9011'
+publicSet.serverRPC = 'http://192.168.1.104:9011'
 // publicSet.serverRPC = 'http://192.168.1.104:9012'
+// publicSet.serverRPC = 'http://192.168.1.104:9013'
 
 // publicSet.serverRPC = 'http://192.168.1.187:9991'
 
-publicSet.serverRPC = 'http://192.168.1.187:12391'
+// publicSet.serverRPC = 'http://192.168.1.187:12391'
 // publicSet.serverRPC = 'http://192.168.1.187:12392'
 // publicSet.serverRPC = 'http://192.168.1.187:12393'
 
