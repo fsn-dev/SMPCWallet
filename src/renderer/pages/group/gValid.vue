@@ -104,6 +104,7 @@ export default {
               kId: this.address,
               status: this.applyStatus === 'AGREE' ? 5 : 4
             })
+            this.toUrl('/waitNews')
           } else {
             this.msgError('Error')
           }

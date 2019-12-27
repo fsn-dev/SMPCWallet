@@ -9,7 +9,10 @@
             <div class="round flex-c"><i class="el-icon-right"></i></div>
           </div>
           <div class="amount-box flex-bc">
-            <p class="amt"><span class="label">{{$t('label').value}}:</span> {{$$.thousandBit(item.Value, 'no')}}</p>
+            <p class="amt"><span class="label">{{$t('label').value}}:</span> {{
+
+              $$.fromWei(item.Value, $$.cutERC20(item.Cointype).coinType) 
+              }}</p>
             <p class="amt"><span class="label">{{$t('label').coinType}}:</span> {{item.Cointype}}</p>
           </div>
           <div class="action-box flex-bc">

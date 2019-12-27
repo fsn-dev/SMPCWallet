@@ -12,7 +12,7 @@
       <el-table :data="tableData" border style="width: 100%" :empty-text="$t('warn').w_12">
         <el-table-column :label="$t('state').name" width="90" align="center">
           <template slot-scope="scope">
-            {{$$.changeState(scope.row.status)}}
+            <span :class="scope.row.status === 0 || scope.row.status === 1 ? 'color_green' : 'color_red'">{{$$.changeState(scope.row.status)}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').coinType" width="90" align="center">
@@ -22,7 +22,7 @@
         </el-table-column>
         <el-table-column :label="$t('label').to" width="200" align="center">
           <template slot-scope="scope" @click="copyTxt(scope.row)">
-            {{$$.cutOut(scope.row.to, 6, 4)}}
+            <span :title="scope.row.to" @click="copyTxt(scope.row.to)" class="cursorP">{{$$.cutOut(scope.row.to, 10, 6)}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').date" width="180" align="center">
@@ -32,12 +32,14 @@
         </el-table-column>
         <el-table-column :label="$t('label').value" width="100" align="center">
           <template slot-scope="scope">
-            {{$$.thousandBit(scope.row.value, 2)}}
+            {{
+              $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 'no')
+            }}
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').hash" align="center">
           <template slot-scope="scope" @click="copyTxt(scope.row)">
-            {{scope.row}}
+            <span :title="scope.row.hash" @click="copyTxt(scope.row.hash)" class="cursorP">{{scope.row.hash}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -57,6 +59,7 @@
         hide-on-single-page
         @current-change="handleCurrentChange"
         :current-page="page.cur"
+        :page-size="page.pageSize"
         background
         layout="prev, pager, next"
         :total="page.total">
@@ -82,20 +85,19 @@ export default {
       dcrmAddr: '',
       baseUrl: '',
       page: {
-        cur: 5,
-        total: 500
+        cur: 0,
+        pageSize: 10,
+        total: 0
       }
     }
-  },
-  computed: {
-    ...computedPub,
   },
   sockets: {
     PersonFindTxns (res) {
       console.log(res)
       if (res.msg === 'Success' && res.info.length > 0) {
-        this.total = res.total
-        this.tableData = res.info
+        this.page.total = res.total
+        this.formatData(res.info)
+        // this.tableData = res.info
       } else {
         this.page.total = 0
         this.tableData = []
@@ -104,19 +106,32 @@ export default {
     GroupFindTxns (res) {
       console.log(res)
       if (res.msg === 'Success' && res.info.length > 0) {
-        this.total = res.total
-        this.tableData = res.info
+        this.page.total = res.total
+        this.formatData(res.info)
+        // this.tableData = res.info
       } else {
         this.page.total = 0
         this.tableData = []
       }
     }
   },
+  watch: {
+    safeMode (cur) {
+      // console.log(cur)
+      this.page.cur = 0
+      this.page.total = 0
+      this.toUrl('/txnsHistory')
+      this.initData()
+    }
+  },
+  computed: {
+    ...computedPub,
+  },
   mounted () {
-    let urlParams = this.$route.query
-    // console.log(urlParams)
-    this.coinType = urlParams.coinType ? urlParams.coinType : ''
-    this.dcrmAddr = urlParams.address ? urlParams.address : ''
+    // let urlParams = this.$route.query
+    // // console.log(urlParams)
+    // this.coinType = urlParams.coinType ? urlParams.coinType : ''
+    // this.dcrmAddr = urlParams.address ? urlParams.address : ''
     this.initData()
   },
   methods: {
@@ -127,6 +142,10 @@ export default {
       this.emitUrl()
     },
     initData () {
+      let urlParams = this.$route.query
+      // console.log(urlParams)
+      this.coinType = urlParams.coinType ? urlParams.coinType : ''
+      this.dcrmAddr = urlParams.address ? urlParams.address : ''
       if (Number(this.safeMode) === 1) {
         this.baseUrl = 'PersonFindTxns'
       } else {
@@ -135,10 +154,50 @@ export default {
       this.emitUrl()
     },
     emitUrl () {
-      this.$socket.emit(this.baseUrl, {
+      let data = {
         coinType: this.coinType,
         from: this.dcrmAddr,
+        pageSize: this.page.pageSize,
         pageNum: this.page.cur
+      }
+      console.log(data)
+      this.$socket.emit(this.baseUrl, data)
+    },
+    formatData (data) {
+      this.tableData = []
+      // console.log()
+      for (let i = 0, len = data.length; i < len; i++) {
+        let dataObj = data[i]
+        dataObj.status = 0
+        // console.log(dataObj)
+        for (let obj of dataObj.member) {
+          if (obj.status === 0 || obj.status === 2 || obj.status === 4 || obj.status === 6) {
+            dataObj.status = obj.status
+            break
+          }
+        }
+        // this.getTxnsHash(dataObj.key, i, dataObj.hash)
+        if (!dataObj.hash && dataObj.status === 1) {
+          this.getTxnsHash(dataObj.key, i, dataObj.hash)
+        }
+        console.log(dataObj.status)
+        this.tableData.push(dataObj)
+      }
+    },
+    getTxnsHash (key, index, hash) {
+      this.$$.getLockOutStatus(key).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && res.status === 'Success') {
+          this.setDBhash(key, index, hash)
+        }
+      }).catch(err => {
+        this.msgError(err.error.toString())
+      })
+    },
+    setDBhash (key, index, hash) {
+      this.$socket.emit('GroupEditTxns', {
+        hash: hash,
+        key: key
       })
     }
   }

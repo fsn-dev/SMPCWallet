@@ -9,8 +9,8 @@
           <el-input type="number" v-model="rawTxData.value" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')">{{$t('btn').agree}}</el-button>
-          <el-button @click="submitForm('rawTxData', 'DISAGREE')">{{$t('btn').refuse}}</el-button>
+          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')" v-if="isApplySataus">{{$t('btn').agree}}</el-button>
+          <el-button @click="submitForm('rawTxData', 'DISAGREE')" v-if="isApplySataus">{{$t('btn').refuse}}</el-button>
           <el-button @click="toUrl('/tNewsList')">{{$t('btn').back}}</el-button>
         </el-form-item>
       </el-form>
@@ -48,7 +48,9 @@ export default {
         value: [
           { required: true, message: this.$t('warn').w_15, trigger: 'blur' }
         ],
-      }
+      },
+      isApplySataus: false,
+      applyStatus: ''
     }
   },
   computed: {
@@ -61,30 +63,58 @@ export default {
   },
   mounted () {
     this.urlParams = this.$route.query
-    this.rawTxData = {
-      to: this.urlParams.DcrmTo,
-      value: this.urlParams.Value 
-    }
+    // this.rawTxData = {
+    //   to: this.urlParams.DcrmTo,
+    //   value: this.urlParams.Value 
+    // }
+    this.showGroupData()
     console.log(this.urlParams)
   },
   methods: {
     modalClick () {
       this.eDialog.pwd = false
     },
+    async showGroupData () {
+      this.rawTxData = {
+        to: this.urlParams.DcrmTo,
+        value: this.$$.fromWei(this.urlParams.Value, this.$$.cutERC20(this.urlParams.Cointype).coinType) 
+      }
+      this.$$.getLockOutStatus(this.urlParams.Key).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && res.status === 'Pending') {
+          this.isApplySataus = true
+        } else {
+          this.isApplySataus = false
+        }
+      }).catch(err => {
+        this.msgError(err.error.toString())
+      })
+    },
     getSignData (data) {
       console.log(data)
       console.log(data.signTx)
       if (data && data.signTx) {
-        let cbData = this.$$.sendTxnsValid(data.signTx)
-        if (cbData.msg === 'Success') {
-          this.msgSuccess('Success!')
-        } else {
-          this.msgError('Error')
-        }
+        // let cbData = this.$$.sendTxnsValid(data.signTx)
+        this.$$.sendTxnsValid(data.signTx).then(res => {
+          let cbData = res
+          console.log(res)
+          if (cbData.msg === 'Success') {
+            this.$socket.emit('GroupAccountsEdit', {
+              key: this.urlParams.Key,
+              kId: this.address,
+              status: this.applyStatus === 'AGREE' ? 5 : 4
+            })
+            this.msgSuccess('Success!')
+          } else {
+            this.msgError('Error')
+          }
+          this.applyStatus = ''
+        })
       }
       this.eDialog.pwd = false
     },
     openPwdDialog (type) {
+      this.applyStatus = type
       try {
         this.$$.getLockOutNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom).then(nonce => {
           if (!isNaN(nonce)) {
@@ -111,6 +141,8 @@ export default {
                     + ':' 
                     + this.urlParams.LimitNum
                     + ':' 
+                    + '0'
+                    + ':'
                     + type
             }
             this.eDialog.pwd = true

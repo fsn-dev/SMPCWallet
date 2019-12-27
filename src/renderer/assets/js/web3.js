@@ -146,6 +146,13 @@ web3.extend({
       params: 1,
       inputFormatter: [null],
       outputFormatter: null
+    },
+    {
+      name: 'getLockOutStatus',
+      call: 'dcrm_getLockOutStatus',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
     }
   ]
 })

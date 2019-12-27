@@ -1,6 +1,12 @@
 @import './base.scss';
 // @import './css.scss';
 
+.d-content-view {
+  width: 100%;
+  .h3 {
+    font-size: $text-lg;line-height: size(36);margin-bottom: size(20);
+  }
+}
 
 .c-form-box {
   width: 600px;margin:30px auto;padding: 60px 25px;border-radius: 6px;

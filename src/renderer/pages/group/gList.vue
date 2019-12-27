@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1">
+  <div class="boxConntent1" v-loading="loading.list" element-loading-text="Loading……">
     <!-- <div>
       <el-button>Create Group</el-button>
     </div> -->
@@ -63,7 +63,10 @@ export default {
     return {
       gList: [],
       publicKey: '',
-      gID: ''
+      gID: '',
+      loading: {
+        list: true
+      }
     }
   },
   computed: {
@@ -83,6 +86,7 @@ export default {
     }
   },
   mounted () {
+    this.loading.list = true
     this.publicKey = this.$route.query.publicKey
     // console.log(this.publicKey)
     this.initGroup()
@@ -90,7 +94,7 @@ export default {
   methods: {
     initGroup () {
       this.$$.getAccounts('', this.safeMode).then(res => {
-        console.log(res)
+        // console.log(res)
         this.gList = []
         let arr = res.info ? res.info : []
         for (let obj1 of arr) {
@@ -104,14 +108,16 @@ export default {
         if (this.$route.query.gID) {
           this.gID = this.$route.query.gID
         }
+        this.loading.list = false
       }).catch(err => {
         if (err.error) {
           this.msgError(err.error)
         }
+        this.loading.list = false
       })
     },
     changeGroup (item) {
-      console.log(item)
+      // console.log(item)
       this.gID = item.Gid
       this.publicKey = item.publicKey
       this.toUrl('/group', {gID: item.gID, publicKey: item.publicKey})

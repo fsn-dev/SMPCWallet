@@ -178,6 +178,7 @@ export default {
         break
       case 4:
         status = 'Refuse'
+        break
       case 5:
         status = 'Agree'
         break
@@ -185,6 +186,7 @@ export default {
         status = 'Timeout'
         break
     }
+    // console.log(status)
     return status
   },
   replaceStr (val, str) {

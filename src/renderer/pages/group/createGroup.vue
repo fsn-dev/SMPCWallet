@@ -262,6 +262,7 @@ export default {
           this.$socket.emit('GroupAccountsAdd', data)
           this.msgSuccess(this.$t('success').s_3)
         }
+        this.toUrl('/waitNews')
         // this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
       }).catch(err => {
         console.log(err)

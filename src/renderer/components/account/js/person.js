@@ -42,7 +42,7 @@ export const psMethods = {
     })
   },
   reqPersonAccount () {
-    this.$$.getNonce(this.address, '', '').then(nonce => {
+    this.$$.getReqNonce(this.address).then(nonce => {
       let rawTx = {
         from: this.address,
         to: this.$$.config.rawTx.to,

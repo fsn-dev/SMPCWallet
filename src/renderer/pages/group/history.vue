@@ -83,7 +83,8 @@ export default {
       baseUrl: '',
       page: {
         cur: 0,
-        total: 500
+        pageSize: 10,
+        total: 0
       }
     }
   },
@@ -140,6 +141,7 @@ export default {
       this.$socket.emit(this.baseUrl, {
         // eNode: this.eNode,
         kId: this.address,
+        pageSize: this.page.pageSize,
         pageNum: this.page.cur
       })
     }

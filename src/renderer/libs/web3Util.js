@@ -56,11 +56,11 @@ let web3Utils = {
       }
     })
   },
-  async getNonce (addr, coinType, dcrmAddr) {
+  async getLockOutNonce (addr, coinType, dcrmAddr) {
     let data = 0
     return new Promise((resolve, reject) => {
       try {
-        web3.dcrm.getNonce(addr, coinType, dcrmAddr).then(res => {
+        web3.dcrm.getLockOutNonce(addr, coinType, dcrmAddr).then(res => {
           let cbData = res
           if (cbData.Status !== 'Error') {
             data = cbData.Data.result
@@ -191,11 +191,13 @@ let web3Utils = {
           cbData = res
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data.result.Group}
-            resolve(data)
+            // resolve(data)
           } else {
-            data = {msg: 'Error', error: cbData.Tip}
-            reject(data)
+            data = {msg: 'Success', info: []}
+            // data = {msg: 'Error', error: cbData.Tip}
+            // reject(data)
           }
+          resolve(data)
         })
       } catch (error) {
         console.log(error)
@@ -210,15 +212,19 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getAccountsBalance(pubk).then(res => {
-          cbData = JSON.parse(res)
+          // cbData = JSON.parse(res)
+          cbData = res
           // console.log(cbData)
           if (cbData.Status !== 'Error') {
-            data = {msg: 'Success', info: cbData.Data.Balances, address: cbData.Data.Address}
-            resolve(data)
+            // data = {msg: 'Success', info: cbData.Data.result.Balances, address: cbData.Data.Address}
+            data = {msg: 'Success', info: cbData.Data.result.Balances}
+            // resolve(data)
           } else {
-            data = {msg: 'Error', error: cbData.Tip}
-            reject(data)
+            data = {msg: 'Success', info: []}
+            // data = {msg: 'Error', error: cbData.Tip}
+            // reject(data)
           }
+          resolve(data)
         })
       } catch (error) {
         console.log(error)
@@ -392,7 +398,8 @@ let web3Utils = {
           console.log(res)
           cbData = res
           if (cbData.Status !== 'Error') {
-            // console.log(JSON.parse(cbData.Data.result))
+            console.log(cbData.Data.result)
+            console.log(JSON.parse(cbData.Data.result))
             let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
             console.log(status)
             status = status.Status
@@ -442,14 +449,14 @@ let web3Utils = {
   },
   async lockout (signTx) {
     let data = {msg: '', info: ''}
-    return new Promise(() => {
+    return new Promise((resolve, reject) => {
       try {
         let cbData = ''
         web3.dcrm.lockOut(signTx).then(res => {
           cbData = res
           // console.log(cbData)
           if (cbData.Status !== 'Error') {
-            cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+            cbData = cbData.Data && cbData.Data.result ? cbData.Data.result : ''
             data = {msg: 'Success', info: cbData}
             resolve(data)
           } else {
@@ -463,12 +470,39 @@ let web3Utils = {
       }
     })
   },
+  async getLockOutStatus (key) {
+    let data = {msg: '', info: ''}
+    return new Promise((resolve, reject) => {
+      try {
+        let cbData = ''
+        web3.dcrm.getLockOutStatus(key).then(res => {
+          console.log(res)
+          cbData = res
+          if (cbData.Status !== 'Error') {
+            // console.log(JSON.parse(cbData.Data.result))
+            let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
+            console.log(status)
+            // status = status.Status
+            data = {msg: 'Success', status: status.Status, info: status}
+          } else {
+            data = {msg: 'Error', info: 'Failure'}
+          }
+          resolve(data)
+        })
+      } catch (error) {
+        console.log(error)
+        data = {msg: 'Error', error: error.toString()}
+        reject(data)
+      }
+    })
+  },
   sendTxnsValid (signTx) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let cbData = ''
         web3.dcrm.acceptLockOut(signTx).then(res => {
+          cbData = res
           if (cbData.Status !== 'Error') {
             cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
             data = {msg: 'Success', info: cbData}

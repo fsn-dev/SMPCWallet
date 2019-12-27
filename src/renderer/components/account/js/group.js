@@ -34,7 +34,7 @@ export const gMethods = {
     // console.log(arr)
     let arr = []
     for (let obj of data) {
-      if (obj === this.$$.eNode) continue
+      if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue
       arr.push({
         p1: 'dcrm',
         p2: 'getEnodeStatus',
@@ -42,20 +42,21 @@ export const gMethods = {
       })
     }
     this.$$.batchRequest(arr).then(res => {
-      console.log(res)
+      // console.log(res)
       for (let obj of res) {
         let cbData = JSON.parse(obj), status
-        if (cbData.Status === 'Success') {
+        // console.log(cbData)
+        if (cbData.Data && cbData.Data.Status && cbData.Data.Status === 'OnLine') {
           status = 'OnLine'
         } else {
           status = 'OffLine'
         }
         this.gMemberInit.push({
-          eNode: obj,
+          eNode: cbData.Data.Enode,
           status: status === 'OnLine' ? 1 : 0
         })
       }
     })
-    console.log(this.gMemberInit)
+    // console.log(this.gMemberInit)
   },
 }
