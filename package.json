@@ -21,7 +21,7 @@
   },
   "build": {
     "productName": "SMPC",
-    "appId": "keyHouse.com",
+    "appId": "SMPC.com",
     "directories": {
       "output": "build"
     },

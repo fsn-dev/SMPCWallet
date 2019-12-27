@@ -87,6 +87,7 @@ let publicSet = {
    * @description 启动gdcrm路径
    */
   gDcrm: path + '/gdcrm.exe',
+  // gDcrm: '../gdcrm.exe',
   /**
    * @description 启动gdcrm路径
    */
@@ -110,7 +111,7 @@ publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 
 // publicSet.serverRPC = 'http://192.168.1.104:9010'
-publicSet.serverRPC = 'http://192.168.1.104:9011'
+// publicSet.serverRPC = 'http://192.168.1.104:9011'
 // publicSet.serverRPC = 'http://192.168.1.104:9012'
 // publicSet.serverRPC = 'http://192.168.1.104:9013'
 
@@ -123,5 +124,7 @@ publicSet.serverRPC = 'http://192.168.1.104:9011'
 // publicSet.serverRPC = 'http://127.0.0.1:12391'
 // publicSet.serverRPC = 'http://127.0.0.1:12392'
 // publicSet.serverRPC = 'http://127.0.0.1:12393'
+
+publicSet.serverRPC = 'http://127.0.0.1:6691'
 // module.exports = publicSet
 export default publicSet

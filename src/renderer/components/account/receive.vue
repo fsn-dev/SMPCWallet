@@ -5,11 +5,11 @@
     <div class="receiveAddress_box">
       <el-form label-position="top" label-width="80px" @submit.native.prevent>
         <el-form-item :label="addressTitle">
-          <el-input v-model="address" id="walletAdressHide" class="font24" :readonly	="true"></el-input>
+          <el-input v-model="selectData.address" id="walletAdressHide" class="font24" :readonly	="true"></el-input>
         </el-form-item>
       </el-form>
       <div class="receiveAddress_btn flex-c" id="receiveAddressBtn">
-        <button class="btn blue flex-c" @click="qrcode(address)">
+        <button class="btn blue flex-c" @click="qrcode(selectData.address)">
           <div class="icon">
             <img src="@etc/img/QRcode.svg">
           </div>
@@ -136,7 +136,7 @@ export default {
     }
   },
   created () {
-    // console.log(this.$route.query)
+    console.log(this.$route.query)
     this.selectData = this.$route.query
   },
   mounted () {

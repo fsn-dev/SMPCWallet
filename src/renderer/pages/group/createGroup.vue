@@ -208,7 +208,7 @@ export default {
       this.$$.getReqNonce(this.address).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = 0
-        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + '0'
+        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode
         this.eDialog.pwd = true
       })
       // let nonce = this.$$.getNonce(this.address, '', '')

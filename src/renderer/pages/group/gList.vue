@@ -96,13 +96,18 @@ export default {
       this.$$.getAccounts('', this.safeMode).then(res => {
         // console.log(res)
         this.gList = []
-        let arr = res.info ? res.info : []
+        let arr = res.info ? res.info : [], arr1 = []
         for (let obj1 of arr) {
           for (let obj2 of obj1.Accounts) {
-            this.gList.push({
-              publicKey: obj2,
-              gID: obj1.GroupID
-            })
+            // console.log(obj2)
+            // console.log(arr1.includes(obj2))
+            if (!arr1.includes(obj2)) {
+              this.gList.push({
+                publicKey: obj2,
+                gID: obj1.GroupID
+              })
+              arr1.push(obj2)
+            }
           }
         }
         if (this.$route.query.gID) {
