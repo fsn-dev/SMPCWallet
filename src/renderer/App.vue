@@ -7,7 +7,7 @@
 <script>
 // import {StartPoint} from '@/assets/js/refresh'
 import {computedPub} from '@/assets/js/pages/public'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 export default {
   name: 'SMPC',
   data () {

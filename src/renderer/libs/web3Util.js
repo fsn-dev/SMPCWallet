@@ -28,7 +28,7 @@ let web3Utils = {
         console.log(error)
         eNodeInit = ''
         setTimeout(() => {
-          getEnode()
+          this.getEnode()
         }, 1000 * 3)
         // return error
       }

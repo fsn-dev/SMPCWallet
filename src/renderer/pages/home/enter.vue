@@ -2,15 +2,24 @@
   <div class="bg flex-c">
     <div class="e-box">
       <div class="line-block logo">
-        <!-- <img :src="dayAndNight ? '~@etc/img/logo/logo-white.svg' : '~@etc/img/logo/logo-black.svg'"> -->
         <img src="@etc/img/logo/logo-white.svg" v-if="!dayAndNight">
         <img src="@etc/img/logo/logo-black.svg" v-else>
       </div>
       <h3 class="title" v-html="$t('title').walletTitle"></h3>
       <p class="tip" v-html="$t('tip').walletTip"></p>
-
-      <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
-      <el-input v-model="test" class="mt-30"></el-input>
+      <div class="flex-c">
+        <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
+      </div>
+      <div class="WW100 mt-20 flex-c flex-wrap" :title="test">
+        <el-input v-model="test" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
+        <el-input v-model="netUrl" class="mt-10"></el-input>
+        <el-button type="primary" class="mt-10" @click="setNet">设置节点</el-button>
+        <el-button type="success" class="mt-10" @click="copyTxt(test)">复制ENODE</el-button>
+      </div>
+      <!-- <div class="WW100 mt-20 flex-c flex-wrap">
+        <el-input v-model="netUrl" class="mt-30"></el-input>
+        <el-button type="primary" class="mt-10" @click="setNet">{{$t('btn').confirm}}</el-button>
+      </div> -->
     </div>
   </div>
 </template>
@@ -22,11 +31,13 @@
 <script>
 import wButton from '@/components/btn/index'
 import {computedPub} from '@/assets/js/pages/public'
+import {mapActions} from 'vuex'
 export default {
   name: '',
   data () {
     return {
-      test: ''
+      test: '',
+      netUrl: this.$$.config.serverRPC
     }
   },
   components: {wButton},
@@ -60,6 +71,7 @@ export default {
     // })
   },
   methods: {
+    ...mapActions(['getEnode', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage']),
     testWs () {
       // let ws = new WebSocket(this.$$.config.appURL)
       let ws = new WebSocket('ws://192.168.1.184:8866/kline')
@@ -73,6 +85,23 @@ export default {
       ws.onclose = () => {
         console.log('end')
       }
+    },
+    setNet () {
+      let url = this.netUrl
+      this.$$.web3.setProvider(this.netUrl)
+      console.log(this.$$.web3)
+      this.getEnode()
+      setTimeout(() => {
+        this.test = this.eNode
+      }, 2000)
+      // this.$$.isConnected().then(res => {
+      //   this.$notify({ type: 'success', message: '连接成功！' })
+      // }).catch(err => {
+      //   this.$notify('节点连接失败！')
+      // })
+      // localStorage.setItem('network', url)
+      // let flag = Number(this.netUrl) === 0 ? 1 : 0
+      // localStorage.setItem('isSelfNet', flag)
     }
   }
 }

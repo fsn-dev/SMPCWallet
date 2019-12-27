@@ -31,7 +31,7 @@
             }"
           >
             <div class="flex-bc">
-              <el-input v-model="eNode.value" @blur="changeState(eNode, index)" :disabled="gID ? true : false" :title="eNode.value"></el-input>
+              <el-input v-model="eNode.value" @blur="changeState(eNode, index)" :disabled="gID || eNode.isSelf ? true : false" :title="eNode.value"></el-input>
             </div>
             <div class="flex-sc" v-if="reload">
               <span class="color_green" v-if="eNode.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
@@ -312,10 +312,19 @@ export default {
       let num = Number(this.groupForm.mode.split('/')[1])
       this.groupForm.eNode = []
       for (let i = 0; i < num; i++) {
-        this.groupForm.eNode.push({
-          value: '',
-          key: Date.now()
-        })
+        if (i === 0) {
+          this.groupForm.eNode.push({
+            value: this.eNode,
+            isSelf: true,
+            key: Date.now()
+          })
+        } else {
+          this.groupForm.eNode.push({
+            value: '',
+            isSelf: false,
+            key: Date.now()
+          })
+        }
       }
     },
     resetForm(formName) {
