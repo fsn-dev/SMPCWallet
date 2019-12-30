@@ -98,10 +98,12 @@ const store = new Vuex.Store({
     getEnode ({commit}) {
       // console.log(this)
       try {
-        web3.getEnode().then(res => {
-          // console.log(res)
-          commit('setEnode', res)
-        })
+        if (this.state.serverRPC) {
+          web3.getEnode().then(res => {
+            // console.log(res)
+            commit('setEnode', res)
+          })
+        }
       } catch (error) {
         commit('setEnode', '')
       }
@@ -151,7 +153,8 @@ const store = new Vuex.Store({
     getServerRPC ({commit}) {
       cookies.getCookies('serverRPC').then(res => {
         // console.log(res)
-        let data = { type: 1, info: res}
+        let url = res ? res : config.serverRPC
+        let data = { type: 1, info: url}
         commit('setServerRPC', data)
       })
     }

@@ -1,4 +1,11 @@
 import coininfo from '@etc/js/config/coininfo.js'
+/**
+ * @description web3方法及配置
+ */
+import web3 from '@/assets/js/web3'
+
+// let BN = web3.utils.BN
+
 export default {
   fromTime (timestamp) {
     if (timestamp.toString().length === 10) {
@@ -113,30 +120,44 @@ export default {
     return ''
   },
   fromWei (balance, coin) {
-    let coinObj = this.getCoinInfo(coin, 'rate')
-    if (coinObj) {
-      balance = Number(balance) / Math.pow(10, coinObj.rate)
-    } else {
-      if (coin === 'gwei') {
-        balance = Number(balance) /  Math.pow(10, 9)
+    balance = balance.toString()
+    coin = coin.toUpperCase()
+    let coinInfo = this.getCoinInfo(coin, 'rate')
+    if (typeof coinInfo[coin] !== 'undefined' && coinInfo[coin].rate) {
+      let d = Number(coinInfo[coin].rate)
+      if (d === 18) {
+        balance = web3.utils.fromWei(balance, 'ether')
       } else {
-        balance = Number(balance) /  Math.pow(10, 18)
+        balance = Number(balance) / Math.pow(10, d)
+      }
+    } else {
+      if (coin === 'GWEI') {
+        balance = web3.utils.fromWei(balance, 'gwei')
+      } else {
+        balance = web3.utils.fromWei(balance, 'ether')
       }
     }
     return balance
   },
   toWei (balance, coin) {
-    let coinObj = this.getCoinInfo(coin, 'rate')
-    if (coinObj) {
-      balance = Number(balance) * Math.pow(10, coinObj.rate)
-    } else {
-      if (coin === 'gwei') {
-        balance = Number(balance) *  Math.pow(10, 9)
+    balance = balance.toString()
+    let coinInfo = this.getCoinInfo(coin, 'rate')
+    coin = coin.toUpperCase()
+    if (typeof coinInfo[coin] !== 'undefined' && coinInfo[coin].rate) {
+      let d = Number(coinInfo[coin].rate)
+      if (d === 18) {
+        balance = web3.utils.toWei(balance, 'ether')
       } else {
-        balance = Number(balance) *  Math.pow(10, 18)
+        balance = Number(balance) * Math.pow(10, d)
+      }
+    } else {
+      if (coin === 'GWEI') {
+        balance = web3.utils.toWei(balance, 'gwei')
+      } else {
+        balance = web3.utils.toWei(balance, 'ether')
       }
     }
-    return Number(balance).toFixed()
+    return balance
   },
   fixPkey (key) {
     if (key.indexOf('0x') === 0) {

@@ -23,7 +23,7 @@ function insertHeaderImg (data) {
 function findHeaderImg (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
-    console.log(params)
+    // console.log(params)
     headerImg.find(params, (err, res) => {
       if (err) {
         // console.log(err)

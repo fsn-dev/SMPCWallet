@@ -21,7 +21,7 @@ function insertNode (data) {
 function findNode (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
-    console.log(params)
+    // console.log(params)
     node.find(params, (err, res) => {
       if (err) {
         // console.log(err)

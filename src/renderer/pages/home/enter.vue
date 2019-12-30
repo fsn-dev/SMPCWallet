@@ -65,7 +65,20 @@ export default {
   mounted () {
     this.test = this.eNode
     this.getNetUrl()
-    console.log(this.serverRPC)
+
+    // let val = 13242354
+    // val = this.$$.toWei(val, 'ETH')
+    // console.log(val)
+    // console.log(this.$$.web3.utils)
+    // console.log(this.$$.web3.utils.toBN(Number(val) *  Math.pow(10, 18)))
+    // let BN = this.$$.web3.utils.BN
+    // console.log(new BN(this.$$.toWei(val, 'ETH')).toString())
+    // val = this.$$.toWei(Number(val), 'ETH')
+    // console.log(val)
+    // console.log(val)
+    // val = this.$$.web3.utils.toWei(Number(val), 'ether')
+    // console.log(val)
+    // console.log(this.serverRPC)
     // this.$socket.emit('kline', 'CCD/BTC,5m,1576208100,1576208700')
     // this.testWs()
     // setTimeout(() => {
@@ -100,7 +113,7 @@ export default {
     },
     getNetUrl () {
       findNode().then(res => {
-        console.log(res)
+        // console.log(res)
         this.netUrlArr = [{
           url: this.$$.config.serverRPC
         }]
@@ -116,13 +129,15 @@ export default {
       // return
       try {
         this.$$.web3.setProvider(this.netUrl)
+        console.log(this.$$.web3)
+        console.log(this.$$.web3.version)
         this.getEnode()
         findNode({url: url}).then(res => {
-          if (res.length <= 0) {
+          if (res.length <= 0 && url !== this.$$.config.serverRPC) {
             insertNode({
               url: url
             }).then(res => {
-              console.log(res)
+              // console.log(res)
               this.getNetUrl()
             })
           }
@@ -136,18 +151,6 @@ export default {
         console.log(error)
         this.msgError(this.$t('error').err_9)
       }
-      // this.getEnode()
-      // setTimeout(() => {
-      //   this.test = this.eNode
-      // }, 2000)
-      // this.$$.isConnected().then(res => {
-      //   this.$notify({ type: 'success', message: '连接成功！' })
-      // }).catch(err => {
-      //   this.$notify('节点连接失败！')
-      // })
-      // localStorage.setItem('network', url)
-      // let flag = Number(this.netUrl) === 0 ? 1 : 0
-      // localStorage.setItem('isSelfNet', flag)
     }
   }
 }

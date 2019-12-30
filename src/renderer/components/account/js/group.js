@@ -3,7 +3,7 @@ export const gMethods = {
     this.loading.account = true
     this.gID = this.$route.query.gID ? this.$route.query.gID : ''
     this.pubKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
-    console.log(this.$route.query)
+    // console.log(this.$route.query)
     this.getAccounts()
     this.getGroupData()
   },

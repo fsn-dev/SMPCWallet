@@ -122,6 +122,11 @@ export default {
       this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = this.$$.toWei(this.rawTx.value, this.$$.cutERC20(this.sendDataObj.coinType).coinType)
+        // this.dataPage.value = this.$$.web3.utils.toWei(this.dataPage.value, 'ether')
+        // this.dataPage.value = this.$$.web3.utils.fromWei(this.dataPage.value, 'ether')
+        // console.log(this.dataPage.value)
+        // console.log(this.$$.web3.utils.isBigNumber(this.dataPage.value))
+        // console.log(this.$$.web3.utils.hexToNumberString(this.dataPage.value))
         this.dataPage.data = 'LOCKOUT:'
                               + this.sendDataObj.dcrmAddr
                               + ':' 

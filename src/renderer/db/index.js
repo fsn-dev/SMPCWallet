@@ -50,7 +50,7 @@ const headerImg = new Datastore({
 
 setTimeout(() => {
   ks.ensureIndex({fieldName: 'name', unique: true}, err => {
-    console.log(123)
+    // console.log(123)
     if (err) {
       console.log(err)
     }

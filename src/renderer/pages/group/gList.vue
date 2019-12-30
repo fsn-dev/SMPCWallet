@@ -88,7 +88,7 @@ export default {
   mounted () {
     this.loading.list = true
     this.publicKey = this.$route.query.publicKey
-    // console.log(this.publicKey)
+    // console.log(this.$$.web3)
     this.initGroup()
   },
   methods: {
