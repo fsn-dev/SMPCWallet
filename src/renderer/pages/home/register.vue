@@ -129,7 +129,7 @@ export default {
         this.msgSuccess(this.$t('success').s_1)
         this.createHeader(
           walletInit.getPublicKeyString(),
-          walletInit.getAddressString(),
+          walletInit.getChecksumAddressString(),
           this.registerObj.username
         )
         this.registerObj = {}

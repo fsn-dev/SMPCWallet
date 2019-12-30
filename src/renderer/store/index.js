@@ -26,7 +26,8 @@ const store = new Vuex.Store({
     safeMode: config.modeInit,
     dayAndNight: '',
     wallet: '',
-    language: ''
+    language: '',
+    serverRPC: ''
     // coininfoArr: [],
     // network: {},
     // coinDollarArr: '',
@@ -84,7 +85,14 @@ const store = new Vuex.Store({
       if (!data.type) {
         cookies.setCookies('language', info, 30)
       }
-    }
+    },
+    setServerRPC (state, data) {
+      let info = data.info ? data.info : ''
+      state.serverRPC = info
+      if (!data.type) {
+        cookies.setCookies('serverRPC', info, 30)
+      }
+    },
   },
   actions: {
     getEnode ({commit}) {
@@ -138,6 +146,13 @@ const store = new Vuex.Store({
         // console.log(res)
         let data = { type: 1, info: res}
         commit('setLanguage', data)
+      })
+    },
+    getServerRPC ({commit}) {
+      cookies.getCookies('serverRPC').then(res => {
+        // console.log(res)
+        let data = { type: 1, info: res}
+        commit('setServerRPC', data)
       })
     }
   }

@@ -9,6 +9,7 @@ export default {
 		err_6: 'The two passwords are inconsistent!',
 		err_7: 'Account already exists',
 		err_8: 'Account does not exist',
+		err_9: 'Connection failed!',
 	},
 	warn: {
 		w_1: 'Please select an account',
@@ -30,7 +31,8 @@ export default {
 	success: {
 		s_1: 'Created successfully!',
 		s_2: 'Replication success',
-		s_3: 'Account creation request sent successfully!'
+		s_3: 'Account creation request sent successfully!',
+		s_4: 'Connection succeeded!',
 	},
 	btn: {
 		confirm: 'Confirm',

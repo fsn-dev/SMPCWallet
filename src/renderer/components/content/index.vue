@@ -36,7 +36,7 @@
         
         <div class="header-top-user">
           <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
-          <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img :src="headerImg"></div>
+          <div class="headImg box_Wshadow1 flex-c" @click="isUserView = !isUserView"><img :src="headerImg"></div>
           <ul class="user-list box_Wshadow1" v-show="isUserView">
             <li class="item" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus mr-5"></i>{{$t('btn').createAccount}}</li>
             <li class="item" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user mr-5"></i>{{$t('title').personAccount}}</li>
@@ -71,6 +71,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import createAccount from '@/pages/group/createGroup'
+import {findHeaderImg} from '@/db/headerImg'
 export default {
   name: 'index',
   provide () {
@@ -97,7 +98,7 @@ export default {
         user: false,
         create: false
       },
-      headerImg: ''
+      headerImg: require('@etc/img/logo/logo.png')
     }
   },
   watch: {
@@ -113,7 +114,8 @@ export default {
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
-    this.headerImg = this.$$.config.file.img.url + this.address + this.$$.config.file.img.type
+    this.getHeaderImg()
+    // this.headerImg = this.$$.config.file.img.url + this.address + this.$$.config.file.img.type
 
     // this.intervalNews()
     // this.intervalSwitch = setInterval(() => {
@@ -121,6 +123,14 @@ export default {
     // }, 1000 * 5)
   },
   methods: {
+    async getHeaderImg () {
+      findHeaderImg({address: this.address}).then(res => {
+        // console.log(res)
+        if (res.length > 0) {
+          this.headerImg = res[0].imgData
+        }
+      })
+    },
     modalClick () {
       this.drawer.create = false
     },

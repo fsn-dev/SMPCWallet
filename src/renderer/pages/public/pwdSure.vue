@@ -40,6 +40,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {findAccount} from '@/db/accounts'
 export default {
   name: "pwdSure",
   // props: ["sendDataPage"],
@@ -60,7 +61,7 @@ export default {
     ...computedPub
   },
   mounted () {
-    console.log(this.sendDataPage)
+    // console.log(this.sendDataPage)
   },
   methods: {
     inputFileBtn () {
@@ -73,50 +74,67 @@ export default {
         this.sureForm.password = ''
         this.loading.wait = false
       } else {
-        let fileUrl = this.$$.config.file.ks.url + username + this.$$.config.file.ks.type
-        this.$$.readFile(fileUrl)
-          .then(res => {
-            try{
-              console.log(res)
-              if (this.$$.walletRequirePass(res.info)) {
-                let walletInfo = this.$$.getWalletFromPrivKeyFile(
-                  res.info,
-                  this.sureForm.password
-                )
-                this.toSign(walletInfo.getPrivateKeyString())
-              } else {
-                this.msgError('Error')
-              }
-              // console.log(walletInfo.getPrivateKeyString())
-            } catch (e) {
-              console.log(e)
-              this.elDialogView()
-              this.msgError(e.toString())
+        findAccount({name: username}).then(res => {
+          console.log(res)
+          if (res.length > 0) {
+            let keystore = res[0].ks
+            if (this.$$.walletRequirePass(keystore)) {
+              let walletInfo = this.$$.getWalletFromPrivKeyFile(
+                keystore,
+                this.sureForm.password
+              )
+              this.toSign(walletInfo.getPrivateKeyString())
+            } else {
+              this.msgError('Error')
             }
-          })
-          .catch(err => {
-            console.log(err)
+          } else {
             this.elDialogView()
-            this.msgError(err.toString())
-          })
+            this.msgError(this.$t('warn').w_13)
+          }
+        })
+        // return
+        // let fileUrl = this.$$.config.file.ks.url + username + this.$$.config.file.ks.type
+        // this.$$.readFile(fileUrl)
+        //   .then(res => {
+        //     try{
+        //       console.log(res)
+        //       if (this.$$.walletRequirePass(res.info)) {
+        //         let walletInfo = this.$$.getWalletFromPrivKeyFile(
+        //           res.info,
+        //           this.sureForm.password
+        //         )
+        //         this.toSign(walletInfo.getPrivateKeyString())
+        //       } else {
+        //         this.msgError('Error')
+        //       }
+        //       // console.log(walletInfo.getPrivateKeyString())
+        //     } catch (e) {
+        //       console.log(e)
+        //       this.elDialogView()
+        //       this.msgError(e.toString())
+        //     }
+        //   })
+        //   .catch(err => {
+        //     console.log(err)
+        //     this.elDialogView()
+        //     this.msgError(err.toString())
+        //   })
       }
     },
     toSign (pwd) {
-      console.log(this.sendDataPage)
+      // console.log(this.sendDataPage)
       // let type = Number(this.$$.getCookies(this.$$.config.cookies.safeMode))
-      let type = 1
-      this.$$.toSign(this.sendDataPage, pwd)
-        .then(res => {
-          this.loading.wait = false
-          this.$emit("sendSignData", res)
-        })
-        .catch(err => {
-          console.log(err)
-          this.loading.wait = false
-          this.$emit("sendSignData", {error: err})
-          this.msgError(err.toString())
-        })
-      this.sureForm.password = ''
+      // let type = 1
+      this.$$.toSign(this.sendDataPage, pwd).then(res => {
+        this.loading.wait = false
+        this.$emit("sendSignData", res)
+      }).catch(err => {
+        console.log(err)
+        this.loading.wait = false
+        this.$emit("sendSignData", {error: err})
+        this.msgError(err.toString())
+      })
+      // this.sureForm.password = ''
     },
     elDialogView () {
       this.sureForm.password = ''

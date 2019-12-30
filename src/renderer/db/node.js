@@ -1,14 +1,12 @@
-import {headerImg} from './index.js'
+import {node} from './index.js'
 
-function insertHeaderImg (data) {
+function insertNode (data) {
   const params = {
-    name: data.name,
-    address: data.address,
-    imgData: data.imgData,
+    url: data.url,
     timestamp: Date.now()
   }
   return new Promise((resolve, reject) => {
-    headerImg.insert(params, (err, res) => {
+    node.insert(params, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -20,11 +18,11 @@ function insertHeaderImg (data) {
   })
 }
 
-function findHeaderImg (params) {
+function findNode (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     console.log(params)
-    headerImg.find(params, (err, res) => {
+    node.find(params, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -37,6 +35,6 @@ function findHeaderImg (params) {
 }
 
 export {
-  insertHeaderImg,
-  findHeaderImg
+  insertNode,
+  findNode
 }

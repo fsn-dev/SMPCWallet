@@ -16,5 +16,8 @@ export const computedPub = {
   },
   language () {
     return this.$store.state.language
+  },
+  serverRPC () {
+    return this.$store.state.serverRPC
   }
 } 

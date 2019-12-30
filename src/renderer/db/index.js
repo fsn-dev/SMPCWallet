@@ -36,33 +36,38 @@ const ks = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/db/ks.db')
 })
-ks.ensureIndex({fieldName: 'name', unique: true}, err => {
-  console.log(123)
-  if (err) {
-    console.log(err)
-  }
-})
-
 
 const node = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/db/node.db')
-})
-node.ensureIndex({fieldName: 'url', unique: true}, err => {
-  if (err) {
-    console.log(err)
-  }
 })
 
 const headerImg = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/db/headerImg.db')
 })
-headerImg.ensureIndex({fieldName: 'name', unique: true}, err => {
-  if (err) {
-    console.log(err)
-  }
-})
+
+
+setTimeout(() => {
+  ks.ensureIndex({fieldName: 'name', unique: true}, err => {
+    console.log(123)
+    if (err) {
+      console.log(err)
+    }
+  })
+
+  node.ensureIndex({fieldName: 'url', unique: true}, err => {
+    if (err) {
+      console.log(err)
+    }
+  })
+
+  headerImg.ensureIndex({fieldName: 'name', unique: true}, err => {
+    if (err) {
+      console.log(err)
+    }
+  })
+}, 0)
 
 export {
   ks,

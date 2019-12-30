@@ -14,10 +14,10 @@
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top">
             <el-form-item :label="$t('label').username" prop="username">
-              <el-input v-model="loginObj.username" @input="validInfo"></el-input>
+              <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('label').password" prop="password">
-              <el-input type="password" v-model="loginObj.password" @input="validInfo"></el-input>
+              <el-input type="password" v-model="loginObj.password" @input="validInfo('password')"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').login}}</el-button>
@@ -41,7 +41,7 @@
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
 
-import {insertAccount, findAccount} from '@/db/accounts'
+import {findAccount} from '@/db/accounts'
 export default {
   name: '',
   data () {
@@ -80,7 +80,10 @@ export default {
   },
   methods: {
     ...headerImg,
-    validInfo () {
+    validInfo (key) {
+      if (key) {
+        this.loginObj[key] = this.loginObj[key].toString().replace(/\s/g, '')
+      }
       if (this.loginObj.username && this.loginObj.username.length >= 3 && this.loginObj.password && this.loginObj.password.length > 5) {
         this.loading.file = false
       } else {
@@ -93,7 +96,8 @@ export default {
         if (valid) {
           this.loading.wait = true
           setTimeout(() => {
-            this.validForm()
+            // this.validForm()
+            this.inputFileBtn()
           }, 300)
         } else {
           console.log('error submit!!')
@@ -101,46 +105,22 @@ export default {
         }
       });
     },
-    validForm () {
-      this.loading.wait = true
-      this.$$.validFile(this.loginObj.username, this.$$.config.file.ks.url, this.$$.config.file.ks.type)
-      .then(res => {
-        // console.log(res)
-        if (res.msg === 'Repeat') {
-          this.inputFileBtn()
-        } else {
-          this.msgError(this.$t('error').err_8)
-          this.loading.wait = false
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        this.msgError(err.error.toString())
-        this.loading.wait = false
-      })
-    },
     inputFileBtn () {
       let fileUrl = this.$$.config.file.ks.url + this.loginObj.username + this.$$.config.file.ks.type
       // console.log(fileUrl)
-      this.$$.readFile(fileUrl).then(res => {
-        // console.log(res)
-        try{
-          if (this.$$.walletRequirePass(res.info)) {
+      findAccount({name: this.loginObj.username}).then(res => {
+        console.log(res)
+        if (res.length > 0) {
+          let keystore = res[0].ks
+          if (this.$$.walletRequirePass(keystore)) {
             this.walletInfo = this.$$.getWalletFromPrivKeyFile(
-              res.info,
+              keystore,
               this.loginObj.password
             )
             let address = this.walletInfo.getChecksumAddressString()
-            this.createHeader(this.walletInfo.getPublicKeyString(), address)
+            // this.createHeader(this.walletInfo.getPublicKeyString(), address)
             // console.log(address)
             // console.log(this.walletInfo.getPrivateKeyString())
-
-            // insertAccount({
-            //   name: this.loginObj.username,
-            //   ks: res.info
-            // }).then(res => {
-            //   console.log(res)
-            // })
             this.$store.commit('setAddress', {info: address})
             this.$store.commit('setToken', {info: this.loginObj.username})
             this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})
@@ -153,15 +133,10 @@ export default {
             this.msgError('Error')
             this.loading.wait = false
           }
-        } catch (e) {
-          console.log(e)
-          this.msgError(e.toString())
+        } else {
+          this.msgError(this.$t('error').err_8)
           this.loading.wait = false
         }
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err.error.toString())
-        this.loading.wait = false
       })
     },
   }

@@ -41,7 +41,7 @@ export default {
     // console.log(this.dayAndNight)
   },
   methods: {
-    ...mapActions(['getEnode', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage']),
+    ...mapActions(['getEnode', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage', 'getServerRPC']),
     initData () {
       this.getEnode()
       this.getToken()
@@ -50,6 +50,7 @@ export default {
       this.getDayAndNight()
       this.getWallet()
       this.getLanguage()
+      this.getServerRPC()
     },
     mousePos (e) {
       let x, y

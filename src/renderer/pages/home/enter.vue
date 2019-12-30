@@ -10,9 +10,17 @@
       <div class="flex-c">
         <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
       </div>
-      <div class="WW100 mt-20 flex-c flex-wrap" :title="test">
-        <el-input v-model="test" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
-        <el-input v-model="netUrl" class="mt-10"></el-input>
+      <div class="W300 mt-20 flex-c flex-wrap">
+        <el-input class="WW100 mt-10" v-model="test" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
+        <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
+        <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl">
+          <el-option
+            v-for="item in netUrlArr"
+            :key="item.url"
+            :label="item.url"
+            :value="item.url">
+          </el-option>
+        </el-select>
         <el-button type="primary" class="mt-20" @click="setNet">设置节点</el-button>
         <el-button type="success" class="mt-20" @click="copyTxt(test)">复制ENODE</el-button>
       </div>
@@ -32,12 +40,14 @@
 import wButton from '@/components/btn/index'
 import {computedPub} from '@/assets/js/pages/public'
 import {mapActions} from 'vuex'
+import {insertNode, findNode} from '@/db/node'
 export default {
   name: '',
   data () {
     return {
       test: '',
-      netUrl: this.$$.config.serverRPC
+      netUrl: this.$$.config.serverRPC,
+      netUrlArr: []
     }
   },
   components: {wButton},
@@ -54,6 +64,8 @@ export default {
   },
   mounted () {
     this.test = this.eNode
+    this.getNetUrl()
+    console.log(this.serverRPC)
     // this.$socket.emit('kline', 'CCD/BTC,5m,1576208100,1576208700')
     // this.testWs()
     // setTimeout(() => {
@@ -86,14 +98,48 @@ export default {
         console.log('end')
       }
     },
+    getNetUrl () {
+      findNode().then(res => {
+        console.log(res)
+        this.netUrlArr = [{
+          url: this.$$.config.serverRPC
+        }]
+        if (res.length > 0) {
+          this.netUrlArr.push(...res)
+        }
+        this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
+      })
+    },
     setNet () {
       let url = this.netUrl
-      this.$$.web3.setProvider(this.netUrl)
-      console.log(this.$$.web3)
-      this.getEnode()
-      setTimeout(() => {
-        this.test = this.eNode
-      }, 2000)
+      // console.log(this.netUrl)
+      // return
+      try {
+        this.$$.web3.setProvider(this.netUrl)
+        this.getEnode()
+        findNode({url: url}).then(res => {
+          if (res.length <= 0) {
+            insertNode({
+              url: url
+            }).then(res => {
+              console.log(res)
+              this.getNetUrl()
+            })
+          }
+        })
+        this.$store.commit('setServerRPC', {info: url})
+        setTimeout(() => {
+          this.test = this.eNode
+          this.msgSuccess(this.$t('success').s_4)
+        }, 1500)
+      } catch (error) {
+        console.log(error)
+        this.msgError(this.$t('error').err_9)
+      }
+      // this.getEnode()
+      // setTimeout(() => {
+      //   this.test = this.eNode
+      // }, 2000)
       // this.$$.isConnected().then(res => {
       //   this.$notify({ type: 'success', message: '连接成功！' })
       // }).catch(err => {
