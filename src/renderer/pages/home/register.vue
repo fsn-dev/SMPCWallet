@@ -15,13 +15,13 @@
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :rules="rules" :model="registerObj" label-width="120px" label-position="top">
             <el-form-item :label="$t('label').username" prop="username">
-              <el-input v-model="registerObj.username" @input="validInfo"></el-input>
+              <el-input v-model="registerObj.username" @input="validInfo('username')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('label').password" prop="newpwd">
-              <el-input type="password" v-model="registerObj.password" @input="validInfo"></el-input>
+              <el-input type="password" v-model="registerObj.password" @input="validInfo('password')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('label').password2" prop="renewpwd">
-              <el-input type="password" v-model="registerObj.password2" @input="validInfo"></el-input>
+              <el-input type="password" v-model="registerObj.password2" @input="validInfo('password2')"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').create}}</el-button>
@@ -42,6 +42,8 @@
 <script>
 import regExp from '@etc/js/config/RegExp'
 import headerImg from './js/headerImg'
+
+import {insertAccount, findAccount} from '@/db/accounts'
 export default {
   name: '',
   data () {
@@ -92,7 +94,10 @@ export default {
   },
   methods: {
     ...headerImg,
-    validInfo () {
+    validInfo (key) {
+      if (key) {
+        this.registerObj[key] = this.registerObj[key].toString().replace(/\s/g, '')
+      }
       if (this.registerObj.username && this.registerObj.password && this.registerObj.password2 && (this.registerObj.password === this.registerObj.password2)) {
         this.loading.file = false
       } else {
@@ -116,32 +121,36 @@ export default {
     createFile () {
       const walletInit = this.$$.wallet.generate(this.registerObj.password)
       let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
-      let fileUrl = this.$$.config.file.ks.url + this.registerObj.username + this.$$.config.file.ks.type
-      this.$$.fs.writeFile(fileUrl, JSON.stringify(walletJSON), (err, res) => {
-        if (err) {
-          console.log(err)
-          this.msgError(err.toString())
-        } else {
-          this.msgSuccess(this.$t('success').s_1)
-          this.createHeader(walletInit.getPublicKeyString(), walletInit.getAddressString())
-        }
+      insertAccount({
+        name: this.registerObj.username,
+        ks: JSON.stringify(walletJSON)
+      }).then(res => {
+        console.log(res)
+        this.msgSuccess(this.$t('success').s_1)
+        this.createHeader(
+          walletInit.getPublicKeyString(),
+          walletInit.getAddressString(),
+          this.registerObj.username
+        )
         this.registerObj = {}
         this.loading.wait = false
         this.toUrl('/')
+      }).catch(err => {
+        this.msgError(err.error)
+        this.loading.wait = false
       })
     },
     changePwd () {
       let fileUrl = this.$$.config.file.ks.url
-      this.$$.validFile(this.registerObj.username, fileUrl, this.$$.config.file.ks.type)
-      .then(res => {
-        if (res.msg === 'Repeat') {
+      findAccount({name: this.registerObj.username}).then(res => {
+        console.log(res)
+        if (res.length > 0) {
           this.msgError(this.$t('error').err_7)
           this.loading.wait = false
         } else {
           this.createFile()
         }
-      })
-      .catch(err => {
+      }).catch(err => {
         this.msgError(err.error)
         this.loading.wait = false
       })

@@ -111,9 +111,9 @@ publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 
 // publicSet.serverRPC = 'http://192.168.1.104:9010'
-// publicSet.serverRPC = 'http://192.168.1.104:9011'
-// publicSet.serverRPC = 'http://192.168.1.104:9012'
-// publicSet.serverRPC = 'http://192.168.1.104:9013'
+publicSet.serverRPC = 'http://192.168.1.104:9011'
+publicSet.serverRPC = 'http://192.168.1.104:9012'
+publicSet.serverRPC = 'http://192.168.1.104:9013'
 
 // publicSet.serverRPC = 'http://192.168.1.187:9991'
 

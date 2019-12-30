@@ -13,8 +13,8 @@
       <div class="WW100 mt-20 flex-c flex-wrap" :title="test">
         <el-input v-model="test" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
         <el-input v-model="netUrl" class="mt-10"></el-input>
-        <el-button type="primary" class="mt-10" @click="setNet">设置节点</el-button>
-        <el-button type="success" class="mt-10" @click="copyTxt(test)">复制ENODE</el-button>
+        <el-button type="primary" class="mt-20" @click="setNet">设置节点</el-button>
+        <el-button type="success" class="mt-20" @click="copyTxt(test)">复制ENODE</el-button>
       </div>
       <!-- <div class="WW100 mt-20 flex-c flex-wrap">
         <el-input v-model="netUrl" class="mt-30"></el-input>

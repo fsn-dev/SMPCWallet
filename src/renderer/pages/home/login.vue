@@ -40,6 +40,8 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
+
+import {insertAccount, findAccount} from '@/db/accounts'
 export default {
   name: '',
   data () {
@@ -65,7 +67,16 @@ export default {
     ...computedPub
   },
   mounted () {
-    
+    // findAccount({}).then(res => {
+    //   console.log(res)
+    // })
+    // insertAccount({
+    //   name: 'test',
+    //   ks: '123',
+    //   timestamp: Date.now()
+    // }).then(res => {
+    //   console.log(res)
+    // })
   },
   methods: {
     ...headerImg,
@@ -123,6 +134,13 @@ export default {
             this.createHeader(this.walletInfo.getPublicKeyString(), address)
             // console.log(address)
             // console.log(this.walletInfo.getPrivateKeyString())
+
+            // insertAccount({
+            //   name: this.loginObj.username,
+            //   ks: res.info
+            // }).then(res => {
+            //   console.log(res)
+            // })
             this.$store.commit('setAddress', {info: address})
             this.$store.commit('setToken', {info: this.loginObj.username})
             this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})

@@ -91,7 +91,7 @@ const store = new Vuex.Store({
       // console.log(this)
       try {
         web3.getEnode().then(res => {
-          console.log(res)
+          // console.log(res)
           commit('setEnode', res)
         })
       } catch (error) {
