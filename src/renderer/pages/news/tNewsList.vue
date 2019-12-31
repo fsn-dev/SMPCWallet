@@ -100,6 +100,7 @@ export default {
       this.$$.getTxnsList().then(res => {
         console.log(res)
         this.newsList = res.info
+        this.$emit('tNewsTip', this.newsList.length)
         this.loading.list = false
       }).catch(err => {
         this.msgError(err.error)

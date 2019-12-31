@@ -82,6 +82,7 @@ export default {
             obj.Enodes = this.gInfo[obj.GroupId].Enodes
             this.newsList.push(obj)
           }
+          this.$emit('gNewsTip', this.newsList.length)
           this.loading.list = false
         }).catch(err => {
           this.msgError(err.error)

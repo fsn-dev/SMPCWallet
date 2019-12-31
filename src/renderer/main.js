@@ -146,7 +146,7 @@ Vue.prototype.quitApp = function() {
   let language = this.$store.state.language
   let serverRPC = this.$store.state.serverRPC
   $$.clearCookies()
-  this.$store.commit('setEnode', '')
+  // this.$store.commit('setEnode', '')
   this.$store.commit('setToken', '')
   this.$store.commit('setWallet', '')
   this.$store.commit('setAddress', '')
