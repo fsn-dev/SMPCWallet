@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios'
 import Vuex from 'vuex'
 import App from './App'
 import router from './router'
@@ -96,6 +97,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$$ = $$
 Vue.prototype.$message = Message
+Vue.prototype.$axios = axios
 
 Vue.prototype.toUrl = function(url, params) {
   this.$router.push({path: url, query: params})

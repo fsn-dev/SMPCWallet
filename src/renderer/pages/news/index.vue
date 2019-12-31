@@ -3,12 +3,12 @@
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box">
       <el-tab-pane name="first">
         <span slot="label">{{$t('title').groupNews + (gNewsNum ? '(' + gNewsNum + ')' : '')}}</span>
-        <div class="flex-sc font14 color_99 cursorP mb-20" @click="toUrl('/groupHistory')">查看历史</div>
+        <div class="font14 color_99 cursorP mb-10 line-block" @click="toUrl('/groupHistory')">查看历史</div>
         <g-news-list @gNewsTip="getGnewsNum"></g-news-list>
       </el-tab-pane>
       <el-tab-pane name="second">
         <span slot="label">{{$t('title').txnsNews + (tNewsNum ? '(' + tNewsNum + ')' : '')}}</span>
-        <div class="flex-sc font14 color_99 cursorP mb-20" @click="toUrl('/txnsHistory')">查看历史</div>
+        <div class="font14 color_99 cursorP mb-10 line-block" @click="toUrl('/txnsHistory')">查看历史</div>
         <t-news-list @tNewsTip="getTnewsNum"></t-news-list>
       </el-tab-pane>
     </el-tabs>

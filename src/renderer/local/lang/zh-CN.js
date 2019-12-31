@@ -95,7 +95,7 @@ export default {
 		to: '地址',
 		value: '数量',
 		source: '发起账户',
-		from: '从',
+		from: '来自',
 		group: '组',
 		txnHistory: '交易历史',
 		groupHistory: '创建历史'

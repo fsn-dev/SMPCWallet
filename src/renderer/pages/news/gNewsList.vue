@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.list" element-loading-text="数据获取中……">
+  <div class="boxConntent1" v-loading="loading.list" :element-loading-text="$t('loading').l_1">
     <!-- <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15">
       <el-breadcrumb-item :to="{ path: '/group' }">账户列表</el-breadcrumb-item>
       <el-breadcrumb-item>消息列表</el-breadcrumb-item>
@@ -20,34 +20,14 @@
         </li>
       </ul>
     </div>
-    <div v-if="newsList.length <= 0" class="boxConntent1 container flex-c font14 color_99">
+    <div v-if="newsList.length <= 0" class="boxConntent1 flex-c font14 color_99">
       {{$t('warn').w_12}}
     </div>
   </div>
 </template>
 
 <style lang="scss">
-// @import '@/assets/scss/index';
-.g-news-list-box {
-  width: 100%;min-height: 80%;padding: size(10) size(0); margin:0 0 size(15);
-  .item {
-    width: 100%;border: size(1) solid $color-primary-sm;border-radius: size(8);font-size: $text-normal;color: #333;cursor: pointer;padding:size(20) size(20) size(20);margin-bottom: size(25);
-    .left {
-      .p1 {
-        font-size: $text-sm;font-weight: bold;
-      }
-      .eNode {
-        line-height:size(21);font-size: $text-normal;color: $color-gray-sm;display: inline-block;margin-top: size(5);
-        .i {
-          overflow: hidden;text-overflow: ellipsis;white-space: nowrap;display: inline-block;
-        }
-      }
-    }
-    .el-button {
-      background: $color-primary;color: #fff;
-    }
-  }
-}
+@import './scss/gNewsList';
 </style>
 
 <script>

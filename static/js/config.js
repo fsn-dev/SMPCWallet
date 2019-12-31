@@ -30,6 +30,10 @@ let publicSet = {
    */
   serverRPC: 'http://127.0.0.1:4449',
   /**
+   * @description 通过地址查询外部交易历史
+   */
+  receiveAddrUrl: 'http://54.183.185.30:5000/',
+  /**
    * @description 数据请求时间间隔
    */
   refreshDataTime: 15, // page refersh time

@@ -5,17 +5,17 @@
     <div class="receiveAddress_box">
       <el-form label-position="top" label-width="80px" @submit.native.prevent>
         <el-form-item :label="addressTitle">
-          <el-input v-model="selectData.address" id="walletAdressHide" class="font24" :readonly	="true"></el-input>
+          <el-input v-model="selectData.address" class="font24" :readonly	="true"></el-input>
         </el-form-item>
       </el-form>
-      <div class="receiveAddress_btn flex-c" id="receiveAddressBtn">
+      <div class="receiveAddress_btn flex-c">
         <button class="btn blue flex-c" @click="qrcode(selectData.address)">
           <div class="icon">
             <img src="@etc/img/QRcode.svg">
           </div>
           {{$t('btn').code}}
         </button>
-        <button class="btn cyan flex-c" @click="copyAddress('walletAdressHide', 'receiveAddressBtn')">
+        <button class="btn cyan flex-c" @click="copyTxt(selectData.address)">
           <div class="icon"><img src="@etc/img/copy.svg"></div>
           <el-popover trigger="hover" :content="$t('btn').copy">
             <div class="addreess" slot="reference">{{$t('btn').copy}}</div>
@@ -24,11 +24,11 @@
       </div>
     </div>
 
-    <div class="tableHistory_box" v-if="selectData.isConfirm || selectData.coinType === $$.config.initCoin">
+    <div class="tableHistory_box">
       <hgroup class="tableHistory_title">
         <h3 class="title">{{$t('title').history}}:</h3>
       </hgroup>
-      <div class="tableHistory_table table-responsive" v-loading="historyLoading" element-loading-text="Loading……">
+      <div class="tableHistory_table table-responsive" v-loading="loading.history" :element-loading-text="$t('loading').l_1">
         <el-table :data="historyData" style="width: 100%" empty-text="Null">
           <el-table-column :label="$t('state').state" width="80">
             <template slot-scope="scope">
@@ -106,7 +106,9 @@ export default {
       historyData: [],
       refreshTable: null,
       codeViewVisible: false,
-      historyLoading: true,
+      loading: {
+        history: true
+      },
       activeNames: "",
       isRefreshStart: true,
       pageInfo: {
@@ -117,22 +119,10 @@ export default {
       // count: 0
     }
   },
-  watch: {
-    selectData (cur, old) {
-      console.log(cur)
-      this.historyLoading = true
-      this.getSendHistory()
-    }
-  },
   computed: {
     ...computedPub,
     addressTitle () {
       return this.selectData.coinType + " Receiving Address"
-    }
-  },
-  sockets: {
-    connect () {
-      console.log('success')
     }
   },
   created () {
@@ -140,32 +130,40 @@ export default {
     this.selectData = this.$route.query
   },
   mounted () {
-    if (this.selectData.coinType) {
-      this.getSendHistory()
-    }
+    // if (this.selectData.coinType) {
+    //   }
+    this.getSendHistory()
   },
   methods: {
-    prevClick () {
-      this.pageInfo --
-      this.getSendHistory()
-    },
-    nextClick () {
-      this.pageInfo ++
-      this.getSendHistory()
-    },
+    // prevClick () {
+    //   this.pageInfo --
+    //   this.getSendHistory()
+    // },
+    // nextClick () {
+    //   this.pageInfo ++
+    //   this.getSendHistory()
+    // },
     qrcode (cont) {
       this.codeViewVisible = true
 			this.$nextTick(() => {
         this.$$.qrCode(cont, "qrcode")
 			})
     },
-    copyAddress (id, textId) {
-      document.getElementById(id).select()
-      document.execCommand("Copy")
-      this.msgSuccess(this.$t('success').s_2)
+    getHistoryUrl () {
+      const coin = this.$$.cutERC20(this.selectData.coinType).coinType
+      const coininfo = this.$$.getCoinInfo(coin)
+      console.log(coininfo)
     },
     getSendHistory () {
-      this.historyLoading = false
+      this.loading.history = false
+      let url = this.$$.config.receiveAddrUrl + `txs/${this.selectData.coinType}/${this.selectData.address}`
+      // let url = this.getHistoryUrl()
+      console.log(url)
+      this.$axios.get(url).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
       // if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
       //   this.historyLoading = false
       //   return

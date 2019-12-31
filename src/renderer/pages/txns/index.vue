@@ -1,20 +1,5 @@
 <template>
   <div class="boxConntent1 container">
-    <!-- <div class="c-form-box">
-      <el-form :model="rawTx" ref="rawTx" :rules="rules" label-width="100px" label-position="top">
-        <el-form-item :label="$t('label').to" prop="to">
-          <el-input v-model="rawTx.to"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('label').value" prop="value">
-          <el-input type="number" v-model="rawTx.value" min="0" :step="0.001"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('rawTx')">{{$t('label').send}}</el-button>
-          <el-button @click="resetForm('rawTx')">{{$t('btn').restart}}</el-button>
-          <el-button @click="toUrl('/group')">{{$t('btn').back}}</el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
     <div class="d-content-view">
       <h3 class="h3">{{$t('label').send}}{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
       <el-form ref="txnsInfoForm" :model="rawTx" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
@@ -23,11 +8,21 @@
         </el-form-item>
         <el-form-item :label="$t('label').amount" prop="value">
           <el-input type="number" v-model="rawTx.value"></el-input>
+          <span class="font12 color_99">{{$t('label').balance + ': ' + $$.fromWei(sendDataObj.balance, $$.cutERC20(sendDataObj.coinType).coinType)}}</span>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" native-type="submit" @click="submitForm('txnsInfoForm')" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
+          <el-button
+            type="primary"
+            native-type="submit"
+            @click="submitForm('txnsInfoForm')"
+            class="btn mt-30 WW100 HH40 font16 btn-primary"
+            :disabled="!rawTx.to || !rawTx.value"
+          >
+            {{$t('label').send}}
+          </el-button>
         </el-form-item>
       </el-form>
+
       <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
         coinType: sendDataObj.coinType,
         address: sendDataObj.dcrmAddr,
@@ -85,12 +80,21 @@ export default {
       }
     }
   },
+  sockets: {
+    GroupAddTxns (res) {
+      console.log(res)
+    },
+    PersonAddTxns (res) {
+      console.log(res)
+    }
+  },
   computed: {
     ...computedPub,
   },
   mounted () {
     this.initTxnsData = this.$route.query
-    console.log(this.initTxnsData)
+    // console.log(this.initTxnsData)
+    // console.log(this.sendDataObj)
   },
   methods: {
     modalClick () {
@@ -122,11 +126,6 @@ export default {
       this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = this.$$.toWei(this.rawTx.value, this.$$.cutERC20(this.sendDataObj.coinType).coinType)
-        // this.dataPage.value = this.$$.web3.utils.toWei(this.dataPage.value, 'ether')
-        // this.dataPage.value = this.$$.web3.utils.fromWei(this.dataPage.value, 'ether')
-        // console.log(this.dataPage.value)
-        // console.log(this.$$.web3.utils.isBigNumber(this.dataPage.value))
-        // console.log(this.$$.web3.utils.hexToNumberString(this.dataPage.value))
         this.dataPage.data = 'LOCKOUT:'
                               + this.sendDataObj.dcrmAddr
                               + ':' 

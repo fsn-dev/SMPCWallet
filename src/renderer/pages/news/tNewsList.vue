@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container" v-loading="loading.list" element-loading-text="数据获取中……">
+  <div class="boxConntent1" v-loading="loading.list" :element-loading-text="$t('loading').l_1">
     <div class="t-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item" v-for="(item, index) in newsList" :key="index">
@@ -23,55 +23,14 @@
       </ul>
     </div>
 
-    <div v-if="newsList.length <= 0" class="boxConntent1 container flex-c font14 color_99">
+    <div v-if="newsList.length <= 0" class="boxConntent1 flex-c font14 color_99">
       {{$t('warn').w_12}}
     </div>
   </div>
 </template>
 
 <style lang="scss">
-// @import '@/assets/scss/index';
-.t-news-list-box {
-  width: 100%;min-height: 80%;padding: size(10) size(0); margin:size(15) 0;
-  .item {
-    width: 100%;border: size(1) solid $color-primary-sm;border-radius: size(8);font-size: $text-normal;color: #333;cursor: pointer;padding:size(30) size(20) size(20);margin-bottom: size(25);
-    .address-box {
-      $listH: 40;
-      width: 100%;height: size($listH);background: $color-primary-sm;border-radius: size(20);position: relative;
-      .addr {
-        width: 50%;text-align: center;color:$color-primary;font-size:$text-normal;
-        .label {
-          color: $color-gray;margin-right: size(5);font-weight: bold;
-        }
-      }
-      .round {
-        $rSize: 50;
-        width: size($rSize);height: size($rSize);position: absolute;top:size(-($rSize - $listH) / 2);left: 50%;margin-left: size(-$rSize / 2);background: $color-primary;border-radius: 100%;color: #fff;font-size: $text-lg;font-weight: bold;
-      }
-    }
-    .amount-box {
-      width: 100%;padding: size(30) 0;border-bottom: size(1) dashed #ddd;
-      .amt {
-        width: 50%;text-align: center;font-size:$text-normal;color: $color-gray;
-        .label {
-          color: $color-gray;margin-right: size(5);font-weight: bold;
-        }
-      }
-    }
-    .action-box {
-      width: 100;padding: size(20) 0 0;
-      .at {
-        width: 50%;text-align: center;font-size:$text-normal;color: $color-gray;
-        .label {
-          color: $color-gray;margin-right: size(5);font-weight: bold;
-        }
-      }
-      .el-button {
-        background: $color-primary;color: #fff;
-      }
-    }
-  }
-}
+@import './scss/tNewsList';
 </style>
 
 <script>

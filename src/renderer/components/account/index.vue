@@ -43,12 +43,6 @@
 
     <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">{{$t('warn').w_1}}</div>
 
-    <!-- 输入密码 start -->
-    <!-- <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
-      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
-    </el-dialog> -->
-    <!-- 输入密码 end -->
-
     <!-- 查看组成员 start -->
     <w-drawer v-model="drawer.member" v-if="drawer.member">
       <div class="d-content-view g-member-list-box">
@@ -108,24 +102,6 @@
     <!-- 发送交易 start -->
     <w-drawer v-model="drawer.send" v-if="drawer.send">
       <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberInit="gMemberInit" @closeModal="modalClick"></send-txns>
-      <!-- <div class="d-content-view">
-        <h3 class="h3">{{$t('label').send}}{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
-        <el-form ref="userInfoForm" :model="rawTx" label-width="120px" label-position="top">
-          <el-form-item :label="$t('label').sendAddr">
-            <el-input v-model="rawTx.to"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('label').amount">
-            <el-input type="number" v-model="rawTx.value"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="openPwdDialog(2)" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
-          </el-form-item>
-        </el-form>
-        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
-          coinType: sendDataObj.coinType,
-          address: sendDataObj.dcrmAddr,
-        })">查看历史</div>
-      </div> -->
     </w-drawer>
     <!-- 发送交易 end -->
   </div>
@@ -242,89 +218,6 @@ export default {
         this.reqPersonAccount()
       }
     },
-    // saveTxnsDB (key) {
-    //   let data = {
-    //     from: this.sendDataObj.dcrmAddr,
-    //     to: this.rawTx.to,
-    //     value: this.rawTx.value,
-    //     nonce: this.dataPage.nonce,
-    //     coinType: this.sendDataObj.coinType,
-    //     hash: '',
-    //     status: 0,
-    //   }
-    //   let dataUrl = 'GroupAddTxns'
-    //   if (Number(this.safeMode) === 1) {
-    //     dataUrl = 'PersonAddTxns'
-    //     data.kId = this.address
-    //     data.eNode = this.eNode
-    //   } else {
-    //     data.gArr = [
-    //       {eNode: this.eNode, kId: this.address, status: 4, timestamp: Date.now(), initiate: 1}
-    //     ]
-    //     for (let obj of this.gMemberInit) {
-    //       data.gArr.push({eNode: obj, kId: '', status: 0, timestamp: '', initiate: 0})
-    //     }
-    //     data.gId = this.gID
-    //     data.key = key
-    //   }
-    //   this.$socket.emit(dataUrl, data)
-    // },
-    // getSignData (data) {
-    //   this.modalClick()
-    //   this.loading.account = true
-    //   if (data.signTx) {
-    //     this.$$.lockout(data.signTx).then(res => {
-    //       console.log(res)
-    //       if (res.msg === 'Success') {
-    //         this.msgSuccess('Success!')
-    //         this.saveTxnsDB(res.info)
-    //       } else {
-    //         this.msgError(res.error)
-    //       }
-    //     }).catch(err => {
-    //       console.log(err)
-    //       this.msgError(err.error)
-    //     })
-    //     this.loading.account = false
-    //     this.drawer.send = false
-    //   } else {
-    //     this.msgError('Error')
-    //     this.loading.account = false
-    //   }
-    // },
-    // openPwdDialog () {
-    //   if (!this.gID) {
-    //     this.msgError(this.$t('warn').w_1)
-    //     return
-    //   }
-    //   // this.gMode = '3/3'
-    //   this.dataPage = {
-    //     from: this.address,
-    //     to: this.$$.config.rawTx.to,
-    //     gasLimit: this.$$.config.rawTx.gasLimit,
-    //     gasPrice: this.$$.config.rawTx.gasPrice,
-    //   }
-    //   this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
-    //     this.dataPage.nonce = nonce
-    //     this.dataPage.value = this.rawTx.value
-    //     this.dataPage.data = 'LOCKOUT:'
-    //                           + this.sendDataObj.dcrmAddr
-    //                           + ':' 
-    //                           + this.rawTx.to
-    //                           + ':'
-    //                           + this.rawTx.value
-    //                           + ':'
-    //                           + this.sendDataObj.coinType
-    //                           + ':'
-    //                           + this.gID
-    //                           + ':'
-    //                           + this.gMode
-    //                           + ':'
-    //                           + this.safeMode
-    //     this.drawer.send = false
-    //     this.eDialog.pwd = true
-    //   })
-    // },
     openReceive (index, item) {
       let url = '/group/receive'
       if (Number(this.safeMode)) {
@@ -334,11 +227,14 @@ export default {
         address: item.DcrmAddr,
         coinType: item.Cointype,
         ERC20Coin: item.Cointype,
-        gID: this.gID
+        gID: this.gID,
+        publicKey: this.pubKey
       })
     },
     setTxnsData (item) {
+      console.log(item)
       this.sendDataObj = {
+        balance: item.Balance,
         dcrmAddr: item.DcrmAddr,
         coinType: item.Cointype,
         gID: this.gID,
