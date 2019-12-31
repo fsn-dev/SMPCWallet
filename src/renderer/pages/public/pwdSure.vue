@@ -10,13 +10,13 @@
               <h3 class="title">{{$t('PLACEHOLDER').ENTER_PASSWORD}}</h3>
             </hgroup> -->
             <div class="selectType_contentBox">
-              <el-form ref="userInfoForm" :model="sureForm" label-width="120px" label-position="top">
+              <el-form ref="userInfoForm" :model="sureForm" label-width="120px" label-position="top" @submit.native.prevent>
                 <el-form-item :label="$t('label').password">
                   <el-input type="password" v-model="sureForm.password"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="inputFileBtn">{{$t('btn').unlock}}</el-button>
-                  <el-button @click="elDialogView">{{$t('btn').cancel}}</el-button>
+                  <el-button native-type="submit" @click="elDialogView">{{$t('btn').cancel}}</el-button>
                 </el-form-item>
               </el-form>
               <!-- <div class="selectType_contTnput">
@@ -78,14 +78,19 @@ export default {
           console.log(res)
           if (res.length > 0) {
             let keystore = res[0].ks
-            if (this.$$.walletRequirePass(keystore)) {
-              let walletInfo = this.$$.getWalletFromPrivKeyFile(
-                keystore,
-                this.sureForm.password
-              )
-              this.toSign(walletInfo.getPrivateKeyString())
-            } else {
-              this.msgError('Error')
+            try {
+              if (this.$$.walletRequirePass(keystore)) {
+                let walletInfo = this.$$.getWalletFromPrivKeyFile(
+                  keystore,
+                  this.sureForm.password
+                )
+                this.toSign(walletInfo.getPrivateKeyString())
+              } else {
+                this.msgError('Error')
+              }
+            } catch (error) {
+              this.elDialogView()
+              this.msgError(error.toString())
             }
           } else {
             this.elDialogView()

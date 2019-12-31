@@ -3,19 +3,13 @@
 
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
-        <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top">
-          <!-- <el-form-item label="账户名" prop="name">
-            <el-input v-model="groupForm.name"></el-input>
-          </el-form-item> -->
+        <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
           <el-form-item :label="$t('label').group">
             <el-select v-model="gID" :placeholder="$t('warn').w_4" class="WW100" @change="changeGroup">
               <el-option :label="$t('btn').newBuild" :value="0"></el-option>
               <el-option v-for="(item, index) in getGroup" :key="index" :label="item.name" :value="item.Gid"></el-option>
             </el-select>
           </el-form-item>
-          <!-- <el-form-item label="组名" prop="name">
-            <el-input v-model="groupForm.name"></el-input>
-          </el-form-item> -->
           <el-form-item :label="$t('label').mode"
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
@@ -39,7 +33,7 @@
             </div>
           </el-form-item>
           <el-form-item class="mt-30">
-            <el-button type="primary" @click="submitForm('groupForm')">{{$t('btn').createAccount}}</el-button>
+            <el-button type="primary" native-type="submit" @click="submitForm('groupForm')">{{$t('btn').createAccount}}</el-button>
             <el-button @click="resetForm('groupForm')">{{$t('btn').restart}}</el-button>
             <!-- <el-button @click="toUrl('/fsgsd')">返回</el-button> -->
           </el-form-item>

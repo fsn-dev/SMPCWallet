@@ -12,7 +12,7 @@
 
       <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
-          <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top">
+          <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
             <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input>
             </el-form-item>
@@ -20,7 +20,7 @@
               <el-input type="password" v-model="loginObj.password" @input="validInfo('password')"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').login}}</el-button>
+              <el-button type="primary" native-type="submit" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').login}}</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
@@ -112,25 +112,30 @@ export default {
         console.log(res)
         if (res.length > 0) {
           let keystore = res[0].ks
-          if (this.$$.walletRequirePass(keystore)) {
-            this.walletInfo = this.$$.getWalletFromPrivKeyFile(
-              keystore,
-              this.loginObj.password
-            )
-            let address = this.walletInfo.getChecksumAddressString()
-            // this.createHeader(this.walletInfo.getPublicKeyString(), address)
-            // console.log(address)
-            // console.log(this.walletInfo.getPrivateKeyString())
-            this.$store.commit('setAddress', {info: address})
-            this.$store.commit('setToken', {info: this.loginObj.username})
-            this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})
-            if (Number(this.safeMode)) {
-              this.$router.push('/person')
+          try {
+            if (this.$$.walletRequirePass(keystore)) {
+              this.walletInfo = this.$$.getWalletFromPrivKeyFile(
+                keystore,
+                this.loginObj.password
+              )
+              let address = this.walletInfo.getChecksumAddressString()
+              // this.createHeader(this.walletInfo.getPublicKeyString(), address)
+              // console.log(address)
+              // console.log(this.walletInfo.getPrivateKeyString())
+              this.$store.commit('setAddress', {info: address})
+              this.$store.commit('setToken', {info: this.loginObj.username})
+              this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})
+              if (Number(this.safeMode)) {
+                this.$router.push('/person')
+              } else {
+                this.$router.push('/group')
+              }
             } else {
-              this.$router.push('/group')
+              this.msgError('Error')
+              this.loading.wait = false
             }
-          } else {
-            this.msgError('Error')
+          } catch (error) {
+            this.msgError(error.toString())
             this.loading.wait = false
           }
         } else {

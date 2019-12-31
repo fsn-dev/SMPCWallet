@@ -4,6 +4,7 @@ import coininfo from '@etc/js/config/coininfo.js'
  */
 import web3 from '@/assets/js/web3'
 
+import {BigNumber} from 'bignumber.js'
 // let BN = web3.utils.BN
 
 export default {
@@ -123,13 +124,13 @@ export default {
     balance = balance.toString()
     coin = coin.toUpperCase()
     let coinInfo = this.getCoinInfo(coin, 'rate')
-    if (typeof coinInfo[coin] !== 'undefined' && coinInfo[coin].rate) {
-      let d = Number(coinInfo[coin].rate)
-      if (d === 18) {
-        balance = web3.utils.fromWei(balance, 'ether')
-      } else {
-        balance = Number(balance) / Math.pow(10, d)
-      }
+    // console.log(coin)
+    // console.log(coinInfo)
+    if (coinInfo && typeof coinInfo.rate !== 'undefined') {
+      let d = Number(coinInfo.rate)
+      balance = Number(balance) / Math.pow(10, d)
+      balance = new BigNumber(balance)
+      balance = balance.toFormat().replace(/,/g, '')
     } else {
       if (coin === 'GWEI') {
         balance = web3.utils.fromWei(balance, 'gwei')
@@ -141,15 +142,13 @@ export default {
   },
   toWei (balance, coin) {
     balance = balance.toString()
-    let coinInfo = this.getCoinInfo(coin, 'rate')
     coin = coin.toUpperCase()
-    if (typeof coinInfo[coin] !== 'undefined' && coinInfo[coin].rate) {
-      let d = Number(coinInfo[coin].rate)
-      if (d === 18) {
-        balance = web3.utils.toWei(balance, 'ether')
-      } else {
-        balance = Number(balance) * Math.pow(10, d)
-      }
+    let coinInfo = this.getCoinInfo(coin, 'rate')
+    if (coinInfo && coinInfo.rate) {
+      let d = Number(coinInfo.rate)
+      balance = Number(balance) * Math.pow(10, d)
+      balance = new BigNumber(balance)
+      balance = balance.toFormat().replace(/,/g, '')
     } else {
       if (coin === 'GWEI') {
         balance = web3.utils.toWei(balance, 'gwei')

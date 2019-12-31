@@ -11,7 +11,7 @@
         <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
       </div>
       <div class="W300 mt-20 flex-c flex-wrap">
-        <el-input class="WW100 mt-10" v-model="test" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
+        <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
         <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
         <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl">
           <el-option
@@ -22,7 +22,7 @@
           </el-option>
         </el-select>
         <el-button type="primary" class="mt-20" @click="setNet">设置节点</el-button>
-        <el-button type="success" class="mt-20" @click="copyTxt(test)">复制ENODE</el-button>
+        <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)">复制ENODE</el-button>
       </div>
       <!-- <div class="WW100 mt-20 flex-c flex-wrap">
         <el-input v-model="netUrl" class="mt-30"></el-input>
@@ -39,13 +39,12 @@
 <script>
 import wButton from '@/components/btn/index'
 import {computedPub} from '@/assets/js/pages/public'
-import {mapActions} from 'vuex'
 import {insertNode, findNode} from '@/db/node'
 export default {
   name: '',
   data () {
     return {
-      test: '',
+      viewEnode: '',
       netUrl: this.$$.config.serverRPC,
       netUrlArr: []
     }
@@ -63,12 +62,16 @@ export default {
     }
   },
   mounted () {
-    this.test = this.eNode
+    this.viewEnode = this.eNode
     this.getNetUrl()
 
     // let val = 13242354
     // val = this.$$.toWei(val, 'ETH')
     // console.log(val)
+    // console.log(Number(val))
+    // let x = new BigNumber(val)
+    // console.log(x)
+    // console.log(x.toFormat().replace(/,/g, ''))
     // console.log(this.$$.web3.utils)
     // console.log(this.$$.web3.utils.toBN(Number(val) *  Math.pow(10, 18)))
     // let BN = this.$$.web3.utils.BN
@@ -96,7 +99,6 @@ export default {
     // })
   },
   methods: {
-    ...mapActions(['getEnode', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage']),
     testWs () {
       // let ws = new WebSocket(this.$$.config.appURL)
       let ws = new WebSocket('ws://192.168.1.184:8866/kline')
@@ -123,30 +125,43 @@ export default {
         this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
       })
     },
+    saveRpcDB () {
+      let url = this.netUrl
+      findNode({url: url}).then(res => {
+        if (res.length <= 0 && url !== this.$$.config.serverRPC) {
+          insertNode({
+            url: url
+          }).then(res => {
+            // console.log(res)
+            this.getNetUrl()
+          })
+        }
+      })
+    },
     setNet () {
       let url = this.netUrl
-      // console.log(this.netUrl)
-      // return
       try {
         this.$$.web3.setProvider(this.netUrl)
-        console.log(this.$$.web3)
-        console.log(this.$$.web3.version)
-        this.getEnode()
-        findNode({url: url}).then(res => {
-          if (res.length <= 0 && url !== this.$$.config.serverRPC) {
-            insertNode({
-              url: url
-            }).then(res => {
-              // console.log(res)
-              this.getNetUrl()
-            })
+        this.$$.web3.dcrm.getEnode().then(res => {
+          let cbData = res
+          cbData = JSON.parse(cbData)
+          // console.log(cbData)
+          if (cbData.Status === "Success") {
+            let eNodeInit = cbData.Data.Enode
+            this.viewEnode = eNodeInit
+            this.saveRpcDB()
+            this.$store.commit('setServerRPC', {info: url})
+            this.$store.commit('setEnode', {info: eNodeInit})
+            this.msgSuccess(this.$t('success').s_4)
+          } else {
+            this.viewEnode = ''
+            this.msgError(this.$t('error').err_9)
           }
+        }).catch(err => {
+          console.log(err)
+          this.viewEnode = ''
+          this.msgError(this.$t('error').err_9)
         })
-        this.$store.commit('setServerRPC', {info: url})
-        setTimeout(() => {
-          this.test = this.eNode
-          this.msgSuccess(this.$t('success').s_4)
-        }, 1500)
       } catch (error) {
         console.log(error)
         this.msgError(this.$t('error').err_9)

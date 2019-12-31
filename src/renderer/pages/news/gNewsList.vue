@@ -82,8 +82,6 @@ export default {
             obj.Enodes = this.gInfo[obj.GroupId].Enodes
             this.newsList.push(obj)
           }
-          // console.log(this.newsList)
-          // this.newsList = res.info
           this.loading.list = false
         }).catch(err => {
           this.msgError(err.error)
@@ -93,14 +91,6 @@ export default {
         this.msgError(err.error)
         this.loading.list = false
       })
-      // this.$$.getPendingGroup().then(res => {
-      //   this.newsList = res.info
-      //   this.loading.list = false
-      // }).catch(err => {
-      //   this.newsList = []
-      //   this.msgError(err.error)
-      //   this.loading.list = false
-      // })
     }
   }
 }

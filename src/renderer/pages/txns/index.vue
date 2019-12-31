@@ -17,7 +17,7 @@
     </div> -->
     <div class="d-content-view">
       <h3 class="h3">{{$t('label').send}}{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
-      <el-form ref="txnsInfoForm" :model="rawTx" :rules="rules" label-width="120px" label-position="top">
+      <el-form ref="txnsInfoForm" :model="rawTx" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('label').sendAddr" prop="to">
           <el-input v-model="rawTx.to"></el-input>
         </el-form-item>
@@ -25,7 +25,7 @@
           <el-input type="number" v-model="rawTx.value"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('txnsInfoForm')" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
+          <el-button type="primary" native-type="submit" @click="submitForm('txnsInfoForm')" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('label').send}}</el-button>
         </el-form-item>
       </el-form>
       <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {

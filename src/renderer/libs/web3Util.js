@@ -23,6 +23,11 @@ let web3Utils = {
             }, 1000 * 3)
           }
           // console.log(eNodeInit)
+        }).catch(err => {
+          console.log(err)
+          setTimeout(() => {
+            this.getEnode()
+          }, 1000 * 3)
         })
       } catch (error) {
         console.log(error)
@@ -48,6 +53,8 @@ let web3Utils = {
             data = 'OffLine'
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -68,6 +75,8 @@ let web3Utils = {
             data = 0
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         data = 0
@@ -87,6 +96,8 @@ let web3Utils = {
             data = 0
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         data = 0
@@ -169,6 +180,8 @@ let web3Utils = {
               data = {msg: 'Error', error: cbData.Tip}
               reject(data)
             }
+          }).catch(err => {
+            console.log(err)
           })
         } else {
           setTimeout(() => {
@@ -198,6 +211,8 @@ let web3Utils = {
             // reject(data)
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -225,6 +240,8 @@ let web3Utils = {
             // reject(data)
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -250,6 +267,8 @@ let web3Utils = {
               // reject(data)
             }
             resolve(data)
+          }).catch(err => {
+            console.log(err)
           })
         } else {
           setTimeout(() => {
@@ -306,6 +325,8 @@ let web3Utils = {
             data = {msg: 'Error', error: cbData.Tip}
             reject(data)
           }
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -329,6 +350,8 @@ let web3Utils = {
             data = {msg: 'Error', error: cbData.Tip}
             reject(data)
           }
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -353,6 +376,8 @@ let web3Utils = {
             data = {msg: 'Error', error: cbData.Tip}
             reject(data)
           }
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -381,6 +406,8 @@ let web3Utils = {
             data = {msg: 'Error', info: []}
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -408,6 +435,8 @@ let web3Utils = {
             data = {msg: 'Error', info: 'Failure'}
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -434,6 +463,8 @@ let web3Utils = {
             }
             data = {msg: 'Success', info: arr}
             resolve(data)
+          }).catch(err => {
+            console.log(err)
           })
         } else {
           setTimeout(() => {
@@ -463,6 +494,8 @@ let web3Utils = {
             data = {msg: 'Error', error: cbData.Error}
             reject(data)
           }
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}
@@ -488,6 +521,8 @@ let web3Utils = {
             data = {msg: 'Error', info: 'Failure'}
           }
           resolve(data)
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         console.log(error)
@@ -511,6 +546,8 @@ let web3Utils = {
             data = {msg: 'Error', error: cbData.Tip}
             reject(data)
           }
+        }).catch(err => {
+          console.log(err)
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}

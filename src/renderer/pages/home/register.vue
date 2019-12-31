@@ -13,7 +13,7 @@
 
       <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
-          <el-form ref="userInfoForm" :rules="rules" :model="registerObj" label-width="120px" label-position="top">
+          <el-form ref="userInfoForm" :rules="rules" :model="registerObj" label-width="120px" label-position="top" @submit.native.prevent>
             <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="registerObj.username" @input="validInfo('username')"></el-input>
             </el-form-item>
@@ -24,7 +24,7 @@
               <el-input type="password" v-model="registerObj.password2" @input="validInfo('password2')"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').create}}</el-button>
+              <el-button type="primary" native-type="submit" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').create}}</el-button>
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
