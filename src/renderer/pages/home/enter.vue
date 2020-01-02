@@ -11,8 +11,8 @@
         <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
       </div>
       <div class="W300 mt-20 flex-c flex-wrap">
-        <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
-        <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
+        <set-enode></set-enode>
+        <!-- <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
         <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl">
           <el-option
             v-for="item in netUrlArr"
@@ -22,7 +22,7 @@
           </el-option>
         </el-select>
         <el-button type="primary" class="mt-20" @click="setNet">设置节点</el-button>
-        <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)">复制ENODE</el-button>
+        <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)">复制ENODE</el-button> -->
       </div>
       <!-- <div class="WW100 mt-20 flex-c flex-wrap">
         <el-input v-model="netUrl" class="mt-30"></el-input>
@@ -38,18 +38,19 @@
 
 <script>
 import wButton from '@/components/btn/index'
+import setEnode from '@/components/setEnode/index'
 import {computedPub} from '@/assets/js/pages/public'
-import {insertNode, findNode} from '@/db/node'
+// import {insertNode, findNode} from '@/db/node'
 export default {
   name: '',
   data () {
     return {
-      viewEnode: '',
-      netUrl: this.$$.config.serverRPC,
-      netUrlArr: []
+      // viewEnode: '',
+      // netUrl: this.$$.config.serverRPC,
+      // netUrlArr: []
     }
   },
-  components: {wButton},
+  components: {wButton, setEnode},
   computed: {
     ...computedPub
   },
@@ -62,8 +63,8 @@ export default {
     }
   },
   mounted () {
-    this.viewEnode = this.eNode
-    this.getNetUrl()
+    // this.viewEnode = this.eNode
+    // this.getNetUrl()
 
     // let val = 13242354
     // val = this.$$.toWei(val, 'ETH')
@@ -113,60 +114,6 @@ export default {
         console.log('end')
       }
     },
-    getNetUrl () {
-      findNode().then(res => {
-        // console.log(res)
-        this.netUrlArr = [{
-          url: this.$$.config.serverRPC
-        }]
-        if (res.length > 0) {
-          this.netUrlArr.push(...res)
-        }
-        this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
-      })
-    },
-    saveRpcDB () {
-      let url = this.netUrl
-      findNode({url: url}).then(res => {
-        if (res.length <= 0 && url !== this.$$.config.serverRPC) {
-          insertNode({
-            url: url
-          }).then(res => {
-            // console.log(res)
-            this.getNetUrl()
-          })
-        }
-      })
-    },
-    setNet () {
-      let url = this.netUrl
-      try {
-        this.$$.web3.setProvider(this.netUrl)
-        this.$$.web3.dcrm.getEnode().then(res => {
-          let cbData = res
-          cbData = JSON.parse(cbData)
-          // console.log(cbData)
-          if (cbData.Status === "Success") {
-            let eNodeInit = cbData.Data.Enode
-            this.viewEnode = eNodeInit
-            this.saveRpcDB()
-            this.$store.commit('setServerRPC', {info: url})
-            this.$store.commit('setEnode', {info: eNodeInit})
-            this.msgSuccess(this.$t('success').s_4)
-          } else {
-            this.viewEnode = ''
-            this.msgError(this.$t('error').err_9)
-          }
-        }).catch(err => {
-          console.log(err)
-          this.viewEnode = ''
-          this.msgError(this.$t('error').err_9)
-        })
-      } catch (error) {
-        console.log(error)
-        this.msgError(this.$t('error').err_9)
-      }
-    }
   }
 }
 </script>

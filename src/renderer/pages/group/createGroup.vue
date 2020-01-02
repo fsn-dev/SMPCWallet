@@ -128,6 +128,13 @@ export default {
       console.log(res)
     }
   },
+  watch: {
+    safeMode (cur) {
+      if (Number(cur) === 1) {
+        this.toUrl('/person')
+      }
+    }
+  },
   computed: {
     ...computedPub,
   },

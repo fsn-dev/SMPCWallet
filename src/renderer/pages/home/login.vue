@@ -2,11 +2,8 @@
   <div class="flex-c bg"  v-loading="loading.wait" element-loading-text="Loading……">
     <div class="user-form-box">
       <div class="user-form-title">
-        <div class="logo flex-sc">
-          <img src="@etc/img/logo/logo.svg">
-          <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
-        </div>
-        <router-link to="/" class="back">&lt;{{$t('btn').back}}</router-link>
+        <logo></logo>
+        <router-link to="/" class="back"><i class="el-icon-arrow-left"></i>{{$t('btn').back}}</router-link>
         <h3 class="title">{{$t('title').login}}</h3>
       </div>
 
@@ -40,7 +37,6 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
-
 import {findAccount} from '@/db/accounts'
 export default {
   name: '',

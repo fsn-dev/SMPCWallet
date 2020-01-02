@@ -3,11 +3,8 @@
     <div class="user-form-box">
 
       <div class="user-form-title">
-        <div class="logo flex-sc">
-          <img src="@etc/img/logo/logo.svg">
-          <p class="appTitle ml-10" v-html="$t('title').walletTitle"></p>
-        </div>
-        <router-link to="/" class="back">&lt;{{$t('btn').back}}</router-link>
+        <logo></logo>
+        <router-link to="/" class="back"><i class="el-icon-arrow-left"></i>{{$t('btn').back}}</router-link>
         <h3 class="title">{{$t('title').register}}</h3>
       </div>
 
@@ -42,7 +39,6 @@
 <script>
 import regExp from '@etc/js/config/RegExp'
 import headerImg from './js/headerImg'
-
 import {insertAccount, findAccount} from '@/db/accounts'
 export default {
   name: '',

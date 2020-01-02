@@ -161,8 +161,10 @@ Vue.prototype.quitApp = function() {
 
 import pwdSure from '@/pages/public/pwdSure'
 import wDrawer from '@/components/drawer/index'
+import logo from '@/components/logo/index'
 Vue.component('pwdSure', pwdSure)
 Vue.component('wDrawer', wDrawer)
+Vue.component('logo', logo)
 
 /* eslint-disable no-new */
 new Vue({

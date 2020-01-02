@@ -60,15 +60,6 @@
           height: 100%;
         }
       }
-      .user-list {
-        width: size(200);position: absolute;top: size($hImg + 10);right: size(8);background: #fff;padding: size(8) size(0);border-radius: size(3);
-        .item {
-          padding: size(8) size(15);text-align: left;cursor: pointer;font-size: $text-normal;line-height: size(21);
-          &:hover {
-            background: #f1f1f1;
-          }
-        }
-      }
     }
   }
 }

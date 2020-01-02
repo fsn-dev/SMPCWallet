@@ -91,6 +91,13 @@ export default {
   computed: {
     ...computedPub,
   },
+  watch: {
+    safeMode (cur) {
+      if (Number(cur) === 1) {
+        this.toUrl('/person')
+      }
+    }
+  },
   sockets: {
     GroupAccountsFind (res) {
       console.log(res)

@@ -2,10 +2,7 @@
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="header-top-box flex-bc">
       <div class="header-logo flex-c">
-        <router-link :to="typeof token !== 'undefined' ? (Number(this.safeMode) ? '/person' : '/group') : '/'" class="logoImg flex-sc">
-          <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
-          <p class="appTitle ml-10 flex-c font18" v-html="$t('title').walletTitle"></p>
-        </router-link>
+        <logo></logo>
       </div>
 
       <div class="flex-c header-top-account">
@@ -36,19 +33,20 @@
         
         <div class="header-top-user">
           <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
-          <div class="headImg box_Wshadow1 flex-c" @click="isUserView = !isUserView"><img :src="headerImg"></div>
-          <ul class="user-list box_Wshadow1" v-show="isUserView">
+          <!-- <div class="headImg box_Wshadow1 flex-c" @click="isUserView = !isUserView"><img :src="headerImg"></div> -->
+          <div class="headImg box_Wshadow1 flex-c" @click="drawer.user = true"><img :src="headerImg"></div>
+          <!-- <ul class="user-list box_Wshadow1" v-show="isUserView">
             <li class="item" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus mr-5"></i>{{$t('btn').createAccount}}</li>
             <li class="item" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user mr-5"></i>{{$t('title').personAccount}}</li>
             <li class="item" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money mr-5"></i>{{$t('title').groupAccount}}</li>
-            <li class="item" @click="quitApp()" :title="$t('title').quit"><i class="el-icon-s-unfold mr-5"></i>{{$t('title').quit}}</li>
-          </ul>
+            <li class="item" @click="quitApp()" :title="$t('title').quit"><i class="el-icon-s-unfold mr-5"></i>{{$t('title').quit}}</li> -->
+          <!-- </ul> -->
         </div>
       </div>
     </header>
     <input type="text" v-model="address" id="addressCopy" class="fixedHide">
     
-    <section id="boxContent_box" @click="changeUserView">
+    <section id="boxContent_box">
       <transition name="fade">
         <router-view v-if="isRouterAlive" ref="nav"></router-view>
       </transition>
@@ -58,8 +56,8 @@
     <w-drawer v-model="drawer.create" v-if="drawer.create">
       <create-account :formBoxClass="false" @closeModal="modalClick"></create-account>
     </w-drawer>
-    <w-drawer v-model="drawer.user" v-if="drawer.user">
-
+    <w-drawer v-model="drawer.user" v-if="drawer.user" :isShowLogo="false">
+      <person-info @closeDrawer="drawer.user = false"></person-info>
     </w-drawer>
   </div>
 </template>
@@ -70,8 +68,9 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import createAccount from '@/pages/group/createGroup'
 import {findHeaderImg} from '@/db/headerImg'
+import createAccount from '@/pages/group/createGroup'
+import personInfo from '@/components/content/personInfo'
 export default {
   name: 'index',
   provide () {
@@ -92,7 +91,7 @@ export default {
         t: 0
       },
       intervalSwitch: '',
-      isUserView: false,
+      // isUserView: false,
       newsActive: 0,
       drawer: {
         user: false,
@@ -110,7 +109,7 @@ export default {
   computed: {
     ...computedPub
   },
-  components: {createAccount},
+  components: {createAccount, personInfo},
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
@@ -147,9 +146,9 @@ export default {
         this.newsActive = 0
       }
     },
-    changeUserView () {
-      this.isUserView = false
-    },
+    // changeUserView () {
+    //   this.isUserView = false
+    // },
     changeDn () {
       if (Number(this.dayAndNight)) {
         this.$store.commit('setDayAndNight', {info: '0'})
@@ -197,7 +196,7 @@ export default {
       // } else {
       //   this.toUrl('/group')
       // }
-      this.changeUserView()
+      // this.changeUserView()
       this.$store.commit('setSafeMode', {info: type})
     },
     copyAddress (id, textId) {
