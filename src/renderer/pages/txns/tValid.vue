@@ -63,7 +63,10 @@ export default {
   sockets: {
     GroupFindTxns (res) {
       console.log(res)
-    }
+    },
+    changeGroupMemberTxnsStatus (res) {
+      console.log(res)
+    },
   },
   mounted () {
     this.urlParams = this.$route.query
@@ -158,9 +161,10 @@ export default {
           let cbData = res
           console.log(res)
           if (cbData.msg === 'Success') {
-            this.$socket.emit('GroupAccountsEdit', {
+            this.$socket.emit('changeGroupMemberTxnsStatus', {
               key: this.urlParams.Key,
               kId: this.address,
+              eNode: this.eNode,
               status: this.applyStatus === 'AGREE' ? 5 : 4
             })
             this.msgSuccess('Success!')

@@ -62,6 +62,7 @@ export default {
         this.$emit('tNewsTip', this.newsList.length)
         this.loading.list = false
       }).catch(err => {
+        console.log(err)
         this.msgError(err.error)
         this.loading.list = false
       })

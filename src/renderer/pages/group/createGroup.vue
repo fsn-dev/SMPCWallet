@@ -14,22 +14,22 @@
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
             }">
-            <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode" :disabled="gID ? true : false">
+            <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode">
               <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
-            v-for="(eNode, index) in groupForm.eNode" :label="$t('label').admins + (index + 1)" :key="index" :prop="'eNode.' + index + '.value'"
+            v-for="(item, index) in groupForm.eNode" :label="$t('label').admins + (index + 1)" :key="index" :prop="'eNode.' + index + '.value'"
             :rules="{
               required: true, message: $t('warn').w_7, trigger: 'blur'
             }"
           >
             <div class="flex-bc">
-              <el-input v-model="eNode.value" @blur="changeState(eNode, index)" :disabled="gID || eNode.isSelf ? true : false" :title="eNode.value"></el-input>
+              <el-input v-model="item.value" @blur="changeState(item, index)" :disabled="item.value === eNode || item.isSelf ? true : false" :title="item.value"></el-input>
             </div>
             <div class="flex-sc" v-if="reload">
-              <span class="color_green" v-if="eNode.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-              <span class="color_red" v-if="eNode.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+              <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+              <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
             </div>
           </el-form-item>
           <el-form-item class="mt-30">

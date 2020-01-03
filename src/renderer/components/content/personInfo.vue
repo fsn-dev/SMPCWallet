@@ -5,7 +5,7 @@
       <div class="quit-box cursorP" @click="quitApp()"> {{$t('title').quit}} </div>
     </div>
     <ul class="user-list">
-      <li class="item flex-sc" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus icon"></i>{{$t('btn').createAccount}}</li>
+      <li class="item flex-sc" @click="createAccount" :title="$t('btn').createAccount"><i class="el-icon-plus icon"></i>{{$t('btn').createAccount}}</li>
       <li class="item flex-sc" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user icon"></i>{{$t('title').personAccount}}</li>
       <li class="item flex-sc" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money icon"></i>{{$t('title').groupAccount}}</li>
     </ul>
@@ -57,7 +57,21 @@ export default {
   methods: {
     closeDrawer () {
       this.$emit('closeDrawer')
-    }
+    },
+    createAccount () {
+      this.$store.commit('setSafeMode', {info: '0'})
+      this.toUrl('/createGroup')
+      this.closeDrawer()
+    },
+    changeMode (type) {
+      if (Number(type)) {
+        this.toUrl('/person')
+      } else {
+        this.toUrl('/group')
+      }
+      this.$store.commit('setSafeMode', {info: type})
+      this.closeDrawer()
+    },
   }
 }
 </script>

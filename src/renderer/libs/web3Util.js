@@ -46,7 +46,7 @@ let web3Utils = {
         web3.dcrm.getEnodeStatus(eNode).then(res => {
           let cbData = res
           cbData = JSON.parse(cbData)
-          // console.log(cbData)
+          console.log(cbData)
           if (cbData.Status === 'Success') {
             data = 'OnLine'
           } else {

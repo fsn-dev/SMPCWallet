@@ -16,7 +16,7 @@
         </el-table-column>
         <el-table-column :label="$t('state').name" width="90" align="center">
           <template slot-scope="scope">
-            <span :class="scope.row.status === 0 || scope.row.status === 1 ? 'color_green' : 'color_red'">{{$$.changeState(scope.row.status)}}</span>
+            <span :class="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(scope.row.status)}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').coinType" width="90" align="center">
@@ -115,7 +115,7 @@ export default {
         this.loading.history = false
       }
     },
-    changeGroupTxnsEdit (res) {
+    changeGroupTxnsStatus (res) {
       console.log(res)
     }
   },
@@ -170,7 +170,12 @@ export default {
       this.$socket.emit(this.baseUrl, data)
     },
     /**
-     * 0: Pending; 1: Success; 2: Failure; 4: Refuse; 5: Agree; 6: Timeout
+     * 0: Pending;
+     * 1: Success;
+     * 2: Failure;
+     * 4: Refuse;
+     * 5: Agree;
+     * 6: Timeout
      */
     formatData (data) {
       this.tableData = []
@@ -200,42 +205,47 @@ export default {
             }
             console.log(stateObj)
             if (stateObj.r > 0) {
-              state = 5
-              this.setTxnsDBState(dataObj.key, i, '', state)
+              state = 4
+              this.setTxnsDBState(dataObj._id, i, '', state)
             } else if (stateObj.a === dataObj.member.length) {
-              state = 1
-              this.getTxnsHash(dataObj.key, i)
+              state = 5
+              this.getTxnsHash(dataObj._id, dataObj.key, i)
             }
           } else if (dataObj.status === 1 && !dataObj.hash) {
-            this.getTxnsHash(dataObj.key, i)
+            this.getTxnsHash(dataObj._id, dataObj.key, i)
           } else if ((nowTime - dataObj.timestamp) >= timeout && dataObj.status !== 6) {
             state = 6
             dataObj.status = state
-            this.setTxnsDBState(dataObj.key, i, '', state)
+            this.setTxnsDBState(dataObj._id, i, '', state)
           }
+        } else if (dataObj.status === 5 && !dataObj.hash) {
+          this.getTxnsHash(dataObj._id, dataObj.key, i)
         }
         // console.log(dataObj.status)
         this.tableData.push(dataObj)
         this.loading.history = false
       }
     },
-    getTxnsHash (key, index) {
+    getTxnsHash (id, key, index) {
       this.$$.getLockOutStatus(key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Success') {
-          this.setTxnsDBState(key, index, hash, 1)
+          this.setTxnsDBState(id, index, hash, 1)
           this.tableData[index].hash = hash
+        } else {
+          this.setTxnsDBState(id, index, '', 2)
+          this.tableData[index].status = 2
         }
       }).catch(err => {
         this.msgError(err.error.toString())
       })
     },
-    setTxnsDBState (key, index, hash, status) {
+    setTxnsDBState (id, index, hash, status) {
       // console.log('key',key)
       // console.log('index',index)
       // console.log('status',status)
-      this.$socket.emit('changeGroupTxnsEdit', {
-        key: key,
+      this.$socket.emit('changeGroupTxnsStatus', {
+        id: id,
         hash: hash,
         status: status
       })

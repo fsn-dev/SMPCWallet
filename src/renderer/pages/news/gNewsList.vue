@@ -51,6 +51,7 @@ export default {
       this.$$.reqAccountList().then(res => {
         console.log(res)
         this.$$.getGroup().then(gList => {
+          console.log(gList)
           this.gInfo = {}
           if (gList.msg === 'Success') {
             for (let obj of gList.info) {
@@ -59,16 +60,18 @@ export default {
           }
           this.newsList = []
           for (let obj of res.info) {
-            obj.Enodes = this.gInfo[obj.GroupId].Enodes
+            obj.Enodes = this.gInfo[obj.GroupId] && this.gInfo[obj.GroupId].Enodes ? this.gInfo[obj.GroupId].Enodes : []
             this.newsList.push(obj)
           }
           this.$emit('gNewsTip', this.newsList.length)
           this.loading.list = false
         }).catch(err => {
+          console.log(err)
           this.msgError(err.error)
           this.loading.list = false
         })
       }).catch(err => {
+        console.log(err)
         this.msgError(err.error)
         this.loading.list = false
       })
