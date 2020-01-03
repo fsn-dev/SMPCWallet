@@ -57,7 +57,8 @@ export default {
 		approval: '审批',
 		create: '创建',
 		newBuild: '新建',
-		set: '设置'
+		set: '设置',
+		setName: '设置别名'
 	},
 	loading: {
 		l_1: '账户获取中……'
@@ -105,7 +106,8 @@ export default {
 		group: '组',
 		txnHistory: '交易历史',
 		groupHistory: '创建历史',
-		IP: 'IP地址'
+		IP: 'IP地址',
+		aliases: '别名'
 	},
 	state: {
 		name: '状态',

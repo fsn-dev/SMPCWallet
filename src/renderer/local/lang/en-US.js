@@ -55,7 +55,8 @@ export default {
 		approval: 'Approval',
 		create: 'Create',
 		newBuild: 'Newly build',
-		set: 'Set'
+		set: 'Set',
+		setName: 'Setting aliases'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -103,7 +104,8 @@ export default {
 		group: 'Group',
 		txnHistory: 'History',
 		groupHistory: 'Create history',
-		IP: 'IP'
+		IP: 'IP',
+		aliases: 'Aliases'
 	},
 	state: {
 		name: 'Status',

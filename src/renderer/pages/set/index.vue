@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container flex-bc pt-20 pb-20">
+  <div class="boxConntent1 container relative set-box">
     <div class="s-list-box">
       <ul>
         <li class="item" :class="navActive === 0 ? 'active' : ''" @click="toUrl('/set')">{{$t('title').netSet}}</li>
@@ -13,8 +13,13 @@
 </template>
 
 <style lang="scss" scoped>
+$lw: size(280);
+$ptb: size(20);
+.set-box {
+  padding: $ptb size(15) $ptb $lw;
+}
 .s-list-box {
-  width: 30%;max-width: 300px;min-height: 200px;height: 100%;padding: size(0) 0;overflow: auto;border:size(1) solid #f2f2f2;
+  width: $lw;min-height: 200px;overflow: auto;border:size(1) solid #f2f2f2;position:absolute;top:$ptb;left:0;bottom:$ptb;
   .item {
     width: 100%; cursor: pointer;padding: size(8) size(12);color:$color-gray;
     &:hover{
