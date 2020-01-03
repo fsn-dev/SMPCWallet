@@ -26,12 +26,9 @@ export default {
       // console.log(this.language)
     },
     serverRPC () {
-      // console.log(this.serverRPC)
       let url = this.serverRPC
       this.$$.web3.setProvider(url)
       this.getEnode()
-      // console.log(url)
-      // console.log(this.$$.web3)
     }
   },
   computed: {

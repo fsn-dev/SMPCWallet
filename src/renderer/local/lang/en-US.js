@@ -26,13 +26,16 @@ export default {
 		w_12: 'Data is empty!',
 		w_13: 'Login timeout, please login again!',
 		w_14: 'Please enter the destination address',
-		w_15: 'Please enter the amount'
+		w_15: 'Please enter the amount',
+		w_16: 'Cancelled',
+		w_17: 'Can not be empty',
 	},
 	success: {
 		s_1: 'Created successfully!',
 		s_2: 'Replication success',
 		s_3: 'Account creation request sent successfully!',
 		s_4: 'Connection succeeded!',
+		s_5: 'Delete successfully!',
 	},
 	btn: {
 		confirm: 'Confirm',
@@ -51,7 +54,8 @@ export default {
 		refuse: 'Refuse',
 		approval: 'Approval',
 		create: 'Create',
-		newBuild: 'Newly build'
+		newBuild: 'Newly build',
+		set: 'Set'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -70,7 +74,9 @@ export default {
 		quit: 'Exit',
 		createGroup: 'Create validation',
 		groupNews: 'Managed Account News',
-		txnsNews: 'Transaction News'
+		txnsNews: 'Transaction News',
+		accountList: 'Account list',
+		netSet: 'Network settings'
 	},
 	label: {
 		username: 'User name',
@@ -96,7 +102,8 @@ export default {
 		from: 'From',
 		group: 'Group',
 		txnHistory: 'History',
-		groupHistory: 'Create history'
+		groupHistory: 'Create history',
+		IP: 'IP'
 	},
 	state: {
 		name: 'Status',
@@ -109,6 +116,8 @@ export default {
 		new: 'New'
 	},
 	tip: {
+		name: '提示',
 		walletTip: 'Welcome to SMPC wallet 1.0 <br> please create a wallet or import a wallet',
+		deleteNode: 'This operation will permanently delete this node. Do you want to continue?'
 	}
 }

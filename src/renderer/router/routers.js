@@ -124,7 +124,7 @@ export default [
       },
       {
         path: '/person/receive',
-        name: 'receive',
+        name: 'personReceive',
         meta: {
           title: '接收',
           notCache: true
@@ -158,7 +158,7 @@ export default [
           },
           {
             path: '/group/receive',
-            name: 'receive',
+            name: 'groupReceive',
             meta: {
               title: '接收',
               notCache: true
@@ -268,6 +268,41 @@ export default [
           notCache: true
         },
         component: resolve => require.ensure([], () => resolve(require('@/pages/news/gNewsList')) )
+      }
+    ]
+  },
+  {
+    path: '/set',
+    component: Content,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '设置',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/set/index')) ),
+        children: [
+          {
+            path: '/',
+            meta: {
+              title: '设置网络',
+              notCache: true
+            },
+            component: resolve => require.ensure([], () => resolve(require('@/pages/set/network')) ),
+          },
+          {
+            path: '/set/groupSet',
+            meta: {
+              title: '设置组信息',
+              notCache: true
+            },
+            component: resolve => require.ensure([], () => resolve(require('@/pages/set/group')) ),
+          }
+        ]
       }
     ]
   },

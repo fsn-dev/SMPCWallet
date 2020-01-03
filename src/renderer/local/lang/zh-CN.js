@@ -26,13 +26,16 @@ export default {
 		w_12: '数据为空！',
 		w_13: '登陆超时，请重新登陆！',
 		w_14: '请输入目标地址',
-		w_15: '请输入金额'
+		w_15: '请输入金额',
+		w_16: '已取消',
+		w_17: '不能为空',
 	},
 	success: {
 		s_1: '创建成功！',
 		s_2: '复制成功',
 		s_3: '创建账户请求发送成功！',
 		s_4: '连接成功！',
+		s_5: '删除成功！',
 	},
 	btn: {
 		confirm: '确认',
@@ -53,7 +56,8 @@ export default {
 		refuse: '拒绝',
 		approval: '审批',
 		create: '创建',
-		newBuild: '新建'
+		newBuild: '新建',
+		set: '设置'
 	},
 	loading: {
 		l_1: '账户获取中……'
@@ -72,7 +76,9 @@ export default {
 		quit: '安全退出',
 		createGroup: '创建确认',
 		groupNews: '共管账户消息',
-		txnsNews: '交易消息'
+		txnsNews: '交易消息',
+		accountList: '账户列表',
+		netSet: '网络设置'
 	},
 	label: {
 		username: '用户名',
@@ -98,7 +104,8 @@ export default {
 		from: '来自',
 		group: '组',
 		txnHistory: '交易历史',
-		groupHistory: '创建历史'
+		groupHistory: '创建历史',
+		IP: 'IP地址'
 	},
 	state: {
 		name: '状态',
@@ -111,6 +118,8 @@ export default {
 		new: '新'
 	},
 	tip: {
+		name: '提示',
 		walletTip: '欢迎使用SMPC Wallet 1.0<br>请创建一个钱包或者导入一个钱包',
+		deleteNode: '此操作将永久删除该节点, 是否继续?'
 	}
 }

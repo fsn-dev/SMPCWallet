@@ -55,6 +55,8 @@ let web3Utils = {
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = 'OffLine'
+          resolve(data)
         })
       } catch (error) {
         console.log(error)
@@ -77,8 +79,11 @@ let web3Utils = {
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = 0
+          resolve(data)
         })
       } catch (error) {
+        console.log(error)
         data = 0
         resolve(data)
       }
@@ -98,8 +103,11 @@ let web3Utils = {
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = 0
+          resolve(data)
         })
       } catch (error) {
+        console.log(error)
         data = 0
         resolve(data)
       }
@@ -138,32 +146,6 @@ let web3Utils = {
       })
     })
   },
-  // async getPendingGroup () {
-  //   let data = {msg: '', info: ''}
-  //   return new Promise((resolve, reject) => {
-  //     try {
-  //       if (eNodeInit) {
-  //         let arr = [], cbData = ''
-  //         web3.dcrm.getGroupNodeStatus(eNodeInit).then(res => {
-  //           cbData = JSON.parse(res)
-  //           if (cbData.Status !== 'Error') {
-  //             arr = cbData.Data.GroupList && cbData.Data.GroupList.length > 0 ? cbData.Data.GroupList : []
-  //           }
-  //           data = {msg: 'Success', info: arr}
-  //           resolve(data)
-  //         })
-  //       } else {
-  //         setTimeout(() => {
-  //           this.getPendingGroup()
-  //         }, this.againTmie)
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //       data = {msg: 'Error', error: error.toString()}
-  //       reject(data)
-  //     }
-  //   })
-  // },
   async getGroupPerson () {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
@@ -182,6 +164,8 @@ let web3Utils = {
             }
           }).catch(err => {
             console.log(err)
+            data = {msg: 'Error', error: cbData.Tip}
+            reject(data)
           })
         } else {
           setTimeout(() => {
@@ -204,15 +188,14 @@ let web3Utils = {
           cbData = res
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data.result.Group}
-            // resolve(data)
           } else {
             data = {msg: 'Success', info: []}
-            // data = {msg: 'Error', error: cbData.Tip}
-            // reject(data)
           }
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -231,17 +214,15 @@ let web3Utils = {
           cbData = res
           // console.log(cbData)
           if (cbData.Status !== 'Error') {
-            // data = {msg: 'Success', info: cbData.Data.result.Balances, address: cbData.Data.Address}
             data = {msg: 'Success', info: cbData.Data.result.Balances}
-            // resolve(data)
           } else {
             data = {msg: 'Success', info: []}
-            // data = {msg: 'Error', error: cbData.Tip}
-            // reject(data)
           }
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -327,6 +308,8 @@ let web3Utils = {
           }
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -352,6 +335,8 @@ let web3Utils = {
           }
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -378,6 +363,8 @@ let web3Utils = {
           }
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -408,6 +395,8 @@ let web3Utils = {
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -437,6 +426,8 @@ let web3Utils = {
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -465,6 +456,8 @@ let web3Utils = {
             resolve(data)
           }).catch(err => {
             console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
           })
         } else {
           setTimeout(() => {
@@ -496,6 +489,8 @@ let web3Utils = {
           }
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}
@@ -523,6 +518,8 @@ let web3Utils = {
           resolve(data)
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -548,6 +545,8 @@ let web3Utils = {
           }
         }).catch(err => {
           console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}

@@ -34,7 +34,24 @@ function findNode (params) {
   })
 }
 
+function removeNode (params) {
+  params = params ? params : {}
+  return new Promise((resolve, reject) => {
+    // console.log(params)
+    node.remove(params, {}, (err, res) => {
+      if (err) {
+        // console.log(err)
+        reject(err)
+      } else {
+        // console.log(res)
+        resolve(res)
+      }
+    })
+  })
+}
+
 export {
   insertNode,
-  findNode
+  findNode,
+  removeNode
 }
