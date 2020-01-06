@@ -84,7 +84,7 @@ export default {
             this.viewEnode = eNodeInit
             this.saveRpcDB()
             this.$store.commit('setServerRPC', {info: url})
-            this.$store.commit('setEnode', {info: eNodeInit})
+            this.$store.commit('setEnode', eNodeInit)
             this.msgSuccess(this.$t('success').s_4)
           } else {
             this.viewEnode = ''
