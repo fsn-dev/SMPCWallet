@@ -24,7 +24,7 @@ function findHeaderImg (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    headerImg.find(params, (err, res) => {
+    headerImg.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)

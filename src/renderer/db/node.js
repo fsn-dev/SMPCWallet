@@ -22,7 +22,7 @@ function findNode (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    node.find(params, (err, res) => {
+    node.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
