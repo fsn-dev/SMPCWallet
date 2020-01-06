@@ -63,9 +63,9 @@ export default {
     ...computedPub
   },
   mounted () {
-    // findAccount({}).then(res => {
-    //   console.log(res)
-    // })
+    findAccount({}).then(res => {
+      console.log(res)
+    })
     // insertAccount({
     //   name: 'test',
     //   ks: '123',

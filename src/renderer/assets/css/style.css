@@ -53,5 +53,5 @@ body{display:block;padding:0;margin:0;}
 .isErc20 {position:absolute;top:-5px;right: 0;font-size: 10px;color:#fff;font-style: italic;padding:0 5px;background: #004a7c;border-radius: 5px;transform: scale(0.6);}
 .isErc20_1{top: 0px;}
 
-.mzindex, .el-select-dropdown.el-popper {z-index: 2009!important}
+/* .mzindex, .el-select-dropdown.el-popper {z-index: 3009!important} */
 

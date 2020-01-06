@@ -24,7 +24,7 @@
     <el-dialog :title="$t('btn').setName" :visible.sync="eDialog.setName">
       <el-form>
         <el-form-item :label="$t('label').aliases">
-          <el-input v-model="gName"></el-input>
+          <el-input v-model="gName" clearable></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -62,7 +62,7 @@ export default {
         setName: false
       },
       gName: '',
-      selectionGid: ''
+      selectionGinfo: ''
     }
   },
   computed: {
@@ -78,36 +78,37 @@ export default {
         this.getGroup = []
         let arr = res.info ? res.info : []
         for (let i = 0, len = arr.length; i< len; i++) {
-          // this.getGroup.push(arr[i])
-          this.getGName(arr[i])
+          arr[i].name = arr[i].name ? arr[i].name : arr[i].Gid
+          this.getGroup.push(arr[i])
+          this.getGName(arr[i], i)
         }
-        // this.getGroup = []
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)
       })
     },
-    getGName (item) {
+    getGName (item, i) {
       findGroup({gId: item.Gid}).then(res => {
         console.log(res)
         if (res.length > 0) {
-          item.name = res[0].name
+          this.getGroup[i].name = res[0].name
         }
-        this.getGroup.push(item)
       })
     },
     openEditPage (item) {
       this.eDialog.setName = true
-      this.selectionGid = item.Gid
+      this.selectionGinfo = item
+      this.gName = item.name
     },
     editGroup () {
       uodateGroup({
-        gId: this.selectionGid,
+        gId: this.selectionGinfo.Gid,
         name: this.gName
       }).then(res => {
         console.log(res)
         this.eDialog.setName = false
         this.msgSuccess(this.$t('success').s_5)
+        this.getGroupData()
       })
     }
   }

@@ -4,10 +4,10 @@
       <el-button>Create Group</el-button>
     </div> -->
     <div class="g-list-box">
-      <ul class="boxConntent1" v-if="gList.length > 0">
-        <li class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" v-for="(item, index) in gList" :key="index" @click="changeGroup(item)">
-          <div class="label">{{item.publicKey ? $$.titleCase(item.publicKey) : 'G'}}</div>
-          {{$$.cutOut(item.publicKey, 10,4)}}
+      <ul class="boxConntent1" v-if="gAccountList.length > 0">
+        <li class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)" :title="item.publicKey">
+          <div class="label">{{item.name ? $$.titleCase(item.name) : 'G'}}</div>
+          {{item.name.length > 16 ? $$.cutOut(item.name, 10 ,4) : item.name}}
         </li>
       </ul>
       <div class="flex-c boxConntent1" v-else>
@@ -57,11 +57,12 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {findGaccount} from '@/db/gAccount'
 export default {
   name: '',
   data () {
     return {
-      gList: [],
+      gAccountList: [],
       publicKey: '',
       gID: '',
       loading: {
@@ -95,20 +96,25 @@ export default {
     initGroup () {
       this.$$.getAccounts('', this.safeMode).then(res => {
         // console.log(res)
-        this.gList = []
-        let arr = res.info ? res.info : [], arr1 = []
+        this.gAccountList = []
+        let arr = res.info ? res.info : [], arr1 = [], arr2 = []
         for (let obj1 of arr) {
           for (let obj2 of obj1.Accounts) {
-            // console.log(obj2)
-            // console.log(arr1.includes(obj2))
             if (!arr1.includes(obj2)) {
-              this.gList.push({
+              let obj3 = {
                 publicKey: obj2,
-                gID: obj1.GroupID
-              })
+                gID: obj1.GroupID,
+                name: obj2
+              }
+              arr2.push(obj3)
               arr1.push(obj2)
             }
           }
+        }
+
+        for (let i = 0, len = arr2.length; i < len; i++) {
+          this.gAccountList.push(arr2[i])
+          this.getGName(arr2[i], i)
         }
         if (this.$route.query.gID) {
           this.gID = this.$route.query.gID
@@ -119,6 +125,14 @@ export default {
           this.msgError(err.error)
         }
         this.loading.list = false
+      })
+    },
+    getGName (item, i) {
+      findGaccount({publicKey: item.publicKey}).then(res => {
+        console.log(res)
+        if (res.length > 0) {
+          this.gAccountList[i].name = res[0].name
+        }
       })
     },
     changeGroup (item) {

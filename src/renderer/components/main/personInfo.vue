@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1">
+  <div class="boxConntent1 plr15">
     <div class="flex-bc t-logo-box">
       <logo @click-logo="closeDrawer"></logo>
       <div class="quit-box cursorP" @click="quitApp()"> {{$t('title').quit}} </div>
@@ -34,7 +34,8 @@
   }
 }
 .set-node-box {
-  position: absolute;left: 0;right: 0;bottom: 0;
+  $lrb: size(15);
+  position: absolute;left: $lrb;right: $lrb;bottom: $lrb;
 }
 </style>
 

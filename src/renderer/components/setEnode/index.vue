@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading.setNode" element-loading-text="Loading……">
     <div class="WW100 flex-c flex-wrap">
       <!-- <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input> -->
       <div class="e-node-box">
@@ -35,7 +35,10 @@ export default {
     return {
       viewEnode: '',
       netUrl: this.$$.config.serverRPC,
-      netUrlArr: []
+      netUrlArr: [],
+      loading: {
+        setNode: false
+      }
     }
   },
   computed: {
@@ -72,9 +75,13 @@ export default {
       })
     },
     setNet () {
+      this.loading.setNode = true
       let url = this.netUrl
+      if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+        url = this.netUrl = 'http://' + url
+      }
       try {
-        this.$$.web3.setProvider(this.netUrl)
+        this.$$.web3.setProvider(url)
         this.$$.web3.dcrm.getEnode().then(res => {
           let cbData = res
           cbData = JSON.parse(cbData)
@@ -90,14 +97,17 @@ export default {
             this.viewEnode = ''
             this.msgError(this.$t('error').err_9)
           }
+          this.loading.setNode = false
         }).catch(err => {
           console.log(err)
           this.viewEnode = ''
           this.msgError(this.$t('error').err_9)
+          this.loading.setNode = false
         })
       } catch (error) {
         console.log(error)
         this.msgError(this.$t('error').err_9)
+        this.loading.setNode = false
       }
     }
   }

@@ -22,11 +22,13 @@ $coinSize: 25;
 }
 
 .g-member-list-box {
+  padding: size(0) size(15);
   .item {
     width: 100%;padding: size(10) size(0);color:$color-gray-sm;
   }
 }
 .node-select-box {
+  padding: size(0) size(15);
   .el-checkbox-group {
     .el-checkbox {
       margin-bottom: size(20);

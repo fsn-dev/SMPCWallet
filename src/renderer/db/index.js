@@ -52,6 +52,11 @@ const group = new Datastore({
   filename: path.join(remote.app.getPath('userData'), '/db/group.db')
 })
 
+const gAccount = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/db/gAccount.db')
+})
+
 
 setTimeout(() => {
   ks.ensureIndex({fieldName: 'name', unique: true}, err => {
@@ -78,13 +83,20 @@ setTimeout(() => {
       console.log(err)
     }
   })
+
+  gAccount.ensureIndex({fieldName: 'pubKey', unique: true}, err => {
+    if (err) {
+      console.log(err)
+    }
+  })
 }, 0)
 
 export {
   ks,
   node,
   headerImg,
-  group
+  group,
+  gAccount
 }
 
 

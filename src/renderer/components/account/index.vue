@@ -44,7 +44,10 @@
     <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">{{$t('warn').w_1}}</div>
 
     <!-- 查看组成员 start -->
-    <w-drawer v-model="drawer.member" v-if="drawer.member">
+    <el-drawer :visible.sync="drawer.member" :destroy-on-close="true" :show-close="false">
+      <div slot="title">
+        <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
+      </div>
       <div class="d-content-view g-member-list-box">
         <h3 class="h3">{{$t('title').gMember}}</h3>
         <ul class="">
@@ -64,26 +67,29 @@
           </li>
         </ul>
       </div>
-    </w-drawer>
+    </el-drawer>
     <!-- 查看组成员 end -->
 
     <!-- 节点选择 start -->
-    <w-drawer v-model="drawer.select" v-if="drawer.select" @on-close="modalClick">
+    <el-drawer :visible.sync="drawer.select" :destroy-on-close="true" :show-close="false">
+      <div slot="title">
+        <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
+      </div>
       <div class="d-content-view node-select-box">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
           <el-checkbox-group v-model="gMemberSelect" :min="1" class="">
             <el-checkbox :label="eNode">
               <div class="flex-bc">
-                {{$$.cutOut(eNode, 14, 20)}}
-                <span class="color_green flex-bc ml-20"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
+                {{$$.cutOut(eNode, 12, 19)}}
+                <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
               </div>
             </el-checkbox>
             <el-checkbox v-for="(item, index) in gMemberInit" :label="item.eNode" :key="index">
               <div class="flex-bc">
-                {{$$.cutOut(item.eNode, 14, 20)}}
-                <span class="color_green flex-bc ml-20" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-                <span class="color_red flex-bc ml-20" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                {{$$.cutOut(item.eNode, 12, 19)}}
+                <span class="color_green flex-bc ml-10" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                <span class="color_red flex-bc ml-10" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
               </div>
             </el-checkbox>
           </el-checkbox-group>
@@ -96,13 +102,16 @@
           address: sendDataObj.dcrmAddr,
         })">查看历史</div>
       </div>
-    </w-drawer>
+    </el-drawer>
     <!-- 节点选择 end -->
 
     <!-- 发送交易 start -->
-    <w-drawer v-model="drawer.send" v-if="drawer.send">
+    <el-drawer :visible.sync="drawer.send" :destroy-on-close="true" :show-close="false">
+      <div slot="title">
+        <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
+      </div>
       <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberInit="gMemberInit" @closeModal="modalClick"></send-txns>
-    </w-drawer>
+    </el-drawer>
     <!-- 发送交易 end -->
   </div>
 </template>

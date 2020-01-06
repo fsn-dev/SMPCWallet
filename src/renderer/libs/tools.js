@@ -121,6 +121,7 @@ export default {
     return ''
   },
   fromWei (balance, coin) {
+    if (!balance) return 0
     balance = balance.toString()
     coin = coin.toUpperCase()
     let coinInfo = this.getCoinInfo(coin, 'rate')
@@ -141,6 +142,7 @@ export default {
     return balance
   },
   toWei (balance, coin) {
+    if (!balance) return 0
     balance = balance.toString()
     coin = coin.toUpperCase()
     let coinInfo = this.getCoinInfo(coin, 'rate')

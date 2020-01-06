@@ -52,13 +52,16 @@
       </transition>
     </section>
 
-    
-    <w-drawer v-model="drawer.create" v-if="drawer.create">
+    <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false">
+      <div slot="title">
+        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
+      </div>
       <create-account :formBoxClass="false" @closeModal="modalClick"></create-account>
-    </w-drawer>
-    <w-drawer v-model="drawer.user" v-if="drawer.user" :isShowLogo="false">
+    </el-drawer>
+
+    <el-drawer :visible.sync="drawer.user" :destroy-on-close="true" :show-close="false">
       <person-info @closeDrawer="drawer.user = false"></person-info>
-    </w-drawer>
+    </el-drawer>
   </div>
 </template>
 
@@ -70,7 +73,7 @@
 import {computedPub} from '@/assets/js/pages/public'
 import {findHeaderImg} from '@/db/headerImg'
 import createAccount from '@/pages/group/createGroup'
-import personInfo from '@/components/content/personInfo'
+import personInfo from '@/components/main/personInfo'
 export default {
   name: 'index',
   provide () {

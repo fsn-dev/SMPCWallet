@@ -4,10 +4,10 @@ function uodateGroup (data) {
   const params = {
     gId: data.gId,
     name: data.name,
-    timestamp: Date.now()
+    updatetime: Date.now()
   }
   return new Promise((resolve, reject) => {
-    group.update(params, params, {upsert: true}, (err, res) => {
+    group.update({gId: data.gId}, params, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)

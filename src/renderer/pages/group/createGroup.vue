@@ -81,6 +81,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {findGroup} from '@/db/group'
 export default {
   name: 'createAccount',
   props: {
@@ -106,9 +107,9 @@ export default {
       groupForm: {
         mode: '3/3',
         eNode: [
-          { value: 'enode://fbced7f239d5633d25c2afda08e4f00e24c054bd0a9e9055f9f104f53fe1ce331c5431442cb2120ff64010bf7ac9b39af5e3349bba546210b1ab003cd9384014@127.0.0.1:12341'},
-          { value: 'enode://4fa6865eb8fbf9dbe22b4d3188ae67d6f20368400c582ad366a5fd709f789ebda23514bd71548bc4c4cf401690d73cdd62bf5ce785c73cc3fc32d616a80b9e6d@127.0.0.1:12342'},
-          { value: 'enode://6e5cc6f7b953013fd7d5172e347a79f9ff44cc1a0a05d092646134f7fcbea391ea720119e7c9bcc6bb61a15f278bbf97d136fcc7271da42c7823ef0d28b3b947@127.0.0.1:12343'},
+          // { value: 'enode://fbced7f239d5633d25c2afda08e4f00e24c054bd0a9e9055f9f104f53fe1ce331c5431442cb2120ff64010bf7ac9b39af5e3349bba546210b1ab003cd9384014@127.0.0.1:12341'},
+          // { value: 'enode://4fa6865eb8fbf9dbe22b4d3188ae67d6f20368400c582ad366a5fd709f789ebda23514bd71548bc4c4cf401690d73cdd62bf5ce785c73cc3fc32d616a80b9e6d@127.0.0.1:12342'},
+          // { value: 'enode://6e5cc6f7b953013fd7d5172e347a79f9ff44cc1a0a05d092646134f7fcbea391ea720119e7c9bcc6bb61a15f278bbf97d136fcc7271da42c7823ef0d28b3b947@127.0.0.1:12343'},
         ],
         name: ''
       },
@@ -150,11 +151,26 @@ export default {
     getGroupData () {
       this.$$.getGroup().then(res => {
         console.log(res)
-        this.getGroup = res.info ? res.info : []
+        this.getGroup = []
+        let arr = res.info ? res.info : []
+        for (let i = 0, len = arr.length; i< len; i++) {
+          arr[i].name = arr[i].name ? arr[i].name : arr[i].Gid
+          this.getGroup.push(arr[i])
+          this.getGName(arr[i], i)
+        }
+        // this.getGroup = res.info ? res.info : []
         // this.getGroup = []
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)
+      })
+    },
+    getGName (item, i) {
+      findGroup({gId: item.Gid}).then(res => {
+        console.log(res)
+        if (res.length > 0) {
+          this.getGroup[i].name = res[0].name
+        }
       })
     },
     submitForm(formName) {

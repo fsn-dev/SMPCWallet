@@ -1,8 +1,8 @@
 // const Main = resolve => require.ensure([], () => resolve(require('@/components/main/index')) )
-const Bg = resolve => require.ensure([], () => resolve(require('@/components/bg/index')) )
-const Content = resolve => require.ensure([], () => resolve(require('@/components/content/index')) )
-const Account = resolve => require.ensure([], () => resolve(require('@/components/account/index')) )
-const Receive = resolve => require.ensure([], () => resolve(require('@/components/account/receive')) )
+const Bg = resolve => require.ensure([], () => resolve(require('@/components/bg/index.vue')) )
+const Main = resolve => require.ensure([], () => resolve(require('@/components/main/index.vue')) )
+const Account = resolve => require.ensure([], () => resolve(require('@/components/account/index.vue')) )
+const Receive = resolve => require.ensure([], () => resolve(require('@/components/account/receive.vue')) )
 
 export default [
   {
@@ -18,7 +18,7 @@ export default [
           title: '首页',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/home/enter')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/home/enter.vue')) )
       }
     ]
   },
@@ -35,7 +35,7 @@ export default [
           title: '登陆',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/home/login')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/home/login.vue')) )
       }
     ]
   },
@@ -52,13 +52,13 @@ export default [
           title: '注册',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/home/register')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/home/register.vue')) )
       }
     ]
   },
   {
     path: '/createGroup',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -69,13 +69,13 @@ export default [
           title: '创建组',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/group/createGroup')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/createGroup.vue')) )
       }
     ]
   },
   {
     path: '/groupHistory',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -86,13 +86,13 @@ export default [
           title: '创建共管账户历史',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/group/history')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/history.vue')) )
       }
     ]
   },
   {
     path: '/gValid',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -103,13 +103,13 @@ export default [
           title: '组确认',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/group/gValid')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/gValid.vue')) )
       }
     ]
   },
   {
     path: '/person',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -135,7 +135,7 @@ export default [
   },
   {
     path: '/group',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -146,7 +146,7 @@ export default [
           title: '共管账户',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/group/index')) ),
+        component: resolve => require.ensure([], () => resolve(require('@/pages/group/index.vue')) ),
         children: [
           {
             path: '/',
@@ -171,7 +171,7 @@ export default [
   },
   {
     path: '/sendTxns',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -182,13 +182,13 @@ export default [
           title: '交易',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/index')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/index.vue')) )
       }
     ]
   },
   {
     path: '/txnsHistory',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -199,13 +199,13 @@ export default [
           title: '交易历史',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/history')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/history.vue')) )
       }
     ]
   },
   {
     path: '/tValid',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -216,13 +216,13 @@ export default [
           title: '交易',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/tValid')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/tValid.vue')) )
       }
     ]
   },
   {
     path: '/waitNews',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -233,13 +233,13 @@ export default [
           title: '消息',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/news/index')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/news/index.vue')) )
       }
     ]
   },
   {
     path: '/tNewsList',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -250,13 +250,13 @@ export default [
           title: '消息',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/news/tNewsList')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/news/tNewsList.vue')) )
       }
     ]
   },
   {
     path: '/gNewsList',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -267,13 +267,13 @@ export default [
           title: '消息',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/news/gNewsList')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/news/gNewsList.vue')) )
       }
     ]
   },
   {
     path: '/set',
-    component: Content,
+    component: Main,
     meta: {
       notCache: true
     },
@@ -284,7 +284,7 @@ export default [
           title: '设置',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/set/index')) ),
+        component: resolve => require.ensure([], () => resolve(require('@/pages/set/index.vue')) ),
         children: [
           {
             path: '/',
@@ -292,7 +292,7 @@ export default [
               title: '设置网络',
               notCache: true
             },
-            component: resolve => require.ensure([], () => resolve(require('@/pages/set/network')) ),
+            component: resolve => require.ensure([], () => resolve(require('@/pages/set/network.vue')) ),
           },
           {
             path: '/set/groupSet',
@@ -300,7 +300,15 @@ export default [
               title: '设置组信息',
               notCache: true
             },
-            component: resolve => require.ensure([], () => resolve(require('@/pages/set/group')) ),
+            component: resolve => require.ensure([], () => resolve(require('@/pages/set/group.vue')) ),
+          },
+          {
+            path: '/set/gAccount',
+            meta: {
+              title: '设置共管账户信息',
+              notCache: true
+            },
+            component: resolve => require.ensure([], () => resolve(require('@/pages/set/gAccount.vue')) ),
           }
         ]
       }

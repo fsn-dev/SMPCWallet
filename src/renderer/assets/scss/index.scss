@@ -90,6 +90,10 @@
   }
 }
 
+.el-drawer__header {
+  margin-bottom: size(5);padding: size(15) size(15) 0;
+}
+
 // 夜间模式
 .night {
   .appTitle {
