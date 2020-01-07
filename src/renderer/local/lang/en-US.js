@@ -105,7 +105,8 @@ export default {
 		txnHistory: 'History',
 		groupHistory: 'Create history',
 		IP: 'IP',
-		aliases: 'Aliases'
+		aliases: 'Aliases',
+		notSetUp: 'Not set up'
 	},
 	state: {
 		name: 'Status',

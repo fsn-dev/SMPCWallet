@@ -31,10 +31,11 @@
           <span class="round" :class="Number(dayAndNight) ? 'el-icon-sunny day' : 'el-icon-moon moon'"></span>
         </div>
         
-        <div class="header-top-user">
+        <div class="header-top-user flex-c cursorP" @click="drawer.user = true">
           <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
           <!-- <div class="headImg box_Wshadow1 flex-c" @click="isUserView = !isUserView"><img :src="headerImg"></div> -->
-          <div class="headImg box_Wshadow1 flex-c" @click="drawer.user = true"><img :src="headerImg"></div>
+          <!-- <div class="headImg box_Wshadow1 flex-c" @click="drawer.user = true"><img :src="headerImg"></div> -->
+          <el-avatar shape="square" :size="30" fit="fill" :src="headerImg"></el-avatar>
           <!-- <ul class="user-list box_Wshadow1" v-show="isUserView">
             <li class="item" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus mr-5"></i>{{$t('btn').createAccount}}</li>
             <li class="item" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user mr-5"></i>{{$t('title').personAccount}}</li>

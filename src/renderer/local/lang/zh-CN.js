@@ -107,7 +107,8 @@ export default {
 		txnHistory: '交易历史',
 		groupHistory: '创建历史',
 		IP: 'IP地址',
-		aliases: '别名'
+		aliases: '别名',
+		notSetUp: '未设置'
 	},
 	state: {
 		name: '状态',

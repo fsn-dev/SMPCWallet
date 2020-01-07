@@ -41,6 +41,7 @@ import wButton from '@/components/btn/index'
 import setEnode from '@/components/setEnode/index'
 import {computedPub} from '@/assets/js/pages/public'
 // import {insertNode, findNode} from '@/db/node'
+
 export default {
   name: '',
   data () {

@@ -313,6 +313,7 @@ export default {
     changeState (item, index) {
       if (!item.value) return
       this.$$.getEnodeState(item.value.replace(/\s/, '')).then(res => {
+        console.log(res)
         this.groupForm.eNode[index].state = res
         this.reload = false
         this.$nextTick(() => {

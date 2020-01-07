@@ -47,7 +47,7 @@ let web3Utils = {
           let cbData = res
           cbData = JSON.parse(cbData)
           console.log(cbData)
-          if (cbData.Status === 'Success') {
+          if (cbData.Status === 'Success' && cbData.Data.Status === 'OnLine') {
             data = 'OnLine'
           } else {
             data = 'OffLine'

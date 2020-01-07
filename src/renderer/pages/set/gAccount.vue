@@ -7,7 +7,7 @@
     <div class="ga-list-box">
       <ul class="ul" >
         <li v-for="(item, index) in gAccountList" :key="index" class="item">
-          <el-divider content-position="left">{{item.name === item.publicKey ? '未设置' : item.name}}</el-divider>
+          <el-divider content-position="left">{{item.name === item.publicKey ? $t('label').notSetUp : item.name}}</el-divider>
           <div class="flex-bc">
             <p class="pubkey" :title="item.publicKey">{{ item.publicKey }}</p>
             <el-button size="mini" type="primary" class="" @click="openEditPage(item)">{{$t('btn').setName}}</el-button>
@@ -34,7 +34,7 @@
 .ga-list-box {
   width: 100%;padding: 0 size(15);
   .ul {
-    padding-top: size(20);
+    padding-top: size(5);
     .item {
       width: 100%;
       .pubkey {
