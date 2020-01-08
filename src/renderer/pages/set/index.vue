@@ -3,8 +3,8 @@
     <div class="s-list-box">
       <ul>
         <li class="item" :class="navActive === 0 ? 'active' : ''" @click="toUrl('/set')">{{$t('title').netSet}}</li>
-        <li class="item" :class="navActive === 1 ? 'active' : ''" @click="toUrl('/set/groupSet')">组设置</li>
-        <li class="item" :class="navActive === 2 ? 'active' : ''" @click="toUrl('/set/gAccount')">共管账户设置</li>
+        <li class="item" :class="navActive === 1 ? 'active' : ''" @click="toUrl('/set/groupSet')">{{$t('title').groupSet}}</li>
+        <li class="item" :class="navActive === 2 ? 'active' : ''" @click="toUrl('/set/gAccount')">{{$t('title').gAccountSet}}</li>
       </ul>
     </div>
     <div class="s-content-box">

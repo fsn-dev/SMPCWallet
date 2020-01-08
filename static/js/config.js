@@ -85,7 +85,8 @@ let publicSet = {
   cookies: {
     token: 'token',
     address: 'address',
-    safeMode: 'safeMode'
+    safeMode: 'safeMode',
+    eNodeTx: 'eNodeTx'
   },
   /**
    * @description 启动gdcrm路径

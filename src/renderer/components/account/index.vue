@@ -210,7 +210,7 @@ export default {
       }
       // console.log(this.pubKey)
       if (this.pubKey) {
-        this.$$.getAccountsBalance(this.pubKey).then(res => {
+        this.$$.getAccountsBalance(this.pubKey, this.address).then(res => {
           // console.log(res)
           if (res.msg === 'Success') {
             this.tableData = res.info

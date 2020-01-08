@@ -11,23 +11,8 @@
         <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-50"></w-button>
       </div>
       <div class="W300 mt-20 flex-c flex-wrap">
-        <set-enode></set-enode>
-        <!-- <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input>
-        <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl">
-          <el-option
-            v-for="item in netUrlArr"
-            :key="item.url"
-            :label="item.url"
-            :value="item.url">
-          </el-option>
-        </el-select>
-        <el-button type="primary" class="mt-20" @click="setNet">设置节点</el-button>
-        <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)">复制ENODE</el-button> -->
+        <set-enode :isShowEnode="false"></set-enode>
       </div>
-      <!-- <div class="WW100 mt-20 flex-c flex-wrap">
-        <el-input v-model="netUrl" class="mt-30"></el-input>
-        <el-button type="primary" class="mt-10" @click="setNet">{{$t('btn').confirm}}</el-button>
-      </div> -->
     </div>
   </div>
 </template>

@@ -2,6 +2,9 @@ export const computedPub = {
   eNode () {
     return this.$store.state.eNode
   },
+  eNodeTx () {
+    return this.$store.state.eNodeTx
+  },
   address () {
     return this.$store.state.address
   },

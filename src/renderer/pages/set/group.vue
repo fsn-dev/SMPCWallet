@@ -2,7 +2,7 @@
   <div class="boxConntent1 container">
     <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-25 relative">
       <el-breadcrumb-item :to="{ path: Number(safeMode) ? '/person' : '/group' }">{{$t('title').accountList}}</el-breadcrumb-item>
-      <el-breadcrumb-item>{{$t('title').netSet}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{$t('title').groupSet}}</el-breadcrumb-item>
     </el-breadcrumb>
     <el-collapse accordion>
       <el-collapse-item v-for="(item, index) in getGroup" :key="index">
@@ -12,7 +12,7 @@
         <div>
           <ul class="e-list">
             <li class="flex-bc relative pb-10">
-              <p class="WW80 ellipsis" :title="item.Gid"><b>组ID：</b>{{item.Gid}}</p>
+              <p class="WW80 ellipsis" :title="item.Gid"><b>ID：</b>{{item.Gid}}</p>
               <el-button size="mini" type="primary" class="" @click="openEditPage(item)">{{$t('btn').setName}}</el-button>
             </li>
             <li v-for="(e, i) in item.Enodes" :key="i" class="item">{{e}}</li>

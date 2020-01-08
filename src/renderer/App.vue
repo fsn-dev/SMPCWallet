@@ -46,16 +46,17 @@ export default {
     // console.log(this.dayAndNight)
   },
   methods: {
-    ...mapActions(['getEnode', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage', 'getServerRPC']),
+    ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage', 'getServerRPC']),
     initData () {
-      this.getServerRPC()
       this.getEnode()
+      this.getEnodeTx()
       this.getToken()
       this.getAddress()
       this.getSafeMode()
       this.getDayAndNight()
       this.getWallet()
       this.getLanguage()
+      this.getServerRPC()
       // let url = this.serverRPC
       // this.$$.web3.setProvider(url)
       // console.log(url)

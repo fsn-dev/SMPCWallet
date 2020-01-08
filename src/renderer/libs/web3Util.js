@@ -1,7 +1,6 @@
 import web3 from '@/assets/js/web3'
-// const Tx = require("ethereumjs-tx")
 import Tx from 'ethereumjs-tx'
-
+import config from '@etc/js/config.js'
 let eNodeInit
 
 let web3Utils = {
@@ -204,12 +203,12 @@ let web3Utils = {
       }
     })
   },
-  async getAccountsBalance (pubk) {
+  async getAccountsBalance (pubk, address) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let cbData = ''
-        web3.dcrm.getAccountsBalance(pubk).then(res => {
+        web3.dcrm.getAccountsBalance(pubk, address).then(res => {
           // cbData = JSON.parse(res)
           cbData = res
           // console.log(cbData)
@@ -373,12 +372,12 @@ let web3Utils = {
       }
     })
   },
-  async reqAccountList () {
+  async reqAccountList (address) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let cbData = ''
-        web3.dcrm.getCurNodeReqAddrInfo().then(res => {
+        web3.dcrm.getCurNodeReqAddrInfo(address).then(res => {
           cbData = res
           if (cbData.Status !== 'Error') {
             let arr = cbData.Data ? cbData.Data : []
@@ -436,13 +435,13 @@ let web3Utils = {
       }
     })
   },
-  async getTxnsList () {
+  async getTxnsList (address) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         if (eNodeInit) {
           let arr = [], cbData = ''
-          web3.dcrm.getCurNodeLockOutInfo(eNodeInit).then(res => {
+          web3.dcrm.getCurNodeLockOutInfo(address).then(res => {
             cbData = res
             if (cbData.Status !== 'Error') {
               cbData = cbData.Data
@@ -559,12 +558,12 @@ let web3Utils = {
     pwd = new Buffer(pwd, "hex")
     // console.log(data)
     let rawTx = {
-      nonce: data.nonce ? Number(data.nonce) : 0,
-      gasPrice: data.gasPrice ? Number(data.gasPrice) : 0,
-      gasLimit: data.gasLimit ? Number(data.gasLimit) : 0,
+      gasPrice: data.gasPrice ? Number(data.gasPrice) : config.rawTx.gasPrice,
+      gasLimit: data.gasLimit ? Number(data.gasLimit) : config.rawTx.gasLimit,
+      to: data.to ? data.to : config.rawTx.to,
       from: data.from,
-      to: data.to,
       value: Number(data.value),
+      nonce: data.nonce ? Number(data.nonce) : 0,
       data: data.data ? data.data : ''
     }
     return new Promise((resolve, reject) => {

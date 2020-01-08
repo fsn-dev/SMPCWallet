@@ -21,6 +21,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     eNode: '',
+    eNodeTx: '',
     address: '',
     token: '',
     safeMode: config.modeInit,
@@ -39,6 +40,13 @@ const store = new Vuex.Store({
   mutations: {
     setEnode (state, data) {
       state.eNode = data
+    },
+    setEnodeTx (state, data) {
+      let info = data.info ? data.info.toString() : ''
+      state.eNodeTx = info
+      if (!data.type) {
+        cookies.setCookies(config.cookies.eNodeTx, info)
+      }
     },
     setAddress (state, data) {
       let info = data.info ? data.info.toString() : ''
@@ -107,6 +115,13 @@ const store = new Vuex.Store({
       } catch (error) {
         commit('setEnode', '')
       }
+    },
+    getEnodeTx ({commit}) {
+      cookies.getCookies(config.cookies.eNodeTx).then(res => {
+        // console.log(res)
+        let data = { type: 1, info: res}
+        commit('setEnodeTx', data)
+      })
     },
     getAddress ({commit}) {
       cookies.getCookies(config.cookies.address).then(res => {

@@ -34,6 +34,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 import wButton from '@/components/btn/index'
 export default {
   name: '',
@@ -46,6 +47,9 @@ export default {
     }
   },
   components: {wButton},
+  computed: {
+    ...computedPub,
+  },
   sockets: {
     GroupFindTxns (res) {
       console.log(res)
@@ -56,7 +60,7 @@ export default {
   },
   methods: {
     initTxnsList () {
-      this.$$.getTxnsList().then(res => {
+      this.$$.getTxnsList(this.address).then(res => {
         console.log(res)
         this.newsList = res.info
         this.$emit('tNewsTip', this.newsList.length)

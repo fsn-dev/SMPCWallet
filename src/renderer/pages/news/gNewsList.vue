@@ -31,6 +31,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: 'gNewsList',
   data () {
@@ -42,13 +43,16 @@ export default {
       gInfo: {}
     }
   },
+  computed: {
+    ...computedPub,
+  },
   mounted () {
     this.initTxnsList()
     // this.$$.reqAccountList()
   },
   methods: {
     initTxnsList () {
-      this.$$.reqAccountList().then(res => {
+      this.$$.reqAccountList(this.address).then(res => {
         console.log(res)
         this.$$.getGroup().then(gList => {
           console.log(gList)

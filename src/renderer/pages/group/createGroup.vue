@@ -188,8 +188,10 @@ export default {
     createGroup () {
       let arr = []
       for (let obj of this.groupForm.eNode) {
+        // arr.push(obj.value.split('0x')[0])
         arr.push(obj.value)
       }
+      console.log(arr)
       this.$$.createGroup(this.groupForm.mode, arr).then(res => {
         let gInfo = res
         console.log(gInfo)
@@ -215,24 +217,23 @@ export default {
         this.msgError(this.$t('warn').w_3)
         return
       }
+      let data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode
+      for (let obj of this.groupForm.eNode) {
+        // let eNodeKey = obj.value.split('0x')[0].match(/enode:\/\/(\S*)@/)[1]
+        data += ':0x' + obj.value.split('0x')[1]
+      }
+      console.log(data)
       // this.gMode = '3/3'
       this.dataPage = {
         from: this.address,
-        to: this.$$.config.rawTx.to,
-        gasLimit: this.$$.config.rawTx.gasLimit,
-        gasPrice: this.$$.config.rawTx.gasPrice,
       }
       this.$$.getReqNonce(this.address).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = 0
-        this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode
+        this.dataPage.data = data
+        console.log(this.dataPage)
         this.eDialog.pwd = true
       })
-      // let nonce = this.$$.getNonce(this.address, '', '')
-      // this.dataPage.nonce = nonce
-      // this.dataPage.value = 0
-      // this.dataPage.data = 'REQDCRMADDR:' + this.gID + ':' + this.gMember.Mode
-      // this.eDialog.pwd = true
     },
     getSignData (data) {
       this.modalClick()
@@ -312,7 +313,7 @@ export default {
     },
     changeState (item, index) {
       if (!item.value) return
-      this.$$.getEnodeState(item.value.replace(/\s/, '')).then(res => {
+      this.$$.getEnodeState(item.value.replace(/\s/, '').split('0x')[0]).then(res => {
         console.log(res)
         this.groupForm.eNode[index].state = res
         this.reload = false
@@ -332,7 +333,7 @@ export default {
       for (let i = 0; i < num; i++) {
         if (i === 0) {
           this.groupForm.eNode.push({
-            value: this.eNode,
+            value: this.eNode + this.eNodeTx,
             isSelf: true,
             key: Date.now()
           })

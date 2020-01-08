@@ -80,8 +80,14 @@ export default {
         this.gID = this.$route.query.gID
         this.publicKey = this.$route.query.publicKey
       } else {
-        this.gID = ''
-        this.publicKey = ''
+        if (this.gAccountList.length > 0) {
+          this.gID = this.gAccountList[0].gID
+          this.publicKey = this.gAccountList[0].publicKey
+          this.changeGroup()
+        } else {
+          this.gID = ''
+          this.publicKey = ''
+        }
       }
       // this.refreshPage()
     }

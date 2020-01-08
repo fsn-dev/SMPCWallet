@@ -10,7 +10,7 @@
       <li class="item flex-sc" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money icon"></i>{{$t('title').groupAccount}}</li>
       <li class="item flex-sc" @click="openUrl('/set')" :title="$t('btn').set"><i class="el-icon-setting icon"></i>{{$t('btn').set}}</li>
     </ul>
-    <set-enode class="mt-20 set-node-box"></set-enode>
+    <set-enode class="mt-20 set-node-box" :isSetNode="false"></set-enode>
   </div>
 </template>
 

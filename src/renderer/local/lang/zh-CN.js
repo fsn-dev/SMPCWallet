@@ -58,7 +58,8 @@ export default {
 		create: '创建',
 		newBuild: '新建',
 		set: '设置',
-		setName: '设置别名'
+		setName: '设置别名',
+		setNode: '设置节点'
 	},
 	loading: {
 		l_1: '账户获取中……'
@@ -79,7 +80,9 @@ export default {
 		groupNews: '共管账户消息',
 		txnsNews: '交易消息',
 		accountList: '账户列表',
-		netSet: '网络设置'
+		netSet: '网络设置',
+		groupSet: '组信息设置',
+		gAccountSet: '共管账户设置'
 	},
 	label: {
 		username: '用户名',

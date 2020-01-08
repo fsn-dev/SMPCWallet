@@ -63,9 +63,11 @@ export default {
     ...computedPub
   },
   mounted () {
-    findAccount({}).then(res => {
-      console.log(res)
-    })
+    // let eNodeKey = this.eNode.match(/enode:\/\/(\S*)@/)
+    // console.log(eNodeKey)
+    // findAccount({}).then(res => {
+    //   console.log(res)
+    // })
     // insertAccount({
     //   name: 'test',
     //   ks: '123',
@@ -110,17 +112,20 @@ export default {
           let keystore = res[0].ks
           try {
             if (this.$$.walletRequirePass(keystore)) {
-              this.walletInfo = this.$$.getWalletFromPrivKeyFile(
+              const walletInfo = this.$$.getWalletFromPrivKeyFile(
                 keystore,
                 this.loginObj.password
               )
-              let address = this.walletInfo.getChecksumAddressString()
+              let address = walletInfo.getChecksumAddressString()
+              let pwd = walletInfo.getPrivateKeyString()
               // this.createHeader(this.walletInfo.getPublicKeyString(), address)
               // console.log(address)
-              // console.log(this.walletInfo.getPrivateKeyString())
+              console.log(walletInfo.getPrivateKeyString())
+              this.signEnode(pwd, address)
               this.$store.commit('setAddress', {info: address})
               this.$store.commit('setToken', {info: this.loginObj.username})
-              this.$store.commit('setWallet', {info: this.walletInfo.getPrivateKeyString()})
+              this.$store.commit('setWallet', {info: pwd})
+              // return
               if (Number(this.safeMode)) {
                 this.$router.push('/person')
               } else {
@@ -131,6 +136,7 @@ export default {
               this.loading.wait = false
             }
           } catch (error) {
+            console.log(error)
             this.msgError(error.toString())
             this.loading.wait = false
           }
@@ -140,6 +146,22 @@ export default {
         }
       })
     },
+    signEnode (pwd, address) {
+      let eNodeKey = this.eNode.match(/enode:\/\/(\S*)@/)[1]
+      // console.log(eNodeKey)
+      let rawTx = {
+        from: address,
+        data: eNodeKey
+      }
+      // console.log(rawTx)
+      this.$$.toSign(rawTx, pwd).then(res => {
+        // console.log(res)
+        this.$store.commit('setEnodeTx', {info: res.signTx})
+      }).catch(err => {
+        console.log(err)
+        this.msgError(err.toString())
+      })
+    }
   }
 }
 </script>

@@ -2,11 +2,11 @@
   <div v-loading="loading.setNode" element-loading-text="Loading……">
     <div class="WW100 flex-c flex-wrap">
       <!-- <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input> -->
-      <div class="e-node-box">
-        {{viewEnode}}
+      <div class="e-node-box" v-if="isShowEnode && viewEnode" :title="viewEnode">
+        {{viewEnode ? viewEnode.substr(0, 128) + '...' : ''}}
       </div>
       <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
-      <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl">
+      <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" :disabled="!isSetNode">
         <el-option
           v-for="item in netUrlArr"
           :key="item.url"
@@ -14,9 +14,14 @@
           :value="item.url">
         </el-option>
       </el-select>
-      <el-button type="primary" class="mt-20" @click="setNet">设置节点</el-button>
-      <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)">复制ENODE</el-button>
+      <el-button type="primary" class="mt-20" @click="setNet" v-if="isSetNode">{{$t('btn').setNode}}</el-button>
+      <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)" v-if="isShowEnode">{{$t('btn').copy}} ENODE</el-button>
+      <!-- <el-button type="success" class="mt-20" @click="openPwdDialog">生成注册码</el-button> -->
     </div>
+
+    <!-- <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
+      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -31,6 +36,16 @@ import {computedPub} from '@/assets/js/pages/public'
 import {insertNode, findNode} from '@/db/node'
 export default {
   name: 'setEnode',
+  props: {
+    isShowEnode: {
+      type: Boolean,
+      default: true
+    },
+    isSetNode: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       viewEnode: '',
@@ -38,6 +53,10 @@ export default {
       netUrlArr: [],
       loading: {
         setNode: false
+      },
+      dataPage: {},
+      eDialog: {
+        pwd: false
       }
     }
   },
@@ -45,7 +64,7 @@ export default {
     ...computedPub
   },
   mounted () {
-    this.viewEnode = this.eNode
+    this.viewEnode = this.eNode + this.eNodeTx
     this.getNetUrl()
   },
   methods: {

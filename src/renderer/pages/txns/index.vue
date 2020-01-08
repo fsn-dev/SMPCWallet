@@ -119,9 +119,6 @@ export default {
       // this.gMode = '3/3'
       this.dataPage = {
         from: this.address,
-        to: this.$$.config.rawTx.to,
-        gasLimit: this.$$.config.rawTx.gasLimit,
-        gasPrice: this.$$.config.rawTx.gasPrice,
       }
       this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce

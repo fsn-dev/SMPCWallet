@@ -15,7 +15,7 @@ export default {
 		w_1: 'Please select an account',
 		w_2: 'Please get the account',
 		w_3: 'Account is empty!',
-		w_4: 'Please select mode',
+		w_4: 'Please select a mode',
 		w_5: 'Mode cannot be empty',
 		w_6: '',
 		w_7: 'User cannot be empty',
@@ -55,8 +55,9 @@ export default {
 		approval: 'Approval',
 		create: 'Create',
 		newBuild: 'Newly build',
-		set: 'Set',
-		setName: 'Setting aliases'
+		set: 'Setting',
+		setName: 'Setting aliases',
+		setNode: 'Set node'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -77,7 +78,9 @@ export default {
 		groupNews: 'Managed Account News',
 		txnsNews: 'Transaction News',
 		accountList: 'Account list',
-		netSet: 'Network settings'
+		netSet: 'Network settings',
+		groupSet: 'Group information settings',
+		gAccountSet: 'Manger account settings'
 	},
 	label: {
 		username: 'User name',
@@ -119,7 +122,7 @@ export default {
 		new: 'New'
 	},
 	tip: {
-		name: '提示',
+		name: 'Tip',
 		walletTip: 'Welcome to SMPC wallet 1.0 <br> please create a wallet or import a wallet',
 		deleteNode: 'This operation will permanently delete this node. Do you want to continue?'
 	}

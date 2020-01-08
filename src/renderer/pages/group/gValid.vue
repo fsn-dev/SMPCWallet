@@ -122,9 +122,6 @@ export default {
           if (!isNaN(nonce)) {
             this.dataPage = {
               from: this.address,
-              to: this.$$.config.rawTx.to,
-              gasLimit: this.$$.config.rawTx.gasLimit,
-              gasPrice: this.$$.config.rawTx.gasPrice,
               nonce: nonce,
               data: 'ACCEPTREQADDR:' 
                     + this.urlParams.Account

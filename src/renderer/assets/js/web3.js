@@ -115,15 +115,15 @@ web3.extend({
     {
       name: 'getAccountsBalance',
       call: 'dcrm_getAccountsBalance',
-      params: 1,
-      inputFormatter: [null],
+      params: 2,
+      inputFormatter: [null, null],
       outputFormatter: null
     },
     {
       name: 'getCurNodeReqAddrInfo',
       call: 'dcrm_getCurNodeReqAddrInfo',
-      params: 0,
-      inputFormatter: [],
+      params: 1,
+      inputFormatter: [null],
       outputFormatter: null
     },
     {
