@@ -4,12 +4,12 @@
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
-          <el-form-item :label="$t('label').group">
+          <!-- <el-form-item :label="$t('label').group">
             <el-select v-model="gID" :placeholder="$t('warn').w_4" class="WW100" @change="changeGroup">
               <el-option :label="$t('btn').newBuild" :value="0"></el-option>
               <el-option v-for="(item, index) in getGroup" :key="index" :label="item.name" :value="item.Gid"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item :label="$t('label').mode"
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
