@@ -188,8 +188,8 @@ export default {
     createGroup () {
       let arr = []
       for (let obj of this.groupForm.eNode) {
-        // arr.push(obj.value.split('0x')[0])
-        arr.push(obj.value)
+        arr.push(obj.value.split('0x')[0])
+        // arr.push(obj.value)
       }
       console.log(arr)
       this.$$.createGroup(this.groupForm.mode, arr).then(res => {

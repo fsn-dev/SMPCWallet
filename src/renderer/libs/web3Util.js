@@ -185,8 +185,9 @@ let web3Utils = {
         let cbData = ''
         web3.dcrm.getAccounts(gID, mode).then(res => {
           cbData = res
+          // console.log(cbData)
           if (cbData.Status !== 'Error') {
-            data = {msg: 'Success', info: cbData.Data.result.Group}
+            data = {msg: 'Success', info: cbData.Data.result && cbData.Data.result.Group ? cbData.Data.result.Group : []}
           } else {
             data = {msg: 'Success', info: []}
           }
@@ -384,8 +385,8 @@ let web3Utils = {
             // console.log(arr)
             let list = []
             for (let obj in arr) {
-              list.push(JSON.parse(arr[obj]))
               // console.log(arr[obj])
+              list.push(JSON.parse(arr[obj]))
             }
             data = {msg: 'Success', info: list}
           } else {

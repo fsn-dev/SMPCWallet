@@ -6,7 +6,7 @@
       </div>
 
       <div class="flex-c header-top-account">
-        <p class="item" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
+        <p class="item" v-if="false" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
         <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
       </div>
       <div class="header-top-set-box flex-ec">
