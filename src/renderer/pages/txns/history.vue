@@ -3,6 +3,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-20">
       <el-breadcrumb-item :to="{ path: '/group' }" v-if="Number(safeMode) === 0">{{$t('title').groupAccount}}</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/person' }" v-if="Number(safeMode) === 1">{{$t('title').personAccount}}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/waitNews' }">{{$t('title').wait}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{$t('label').txnHistory}}</el-breadcrumb-item>
       <el-breadcrumb-item v-if="coinType">{{$$.cutERC20(coinType).coinType}}</el-breadcrumb-item>
       <el-breadcrumb-item v-if="dcrmAddr">{{dcrmAddr}}</el-breadcrumb-item>

@@ -98,7 +98,9 @@ export default {
   },
   methods: {
     modalClick () {
+      console.log(12)
       this.eDialog.pwd = false
+      this.$emit('closeModal')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -149,7 +151,6 @@ export default {
           console.log(res)
           if (res.msg === 'Success') {
             this.msgSuccess('Success!')
-            this.$emit('closeModal')
             this.saveTxnsDB(res.info)
           } else {
             this.msgError(res.error)
@@ -158,11 +159,8 @@ export default {
           console.log(err)
           this.msgError(err.error)
         })
-        // this.loading.account = false
-        // this.drawer.send = false
       } else {
         this.msgError('Error')
-        // this.loading.account = false
       }
     },
     saveTxnsDB (key) {
@@ -192,8 +190,11 @@ export default {
       }
       console.log(data)
       this.$socket.emit(dataUrl, data)
+      
+      this.resetForm()
     },
-    resetForm(formName) {
+    resetForm() {
+      this.dataPage = {}
       this.rawTx = {
         to: '',
         value: ''

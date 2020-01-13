@@ -59,7 +59,8 @@ export default {
 		newBuild: '新建',
 		set: '设置',
 		setName: '设置别名',
-		setNode: '设置节点'
+		setNode: '设置节点',
+		review: '重审'
 	},
 	loading: {
 		l_1: '账户获取中……'
@@ -111,7 +112,9 @@ export default {
 		groupHistory: '创建历史',
 		IP: 'IP地址',
 		aliases: '别名',
-		notSetUp: '未设置'
+		notSetUp: '未设置',
+		initiator: '发起者',
+		approver: '审批者'
 	},
 	state: {
 		name: '状态',

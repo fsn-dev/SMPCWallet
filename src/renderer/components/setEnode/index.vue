@@ -64,7 +64,7 @@ export default {
     ...computedPub
   },
   mounted () {
-    this.viewEnode = this.eNode + this.eNodeTx
+    this.viewEnode = this.eNode + this.eNodeTx + this.address
     this.getNetUrl()
   },
   methods: {

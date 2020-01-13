@@ -81,9 +81,7 @@ export default {
         this.publicKey = this.$route.query.publicKey
       } else {
         if (this.gAccountList.length > 0) {
-          this.gID = this.gAccountList[0].gID
-          this.publicKey = this.gAccountList[0].publicKey
-          this.changeGroup()
+          this.changeGroup(this.gAccountList[0])
         } else {
           this.gID = ''
           this.publicKey = ''
@@ -94,12 +92,12 @@ export default {
   },
   mounted () {
     this.loading.list = true
-    this.publicKey = this.$route.query.publicKey
     // console.log(this.$$.web3)
     this.initGroup()
   },
   methods: {
     initGroup () {
+      
       this.$$.getAccounts('', this.safeMode).then(res => {
         // console.log(res)
         this.gAccountList = []
@@ -124,6 +122,9 @@ export default {
         }
         if (this.$route.query.gID) {
           this.gID = this.$route.query.gID
+          this.publicKey = this.$route.query.publicKey
+        } else if (this.gAccountList.length > 0) {
+          this.changeGroup(this.gAccountList[0])
         }
         this.loading.list = false
       }).catch(err => {
@@ -135,7 +136,7 @@ export default {
     },
     getGName (item, i) {
       findGaccount({publicKey: item.publicKey}).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.length > 0) {
           this.gAccountList[i].name = res[0].name
         }
@@ -143,7 +144,7 @@ export default {
     },
     changeGroup (item) {
       // console.log(item)
-      this.gID = item.Gid
+      this.gID = item.gID
       this.publicKey = item.publicKey
       this.toUrl('/group', {gID: item.gID, publicKey: item.publicKey})
     }

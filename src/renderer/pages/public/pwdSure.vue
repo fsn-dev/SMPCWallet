@@ -87,9 +87,12 @@ export default {
                 this.toSign(walletInfo.getPrivateKeyString())
               } else {
                 this.msgError('Error')
+                this.elDialogView()
               }
             } catch (error) {
-              this.elDialogView()
+              console.log(error)
+              // this.elDialogView()
+              this.loading.wait = false
               this.msgError(error.toString())
             }
           } else {
@@ -97,39 +100,9 @@ export default {
             this.msgError(this.$t('warn').w_13)
           }
         })
-        // return
-        // let fileUrl = this.$$.config.file.ks.url + username + this.$$.config.file.ks.type
-        // this.$$.readFile(fileUrl)
-        //   .then(res => {
-        //     try{
-        //       console.log(res)
-        //       if (this.$$.walletRequirePass(res.info)) {
-        //         let walletInfo = this.$$.getWalletFromPrivKeyFile(
-        //           res.info,
-        //           this.sureForm.password
-        //         )
-        //         this.toSign(walletInfo.getPrivateKeyString())
-        //       } else {
-        //         this.msgError('Error')
-        //       }
-        //       // console.log(walletInfo.getPrivateKeyString())
-        //     } catch (e) {
-        //       console.log(e)
-        //       this.elDialogView()
-        //       this.msgError(e.toString())
-        //     }
-        //   })
-        //   .catch(err => {
-        //     console.log(err)
-        //     this.elDialogView()
-        //     this.msgError(err.toString())
-        //   })
       }
     },
     toSign (pwd) {
-      // console.log(this.sendDataPage)
-      // let type = Number(this.$$.getCookies(this.$$.config.cookies.safeMode))
-      // let type = 1
       this.$$.toSign(this.sendDataPage, pwd).then(res => {
         this.loading.wait = false
         this.$emit("sendSignData", res)

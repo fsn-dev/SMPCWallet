@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="300" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false">
+    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false">
       <div class="confirm-list-box">
         <ul class="list-box">
           <!-- <li class="item flex-ai-fs"> <p class="label">账户名:</p> <p class="info">{{groupForm.name}}</p> </li> -->
@@ -142,6 +142,7 @@ export default {
   mounted () {
     this.getGroupData()
     this.changeMode()
+    this.splitTx()
   },
   methods: {
     modalClick () {
@@ -188,7 +189,7 @@ export default {
     createGroup () {
       let arr = []
       for (let obj of this.groupForm.eNode) {
-        arr.push(obj.value.split('0x')[0])
+        arr.push(this.splitTx(obj.value).eNode)
         // arr.push(obj.value)
       }
       console.log(arr)
@@ -196,20 +197,14 @@ export default {
         let gInfo = res
         console.log(gInfo)
         if (gInfo.msg === 'Success') {
-          // this.msgSuccess(this.$t('warn').w_11)
-          // this.reqAccount()
-          // this.toUrl('/group')
           this.gID = res.info.Gid
-          // this.eDialog.confirm = false
           this.openPwdDialog()
         } else {
           this.msgError(gInfo.info.toString())
-          // this.eDialog.confirm = false
         }
       }).catch(err => {
         this.msgError(err)
         this.loading.creat = false
-        // this.eDialog.confirm = false
       })
     },
     openPwdDialog () {
@@ -220,7 +215,7 @@ export default {
       let data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode
       for (let obj of this.groupForm.eNode) {
         // let eNodeKey = obj.value.split('0x')[0].match(/enode:\/\/(\S*)@/)[1]
-        data += ':0x' + obj.value.split('0x')[1]
+        data += ':' + this.splitTx(obj.value).signTx
       }
       console.log(data)
       // this.gMode = '3/3'
@@ -253,40 +248,41 @@ export default {
           this.loading.creat = false
           this.$emit('closeModal')
           this.modalClick()
-          let data = {
-            key: res.info,
-            gId: this.gID,
-            mode: this.groupForm.mode,
-            nonce: Number(this.dataPage.nonce),
-            member: []
-          }
-          for (let obj of this.groupForm.eNode) {
-            let obj1 = {
-              eNode: obj.value,
-              kId: '',
-              status: 0,
-              initiate: 0
-            }
-            // console.log(this.eNode.substr(0, this.eNode.indexOf('@')))
-            // console.log(obj.value.substr(0, obj.value.indexOf('@')))
-            // console.log(this.eNode.substr(0, this.eNode.indexOf('@')) === obj.value.substr(0, obj.value.indexOf('@')))
-            if (this.eNode.substr(0, this.eNode.indexOf('@')) === obj.value.substr(0, obj.value.indexOf('@'))) {
-              obj1.kId = this.address
-              obj1.status = 5
-              obj1.initiate = 1
-            }
-            data.member.push(obj1)
-          }
-          this.$socket.emit('GroupAccountsAdd', data)
+          this.saveDB(res.info)
           this.msgSuccess(this.$t('success').s_3)
         }
         this.toUrl('/waitNews')
-        // this.toUrl('/group', {gID: this.gID, publicKey: res.info.PubKey})
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)
         this.loading.creat = false
       })
+    },
+    saveDB (key) {
+      let data = {
+        key: key,
+        gId: this.gID,
+        mode: this.groupForm.mode,
+        nonce: Number(this.dataPage.nonce),
+        member: [{
+          eNode: this.eNode,
+          kId: this.address,
+          status: 5,
+          initiate: 1
+        }]
+      }
+      for (let obj of this.groupForm.eNode) {
+        let obj2 = this.splitTx(obj.value)
+        if (this.eNode.indexOf(obj2.eNodeId) !== -1) continue
+        let obj1 = {
+          eNode: obj2.eNode,
+          kId: obj2.address,
+          status: 0,
+          initiate: 0
+        }
+        data.member.push(obj1)
+      }
+      this.$socket.emit('GroupAccountsAdd', data)
     },
     changeGroup () {
       this.gMember = ''
@@ -321,11 +317,6 @@ export default {
           this.reload = true
         })
       })
-      // this.groupForm.eNode[index].state = this.$$.getEnodeState(item.value.replace(/\s/, ''))
-      // this.reload = false
-      // this.$nextTick(() => {
-      //   this.reload = true
-      // })
     },
     changeMode () {
       let num = Number(this.groupForm.mode.split('/')[1])
@@ -333,7 +324,7 @@ export default {
       for (let i = 0; i < num; i++) {
         if (i === 0) {
           this.groupForm.eNode.push({
-            value: this.eNode + this.eNodeTx,
+            value: this.eNode + this.eNodeTx + this.address,
             isSelf: true,
             key: Date.now()
           })
@@ -344,6 +335,17 @@ export default {
             key: Date.now()
           })
         }
+      }
+    },
+    splitTx (tx) {
+      if (!tx) return
+      tx = tx.split('0x')
+      let eNodeKey = tx[0].match(/enode:\/\/(\S*)@/)
+      return {
+        address: '0x' + tx[2],
+        signTx: '0x' + tx[1],
+        eNode: tx[0],
+        eNodeId: eNodeKey[1]
       }
     },
     resetForm(formName) {

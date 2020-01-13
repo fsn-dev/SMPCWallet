@@ -24,7 +24,7 @@ function updateGaccount (data) {
 function findGaccount (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
-    console.log(params)
+    // console.log(params)
     gAccount.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)

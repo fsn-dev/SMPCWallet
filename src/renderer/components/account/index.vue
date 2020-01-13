@@ -161,7 +161,7 @@ export default {
   components: {sendTxns},
   watch: {
     '$route' (cur) {
-      // console.log(cur)
+      console.log(cur)
       if (cur.query.gID) {
         this.initGroupData()
       } else {

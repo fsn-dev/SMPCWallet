@@ -184,6 +184,7 @@ export default {
   },
   changeState (code) {
     code = Number(code)
+    // console.log(code)
     let status = ''
     switch (code) {
       case 0: 

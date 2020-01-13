@@ -57,7 +57,8 @@ export default {
 		newBuild: 'Newly build',
 		set: 'Setting',
 		setName: 'Setting aliases',
-		setNode: 'Set node'
+		setNode: 'Set node',
+		review: 'Review'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -109,7 +110,9 @@ export default {
 		groupHistory: 'Create history',
 		IP: 'IP',
 		aliases: 'Aliases',
-		notSetUp: 'Not set up'
+		notSetUp: 'Not set up',
+		initiator: 'Initiator',
+		approver: 'Approver'
 	},
 	state: {
 		name: 'Status',
