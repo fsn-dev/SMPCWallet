@@ -110,7 +110,8 @@ export default {
 		from: '来自',
 		group: '组',
 		txnHistory: '交易历史',
-		groupHistory: '创建历史',
+		groupHistory: '共管账户历史',
+		txnsHistory: '交易历史',
 		IP: 'IP地址',
 		aliases: '别名',
 		notSetUp: '未设置',
@@ -132,6 +133,7 @@ export default {
 	tip: {
 		name: '提示',
 		walletTip: '<span class="color_red">注意：当前版本为测试网。<br />请勿转入主网币，否则将丢失所有资产！<br />钱包密钥是本地存储。我们无法恢复密钥！</span>',
-		deleteNode: '此操作将永久删除该节点, 是否继续? '
+		deleteNode: '此操作将永久删除该节点, 是否继续? ',
+		devTip: '开发中'
 	}
 }

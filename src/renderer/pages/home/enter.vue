@@ -7,14 +7,14 @@
       </div>
       <h3 class="title" v-html="$t('title').walletTitle"></h3>
       <p class="tip" v-html="$t('tip').walletTip"></p>
-      <p class="tip">
+      <!-- <p class="tip"> -->
         <!-- {{$t('label').version}}：{{$$.config.version}}  -->
         <!-- <span class="color_red" v-if="!$$.config.versionType">（{{$t('label').versionTest}}）</span> -->
-      </p>
+      <!-- </p> -->
       <div class="flex-c">
         <w-button :ok="$t('btn').login" :cancel="$t('btn').register" @onOk="toUrl('login')" @onCancel="toUrl('register')" class="mt-20"></w-button>
       </div>
-      <div class="W300 mt-20 flex-c flex-wrap">
+      <div class="WW100 mt-20 flex-c flex-wrap">
         <set-enode :isShowEnode="false"></set-enode>
       </div>
     </div>

@@ -10,8 +10,8 @@
         <group-history></group-history>
       </el-tab-pane>
       <el-tab-pane name="second">
-        <span v-if="Number(safeMode) === 0" slot="label">{{$t('title').groupAccount + $t('label').txnHistory}}</span>
-        <span v-if="Number(safeMode) === 1" slot="label">{{$t('title').personAccount + $t('label').txnHistory}}</span>
+        <span v-if="Number(safeMode) === 0" slot="label">{{$t('label').txnsHistory}}</span>
+        <span v-if="Number(safeMode) === 1" slot="label">{{$t('label').txnsHistory}}</span>
         <txns-history></txns-history>
       </el-tab-pane>
     </el-tabs>

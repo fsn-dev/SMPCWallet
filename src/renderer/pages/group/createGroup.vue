@@ -105,7 +105,7 @@ export default {
       gID: 0,
       dataPage: {},
       groupForm: {
-        mode: '3/3',
+        mode: '5/5',
         eNode: [
           // { value: 'enode://fbced7f239d5633d25c2afda08e4f00e24c054bd0a9e9055f9f104f53fe1ce331c5431442cb2120ff64010bf7ac9b39af5e3349bba546210b1ab003cd9384014@127.0.0.1:12341'},
           // { value: 'enode://4fa6865eb8fbf9dbe22b4d3188ae67d6f20368400c582ad366a5fd709f789ebda23514bd71548bc4c4cf401690d73cdd62bf5ce785c73cc3fc32d616a80b9e6d@127.0.0.1:12342'},
@@ -294,7 +294,7 @@ export default {
       }
       console.log(this.gMember)
       if (this.gID === 0) {
-        this.groupForm.mode = '3/3'
+        this.groupForm.mode = '5/5'
         this.changeMode()
       } else {
         this.groupForm.mode = this.gMember.Mode
@@ -319,6 +319,11 @@ export default {
       })
     },
     changeMode () {
+      if (this.groupForm.mode !== '5/5') {
+        this.groupForm.mode = '5/5'
+        this.msgError(this.$t('tip').devTip)
+        return
+      }
       let num = Number(this.groupForm.mode.split('/')[1])
       this.groupForm.eNode = []
       for (let i = 0; i < num; i++) {

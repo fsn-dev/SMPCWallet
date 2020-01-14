@@ -100,7 +100,7 @@ export default {
 		amount: 'Amount',
 		date: 'Date',
 		info: 'Information',
-		hash: 'Hash',
+		hash: 'TxHash',
 		mode: 'Mode',
 		to: 'To Address',
 		value: 'Value',
@@ -108,7 +108,8 @@ export default {
 		from: 'From',
 		group: 'Group',
 		txnHistory: 'History',
-		groupHistory: 'Create history',
+		groupHistory: 'Managed Account history',
+		txnsHistory: 'Transaction history',
 		IP: 'IP',
 		aliases: 'Aliases',
 		notSetUp: 'Not set up',
@@ -130,6 +131,7 @@ export default {
 	tip: {
 		name: 'Tip',
 		walletTip: "Note: the current version is testnet. <br/> Please do not transfer mainnet coins, otherwise all assets will be lost! <br/> the wallet key is stored locally. We can't recover the key!",
-		deleteNode: 'This operation will permanently delete this node. Do you want to continue?'
+		deleteNode: 'This operation will permanently delete this node. Do you want to continue?',
+		devTip: 'Coming soon!'
 	}
 }

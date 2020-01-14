@@ -8,7 +8,7 @@ Vue.use(VueI18n)
 // 自动根据浏览器系统语言设置语言
 const navLang = navigator.language
 const localLang = (navLang === 'zh-CN' || navLang === 'en-US') ? navLang : false
-let lang = localStorage.getItem(config.AppName + '_DEXAPP_LANGUAGE_TYPE') || localLang || 'zh-CN'
+let lang = localLang || 'en-US'
 
 Vue.config.lang = lang
 

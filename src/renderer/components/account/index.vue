@@ -81,13 +81,13 @@
           <el-checkbox-group v-model="gMemberSelect" :min="1" class="">
             <el-checkbox :label="eNode">
               <div class="flex-bc">
-                {{$$.cutOut(eNode, 12, 19)}}
+                {{$$.cutOut(eNode, 12, 16)}}
                 <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
               </div>
             </el-checkbox>
             <el-checkbox v-for="(item, index) in gMemberInit" :label="item.eNode" :key="index">
               <div class="flex-bc">
-                {{$$.cutOut(item.eNode, 12, 19)}}
+                {{$$.cutOut(item.eNode, 12, 16)}}
                 <span class="color_green flex-bc ml-10" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
                 <span class="color_red flex-bc ml-10" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
               </div>
