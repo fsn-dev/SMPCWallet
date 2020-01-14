@@ -60,7 +60,8 @@ export default {
 		set: '设置',
 		setName: '设置别名',
 		setNode: '设置节点',
-		review: '重审'
+		review: '重审',
+		lookHistory: '查看历史'
 	},
 	loading: {
 		l_1: '账户获取中……'
@@ -114,7 +115,9 @@ export default {
 		aliases: '别名',
 		notSetUp: '未设置',
 		initiator: '发起者',
-		approver: '审批者'
+		approver: '审批者',
+		version: '版本',
+		versionTest: '测试网'
 	},
 	state: {
 		name: '状态',
@@ -128,7 +131,7 @@ export default {
 	},
 	tip: {
 		name: '提示',
-		walletTip: '欢迎使用SMPC Wallet 1.0<br>请创建一个钱包或者导入一个钱包',
-		deleteNode: '此操作将永久删除该节点, 是否继续?'
+		walletTip: '<span class="color_red">注意：当前版本为测试网。<br />请勿转入主网币，否则将丢失所有资产！<br />钱包密钥是本地存储。我们无法恢复密钥！</span>',
+		deleteNode: '此操作将永久删除该节点, 是否继续? '
 	}
 }

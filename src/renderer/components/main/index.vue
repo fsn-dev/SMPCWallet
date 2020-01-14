@@ -12,9 +12,9 @@
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" :title="$t('title').wait"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">{{$t('title').wait}}</el-badge></li>
-            <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/createGroup')" title="创建共管账户">创建共管账户</li> -->
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="openDrawerCreate" :title="$t('btn').createAccount">{{$t('btn').createAccount}}</li>
+            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="openDrawerCreate" :title="$t('btn').create">{{$t('btn').create}}</li>
+            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" :title="$t('title').wait"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">{{$t('btn').approval}}</el-badge></li>
+            <li class="item flex-c" :class="newsActive === 3 ? 'active' : ''" @click="toUrl('/history')" :title="$t('btn').history">{{$t('title').history}}</li>
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
@@ -109,12 +109,12 @@ export default {
       // console.log(cur)
       this.newsView(cur)
     },
-    // serverRPC (cur) {
-    //   console.log(cur)
-    //   setTimeout(() => {
-    //     this.reload()
-    //   }, 500)
-    // }
+    serverRPC (cur) {
+      console.log(cur)
+      setTimeout(() => {
+        this.reload()
+      }, 500)
+    }
   },
   computed: {
     ...computedPub
@@ -146,6 +146,8 @@ export default {
         this.newsActive = 1
       } else if (cur.path.indexOf('createGroup') !== -1) {
         this.newsActive = 2
+      } else if (cur.path.indexOf('history') !== -1) {
+        this.newsActive = 3
       } else {
         this.newsActive = 0
       }

@@ -97,10 +97,10 @@
         <div class="node-select-btn">
           <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
         </div>
-        <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
+        <!-- <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
           coinType: sendDataObj.coinType,
           address: sendDataObj.dcrmAddr,
-        })">查看历史</div>
+        })">{{$t('btn').lookHistory}}</div> -->
       </div>
     </el-drawer>
     <!-- 节点选择 end -->
@@ -180,6 +180,9 @@ export default {
       } else {
         this.toUrl('/group')
       }
+    },
+    gMemberSelect (cur) {
+      console.log(cur)
     }
   },
   mounted () {

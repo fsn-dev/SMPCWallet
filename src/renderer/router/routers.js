@@ -74,23 +74,6 @@ export default [
     ]
   },
   {
-    path: '/groupHistory',
-    component: Main,
-    meta: {
-      notCache: true
-    },
-    children: [
-      {
-        path: '/',
-        meta: {
-          title: '创建共管账户历史',
-          notCache: true
-        },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/group/history.vue')) )
-      }
-    ]
-  },
-  {
     path: '/gValid',
     component: Main,
     meta: {
@@ -187,7 +170,7 @@ export default [
     ]
   },
   {
-    path: '/txnsHistory',
+    path: '/history',
     component: Main,
     meta: {
       notCache: true
@@ -196,13 +179,47 @@ export default [
       {
         path: '/',
         meta: {
-          title: '交易历史',
+          title: '历史',
           notCache: true
         },
-        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/history.vue')) )
+        component: resolve => require.ensure([], () => resolve(require('@/pages/history/index.vue')) )
       }
     ]
   },
+  // {
+  //   path: '/txnsHistory',
+  //   component: Main,
+  //   meta: {
+  //     notCache: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '/',
+  //       meta: {
+  //         title: '交易历史',
+  //         notCache: true
+  //       },
+  //       component: resolve => require.ensure([], () => resolve(require('@/pages/txns/history.vue')) )
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/groupHistory',
+  //   component: Main,
+  //   meta: {
+  //     notCache: true
+  //   },
+  //   children: [
+  //     {
+  //       path: '/',
+  //       meta: {
+  //         title: '创建共管账户历史',
+  //         notCache: true
+  //       },
+  //       component: resolve => require.ensure([], () => resolve(require('@/pages/group/history.vue')) )
+  //     }
+  //   ]
+  // },
   {
     path: '/tValid',
     component: Main,

@@ -6,12 +6,13 @@
     </div> -->
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box">
       <el-tab-pane name="first">
-        <span slot="label">{{$t('title').groupNews + (gNewsNum ? '(' + gNewsNum + ')' : '')}}</span>
-        <g-news-list @gNewsTip="getGnewsNum"></g-news-list>
+        <span slot="label">{{$t('label').groupHistory}}</span>
+        <group-history></group-history>
       </el-tab-pane>
       <el-tab-pane name="second">
-        <span slot="label">{{$t('title').txnsNews + (tNewsNum ? '(' + tNewsNum + ')' : '')}}</span>
-        <t-news-list @tNewsTip="getTnewsNum"></t-news-list>
+        <span v-if="Number(safeMode) === 0" slot="label">{{$t('title').groupAccount + $t('label').txnHistory}}</span>
+        <span v-if="Number(safeMode) === 1" slot="label">{{$t('title').personAccount + $t('label').txnHistory}}</span>
+        <txns-history></txns-history>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -32,8 +33,9 @@
 </style>
 
 <script>
-import gNewsList from './gNewsList'
-import tNewsList from './tNewsList'
+import {computedPub} from '@/assets/js/pages/public'
+import groupHistory from './groupHistory'
+import txnsHistory from './txnsHistory'
 export default {
   name: '',
   data () {
@@ -43,14 +45,17 @@ export default {
       tNewsNum: 0,
     }
   },
-  components: {gNewsList, tNewsList},
-  watch: {
-    gNewsNum () {
-      this.initTabView()
-    },
-    tNewsNum () {
-      this.initTabView()
-    },
+  components: {groupHistory, txnsHistory},
+  // watch: {
+  //   gNewsNum () {
+  //     this.initTabView()
+  //   },
+  //   tNewsNum () {
+  //     this.initTabView()
+  //   },
+  // },
+  computed: {
+    ...computedPub,
   },
   mounted () {
     
@@ -59,21 +64,21 @@ export default {
     handleClick () {
 
     },
-    initTabView () {
-      if (this.gNewsNum === 0 && this.tNewsNum > 0) {
-        this.activeName = 'second'
-      } else {
-        this.activeName = 'first'
-      }
-    },
-    getGnewsNum (num) {
-      // console.log(num)
-      this.gNewsNum = num ? num : 0
-    },
-    getTnewsNum (num) {
-      // console.log(num)
-      this.tNewsNum = num ? num : 0
-    }
+    // initTabView () {
+    //   if (this.gNewsNum === 0 && this.tNewsNum > 0) {
+    //     this.activeName = 'second'
+    //   } else {
+    //     this.activeName = 'first'
+    //   }
+    // },
+    // getGnewsNum (num) {
+    //   // console.log(num)
+    //   this.gNewsNum = num ? num : 0
+    // },
+    // getTnewsNum (num) {
+    //   // console.log(num)
+    //   this.tNewsNum = num ? num : 0
+    // }
   }
 }
 </script>

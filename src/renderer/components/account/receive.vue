@@ -156,7 +156,7 @@ export default {
     },
     getSendHistory () {
       this.loading.history = false
-      let url = this.$$.config.receiveAddrUrl + `txs/${this.selectData.coinType}/${this.selectData.address}`
+      let url = this.$$.config.receiveAddrUrl + `txs/${this.selectData.coinType}/${this.selectData.address.toLowerCase()}`
       // let url = this.getHistoryUrl()
       console.log(url)
       this.$axios.get(url).then(res => {

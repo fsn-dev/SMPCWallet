@@ -2,9 +2,15 @@ const path = require('path').resolve('.')
 
 let publicSet = {
   /**
-   * @description 主币种，默认币种
+   * @description 版本号
    */
-  initCoin: 'FSN',
+  version: '0.1.0',
+  /**
+   * @description 版本号
+   * @param 0: 测试
+   * @param 1: 生产
+   */
+  versionType: 0,
   /**
    * @description 链接node请求的地址
    */
@@ -32,7 +38,7 @@ let publicSet = {
   /**
    * @description 通过地址查询外部交易历史
    */
-  receiveAddrUrl: 'http://54.183.185.30:5000/',
+  receiveAddrUrl: 'http://5.189.139.168:5000/',
   /**
    * @description 数据请求时间间隔
    */
@@ -111,8 +117,8 @@ let publicSet = {
   dayAndNight: '1', // '0': 夜晚； '1': 白天
 }
 
-// publicSet.appURL = 'http://139.196.26.212:8300'
-publicSet.appURL = 'http://localhost:8300'
+publicSet.appURL = 'http://139.196.26.212:8300'
+// publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.184:8877'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 

@@ -254,10 +254,6 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
           breakAgaing().then(res => {
             this.getAccounts(address, mode).then(res => {
               resolve(res)
@@ -291,10 +287,6 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
           breakAgaing().then(res => {
             this.getAccountsBalance(pubk, address).then(res => {
               resolve(res)

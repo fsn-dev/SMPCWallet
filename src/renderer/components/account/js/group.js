@@ -41,6 +41,7 @@ export const gMethods = {
         p3: [obj]
       })
     }
+    this.gMemberSelect.push(this.eNode)
     this.$$.batchRequest(arr).then(res => {
       // console.log(res)
       for (let obj of res) {
@@ -55,6 +56,7 @@ export const gMethods = {
           eNode: cbData.Data.Enode,
           status: status === 'OnLine' ? 1 : 0
         })
+        this.gMemberSelect.push(cbData.Data.Enode)
       }
     })
     // console.log(this.gMemberInit)

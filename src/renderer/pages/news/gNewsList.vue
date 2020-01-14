@@ -28,6 +28,9 @@
 .node-view-style {
   .eNode {
     width: size(150);height: size(30);padding: 0 size(12);background: $color-primary-sm;margin-right: size(5);overflow: hidden;text-overflow: ellipsis;white-space: nowrap;border-radius: size(30);line-height:size(21);font-size: $text-sm;color: $color-gray-sm;margin-top: size(10);
+    .i {
+      overflow: hidden;text-overflow: ellipsis;white-space: nowrap;display: inline-block;
+    }
   }
 }
 </style>

@@ -58,7 +58,8 @@ export default {
 		set: 'Setting',
 		setName: 'Setting aliases',
 		setNode: 'Set node',
-		review: 'Review'
+		review: 'Review',
+		lookHistory: 'Viewing history'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -112,7 +113,9 @@ export default {
 		aliases: 'Aliases',
 		notSetUp: 'Not set up',
 		initiator: 'Initiator',
-		approver: 'Approver'
+		approver: 'Approver',
+		version: 'Version',
+		versionTest: 'Testnet'
 	},
 	state: {
 		name: 'Status',
@@ -126,7 +129,7 @@ export default {
 	},
 	tip: {
 		name: 'Tip',
-		walletTip: 'Welcome to SMPC wallet 1.0 <br> please create a wallet or import a wallet',
+		walletTip: "Note: the current version is testnet. <br/> Please do not transfer mainnet coins, otherwise all assets will be lost! <br/> the wallet key is stored locally. We can't recover the key!",
 		deleteNode: 'This operation will permanently delete this node. Do you want to continue?'
 	}
 }

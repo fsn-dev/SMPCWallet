@@ -23,10 +23,10 @@
         </el-form-item>
       </el-form>
 
-      <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
+      <!-- <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
         coinType: sendDataObj.coinType,
         address: sendDataObj.dcrmAddr,
-      })">查看历史</div>
+      })">{{$t('btn').lookHistory}}</div> -->
     </div>
 
     <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>

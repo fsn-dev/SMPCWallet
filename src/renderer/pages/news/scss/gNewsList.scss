@@ -6,12 +6,12 @@
       .p1 {
         width:100%;font-size: $text-sm;font-weight: bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
       }
-      .eNode {
-        // line-height:size(21);font-size: $text-normal;color: $color-gray-sm;margin-top: size(5);
-        .i {
-          overflow: hidden;text-overflow: ellipsis;white-space: nowrap;display: inline-block;
-        }
-      }
+      // .eNode {
+      //   // line-height:size(21);font-size: $text-normal;color: $color-gray-sm;margin-top: size(5);
+      //   // .i {
+      //   //   overflow: hidden;text-overflow: ellipsis;white-space: nowrap;display: inline-block;
+      //   // }
+      // }
     }
     .el-button {
       background: $color-primary;color: #fff;
