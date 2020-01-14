@@ -1,18 +1,15 @@
 <template>
   <div class="boxConntent1" v-loading="loading.list" :element-loading-text="$t('loading').l_1">
-    <!-- <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15">
-      <el-breadcrumb-item :to="{ path: '/group' }">账户列表</el-breadcrumb-item>
-      <el-breadcrumb-item>消息列表</el-breadcrumb-item>
-    </el-breadcrumb> -->
     <div class="g-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item flex-bc" v-for="(item, index) in newsList" :key="index">
           <div class="left">
-            <p class="p1">{{$$.cutOut(item.GroupId, 12, 10)}}</p>
-            <div class="flex-sc">
+            <p class="p1">{{item.Key}}</p>
+            <div class="flex-sc node-view-style flex-wrap">
               <span v-for="(eNode, indexs) in item.Enodes" :key="indexs" class="eNode flex-sc" :title="eNode">
-                <i class="i">{{$$.cutOut(eNode, 12, 10)}}</i>
-                <span>{{ indexs === (item.Enodes.length - 1) ? "" : '、'}}</span>
+                <!-- <i class="i">{{$$.cutOut(eNode, 12, 10)}}</i> -->
+                <i class="i">{{splitNode(eNode)}}</i>
+                <!-- <span>{{ indexs === (item.Enodes.length - 1) ? "" : '、'}}</span> -->
               </span>
             </div>
           </div>
@@ -28,6 +25,11 @@
 
 <style lang="scss">
 @import './scss/gNewsList';
+.node-view-style {
+  .eNode {
+    width: size(150);height: size(30);padding: 0 size(12);background: $color-primary-sm;margin-right: size(5);overflow: hidden;text-overflow: ellipsis;white-space: nowrap;border-radius: size(30);line-height:size(21);font-size: $text-sm;color: $color-gray-sm;margin-top: size(10);
+  }
+}
 </style>
 
 <script>
@@ -55,7 +57,7 @@ export default {
       this.$$.reqAccountList(this.address).then(res => {
         console.log(res)
         this.$$.getGroup().then(gList => {
-          console.log(gList)
+          // console.log(gList)
           this.gInfo = {}
           if (gList.msg === 'Success') {
             for (let obj of gList.info) {
@@ -79,6 +81,9 @@ export default {
         this.msgError(err.error)
         this.loading.list = false
       })
+    },
+    splitNode (eNode) {
+      return eNode.match(/enode:\/\/(\S*)@/)[1]
     }
   }
 }

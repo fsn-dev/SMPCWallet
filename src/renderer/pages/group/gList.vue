@@ -75,7 +75,7 @@ export default {
   },
   watch: {
     '$route' (cur) {
-      console.log(cur)
+      // console.log(cur)
       if (cur.query.gID) {
         this.gID = this.$route.query.gID
         this.publicKey = this.$route.query.publicKey
@@ -98,7 +98,7 @@ export default {
   methods: {
     initGroup () {
       
-      this.$$.getAccounts('', this.safeMode).then(res => {
+      this.$$.getAccounts(this.address, this.safeMode).then(res => {
         // console.log(res)
         this.gAccountList = []
         let arr = res.info ? res.info : [], arr1 = [], arr2 = []

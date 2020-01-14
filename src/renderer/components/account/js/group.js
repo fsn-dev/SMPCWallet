@@ -31,7 +31,7 @@ export const gMethods = {
   },
   setMemberList (data) {
     this.gMemberInit = []
-    // console.log(arr)
+    console.log(arr)
     let arr = []
     for (let obj of data) {
       if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue

@@ -19,9 +19,28 @@
         <el-form-item :label="$t('label').value">
           <el-input type="number" v-model="rawTxData.value" disabled="disabled"></el-input>
         </el-form-item>
+        <el-form-item v-for="(eNode, index) in gForm.eNode" :key="index">
+
+          <div class="flex-bc flex-wrap">
+            <div class="flex-bc WW100">
+              <div class="flex-sc">
+                {{eNode.initiate ? ($t('label').initiator + '：') : ($t('label').approver + '：')}}
+                <span slot="label" :class="eNode.status === 5 || eNode.status === 0 ? 'color_green' : 'color_red'">{{$$.changeState(eNode.status)}}</span>
+              </div>
+              <!-- <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span> -->
+            </div>
+            <el-input v-model="eNode.eNode" disabled="disabled" :title="eNode.eNode"></el-input>
+            <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
+          </div>
+        </el-form-item>
         <el-form-item class="flex-ec">
-          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')" v-if="isApplySataus">{{$t('btn').agree}}</el-button>
-          <el-button @click="submitForm('rawTxData', 'DISAGREE')" v-if="isApplySataus">{{$t('btn').refuse}}</el-button>
+          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')" v-if="isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
+          <el-button type="danger" @click="submitForm('rawTxData', 'DISAGREE')" v-if="isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
+
+          <el-button type="success" @click="reviewApply" v-if="isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
+
+
+
           <el-button @click="toUrl('/tNewsList')">{{$t('btn').back}}</el-button>
         </el-form-item>
       </el-form>
@@ -54,7 +73,10 @@ export default {
       modeArr: this.$$.mode,
       urlParams: {},
       isApplySataus: false,
-      applyStatus: ''
+      isReplySet: true,
+      applyStatus: '',
+      keyId: '',
+      gForm: {}
     }
   },
   computed: {
@@ -63,6 +85,37 @@ export default {
   sockets: {
     GroupFindTxns (res) {
       console.log(res)
+      let arr = []
+      if (res.msg === 'Success' && res.info.length > 0) {
+        let aObj = {}
+        aObj = res.info[0]
+        console.log(aObj)
+        this.keyId = aObj.keyId
+        for (let obj of aObj.member) {
+          if (obj.kId === this.address && obj.status !== 0) {
+            this.isReplySet = false
+          }
+          arr.push(obj)
+        }
+        this.gForm = {
+          name: aObj.key,
+          mode: aObj.mode,
+          eNode: arr,
+          gID: aObj.key,
+        }
+      } else {
+        for (let obj of this.urlParams.Enodes) {
+          arr.push({
+            eNode: obj,
+          })
+        }
+        this.gForm = {
+          name: this.urlParams.Gname,
+          mode: this.urlParams.LimitNum,
+          eNode: arr,
+          gID: this.urlParams.Key,
+        }
+      }
     },
     changeGroupMemberTxnsStatus (res) {
       console.log(res)
@@ -81,16 +134,19 @@ export default {
     modalClick () {
       this.eDialog.pwd = false
     },
+    reviewApply () {
+      this.isReplySet = true
+    },
     async showGroupData () {
       this.rawTxData = {
         to: this.urlParams.DcrmTo,
         value: this.$$.fromWei(this.urlParams.Value, this.$$.cutERC20(this.urlParams.Cointype).coinType) 
       }
+      this.$socket.emit('GroupFindTxns', {
+        key: this.urlParams.Key,
+      })
       this.$$.getLockOutStatus(this.urlParams.Key).then(res => {
         console.log(res)
-        let gData = res.info.AllReply ? res.info.AllReply : ''
-        gData = gData ? JSON.parse(gData) : ''
-        console.log(gData)
         if (res.msg === 'Success' && res.status === 'Pending') {
           this.isApplySataus = true
         } else {
@@ -159,12 +215,13 @@ export default {
           console.log(res)
           if (cbData.msg === 'Success') {
             this.$socket.emit('changeGroupMemberTxnsStatus', {
-              key: this.urlParams.Key,
+              keyId: this.keyId,
               kId: this.address,
               eNode: this.eNode,
               status: this.applyStatus === 'AGREE' ? 5 : 4
             })
             this.msgSuccess('Success!')
+            this.toUrl('/waitNews')
           } else {
             this.msgError('Error')
           }

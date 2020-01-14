@@ -3,13 +3,51 @@ const pathLink = path
 
 const Web3 = require('web3')
 import config from '@etc/js/config.js'
+/**
+ * @description 基本信息设置
+ */
+// import {findBaseInfo} from '@/db/baseInfo'
+
 let web3
 try {
-  // web3 = new Web3(new Web3.providers.HttpProvider('https://10.192.32.92'))
   web3 = new Web3(new Web3.providers.HttpProvider(config.serverRPC))
 } catch (error) {
   web3 = new Web3()
 }
+
+// let web3 = new Web3()
+
+// findBaseInfo({key: 'serverRPC'}).then(res => {
+//   let url = config.serverRPC
+//   if (res.length > 0) {
+//     url = res[0].value
+//   }
+//   web3.setProvider(url)
+// }).catch(err => {
+//   console.log(err)
+//   web3.setProvider(config.serverRPC)
+// })
+
+
+
+// let serverUrl = ''
+// function getUrl () { 
+//   return new Promise(resolve => {
+//     findBaseInfo({key: 'serverRPC'}).then(res => {
+//       let url = config.serverRPC
+//       if (res.length > 0) {
+//         url = res[0].value
+//       }
+//       // serverUrl = url
+//       resolve(url)
+//     })
+//   })
+// }
+
+// let url = await getUrl()
+// console.log(url)
+// web3 = new Web3(new Web3.providers.HttpProvider(url))
+// console.log(url)
 
 web3.extend({
   property: 'dcrm',

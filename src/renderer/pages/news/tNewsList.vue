@@ -60,6 +60,7 @@ export default {
   },
   methods: {
     initTxnsList () {
+      console.log(this.address)
       this.$$.getTxnsList(this.address).then(res => {
         console.log(res)
         this.newsList = res.info

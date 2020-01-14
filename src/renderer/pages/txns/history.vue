@@ -86,7 +86,8 @@ export default {
         cur: 0,
         pageSize: 10,
         total: 0
-      }
+      },
+      timeout: 1000 * 60 * 10
     }
   },
   sockets: {
@@ -150,7 +151,7 @@ export default {
     },
     initData () {
       let urlParams = this.$route.query
-      // console.log(urlParams)
+      console.log(urlParams)
       this.coinType = urlParams.coinType ? urlParams.coinType : ''
       this.dcrmAddr = urlParams.address ? urlParams.address : ''
       if (Number(this.safeMode) === 1) {
@@ -162,6 +163,7 @@ export default {
     },
     emitUrl () {
       let data = {
+        kId: this.address,
         coinType: this.coinType,
         from: this.dcrmAddr,
         pageSize: this.page.pageSize,
@@ -181,17 +183,15 @@ export default {
     formatData (data) {
       this.tableData = []
       let nowTime = Date.now()
-      // let timeout = 1000 * 60 * 10
-      let timeout = 1000 * 30
+      // let timeout = 1000 * 30
       // console.log()
       for (let i = 0, len = data.length; i < len; i++) {
         let dataObj = data[i]
-        // dataObj.status = 0
-        // console.log('index',i)
         console.log(dataObj.status)
         if (dataObj.status === 0) {
           let state = 0
-          if ((nowTime - dataObj.timestamp) < timeout) {
+          // if ((nowTime - dataObj.timestamp) < timeout) {
+          if (dataObj.member && dataObj.member.length > 0) {
             let stateObj = { p: 0, a: 0, r: 0 }
             for (let obj of dataObj.member) {
               if (obj.status === 0) {
@@ -211,13 +211,14 @@ export default {
             } else if (stateObj.a === dataObj.member.length) {
               state = 5
               this.getTxnsHash(dataObj._id, dataObj.key, i)
+            } else if ((nowTime - dataObj.timestamp) < this.timeout && stateObj.p > 0) {
+              state = 6
+              dataObj.status = state
+              this.setTxnsDBState(dataObj._id, i, '', state)
             }
-          } else if (dataObj.status === 1 && !dataObj.hash) {
-            this.getTxnsHash(dataObj._id, dataObj.key, i)
-          } else if ((nowTime - dataObj.timestamp) >= timeout && dataObj.status !== 6) {
-            state = 6
             dataObj.status = state
-            this.setTxnsDBState(dataObj._id, i, '', state)
+          } else {
+            this.getTxnsHash(dataObj._id, dataObj.key, i)
           }
         } else if (dataObj.status === 5 && !dataObj.hash) {
           this.getTxnsHash(dataObj._id, dataObj.key, i)
@@ -242,9 +243,6 @@ export default {
       })
     },
     setTxnsDBState (id, index, hash, status) {
-      // console.log('key',key)
-      // console.log('index',index)
-      // console.log('status',status)
       this.$socket.emit('changeGroupTxnsStatus', {
         id: id,
         hash: hash,

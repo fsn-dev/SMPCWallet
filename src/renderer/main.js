@@ -72,21 +72,10 @@ Vue.prototype.msgWarning = function(txt) {
 }
 
 Vue.prototype.quitApp = function() {
-  // console.log(this)
-  // console.log(this.$store)
-  // console.log($$)
-  let dayAndNight = this.$store.state.dayAndNight
-  let language = this.$store.state.language
-  let serverRPC = this.$store.state.serverRPC
   $$.clearCookies()
-  // this.$store.commit('setEnode', '')
   this.$store.commit('setToken', '')
   this.$store.commit('setWallet', '')
   this.$store.commit('setAddress', '')
-  this.$store.commit('setDayAndNight', {info: dayAndNight})
-  this.$store.commit('setSafeMode', {info: $$.config.modeInit})
-  this.$store.commit('setLanguage', {info: language})
-  this.$store.commit('setServerRPC', {info: serverRPC})
   this.$router.push('/')
 }
 

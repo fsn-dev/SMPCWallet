@@ -49,7 +49,7 @@ export default {
   data () {
     return {
       viewEnode: '',
-      netUrl: this.$$.config.serverRPC,
+      netUrl: this.serverRPC,
       netUrlArr: [],
       loading: {
         setNode: false
@@ -58,6 +58,11 @@ export default {
       eDialog: {
         pwd: false
       }
+    }
+  },
+  watch: {
+    serverRPC () {
+      this.netUrl = this.serverRPC
     }
   },
   computed: {
@@ -77,7 +82,7 @@ export default {
         if (res.length > 0) {
           this.netUrlArr.push(...res)
         }
-        this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
+        this.netUrl = this.serverRPC
       })
     },
     saveRpcDB () {

@@ -1,32 +1,3 @@
-// // const Datastore = require('nedb')
-// import Datastore from 'nedb'
-// import path from 'path'
-// import { remote } from 'electron'
-// const db = {}
-
-// // const path = 'C:/Program Files/SMPC'
-// // const path = './data'
-
-// // console.log()
-
-// db.ks = new Datastore({
-//   filename: path.join(remote.app.getPath('userData'), 'db/ks.db')
-// })
-// db.ks.insert({
-//   name: 'test',
-//   ks: '123',
-//   timestamp: Date.now()
-// }, (err, res) => {
-//   console.log(err)
-//   console.log(res)
-// })
-
-// console.log(db)
-// // export const ks = db.ks
-// // console.log(remote.app)
-// export const ks = new Datastore({
-//   filename: path.join(remote.app.getPath('userData'), 'db/ks.db')
-// })
 
 import Datastore from 'nedb'
 import path from 'path'
@@ -55,6 +26,11 @@ const group = new Datastore({
 const gAccount = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/db/gAccount.db')
+})
+
+const baseInfo = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/db/baseInfo.db')
 })
 
 
@@ -96,7 +72,8 @@ export {
   node,
   headerImg,
   group,
-  gAccount
+  gAccount,
+  baseInfo
 }
 
 

@@ -31,7 +31,7 @@
           <span class="round" :class="Number(dayAndNight) ? 'el-icon-sunny day' : 'el-icon-moon moon'"></span>
         </div>
         
-        <div class="header-top-user flex-c cursorP" @click="drawer.user = true">
+        <div class="header-top-user flex-c cursorP" @click="drawer.user = true" :title="token">
           <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
           <!-- <div class="headImg box_Wshadow1 flex-c" @click="isUserView = !isUserView"><img :src="headerImg"></div> -->
           <!-- <div class="headImg box_Wshadow1 flex-c" @click="drawer.user = true"><img :src="headerImg"></div> -->
@@ -109,6 +109,12 @@ export default {
       // console.log(cur)
       this.newsView(cur)
     },
+    // serverRPC (cur) {
+    //   console.log(cur)
+    //   setTimeout(() => {
+    //     this.reload()
+    //   }, 500)
+    // }
   },
   computed: {
     ...computedPub
@@ -118,12 +124,6 @@ export default {
     // console.log(this.$route)
     this.newsView(this.$route)
     this.getHeaderImg()
-    // this.headerImg = this.$$.config.file.img.url + this.address + this.$$.config.file.img.type
-
-    // this.intervalNews()
-    // this.intervalSwitch = setInterval(() => {
-    //   this.intervalNews()
-    // }, 1000 * 5)
   },
   methods: {
     async getHeaderImg () {

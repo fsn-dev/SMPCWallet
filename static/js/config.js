@@ -44,7 +44,7 @@ let publicSet = {
   /**
    * @description 项目所属
    */
-  AppName: 'Fusion',
+  AppName: 'SMPC Wallet',
   /**
    * @description copyRight
    */
@@ -111,6 +111,7 @@ let publicSet = {
   dayAndNight: '1', // '0': 夜晚； '1': 白天
 }
 
+// publicSet.appURL = 'http://139.196.26.212:8300'
 publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.184:8877'
 // publicSet.appURL = 'http://192.168.1.153:7700'

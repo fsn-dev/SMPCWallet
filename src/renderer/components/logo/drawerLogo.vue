@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :title="$$.config.AppName + (token ? '--' + token : '')">
     <logo @click-logo="closeDrawer"></logo>
     <div class="d-back"> <span @click="closeDrawer"><i class="el-icon-arrow-left"></i>{{$t('btn').back}}</span></div>
   </div>
@@ -12,12 +12,16 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: 'drawerLogo',
   data () {
     return {
 
     }
+  },
+  computed: {
+    ...computedPub
   },
   methods: {
     closeDrawer () {

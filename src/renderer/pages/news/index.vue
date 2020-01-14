@@ -1,14 +1,16 @@
 <template>
-  <div class="boxConntent1 container pt-30">
+  <div class="boxConntent1 container pt-30 relative">
+    <div class="history-btn">
+      <div class="font14 cursorP line-block H40" v-if="activeName === 'first'" @click="toUrl('/groupHistory')">查看历史</div>
+      <div class="font14 cursorP line-block H40" v-if="activeName === 'second'" @click="toUrl('/txnsHistory')">查看历史</div>
+    </div>
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box">
       <el-tab-pane name="first">
         <span slot="label">{{$t('title').groupNews + (gNewsNum ? '(' + gNewsNum + ')' : '')}}</span>
-        <div class="font14 color_99 cursorP mb-10 line-block" @click="toUrl('/groupHistory')">查看历史</div>
         <g-news-list @gNewsTip="getGnewsNum"></g-news-list>
       </el-tab-pane>
       <el-tab-pane name="second">
         <span slot="label">{{$t('title').txnsNews + (tNewsNum ? '(' + tNewsNum + ')' : '')}}</span>
-        <div class="font14 color_99 cursorP mb-10 line-block" @click="toUrl('/txnsHistory')">查看历史</div>
         <t-news-list @tNewsTip="getTnewsNum"></t-news-list>
       </el-tab-pane>
     </el-tabs>
@@ -16,6 +18,9 @@
 </template>
 
 <style lang="scss">
+.history-btn {
+  position: absolute;top:30px; right: 15px;z-index: 3;color: $color-primary;
+}
 // .n-tab-box {
 //   .el-tabs__item {
 //     color: $color-gray;

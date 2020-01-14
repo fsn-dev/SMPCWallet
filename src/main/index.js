@@ -33,12 +33,15 @@ function createWindow () {
       webSecurity: false
     }
   })
-
   mainWindow.loadURL(winURL)
   mainWindow.openDevTools()
   mainWindow.on('closed', () => {
-    mainWindow.close()
-    mainWindow = null
+    try {
+      mainWindow.close()
+      mainWindow = null
+    } catch (error) {
+      console.log(error)
+    }
     // cookies.clearCookies()
     // Cookies.set(config.cookies.token, '', { expires: 0 })
     // Cookies.set(config.cookies.address, '', { expires: 0 })

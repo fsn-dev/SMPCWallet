@@ -21,7 +21,7 @@
                 {{eNode.initiate ? ($t('label').initiator + '：') : ($t('label').approver + '：')}}
                 <span slot="label" :class="eNode.status === 5 || eNode.status === 0 ? 'color_green' : 'color_red'">{{$$.changeState(eNode.status)}}</span>
               </div>
-              <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span>
+              <!-- <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span> -->
             </div>
             <el-input v-model="eNode.eNode" disabled="disabled" :title="eNode.eNode"></el-input>
             <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->

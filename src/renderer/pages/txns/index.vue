@@ -180,7 +180,7 @@ export default {
         data.eNode = this.eNode
       } else {
         data.gArr = [
-          {eNode: this.eNode, kId: this.address, status: 1, timestamp: Date.now(), initiate: 1}
+          {eNode: this.eNode, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
         ]
         for (let obj of this.gMemberInit) {
           data.gArr.push({eNode: obj.eNode, kId: '', status: 0, timestamp: '', initiate: 0})

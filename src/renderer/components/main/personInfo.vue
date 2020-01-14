@@ -16,13 +16,13 @@
 
 <style lang="scss" scoped>
 .t-logo-box {
-  border-bottom: 1px solid #ddd;padding-bottom: size(30);
+  border-bottom: 1px solid #ddd;padding-bottom: size(20);
   .quit-box {
     padding: size(0) size(8);border: 1px solid $color-primary;color: $color-primary;font-size: $text-sm;display: inline-block;
   }
 }
 .user-list {
-  width: 100%;max-height: size(400);background: #fff;padding: size(8) size(0);border-radius: size(3);margin-bottom: size(50);
+  width: 100%;max-height: size(400);background: #fff;padding: size(5) size(0);border-radius: size(3);margin-bottom: size(50);
   .item {
     padding: size(15) size(0);text-align: left;cursor: pointer;font-size: $text-normal;line-height: size(21);
     &:hover {

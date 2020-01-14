@@ -1,7 +1,31 @@
 import web3 from '@/assets/js/web3'
 import Tx from 'ethereumjs-tx'
 import config from '@etc/js/config.js'
+import {findBaseInfo} from '@/db/baseInfo'
 let eNodeInit
+
+let connectNum = 0
+function breakAgaing () {
+  connectNum ++
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (connectNum < 5) {
+        findBaseInfo({key: 'serverRPC'}).then(res => {
+          let url = config.serverRPC
+          if (res.length > 0) {
+            url = res[0].value
+          }
+          resolve(1)
+        }).catch(err => {
+          console.log(err)
+          resolve(1)
+        })
+      } else {
+        reject(0)
+      }
+    }, 1000)
+  })
+}
 
 let web3Utils = {
   againTmie: 500,
@@ -53,9 +77,18 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = 'OffLine'
-          resolve(data)
+          // console.log(err)
+          // data = 'OffLine'
+          // resolve(data)
+          breakAgaing().then(res => {
+            this.getEnodeState(eNode).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = 'OffLine'
+            resolve(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -77,9 +110,18 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = 0
-          resolve(data)
+          // console.log(err)
+          // data = 0
+          // resolve(data)
+          breakAgaing().then(res => {
+            this.getLockOutNonce(addr, coinType, dcrmAddr).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = 0
+            resolve(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -101,9 +143,18 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = 0
-          resolve(data)
+          // console.log(err)
+          // data = 0
+          // resolve(data)
+          breakAgaing().then(res => {
+            this.getReqNonce(addr).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = 0
+            resolve(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -162,9 +213,19 @@ let web3Utils = {
               reject(data)
             }
           }).catch(err => {
-            console.log(err)
-            data = {msg: 'Error', error: cbData.Tip}
-            reject(data)
+            // console.log(err)
+            // data = {msg: 'Error', error: cbData.Tip}
+            // reject(data)
+
+            breakAgaing().then(res => {
+              this.getGroupPerson().then(res => {
+                resolve(res)
+              })
+            }).catch(e => {
+              console.log(err)
+              data = {msg: 'Error', error: cbData.Tip}
+              reject(data)
+            })
           })
         } else {
           setTimeout(() => {
@@ -178,12 +239,12 @@ let web3Utils = {
       }
     })
   },
-  async getAccounts (gID, mode) {
+  async getAccounts (address, mode) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let cbData = ''
-        web3.dcrm.getAccounts(gID, mode).then(res => {
+        web3.dcrm.getAccounts(address, mode).then(res => {
           cbData = res
           // console.log(cbData)
           if (cbData.Status !== 'Error') {
@@ -193,9 +254,19 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.getAccounts(address, mode).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -220,9 +291,19 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.getAccountsBalance(pubk, address).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -247,9 +328,19 @@ let web3Utils = {
               data = {msg: 'Success', info: []}
               // reject(data)
             }
+            console.log(data)
             resolve(data)
           }).catch(err => {
             console.log(err)
+            breakAgaing().then(res => {
+              this.getGroup().then(res => {
+                resolve(res)
+              })
+            }).catch(e => {
+              console.log(err)
+              data = {msg: 'Error', error: err.toString()}
+              reject(data)
+            })
           })
         } else {
           setTimeout(() => {
@@ -307,9 +398,19 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.createGroup(mode, nodeArr).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -334,9 +435,19 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.validGroup(name, eNode, type).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -362,9 +473,19 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.reqAccount(signTx, mode).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -382,7 +503,7 @@ let web3Utils = {
           cbData = res
           if (cbData.Status !== 'Error') {
             let arr = cbData.Data ? cbData.Data : []
-            // console.log(arr)
+            console.log(arr)
             let list = []
             for (let obj in arr) {
               // console.log(arr[obj])
@@ -394,9 +515,15 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          breakAgaing().then(res => {
+            this.reqAccountList(address).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -425,9 +552,19 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.reqAccountStatus(key).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -437,7 +574,7 @@ let web3Utils = {
     })
   },
   async getTxnsList (address) {
-    let data = {msg: '', info: ''}
+    let data = {msg: 'Success', info: []}
     return new Promise((resolve, reject) => {
       try {
         if (eNodeInit) {
@@ -456,8 +593,19 @@ let web3Utils = {
             resolve(data)
           }).catch(err => {
             console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
+            // data = {msg: 'Error', error: err.toString()}
+            // reject(data)
+
+            breakAgaing().then(res => {
+              console.log(address)
+              this.getTxnsList(address).then(res => {
+                resolve(res)
+              })
+            }).catch(e => {
+              console.log(err)
+              data = {msg: 'Error', error: err.toString()}
+              reject(data)
+            })
           })
         } else {
           setTimeout(() => {
@@ -488,9 +636,19 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          // console.log(err)
+          // data = {msg: 'Error', error: err.toString()}
+          // reject(data)
+
+          breakAgaing().then(res => {
+            this.lockout(signTx).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}
@@ -504,12 +662,12 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getLockOutStatus(key).then(res => {
-          console.log(res)
+          // console.log(res)
           cbData = res
           if (cbData.Status !== 'Error') {
             // console.log(JSON.parse(cbData.Data.result))
             let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
-            console.log(status)
+            // console.log(status)
             // status = status.Status
             data = {msg: 'Success', status: status.Status, info: status}
           } else {
@@ -517,9 +675,15 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          breakAgaing().then(res => {
+            this.getLockOutStatus(key).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         console.log(error)
@@ -544,9 +708,15 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          console.log(err)
-          data = {msg: 'Error', error: err.toString()}
-          reject(data)
+          breakAgaing().then(res => {
+            this.sendTxnsValid(signTx).then(res => {
+              resolve(res)
+            })
+          }).catch(e => {
+            console.log(err)
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
+          })
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}
