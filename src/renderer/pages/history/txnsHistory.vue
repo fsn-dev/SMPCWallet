@@ -244,6 +244,9 @@ export default {
               }
             }
             // console.log(stateObj)
+            // console.log((nowTime - dataObj.timestamp) > this.$$.config.timeout)
+            // console.log((nowTime - dataObj.timestamp))
+            // console.log(this.$$.config.timeout)
             if (stateObj.r > 0) {
               state = 4
               this.setTxnsDBState(dataObj._id, i, '', state)
