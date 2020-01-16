@@ -349,10 +349,12 @@ export default {
       })
     },
     changeMode () {
-      if (this.groupForm.mode !== this.$$.config.initGroupMode) {
+      let openMode = ['3/3', '5/5']
+      // if (this.groupForm.mode !== this.$$.config.initGroupMode) {
+      if (!openMode.includes(this.groupForm.mode)) {
         this.groupForm.mode = this.$$.config.initGroupMode
         this.msgError(this.$t('tip').devTip)
-        return
+        // return
       }
       let num = Number(this.groupForm.mode.split('/')[1])
       this.groupForm.eNode = []

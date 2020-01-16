@@ -19,11 +19,11 @@ function initMenu(){
 
   menu2.append(new MenuItem({label:'复制', role: 'copy' }));
   //点击dome
-  menu2.append(new MenuItem({label:'show', click() { 
-    //展示选中文本
-    let selectText = window.getSelection().toString();
-    alert(selectText); 
-  } }));
+  // menu2.append(new MenuItem({label:'show', click() { 
+  //   //展示选中文本
+  //   let selectText = window.getSelection().toString();
+  //   alert(selectText); 
+  // } }));
   window.addEventListener('contextmenu', (e) => { 
   
     e.preventDefault();
@@ -51,5 +51,5 @@ function isEleEditable(e){
     return isEleEditable(e.parentNode)
   }
 }
-initMenu()
-export const test = 1
+// initMenu()
+export default initMenu
