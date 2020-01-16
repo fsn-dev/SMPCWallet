@@ -7,7 +7,7 @@
       <ul class="boxConntent1" v-if="gAccountList.length > 0">
         <li class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)" :title="item.publicKey">
           <div class="label">{{item.name ? $$.titleCase(item.name) : 'G'}}</div>
-          {{item.name.length > 16 ? $$.cutOut(item.name, 10 ,4) : item.name}}
+          {{item.name.length > 16 ? '04' + $$.cutOut(item.name, 8 ,4) : item.name}}
         </li>
       </ul>
       <div class="flex-c boxConntent1" v-else>
@@ -108,7 +108,7 @@ export default {
               let obj3 = {
                 publicKey: obj2,
                 gID: obj1.GroupID,
-                name: obj2
+                name: obj2.substr(2)
               }
               arr2.push(obj3)
               arr1.push(obj2)

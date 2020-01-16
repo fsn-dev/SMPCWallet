@@ -12,7 +12,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/css.css'
 import './assets/css/style.css'
 
-import {test} from '@/libs/menu'
+// import {test} from '@/libs/menu'
 
 import ElementUI from 'element-ui'
 Vue.use(ElementUI)

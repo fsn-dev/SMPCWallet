@@ -33,6 +33,11 @@ const baseInfo = new Datastore({
   filename: path.join(remote.app.getPath('userData'), '/db/baseInfo.db')
 })
 
+const status = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/db/status.db')
+})
+
 
 setTimeout(() => {
   ks.ensureIndex({fieldName: 'name', unique: true}, err => {
@@ -65,6 +70,12 @@ setTimeout(() => {
       console.log(err)
     }
   })
+
+  status.ensureIndex({fieldName: 'key', unique: true}, err => {
+    if (err) {
+      console.log(err)
+    }
+  })
 }, 0)
 
 export {
@@ -73,7 +84,8 @@ export {
   headerImg,
   group,
   gAccount,
-  baseInfo
+  baseInfo,
+  status
 }
 
 

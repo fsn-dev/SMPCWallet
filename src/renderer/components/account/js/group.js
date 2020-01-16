@@ -14,6 +14,7 @@ export const gMethods = {
       if (this.$route.query.gID) {
         this.gID = this.$route.query.gID
       }
+      this.gMemberInit = []
       this.getMemberList()
     }).catch(err => {
       console.log(err)
@@ -30,8 +31,6 @@ export const gMethods = {
     }
   },
   setMemberList (data) {
-    this.gMemberInit = []
-    console.log(arr)
     let arr = []
     for (let obj of data) {
       if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue
@@ -58,7 +57,7 @@ export const gMethods = {
         })
         this.gMemberSelect.push(cbData.Data.Enode)
       }
+      this.loading.nodeSelect = false
     })
-    // console.log(this.gMemberInit)
   },
 }

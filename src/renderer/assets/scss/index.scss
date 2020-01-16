@@ -94,6 +94,40 @@
   margin-bottom: size(5);padding: size(15) size(15) 0;
 }
 
+.labelType {
+  width: size(200);height: size(40);position: absolute;top: size(25);left:size(-55);z-index: 3;
+  &.self {
+    border: 1px solid $color-info;color: $color-info;background: $color-info-sm;
+  }
+}
+
+.table-box {
+  .el-table thead {
+    th {
+      color: #909399;font-weight: bold;
+    }
+  }
+}
+
+.tables-expand {
+  $left: size(100);
+  .el-form-item {
+    margin-right: 0; margin-bottom: 0; width: 100%;position: relative;padding-left: $left;
+    label {
+      width: $left; color: #99a9bf;position: absolute;left: 0;top: 0;text-align: right;
+    }
+    .el-form-item__content {
+      width: 100%;line-height: 40px; font-size: $text-normal;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
+    }
+  }
+}
+.table-list {
+  width: 100%;
+  .item {
+    width: 100%;position: relative;
+  }
+}
+
 // 夜间模式
 .night {
   .appTitle {

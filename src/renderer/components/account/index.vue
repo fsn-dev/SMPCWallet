@@ -75,7 +75,7 @@
       <div slot="title">
         <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
       </div>
-      <div class="d-content-view node-select-box">
+      <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
           <el-checkbox-group v-model="gMemberSelect" :min="1" class="">
@@ -97,10 +97,6 @@
         <div class="node-select-btn">
           <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
         </div>
-        <!-- <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
-          coinType: sendDataObj.coinType,
-          address: sendDataObj.dcrmAddr,
-        })">{{$t('btn').lookHistory}}</div> -->
       </div>
     </el-drawer>
     <!-- 节点选择 end -->
@@ -136,7 +132,8 @@ export default {
         // pwd: false,
       },
       loading: {
-        account: false
+        account: false,
+        nodeSelect: true
       },
       gMemberInit: [],
       gMemberSelect: [],
@@ -180,15 +177,15 @@ export default {
       } else {
         this.toUrl('/group')
       }
-    },
-    gMemberSelect (cur) {
-      console.log(cur)
     }
   },
   mounted () {
     setTimeout(() => {
+      // console.log(this.$route)
       if (!Number(this.safeMode)) {
-        this.initGroupData()
+        if (this.$route.query.publicKey) {
+          this.initGroupData()
+        }
       } else {
         this.getGroupPersonId()
       }
@@ -244,7 +241,7 @@ export default {
       })
     },
     setTxnsData (item) {
-      console.log(item)
+      // console.log(item)
       this.sendDataObj = {
         balance: item.Balance,
         dcrmAddr: item.DcrmAddr,
@@ -256,6 +253,9 @@ export default {
     openSendDialog (index, item) {
       this.setTxnsData(item)
       if (!Number(this.safeMode)) {
+        this.gMemberInit = []
+        this.gMemberSelect = []
+        this.loading.nodeSelect = true
         this.drawer.select = true
         setTimeout(() => {
           this.getMemberList()

@@ -320,7 +320,7 @@ let web3Utils = {
               data = {msg: 'Success', info: []}
               // reject(data)
             }
-            console.log(data)
+            // console.log(data)
             resolve(data)
           }).catch(err => {
             console.log(err)
@@ -530,13 +530,13 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getReqAddrStatus(key).then(res => {
-          console.log(res)
+          // console.log(res)
           cbData = res
           if (cbData.Status !== 'Error') {
-            console.log(cbData.Data.result)
-            console.log(JSON.parse(cbData.Data.result))
+            // console.log(cbData.Data.result)
+            // console.log(JSON.parse(cbData.Data.result))
             let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
-            console.log(status)
+            // console.log(status)
             status = status.Status
             data = {msg: 'Success', info: status}
           } else {

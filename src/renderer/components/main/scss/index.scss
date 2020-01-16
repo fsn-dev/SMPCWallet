@@ -32,12 +32,6 @@
         }
       }
     }
-    .header-top-lang {
-      width: 80px;
-      .el-input__inner{
-        border:none;padding-left: 0;background: none;color: $color-gray-sm;
-      }
-    }
     .header-top-dn {
       $dn-h: 28;
       width: size(50);height: size($dn-h);border: size(1) solid #ddd;border-radius: size(15);position: relative;margin: 0 size(15);

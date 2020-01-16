@@ -28,11 +28,15 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="openPwdDialog('AGREE')" v-if="isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
-          <el-button type="danger" @click="openPwdDialog('DISAGREE')" v-if="isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
-          <el-button type="success" @click="reviewApply" v-if="isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
-
-          <el-button @click="goBack">{{$t('btn').back}}</el-button>
+          <div class="flex-bc WW100">
+            <div>{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
+            <div>
+              <el-button type="primary" @click="openPwdDialog('AGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
+              <el-button type="danger" @click="openPwdDialog('DISAGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
+              <el-button type="success" @click="reviewApply" v-if="countDown && isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
+              <el-button @click="goBack">{{$t('btn').back}}</el-button>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -49,6 +53,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {uodateStatus} from '@/db/status'
 export default {
   name: '',
   data () {
@@ -66,7 +71,8 @@ export default {
       urlParams: this.$route.query,
       dataPage: {},
       keyId: '',
-      applyStatus: ''
+      applyStatus: '',
+      countDown: 0
     }
   },
   sockets: {
@@ -87,13 +93,15 @@ export default {
           }
           arr.push(obj)
         }
-        console.log(this.isReplySet)
+        // console.log(this.isReplySet)
         this.gForm = {
           name: aObj.key,
           mode: aObj.mode,
           eNode: arr,
           gID: aObj.key,
+          timestamp: aObj.timestamp
         }
+        this.countDownFn()
       } else {
         for (let obj of this.urlParams.Enodes) {
           arr.push({
@@ -133,6 +141,17 @@ export default {
     reviewApply () {
       this.isReplySet = true
     },
+    countDownFn () {
+      let timeout = this.$$.config.timeout
+      let countInterval = setInterval(() => {
+        if (Date.now() - this.gForm.timestamp > timeout) {
+          this.countDown = 0
+          clearInterval(countInterval)
+        } else {
+          this.countDown = parseInt((timeout - (Date.now() - this.gForm.timestamp)) / 1000)
+        }
+      }, 500)
+    },
     async showGroupData () {
       this.$socket.emit('GroupAccountsFind', {
         key: this.urlParams.Key,
@@ -161,6 +180,7 @@ export default {
                 status: this.applyStatus === 'AGREE' ? 5 : 4
               })
             }
+            this.updateStatus(this.urlParams.Key)
             this.toUrl('/waitNews')
           } else {
             this.msgError('Error')
@@ -169,6 +189,17 @@ export default {
         })
       }
       this.eDialog.pwd = false
+    },
+    updateStatus (key) {
+      uodateStatus({
+        key: key,
+        type: 1,
+        status: 1
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     openPwdDialog (type) {
       console.log(type)

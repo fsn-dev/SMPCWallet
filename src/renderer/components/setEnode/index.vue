@@ -8,9 +8,9 @@
       <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
       <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" :disabled="!isSetNode">
         <el-option
-          v-for="item in netUrlArr"
-          :key="item.url"
-          :label="item.url"
+          v-for="(item, index) in netUrlArr"
+          :key="index"
+          :label="item.name"
           :value="item.url">
         </el-option>
       </el-select>
@@ -51,6 +51,7 @@ export default {
       viewEnode: '',
       netUrl: this.serverRPC,
       netUrlArr: [],
+      noSaveDBnet: [],
       loading: {
         setNode: false
       },
@@ -60,10 +61,33 @@ export default {
       }
     }
   },
+  sockets: {
+    getNodeInfos (res) {
+      // console.log(res)
+      if (res.msg === 'Success' && res.info.length > 0) {
+        let arr = []
+        this.netUrl = this.serverRPC ? this.serverRPC : res.info[0].url
+        for (let obj of res.info) {
+          arr.push({
+            name: obj.name,
+            url: obj.url
+          })
+          this.noSaveDBnet.push(obj.url)
+        }
+        this.netUrlArr.unshift(...arr)
+        // console.log(this.netUrlArr)
+        // console.log(this.netUrl.toString())
+      }
+    }
+  },
   watch: {
     serverRPC () {
+      // console.log(123)
       this.netUrl = this.serverRPC
-    }
+    },
+    // netUrl (cur) {
+    //   console.log(cur)
+    // }
   },
   computed: {
     ...computedPub
@@ -79,24 +103,37 @@ export default {
         this.netUrlArr = [{
           url: this.$$.config.serverRPC
         }]
+        this.noSaveDBnet = [this.$$.config.serverRPC]
         if (res.length > 0) {
-          this.netUrlArr.push(...res)
+          for (let obj of res) {
+            if (!this.noSaveDBnet.includes(obj.url)) {
+              this.noSaveDBnet.push(obj.url)
+              this.netUrlArr.push({
+                url: obj.url,
+                name: obj.url
+              })
+            }
+          }
         }
-        this.netUrl = this.serverRPC
+        this.$socket.emit('getNodeInfos')
       })
     },
     saveRpcDB () {
       let url = this.netUrl
-      findNode({url: url}).then(res => {
-        if (res.length <= 0 && url !== this.$$.config.serverRPC) {
-          insertNode({
-            url: url
-          }).then(res => {
-            // console.log(res)
-            this.getNetUrl()
-          })
-        }
-      })
+      // console.log(url)
+      // console.log(this.noSaveDBnet.includes(url))
+      if (!this.noSaveDBnet.includes(url)) {
+        findNode({url: url}).then(res => {
+          if (res.length <= 0 && url !== this.$$.config.serverRPC) {
+            insertNode({
+              url: url
+            }).then(res => {
+              // console.log(res)
+              this.getNetUrl()
+            })
+          }
+        })
+      }
     },
     setNet () {
       this.loading.setNode = true

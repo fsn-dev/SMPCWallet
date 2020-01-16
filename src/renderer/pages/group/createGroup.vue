@@ -82,6 +82,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {findGroup} from '@/db/group'
+import {uodateStatus} from '@/db/status'
 export default {
   name: 'createAccount',
   props: {
@@ -105,7 +106,7 @@ export default {
       gID: 0,
       dataPage: {},
       groupForm: {
-        mode: '5/5',
+        mode: this.$$.config.initGroupMode,
         eNode: [
           // { value: 'enode://fbced7f239d5633d25c2afda08e4f00e24c054bd0a9e9055f9f104f53fe1ce331c5431442cb2120ff64010bf7ac9b39af5e3349bba546210b1ab003cd9384014@127.0.0.1:12341'},
           // { value: 'enode://4fa6865eb8fbf9dbe22b4d3188ae67d6f20368400c582ad366a5fd709f789ebda23514bd71548bc4c4cf401690d73cdd62bf5ce785c73cc3fc32d616a80b9e6d@127.0.0.1:12342'},
@@ -248,6 +249,7 @@ export default {
           this.loading.creat = false
           this.$emit('closeModal')
           this.modalClick()
+          this.updateStatus(res.info)
           this.saveDB(res.info)
           this.msgSuccess(this.$t('success').s_3)
         }
@@ -256,6 +258,15 @@ export default {
         console.log(err)
         this.msgError(err.error)
         this.loading.creat = false
+      })
+    },
+    updateStatus (key) {
+      uodateStatus({
+        key: key,
+        type: 1,
+        status: 1
+      }).then(res => {
+        console.log(res)
       })
     },
     saveDB (key) {
@@ -294,7 +305,7 @@ export default {
       }
       console.log(this.gMember)
       if (this.gID === 0) {
-        this.groupForm.mode = '5/5'
+        this.groupForm.mode = this.$$.config.initGroupMode
         this.changeMode()
       } else {
         this.groupForm.mode = this.gMember.Mode
@@ -309,6 +320,25 @@ export default {
     },
     changeState (item, index) {
       if (!item.value) return
+      let enode = item.value
+      let enodeArr = this.groupForm.eNode
+      if (enode.indexOf('enode:') < 0 || enode.indexOf('@') < 0 ) {
+        this.msgError(this.$t('warn').w_18)
+        return
+      }
+      let arr = new Set()
+      for (let i = 0, len = enodeArr.length; i < len; i++) {
+        if (i !== index && enodeArr[i].value) {
+          let eNodeKey = enodeArr[i].value.match(/enode:\/\/(\S*)@/)[1]
+          arr.add(eNodeKey)
+        }
+      }
+      let enode1 = enode.match(/enode:\/\/(\S*)@/)[1]
+      if (arr.has(enode1)) {
+        this.groupForm.eNode[index].value = ''
+        this.msgError('Repeat')
+        return
+      }
       this.$$.getEnodeState(item.value.replace(/\s/, '').split('0x')[0]).then(res => {
         console.log(res)
         this.groupForm.eNode[index].state = res
@@ -319,8 +349,8 @@ export default {
       })
     },
     changeMode () {
-      if (this.groupForm.mode !== '5/5') {
-        this.groupForm.mode = '5/5'
+      if (this.groupForm.mode !== this.$$.config.initGroupMode) {
+        this.groupForm.mode = this.$$.config.initGroupMode
         this.msgError(this.$t('tip').devTip)
         return
       }

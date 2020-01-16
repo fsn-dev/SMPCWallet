@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getAccountData () {
-      this.$$.getAccounts('', this.safeMode).then(res => {
+      this.$$.getAccounts(this.address, this.safeMode).then(res => {
         console.log(res)
         this.gAccountList = []
         let arr = res.info ? res.info : [], arr1 = [], arr2 = []

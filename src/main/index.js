@@ -17,8 +17,27 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
-  Menu.setApplicationMenu(null)
-  
+  // Menu.setApplicationMenu(null)
+  if (process.platform === 'darwin') {
+    const template = [
+      {
+        label: "Application",
+        submenu: [
+          { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+        ]
+      }, 
+      {
+        label: "Edit",
+        submenu: [
+          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        ]
+      }
+    ];
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  } else {
+    Menu.setApplicationMenu(null)
+  }
   /**
    * Initial window options
    */

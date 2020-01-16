@@ -137,7 +137,6 @@ export default {
       })
     },
     changePwd () {
-      let fileUrl = this.$$.config.file.ks.url
       findAccount({name: this.registerObj.username}).then(res => {
         console.log(res)
         if (res.length > 0) {

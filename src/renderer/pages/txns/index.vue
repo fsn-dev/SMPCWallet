@@ -118,6 +118,11 @@ export default {
         this.msgError(this.$t('warn').w_1)
         return
       }
+      let balance = this.$$.fromWei(this.sendDataObj.balance, this.$$.cutERC20(this.sendDataObj.coinType).coinType)
+      if (Number(this.rawTx.value) > Number(balance)) {
+        this.msgError(this.$t('warn').w_19)
+        return
+      }
       // this.gMode = '3/3'
       this.dataPage = {
         from: this.address,

@@ -191,7 +191,7 @@ const store = new Vuex.Store({
     getServerRPC ({commit}) {
       let data = { type: 1, info: ''}
       findBaseInfo({key: 'serverRPC'}).then(res => {
-        // console.log(res)
+        console.log(res)
         if (res.length > 0) {
           data.info = res[0].value
         } else {

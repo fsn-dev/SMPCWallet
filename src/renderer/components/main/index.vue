@@ -18,12 +18,7 @@
             <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
           </ul>
         </div>
-        <div class="header-top-lang">
-          <el-select v-model="lang" size="mini" @change="changLanguage">
-            <el-option v-for="item in languageOption" :key="item.value" :label="item.label" :value="item.value" >
-            </el-option>
-          </el-select>
-        </div>
+        <language @changeLang="reload"></language>
         <div class="header-top-refresh cursorP" @click="Refresh" :title="$t('title').refrsh">
           <i class="el-icon-refresh-right"></i>
         </div>
@@ -73,8 +68,9 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {findHeaderImg} from '@/db/headerImg'
-import createAccount from '@/pages/group/createGroup'
-import personInfo from '@/components/main/personInfo'
+import createAccount from '@/pages/group/createGroup.vue'
+import personInfo from '@/components/main/personInfo.vue'
+import language from '@/components/language/index.vue'
 export default {
   name: 'index',
   provide () {
@@ -84,11 +80,6 @@ export default {
   },
   data () {
     return {
-      lang: this.$i18n.locale,
-      languageOption: [
-        {value: 'en-US', label: 'English'},
-        {value: 'zh-CN', label: '中文简体'}
-      ],
       isRouterAlive: true,
       news: {
         g: 0,
@@ -119,7 +110,7 @@ export default {
   computed: {
     ...computedPub
   },
-  components: {createAccount, personInfo},
+  components: {createAccount, personInfo, language},
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
@@ -152,9 +143,6 @@ export default {
         this.newsActive = 0
       }
     },
-    // changeUserView () {
-    //   this.isUserView = false
-    // },
     changeDn () {
       if (Number(this.dayAndNight)) {
         this.$store.commit('setDayAndNight', {info: '0'})
@@ -184,7 +172,7 @@ export default {
         this.news.t = false
       })
     },
-    Refresh (data) {
+    Refresh () {
       this.isRouterAlive = false
 			this.$nextTick(() => {
 				this.isRouterAlive = true
@@ -197,12 +185,6 @@ export default {
 			})
     },
     changeMode (type) {
-      // if (Number(type)) {
-      //   this.toUrl('/person')
-      // } else {
-      //   this.toUrl('/group')
-      // }
-      // this.changeUserView()
       this.$store.commit('setSafeMode', {info: type})
     },
     copyAddress (id, textId) {
@@ -210,14 +192,6 @@ export default {
       document.execCommand('Copy')
       this.msgSuccess(this.$t('success').s_2)
     },
-    changLanguage (type) {
-      if (type) {
-        this.lang = type
-      }
-      this.$i18n.locale = this.lang
-      this.$store.commit('setLanguage', {info: this.lang})
-      this.reload()
-    }
   },
   beforeDestroy () {
     clearInterval(this.intervalSwitch)

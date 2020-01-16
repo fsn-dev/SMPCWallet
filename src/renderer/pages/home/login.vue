@@ -90,6 +90,10 @@ export default {
     },
     submitForm(formName) {
       if (this.loading.file) return
+      if (!this.eNode) {
+        this.msgError(this.$t('error').err_10)
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading.wait = true
@@ -104,8 +108,6 @@ export default {
       });
     },
     inputFileBtn () {
-      let fileUrl = this.$$.config.file.ks.url + this.loginObj.username + this.$$.config.file.ks.type
-      // console.log(fileUrl)
       findAccount({name: this.loginObj.username}).then(res => {
         console.log(res)
         if (res.length > 0) {
@@ -120,7 +122,11 @@ export default {
               let pwd = walletInfo.getPrivateKeyString()
               // this.createHeader(this.walletInfo.getPublicKeyString(), address)
               // console.log(address)
-              console.log(walletInfo.getPrivateKeyString())
+              // console.log(walletInfo.getPrivateKeyString())
+              if (!this.eNode) {
+                this.msgError(this.$t('error').err_10)
+                return
+              }
               this.signEnode(pwd, address)
               this.$store.commit('setAddress', {info: address})
               this.$store.commit('setToken', {info: this.loginObj.username})
