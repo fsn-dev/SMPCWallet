@@ -78,7 +78,7 @@
       <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
-          <el-checkbox-group v-model="gMemberSelect" :min="1" class="">
+          <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? Number(gMode.split('/')[0]) : 1" class="">
             <el-checkbox :label="eNode">
               <div class="flex-bc">
                 {{$$.cutOut(eNode, 12, 16)}}
@@ -95,7 +95,7 @@
           </el-checkbox-group>
         </div>
         <div class="node-select-btn">
-          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length <= 0" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
+          <el-button type="primary" @click="toSendTxnsUrl" :disabled="gMemberSelect.length < gMode.split('/')[0]" class="btn mt-30 WW100 HH40 font16 btn-primary">{{$t('btn').confirm}}</el-button>
         </div>
       </div>
     </el-drawer>
@@ -158,7 +158,7 @@ export default {
   components: {sendTxns},
   watch: {
     '$route' (cur) {
-      console.log(cur)
+      // console.log(cur)
       if (cur.query.gID) {
         this.initGroupData()
       } else {

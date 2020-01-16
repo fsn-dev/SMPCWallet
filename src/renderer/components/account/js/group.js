@@ -55,7 +55,9 @@ export const gMethods = {
           eNode: cbData.Data.Enode,
           status: status === 'OnLine' ? 1 : 0
         })
-        this.gMemberSelect.push(cbData.Data.Enode)
+        if (this.gMode.split('/')[0] === this.gMode.split('/')[1]) {
+          this.gMemberSelect.push(cbData.Data.Enode)
+        }
       }
       this.loading.nodeSelect = false
     })
