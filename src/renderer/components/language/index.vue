@@ -19,7 +19,7 @@
 </style>
 
 <script>
-import initMenu from '@/libs/menu'
+// import initMenu from '@/libs/menu'
 export default {
   name: 'language',
   data () {
@@ -32,7 +32,7 @@ export default {
     }
   },
   mounted () {
-    initMenu(this)
+    // initMenu(this)
   },
   methods: {
     changLanguage (type) {
@@ -42,7 +42,7 @@ export default {
       this.$i18n.locale = this.lang
       this.$store.commit('setLanguage', {info: this.lang})
       this.$emit('changeLang')
-      initMenu(this)
+      // initMenu(this)
       // this.reload()
     }
   }

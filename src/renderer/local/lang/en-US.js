@@ -136,6 +136,15 @@ export default {
 		new: 'New',
 		end: 'End'
 	},
+	action: {
+		copy: 'Copy',
+		paste: 'Paste',
+		revoke: 'Revoke',
+		redo: 'Redo',
+		cut: 'Cut',
+		delete: 'Delete',
+		selectAll: 'Select All',
+	},
 	tip: {
 		name: 'Tip',
 		walletTip: "Note: the current version is testnet. <br/> Please do not transfer mainnet coins, otherwise all assets will be lost! <br/> the wallet key is stored locally. We can't recover the key!",

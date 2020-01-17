@@ -8,17 +8,24 @@ function initMenu(that){
   const menu = new Menu();
   const menu2 = new Menu();
   menu.append(new MenuItem({label:that.$t('action').revoke, role: 'undo' }));
-  menu.append(new MenuItem({label:that.$t('action').redo, role: 'redo' }));
-  menu.append(new MenuItem({label:that.$t('action').cut, role: 'cut' }));
-  menu.append(new MenuItem({label:that.$t('action').copy, role: 'copy' }));
-  menu.append(new MenuItem({label:that.$t('action').paste, role: 'paste' }));
-  menu.append(new MenuItem({label:that.$t('action').delete, role: 'delete' }));
-  menu.append(new MenuItem({ label:that.$t('action').selectAll, role: 'selectall' }));
+  menu.append(new MenuItem({label:'重做', role: 'redo' }));
+  // menu.append(new MenuItem({ role: 'separator' }));
+  menu.append(new MenuItem({label:'剪切', role: 'cut' }));
+  menu.append(new MenuItem({label:'复制', role: 'copy' }));
+  menu.append(new MenuItem({label:'粘贴', role: 'paste' }));
+  // menu.append(new MenuItem({ role: 'pasteandmatchstyle' }));
+  menu.append(new MenuItem({label:'删除', role: 'delete' }));
+  menu.append(new MenuItem({ label:'全选', role: 'selectall' }));
 
   menu2.append(new MenuItem({label:'复制', role: 'copy' }));
-
+  //点击dome
+  // menu2.append(new MenuItem({label:'show', click() { 
+  //   //展示选中文本
+  //   let selectText = window.getSelection().toString();
+  //   alert(selectText); 
+  // } }));
   window.addEventListener('contextmenu', (e) => { 
-    console.log(that.$t('action').revoke)
+  
     e.preventDefault();
     if(isEleEditable(e.target)){
       menu.popup(remote.getCurrentWindow());

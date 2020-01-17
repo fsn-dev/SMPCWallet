@@ -14,7 +14,7 @@
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
             }">
-            <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode">
+            <el-select v-model="groupForm.mode" :placeholder="$t('warn').w_4" class="WW100">
               <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
             </el-select>
           </el-form-item>
@@ -107,11 +107,7 @@ export default {
       dataPage: {},
       groupForm: {
         mode: this.$$.config.initGroupMode,
-        eNode: [
-          // { value: 'enode://fbced7f239d5633d25c2afda08e4f00e24c054bd0a9e9055f9f104f53fe1ce331c5431442cb2120ff64010bf7ac9b39af5e3349bba546210b1ab003cd9384014@127.0.0.1:12341'},
-          // { value: 'enode://4fa6865eb8fbf9dbe22b4d3188ae67d6f20368400c582ad366a5fd709f789ebda23514bd71548bc4c4cf401690d73cdd62bf5ce785c73cc3fc32d616a80b9e6d@127.0.0.1:12342'},
-          // { value: 'enode://6e5cc6f7b953013fd7d5172e347a79f9ff44cc1a0a05d092646134f7fcbea391ea720119e7c9bcc6bb61a15f278bbf97d136fcc7271da42c7823ef0d28b3b947@127.0.0.1:12343'},
-        ],
+        eNode: [],
         name: ''
       },
       gMember: '',
@@ -135,6 +131,9 @@ export default {
       if (Number(cur) === 1) {
         this.toUrl('/person')
       }
+    },
+    'groupForm.mode' (cur, old) {
+      this.changeMode(cur, old)
     }
   },
   computed: {
@@ -143,7 +142,6 @@ export default {
   mounted () {
     this.getGroupData()
     this.changeMode()
-    this.splitTx()
   },
   methods: {
     modalClick () {
@@ -160,8 +158,6 @@ export default {
           this.getGroup.push(arr[i])
           this.getGName(arr[i], i)
         }
-        // this.getGroup = res.info ? res.info : []
-        // this.getGroup = []
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)
@@ -169,7 +165,7 @@ export default {
     },
     getGName (item, i) {
       findGroup({gId: item.Gid}).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.length > 0) {
           this.getGroup[i].name = res[0].name
         }
@@ -178,9 +174,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // this.eDialog.confirm = true
           this.createGroup()
-          // this.openPwdDialog()
         } else {
           console.log('error submit!!');
           return false;
@@ -191,7 +185,6 @@ export default {
       let arr = []
       for (let obj of this.groupForm.eNode) {
         arr.push(this.splitTx(obj.value).eNode)
-        // arr.push(obj.value)
       }
       console.log(arr)
       this.$$.createGroup(this.groupForm.mode, arr).then(res => {
@@ -215,11 +208,9 @@ export default {
       }
       let data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode
       for (let obj of this.groupForm.eNode) {
-        // let eNodeKey = obj.value.split('0x')[0].match(/enode:\/\/(\S*)@/)[1]
         data += ':' + this.splitTx(obj.value).signTx
       }
       console.log(data)
-      // this.gMode = '3/3'
       this.dataPage = {
         from: this.address,
       }
@@ -348,13 +339,13 @@ export default {
         })
       })
     },
-    changeMode () {
+    changeMode (cur, old) {
+      cur = cur ? cur : this.groupForm.mode
+      old = old ? old : this.$$.config.initGroupMode
       let openMode = ['3/3', '5/5']
-      // if (this.groupForm.mode !== this.$$.config.initGroupMode) {
-      if (!openMode.includes(this.groupForm.mode)) {
-        this.groupForm.mode = this.$$.config.initGroupMode
+      if (!openMode.includes(cur)) {
+        this.groupForm.mode = old
         this.msgError(this.$t('tip').devTip)
-        // return
       }
       let num = Number(this.groupForm.mode.split('/')[1])
       this.groupForm.eNode = []
@@ -387,7 +378,7 @@ export default {
     },
     resetForm(formName) {
       this.groupForm = {
-        mode: '3/3',
+        mode: this.$$.config.initGroupMode,
         eNode: [],
         name: ''
       }

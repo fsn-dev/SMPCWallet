@@ -138,6 +138,15 @@ export default {
 		new: '新',
 		end: '结束'
 	},
+	action: {
+		copy: '复制',
+		paste: '粘贴',
+		revoke: '撤销',
+		redo: '重做',
+		cut: '剪切',
+		delete: '删除',
+		selectAll: '全选',
+	},
 	tip: {
 		name: '提示',
 		walletTip: '注意：当前版本为测试网。<br />请勿转入主网币，否则将丢失所有资产！<br />钱包密钥是本地存储。我们无法恢复密钥！',
