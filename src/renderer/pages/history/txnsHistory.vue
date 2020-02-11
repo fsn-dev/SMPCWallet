@@ -21,7 +21,7 @@
                 <span>{{ $$.cutERC20(scope.row.coinType).coinType}}</span>
               </el-form-item>
               <el-form-item :label="$t('label').value + ':'">
-                <span>{{ $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 2) }}</span>
+                <span>{{ $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 6) }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').date + ':'">
                 <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
@@ -79,7 +79,7 @@
         <el-table-column :label="$t('label').value" width="160" align="right">
           <template slot-scope="scope">
             {{
-              $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 2)
+              $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 'no')
             }}
           </template>
         </el-table-column>

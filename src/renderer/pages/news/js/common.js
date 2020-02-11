@@ -28,7 +28,7 @@ export const methods = {
       console.log(res)
       if (res.length > 0) {
         for (let obj of res) {
-          if ((nowDate - obj.updatetime) > (1000 * 60 * 30)) {
+          if ((nowDate - obj.updatetime) > (1000 * 60 * 20)) {
             removeStatus({key: obj.key})
           }
         }

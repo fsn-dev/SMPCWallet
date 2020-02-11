@@ -180,6 +180,9 @@ export default {
                 status: this.applyStatus === 'AGREE' ? 5 : 4
               })
             }
+            // if (this.applyStatus === 'AGREE') {
+            //   this.updateStatus(this.urlParams.Key)
+            // }
             this.updateStatus(this.urlParams.Key)
             this.toUrl('/waitNews')
           } else {
