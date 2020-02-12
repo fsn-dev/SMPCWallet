@@ -147,6 +147,7 @@ export default {
     modalClick () {
       this.eDialog.pwd = false
       this.eDialog.confirm = false
+      this.$emit('closeModal')
     },
     getGroupData () {
       this.$$.getGroup().then(res => {
@@ -223,7 +224,8 @@ export default {
       })
     },
     getSignData (data) {
-      this.modalClick()
+      // this.modalClick()
+      this.eDialog.pwd = false
       // this.loading.creat = true
       if (data.signTx) {
         this.signTx = data.signTx
