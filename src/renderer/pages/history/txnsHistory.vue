@@ -277,6 +277,7 @@ export default {
           let hash = res.info.OutTxHash.indexOf('0x') === 0 ? res.info.OutTxHash : ('0x' + res.info.OutTxHash)
           this.setTxnsDBState(id, index, hash, 1)
           this.tableData[index].hash = hash
+          // this.tableData[index].status = 1
         } else if (res.status === 'Failure') {
           this.setTxnsDBState(id, index, '', 2)
           this.tableData[index].status = 2

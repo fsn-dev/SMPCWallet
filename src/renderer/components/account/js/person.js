@@ -6,7 +6,6 @@ export const psMethods = {
         this.gID = res.info.Gid
         this.gMode = res.info.Mode ? res.info.Mode : '3/3'
         this.pubKey = res.info.PubKey ? res.info.PubKey : ''
-        // this.setMemberList(res.info.Enodes)
         this.getPersonAccount()
         this.loading.account = true
       } else {

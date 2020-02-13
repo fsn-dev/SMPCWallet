@@ -32,7 +32,6 @@ export const gMethods = {
   },
   setMemberList (data) {
     let arr = []
-    this.gMemberInit = []
     for (let obj of data) {
       if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue
       arr.push({
@@ -42,6 +41,7 @@ export const gMethods = {
       })
     }
     this.gMemberSelect.push(this.eNode)
+    this.gMemberInit = []
     this.$$.batchRequest(arr).then(res => {
       // console.log(res)
       for (let obj of res) {
