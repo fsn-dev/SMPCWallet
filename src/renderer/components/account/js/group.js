@@ -41,8 +41,8 @@ export const gMethods = {
       })
     }
     this.gMemberSelect.push(this.eNode)
-    this.gMemberInit = []
     this.$$.batchRequest(arr).then(res => {
+      this.gMemberInit = []
       // console.log(res)
       for (let obj of res) {
         let cbData = JSON.parse(obj), status
