@@ -14,7 +14,7 @@ export const gMethods = {
       if (this.$route.query.gID) {
         this.gID = this.$route.query.gID
       }
-      this.gMemberInit = []
+      // this.gMemberInit = []
       this.getMemberList()
     }).catch(err => {
       console.log(err)
@@ -32,6 +32,7 @@ export const gMethods = {
   },
   setMemberList (data) {
     let arr = []
+    this.gMemberInit = []
     for (let obj of data) {
       if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue
       arr.push({
