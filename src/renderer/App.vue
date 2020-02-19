@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.dayAndNight)
+    // console.log(this.$$.web3)
   },
   methods: {
     ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getSafeMode', 'getDayAndNight', 'getWallet', 'getLanguage', 'getServerRPC']),

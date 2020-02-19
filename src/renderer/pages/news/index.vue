@@ -53,18 +53,32 @@ export default {
     },
   },
   mounted () {
-    
+    console.log(this.$route)
+    this.initTabView()
   },
   methods: {
     handleClick () {
-
+      console.log(this.activeName)
+      this.$router.push({path: this.$route.path, query: {activeTab: this.activeName}})
+      console.log(this.$route)
     },
     initTabView () {
+      let at = this.$route.query.activeTab ? this.$route.query.activeTab : ''
       if (this.gNewsNum === 0 && this.tNewsNum > 0) {
         this.activeName = 'second'
+      } else if (((this.gNewsNum > 0 && this.tNewsNum > 0) || (this.gNewsNum === 0 && this.tNewsNum === 0)) && at) {
+        this.activeName = at
       } else {
         this.activeName = 'first'
       }
+
+
+
+      // if (this.gNewsNum === 0 && this.tNewsNum > 0 && !at) {
+      //   this.activeName = 'second'
+      // } else {
+      //   this.activeName = 'first'
+      // }
     },
     getGnewsNum (num) {
       // console.log(num)

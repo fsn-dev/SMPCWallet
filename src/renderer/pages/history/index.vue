@@ -58,11 +58,20 @@ export default {
     ...computedPub,
   },
   mounted () {
-    
+    // console.log(this.$route)
+    let at = this.$route.query.activeTab ? this.$route.query.activeTab : 'first'
+    // console.log(at)
+    this.activeName = at
+    // if (at) {
+    // } else {
+    //   this.activeName = 'first'
+    // }
   },
   methods: {
-    handleClick () {
-
+    handleClick (type) {
+      // console.log(this.activeName)
+      // this.$route.query.push({activeTab: this.activeName})
+      this.$router.push({path: this.$route.path, query: {activeTab: this.activeName}})
     },
     // initTabView () {
     //   if (this.gNewsNum === 0 && this.tNewsNum > 0) {

@@ -535,19 +535,17 @@ let web3Utils = {
           if (cbData.Status !== 'Error') {
             // console.log(cbData.Data.result)
             // console.log(JSON.parse(cbData.Data.result))
-            let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
+            let result = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+            let status = result ? result.Status : 'Failure'
+            let pubKey = result && result.PubKey ? result.PubKey : ''
             // console.log(status)
-            status = status.Status
-            data = {msg: 'Success', info: status}
+            // status = status.Status
+            data = {msg: 'Success', status: status, pubKey: pubKey}
           } else {
-            data = {msg: 'Error', info: 'Failure'}
+            data = {msg: 'Error', status: 'Failure', pubKey: pubKey}
           }
           resolve(data)
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
           breakAgaing().then(res => {
             this.reqAccountStatus(key).then(res => {
               resolve(res)

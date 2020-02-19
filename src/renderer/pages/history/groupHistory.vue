@@ -5,11 +5,14 @@
         <el-table-column type="expand">
           <template slot-scope="scope">
             <el-form label-position="left" inline class="tables-expand">
-              <el-form-item label="ID">
+              <el-form-item label="Key ID:">
                 <span>{{ scope.row.key }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').groupId + ':'">
                 <span>{{ scope.row.gId }}</span>
+              </el-form-item>
+              <el-form-item :label="$t('label').groupAccountId + ':'">
+                <span>{{ scope.row.pubKey }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').date + ':'">
                 <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
@@ -49,14 +52,19 @@
             <span :class="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(scope.row.status)}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="ID" align="center">
+        <el-table-column label="Key ID" align="center">
           <template slot-scope="scope">
-            <span class="cursorP" :title="scope.row.key" @click="toUrl('/gValid', {key: scope.row.keyId})">{{ $$.cutOut(scope.row.key, 20, 12) }}</span>
+            <span class="cursorP" :title="scope.row.key" @click="toUrl('/gValid', {key: scope.row.keyId})">{{ $$.cutOut(scope.row.key, 10, 12) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').groupId" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.gId">{{ $$.cutOut(scope.row.gId, 20, 12) }}</span>
+            <span :title="scope.row.gId">{{ $$.cutOut(scope.row.gId, 10, 12) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('label').groupAccountId" align="center">
+          <template slot-scope="scope">
+            <span :title="scope.row.pubKey">{{ $$.cutOut(scope.row.pubKey, 10, 12) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').date" width="200" align="center">
@@ -117,43 +125,55 @@ export default {
   },
   sockets: {
     GroupAccountsFind (res) {
+      // console.log(res)
       console.log(res)
-      let nowTime = Date.now()
+      this.loading.history = true
       if (res.msg === 'Success' && res.info.length > 0) {
         this.page.total = res.total
+        this.formatData(res.info)
         // this.tableData = res.info
-        this.tableData = []
-        for (let obj of res.info) {
-          let _s = obj.status, _s1 = 0
-          if (_s === 0) {
-            for (let obj1 of obj.member) {
-              if (obj1.status === 5) {
-                _s1 += 1
-              }
-            }
-          }
-          if (_s1 === obj.member.length && obj.status !== 1) {
-            _s = 1
-            this.$socket.emit('changeGroupAccountsEdit', {
-              keyId: obj.keyId,
-              status: _s
-            })
-          } else if (obj.status === 0 && _s1 < obj.member.length && (nowTime - obj.timestamp) >= this.$$.config.timeout) {
-            _s = 6
-            this.$socket.emit('changeGroupAccountsEdit', {
-              keyId: obj.keyId,
-              status: _s
-            })
-          }
-          obj.status = _s
-          this.tableData.push(obj)
-        }
-        this.loading.history = false
       } else {
         this.page.total = 0
         this.tableData = []
         this.loading.history = false
       }
+      // this.formatData(res)
+      // let nowTime = Date.now()
+      // if (res.msg === 'Success' && res.info.length > 0) {
+      //   this.page.total = res.total
+      //   // this.tableData = res.info
+      //   this.tableData = []
+      //   for (let obj of res.info) {
+      //     let _s = obj.status, _s1 = 0
+      //     if (_s === 0) {
+      //       for (let obj1 of obj.member) {
+      //         if (obj1.status === 5) {
+      //           _s1 += 1
+      //         }
+      //       }
+      //     }
+      //     if (_s1 === obj.member.length && obj.status !== 1) {
+      //       _s = 1
+      //       this.$socket.emit('changeGroupAccountsEdit', {
+      //         keyId: obj.keyId,
+      //         status: _s
+      //       })
+      //     } else if (obj.status === 0 && _s1 < obj.member.length && (nowTime - obj.timestamp) >= this.$$.config.timeout) {
+      //       _s = 6
+      //       this.$socket.emit('changeGroupAccountsEdit', {
+      //         keyId: obj.keyId,
+      //         status: _s
+      //       })
+      //     }
+      //     obj.status = _s
+      //     this.tableData.push(obj)
+      //   }
+      //   this.loading.history = false
+      // } else {
+      //   this.page.total = 0
+      //   this.tableData = []
+      //   this.loading.history = false
+      // }
     },
   },
   mounted () {
@@ -162,6 +182,9 @@ export default {
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
     this.initData()
+    // this.$$.reqAccountStatus('0xd4b0c2c5830ae6869364761f03eeebf694ea839722ae37916db98325808f75f0').then(res => {
+    //   console.log(res)
+    // })
   },
   methods: {
     handleCurrentChange (val) {
@@ -183,7 +206,91 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       })
-    }
+    },
+    /**
+     * 0: Pending;
+     * 1: Success;
+     * 2: Failure;
+     * 4: Refuse;
+     * 5: Agree;
+     * 6: Timeout
+     */
+    formatData (data) {
+      this.tableData = []
+      let nowTime = Date.now()
+      for (let i = 0, len = data.length; i < len; i++) {
+        let dataObj = data[i]
+        // console.log(dataObj.status)
+        if (dataObj.status === 0) {
+          let state = 0
+          if (dataObj.member && dataObj.member.length > 0) {
+            let stateObj = { p: 0, a: 0, r: 0 }
+            for (let obj of dataObj.member) {
+              if (obj.status === 0) {
+                stateObj.p ++
+              }
+              if (obj.status === 4) {
+                stateObj.r ++
+              }
+              if (obj.status === 5) {
+                stateObj.a ++
+              }
+            }
+            // console.log(stateObj)
+            // console.log((nowTime - dataObj.timestamp) > this.$$.config.timeout)
+            // console.log((nowTime - dataObj.timestamp))
+            // console.log(this.$$.config.timeout)
+            if (stateObj.r > 0) {
+              state = 4
+              this.setAccountDBState(dataObj._id, i, '', state)
+            } else if (stateObj.a === dataObj.member.length) {
+              state = 5
+              this.getAccountPub(dataObj._id, dataObj.key, i)
+            } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
+              state = 6
+              dataObj.status = state
+              this.setAccountDBState(dataObj._id, i, '', state)
+            }
+            dataObj.status = state
+          } else {
+            this.getAccountPub(dataObj._id, dataObj.key, i)
+          }
+        } else if (dataObj.status === 5 && !dataObj.hash) {
+          this.getAccountPub(dataObj._id, dataObj.key, i)
+        }
+        console.log(dataObj.status)
+        this.tableData.push(dataObj)
+        this.loading.history = false
+      }
+    },
+    getAccountPub (id, key, index) {
+      this.$$.reqAccountStatus(key).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && res.status === 'Success') {
+          let pubKey = res.pubKey
+          this.setAccountDBState(id, index, pubKey, 1)
+          this.tableData[index].pubKey = pubKey
+          this.tableData[index].status = 1
+        } else if (res.status === 'Failure') {
+          this.setAccountDBState(id, index, '', 2)
+          this.tableData[index].status = 2
+        }
+      }).catch(err => {
+        console.log(err)
+        if (err.error) {
+          this.msgError(err.error.toString())
+        } else {
+          this.msgError(err.toString())
+        }
+      })
+    },
+    setAccountDBState (id, index, pubKey, status) {
+      this.$socket.emit('changeGroupAccountsEdit', {
+        id: id,
+        pubKey: pubKey,
+        status: status
+      })
+    },
   }
 }
 </script>

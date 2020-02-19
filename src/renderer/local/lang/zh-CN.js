@@ -122,7 +122,8 @@ export default {
 		approver: '审批者',
 		version: '版本',
 		versionTest: '测试网',
-		groupId: '组ID',
+		groupId: '组 ID',
+		groupAccountId: '共管账户 ID',
 		identity: '身份',
 		details: '详情',
 		approvalTime: '审批剩余时间'

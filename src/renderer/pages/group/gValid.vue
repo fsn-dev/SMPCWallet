@@ -158,7 +158,7 @@ export default {
       })
       this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
         console.log(res)
-        if (res.msg === 'Success' && res.info === 'Pending') {
+        if (res.msg === 'Success' && res.status === 'Pending') {
           this.isApplySataus = true
         } else {
           this.isApplySataus = false
