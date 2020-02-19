@@ -274,6 +274,9 @@ export default {
         } else if (res.status === 'Failure') {
           this.setAccountDBState(id, index, '', 2)
           this.tableData[index].status = 2
+        } else if (res.status === 'Timeout') {
+          this.setAccountDBState(id, index, '', 6)
+          this.tableData[index].status = 6
         }
       }).catch(err => {
         console.log(err)

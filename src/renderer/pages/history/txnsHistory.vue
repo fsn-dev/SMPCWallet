@@ -281,6 +281,9 @@ export default {
         } else if (res.status === 'Failure') {
           this.setTxnsDBState(id, index, '', 2)
           this.tableData[index].status = 2
+        } else if (res.status === 'Timeout') {
+          this.setTxnsDBState(id, index, '', 6)
+          this.tableData[index].status = 6
         }
       }).catch(err => {
         console.log(err)
