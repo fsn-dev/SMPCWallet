@@ -542,7 +542,7 @@ let web3Utils = {
             // status = status.Status
             data = {msg: 'Success', status: status, pubKey: pubKey}
           } else {
-            data = {msg: 'Error', status: 'Failure', pubKey: pubKey}
+            data = {msg: 'Error', status: 'Failure', pubKey: ''}
           }
           resolve(data)
         }).catch(err => {
