@@ -1,6 +1,6 @@
 {
-  "name": "SMPC",
-  "version": "0.0.2",
+  "name": "SMPCWallet",
+  "version": "0.0.3",
   "author": "winter520",
   "description": "An electron-vue project",
   "license": null,
@@ -20,8 +20,8 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "SMPC",
-    "appId": "SMPC.com",
+    "productName": "SMPCWallet",
+    "appId": "SMPCWallet.com",
     "directories": {
       "output": "build"
     },
