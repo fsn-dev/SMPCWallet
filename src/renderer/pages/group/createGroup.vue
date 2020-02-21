@@ -272,7 +272,8 @@ export default {
           eNode: this.eNode,
           kId: this.address,
           status: 5,
-          initiate: 1
+          initiate: 1,
+          timestamp: Date.now()
         }]
       }
       for (let obj of this.groupForm.eNode) {
@@ -282,7 +283,8 @@ export default {
           eNode: obj2.eNode,
           kId: obj2.address,
           status: 0,
-          initiate: 0
+          initiate: 0,
+          timestamp: ''
         }
         data.member.push(obj1)
       }

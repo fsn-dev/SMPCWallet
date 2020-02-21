@@ -33,6 +33,11 @@
                       <span>{{props.row.eNode}}</span>
                     </template>
                   </el-table-column>
+                  <el-table-column :label="$t('label').date" width="140" align="center">
+                    <template slot-scope="props">
+                      {{props.row.timestamp ? $$.timeChange(props.row.timestamp, 'yyyy-mm-dd hh:mm') : ''}}
+                    </template>
+                  </el-table-column>
                   <el-table-column :label="$t('state').name" width="90" align="center">
                     <template slot-scope="props">
                       <span :class="props.row.status === 0 || props.row.status === 1 || props.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(props.row.status)}}</span>
@@ -258,7 +263,7 @@ export default {
         } else if (dataObj.status === 5 && !dataObj.hash) {
           this.getAccountPub(dataObj._id, dataObj.key, i)
         }
-        console.log(dataObj.status)
+        // console.log(dataObj.status)
         this.tableData.push(dataObj)
         this.loading.history = false
       }

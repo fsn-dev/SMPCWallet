@@ -93,7 +93,7 @@ export default {
   },
   mounted () {
     this.initTxnsData = this.$route.query
-    // console.log(this.initTxnsData)
+    console.log(this.initTxnsData)
     // console.log(this.sendDataObj)
   },
   methods: {
@@ -177,6 +177,7 @@ export default {
         coinType: this.sendDataObj.coinType,
         hash: '',
         status: 0,
+        pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : ''
       }
       let dataUrl = 'GroupAddTxns'
       if (Number(this.safeMode) === 1) {

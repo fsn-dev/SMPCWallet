@@ -11,6 +11,9 @@
               <el-form-item :label="$t('label').groupId + ':'">
                 <span>{{ scope.row.gId }}</span>
               </el-form-item>
+              <el-form-item :label="$t('label').groupAccountId + ':'">
+                <span>{{ scope.row.pubKey }}</span>
+              </el-form-item>
               <el-form-item :label="$t('label').from + ':'">
                 <span>{{ scope.row.from }}</span>
               </el-form-item>
@@ -42,6 +45,11 @@
                       <span>{{props.row.eNode}}</span>
                     </template>
                   </el-table-column>
+                  <el-table-column :label="$t('label').date" width="140" align="center">
+                    <template slot-scope="props">
+                      {{props.row.timestamp ? $$.timeChange(props.row.timestamp, 'yyyy-mm-dd hh:mm') : ''}}
+                    </template>
+                  </el-table-column>
                   <el-table-column :label="$t('state').name" width="90" align="center">
                     <template slot-scope="props">
                       <span :class="props.row.status === 0 || props.row.status === 1 || props.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(props.row.status)}}</span>
@@ -54,29 +62,39 @@
         </el-table-column>
         <el-table-column
           type="index"
-          width="50">
+          width="40">
         </el-table-column>
-        <el-table-column :label="$t('state').name" width="90" align="center">
+        <el-table-column :label="$t('state').name" width="80" align="center">
           <template slot-scope="scope">
             <span :class="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(scope.row.status)}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').coinType" width="90" align="center">
+        <el-table-column :label="$t('label').coinType" width="85" align="center">
           <template slot-scope="scope">
             {{ $$.cutERC20(scope.row.coinType).coinType}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').to" width="200" align="center">
-          <template slot-scope="scope" @click="copyTxt(scope.row)">
-            <span :title="scope.row.to" @click="copyTxt(scope.row.to)" class="cursorP">{{$$.cutOut(scope.row.to, 10, 6)}}</span>
+        <el-table-column :label="$t('label').groupAccountId" width="180" align="center">
+          <template slot-scope="scope">
+            <span :title="scope.row.pubKey" @click="copyTxt(scope.row.pubKey)" class="cursorP">{{$$.cutOut(scope.row.pubKey, 8, 6)}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').date" width="180" align="center">
+        <el-table-column :label="$t('label').from" width="150" align="center">
+          <template slot-scope="scope">
+            <span :title="scope.row.from" @click="copyTxt(scope.row.from)" class="cursorP">{{$$.cutOut(scope.row.from, 6, 4)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('label').to" width="150" align="center">
+          <template slot-scope="scope">
+            <span :title="scope.row.to" @click="copyTxt(scope.row.to)" class="cursorP">{{$$.cutOut(scope.row.to, 6, 4)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('label').date" width="160" align="center">
           <template slot-scope="scope">
             {{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').value" width="160" align="right">
+        <el-table-column :label="$t('label').value" width="120" align="right">
           <template slot-scope="scope">
             {{
               $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 'no')
@@ -84,8 +102,8 @@
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').hash" align="center">
-          <template slot-scope="scope" @click="copyTxt(scope.row)">
-            <span :title="scope.row.hash" @click="copyTxt(scope.row.hash)" class="cursorP">{{$$.cutOut(scope.row.hash, 18, 12)}}</span>
+          <template slot-scope="scope">
+            <span :title="scope.row.hash" @click="copyTxt(scope.row.hash)" class="cursorP">{{$$.cutOut(scope.row.hash, 8, 6)}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -109,6 +127,11 @@
 
 // }
 
+// .form-sm {
+//   .el-form-item__label {
+//     white-space: nowrap;font-size:12px;
+//   }
+// }
 
 </style>
 
