@@ -1,12 +1,16 @@
-# SMPC
+# SMPC Wallet
 
-> An electron-vue project
+A smpc wallet for [dcrm-walletServce](https://github.com/fsn-dev/dcrm-walletService), build by [Electron](https://github.com/electron/electron), support Linux/MacOS/Widows. SMPCWallet can create distributed custodial account which support BTC/ETH/FSN now.
 
-#### Build Setup
+*Note : SMPCWallet is considered beta software. We make no warranties or guarantees of its security or stability.
+
+## Build Setup
 
 ``` bash
 # install dependencies
 npm install
+npm install electron -g
+npm install electron-packager -g
 
 # serve with hot reload at localhost:9080
 npm run dev
@@ -14,12 +18,6 @@ npm run dev
 # build electron application for production
 npm run build
 
-# run unit & end-to-end tests
-npm test
-
-
 ```
-
----
-
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[8fae476](https://github.com/SimulatedGREG/electron-vue/tree/8fae4763e9d225d3691b627e83b9e09b56f6c935) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+## Run
+After install and open the SMPCWallet, then set the dcrm service node,  we can register and login to create distributed custodial account.
