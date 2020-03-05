@@ -15,6 +15,9 @@
 
 
     <el-dialog :title="$t('btn').exportAccount" :visible.sync="eDialog.export" width="300px" :before-close="closeDrawer"  :close-on-click-modal="false" :modal-append-to-body='false'>
+      <div>
+        {{$t('warn').w_21}}：{{accountData && accountData.account && accountData.account.name ? accountData.account.name : ''}} ?
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDrawer">{{$t('btn').cancel}}</el-button>
         <el-button type="primary" @click="exportAccount">{{$t('btn').confirm}}</el-button>

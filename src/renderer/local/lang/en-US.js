@@ -34,6 +34,7 @@ export default {
 		w_18: 'Incorrect format',
 		w_19: 'Insufficient Balance',
 		w_20: 'Import this account or not',
+		w_21: 'Export this account or not',
 	},
 	success: {
 		s_1: 'Created successfully!',
