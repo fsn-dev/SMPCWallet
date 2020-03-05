@@ -37,6 +37,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
+import {findHeaderImg} from '@/db/headerImg'
 import {findAccount} from '@/db/accounts'
 export default {
   name: '',
@@ -127,6 +128,7 @@ export default {
                 this.msgError(this.$t('error').err_10)
                 return
               }
+              this.getHeaderImg(walletInfo.getPublicKeyString(), walletInfo.getChecksumAddressString(),this.loginObj.username)
               this.signEnode(pwd, address)
               this.$store.commit('setAddress', {info: address})
               this.$store.commit('setToken', {info: this.loginObj.username})
@@ -152,7 +154,15 @@ export default {
         }
       })
     },
-    signEnode (pwd, address) {
+    async getHeaderImg (hex, address, name) {
+      findHeaderImg({address: address}).then(res => {
+        // console.log(res)
+        if (res.length <= 0) {
+          this.createHeader(hex, address, name)
+        }
+      })
+    },
+    async signEnode (pwd, address) {
       let eNodeKey = this.eNode.match(/enode:\/\/(\S*)@/)[1]
       // console.log(eNodeKey)
       let rawTx = {

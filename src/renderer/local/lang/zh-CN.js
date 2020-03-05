@@ -2,7 +2,7 @@ import config from '@etc/js/config'
 export default {
 	error: {
 		err_1: '请输入用户名',
-		err_2: '长度在 3 到 5 个字符',
+		err_2: '用户名只能输入6-20个字母、数字、下划线',
 		err_3: '请输入密码',
 		err_4: '密码只能输入6-20个字母、数字、下划线',
 		err_5: '请再次输入密码',
@@ -11,6 +11,7 @@ export default {
 		err_8: '账户不存在',
 		err_9: '连接失败！',
 		err_10: '当前节点连接失败，请检查节点！',
+		err_11: '文件格式错误！',
 	},
 	warn: {
 		w_1: '请选择账户',
@@ -32,6 +33,7 @@ export default {
 		w_17: '不能为空',
 		w_18: '格式不正确',
 		w_19: '余额不足',
+		w_20: '是否导入此账户',
 	},
 	success: {
 		s_1: '创建成功！',
@@ -39,6 +41,8 @@ export default {
 		s_3: '创建账户请求发送成功！',
 		s_4: '连接成功！',
 		s_5: '删除成功！',
+		s_6: '导出成功！',
+		s_7: '导入成功！',
 	},
 	btn: {
 		confirm: '确认',
@@ -64,7 +68,9 @@ export default {
 		setName: '设置别名',
 		setNode: '设置节点',
 		review: '重审',
-		lookHistory: '查看历史'
+		lookHistory: '查看历史',
+		exportAccount: '导出账户',
+		importAccount: '导入账户',
 	},
 	loading: {
 		l_1: '账户获取中……'

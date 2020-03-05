@@ -5,7 +5,9 @@
     </div>
     <div class="i-g-dtil">
       <!-- <gDtil></gDtil> -->
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>

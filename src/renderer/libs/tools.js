@@ -239,5 +239,55 @@ export default {
     if (!str) return
     str = str.substr(0, 1).toUpperCase()
     return str
+  },
+  getBlob (mime, str) {
+    var _typeof = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? function (obj) {
+      return typeof obj
+    } : function (obj) {
+      return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj
+    }
+    var str1 = (typeof str === 'undefined' ? 'undefined' : _typeof(str)) === 'object' ? JSON.stringify(str) : str
+    if (str1 == null) return ''
+
+    let blob
+    try {
+      blob = new Blob([str1], {type: mime})
+    } catch (e) {
+      // TypeError old chrome and FF
+      let BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder
+      if (e.name === 'TypeError' && window.BlobBuilder) {
+        blob = new BlobBuilder()
+        blob.append([str1.buffer])
+        blob = blob.getBlob(mime)
+      } else {
+        let tip = 'Browser does not support'
+        alert(tip)
+        throw tip
+      }
+    }
+    return window.URL.createObjectURL(blob)
+  },
+  walletRequirePass (ethjson) {
+    let jsonArr
+    try {
+      jsonArr = JSON.parse(ethjson)
+    } catch (err) {
+      let errtxt1 = 'This is not a valid wallet file. '
+      throw errtxt1
+    }
+    if (jsonArr.encseed != null) {
+      return true
+    } else if (jsonArr.Crypto != null || jsonArr.crypto != null) {
+      return true
+    } else if (jsonArr.hash != null && jsonArr.locked) {
+      return true
+    } else if (jsonArr.hash != null && !jsonArr.locked) {
+      return false
+    } else if (jsonArr.publisher === 'MyEtherWallet' && !jsonArr.encrypted) {
+      return false
+    } else {
+      let errtxt2 = 'Sorry! We don\'t recognize this type of wallet file. '
+      throw errtxt2
+    }
   }
 }

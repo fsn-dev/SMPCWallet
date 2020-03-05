@@ -40,7 +40,7 @@ const status = new Datastore({
 
 
 setTimeout(() => {
-  ks.ensureIndex({fieldName: 'name', unique: true}, err => {
+  ks.ensureIndex({fieldName: 'address', unique: true}, err => {
     // console.log(123)
     if (err) {
       console.log(err)
@@ -53,7 +53,7 @@ setTimeout(() => {
     }
   })
 
-  headerImg.ensureIndex({fieldName: 'name', unique: true}, err => {
+  headerImg.ensureIndex({fieldName: 'address', unique: true}, err => {
     if (err) {
       console.log(err)
     }

@@ -6,11 +6,20 @@
     </div>
     <ul class="user-list">
       <li class="item flex-sc" @click="createAccount" :title="$t('btn').createAccount"><i class="el-icon-plus icon"></i>{{$t('btn').createAccount}}</li>
-      <li class="item flex-sc" v-if="false" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user icon"></i>{{$t('title').personAccount}}</li>
+      <li class="item flex-sc" v-if="$$.config.accountSwitch.person" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user icon"></i>{{$t('title').personAccount}}</li>
       <li class="item flex-sc" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money icon"></i>{{$t('title').groupAccount}}</li>
+      <li class="item flex-sc" @click="getAccountData" :title="$t('title').exportAccount"><i class="el-icon-download icon"></i>{{$t('btn').exportAccount}}</li>
       <li class="item flex-sc" @click="openUrl('/set')" :title="$t('btn').set"><i class="el-icon-setting icon"></i>{{$t('btn').set}}</li>
     </ul>
     <set-enode class="mt-20 set-node-box" :isSetNode="false"></set-enode>
+
+
+    <el-dialog :title="$t('btn').exportAccount" :visible.sync="eDialog.export" width="300px" :before-close="closeDrawer"  :close-on-click-modal="false" :modal-append-to-body='false'>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeDrawer">{{$t('btn').cancel}}</el-button>
+        <el-button type="primary" @click="exportAccount">{{$t('btn').confirm}}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -40,13 +49,19 @@
 </style>
 
 <script>
+import {findAccount} from '@/db/accounts'
 import {computedPub} from '@/assets/js/pages/public'
 import setEnode from '@/components/setEnode/index'
 export default {
   name: 'personInfo',
   data () {
     return {
-
+      accountData: {},
+      eDialog: {
+        export: false
+      },
+      ksName: '',
+      ksUrl: ''
     }
   },
   components: {setEnode},
@@ -54,10 +69,14 @@ export default {
     ...computedPub
   },
   mounted () {
-
+    console.log(this.$$.config)
   },
   methods: {
     closeDrawer () {
+      this.eDialog.export = false
+      this.accountData = {}
+      this.ksName = ''
+      this.ksUrl = ''
       this.$emit('closeDrawer')
     },
     createAccount () {
@@ -78,6 +97,31 @@ export default {
       this.$store.commit('setSafeMode', {info: type})
       this.closeDrawer()
     },
+    getAccountData () {
+      findAccount({address: this.address}).then(res => {
+        console.log(res)
+        this.accountData.account = {
+          address: res[0].address,
+          ks: res[0].ks,
+          name: res[0].name,
+          timestamp: res[0].timestamp,
+        }
+        this.ksName = res[0].name
+        this.eDialog.export = true
+      })
+    },
+    exportAccount () {
+      // this.getAccountData()
+      this.ksUrl = this.$$.getBlob("text/json;charset=UTF-8", this.accountData)
+      let _a = document.createElement('a')
+      _a.download = this.ksName + '.json'
+      _a.href = this.ksUrl
+      _a.click()
+      this.closeDrawer()
+      this.msgSuccess(this.$t('success').s_6)
+      _a = null
+      // console.log(this.ksUrl)
+    }
   }
 }
 </script>

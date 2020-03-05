@@ -43,6 +43,18 @@ import {insertAccount, findAccount} from '@/db/accounts'
 export default {
   name: '',
   data () {
+    const validateUsername = (rule, value, callback) => {
+      if (this.registerObj.username) {
+        if (!regExp.username.test(this.registerObj.username)) {
+          callback(new Error(this.$t('error').err_2))
+        } else {
+          callback()
+        }
+      } else {
+        callback(new Error(this.$t('error').err_1))
+      }
+      this.validInfo()
+    };
     const validatePass = (rule, value, callback) => {
       if (this.registerObj.password) {
         if (!regExp.pwd.test(this.registerObj.password)) {
@@ -73,8 +85,9 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: this.$t('error').err_1, trigger: 'blur' },
-          { min: 3, max: 20, message: this.$t('error').err_2, trigger: 'blur' }
+          // { required: true, message: this.$t('error').err_1, trigger: 'blur' },
+          // { min: 3, max: 20, message: this.$t('error').err_2, trigger: 'blur' }
+          { required: true, validator: validateUsername, trigger: 'blur' }
         ],
         newpwd: [
           { required: true, validator: validatePass, trigger: 'blur' }
@@ -83,6 +96,17 @@ export default {
           { required: true, validator: validatePass2, trigger: 'blur' }
         ]
       },
+    }
+  },
+  sockets: {
+    GetUserIsRepeat (res) {
+      console.log(res)
+      if (res.info > 0) {
+        this.msgError(this.$t('error').err_7)
+        this.loading.wait = false
+      } else {
+        this.createFile()
+      }
     }
   },
   mounted () {
@@ -117,10 +141,10 @@ export default {
     createFile () {
       const walletInit = this.$$.wallet.generate(this.registerObj.password)
       let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
-      insertAccount({
-        name: this.registerObj.username,
-        ks: JSON.stringify(walletJSON)
-      }).then(res => {
+      Promise.all([
+        this.insertServerAccount(walletInit, JSON.stringify(walletJSON)),
+        this.insertLocalAccount(walletInit, JSON.stringify(walletJSON))
+      ]).then(res => {
         console.log(res)
         this.msgSuccess(this.$t('success').s_1)
         this.createHeader(
@@ -132,23 +156,89 @@ export default {
         this.loading.wait = false
         this.toUrl('/')
       }).catch(err => {
-        this.msgError(err.error)
+        console.log(err)
+        this.msgError(err)
         this.loading.wait = false
+      })
+      // this.insertLocalAccount(JSON.stringify(walletJSON))
+      // insertAccount({
+      //   name: this.registerObj.username,
+      //   ks: JSON.stringify(walletJSON)
+      // }).then(res => {
+      //   console.log(res)
+      //   this.msgSuccess(this.$t('success').s_1)
+      //   this.createHeader(
+      //     walletInit.getPublicKeyString(),
+      //     walletInit.getChecksumAddressString(),
+      //     this.registerObj.username
+      //   )
+      //   this.registerObj = {}
+      //   this.loading.wait = false
+      //   this.toUrl('/')
+      // }).catch(err => {
+      //   this.msgError(err.error)
+      //   this.loading.wait = false
+      // })
+    },
+    cutPwd (name, pwd) {
+      pwd = pwd.toString()
+      return pwd.substr(0,1) + name + pwd.substr(pwd.length - 2, 1)
+    },
+    insertServerAccount (walletInit, walletJSON) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('UserInfoAdd', {
+          username: this.registerObj.username,
+          address: walletInit.getChecksumAddressString(),
+          password: this.cutPwd(this.registerObj.username, this.registerObj.password),
+          ks: walletJSON,
+        })
+        this.sockets.subscribe('UserInfoAdd', (res) => {
+          resolve(res)
+        })
+      })
+      // this.sockets.unsubscribe('UserInfoAdd')
+    },
+    insertLocalAccount (walletInit, walletJSON) {
+      return new Promise((resolve, reject) => {
+        insertAccount({
+          name: this.registerObj.username,
+          address:  walletInit.getChecksumAddressString(),
+          ks: walletJSON
+        }).then(res => {
+          console.log(res)
+          resolve(res)
+          // this.msgSuccess(this.$t('success').s_1)
+          // this.createHeader(
+          //   walletInit.getPublicKeyString(),
+          //   walletInit.getChecksumAddressString(),
+          //   this.registerObj.username
+          // )
+          // this.registerObj = {}
+          // this.loading.wait = false
+          // this.toUrl('/')
+        }).catch(err => {
+          reject(err)
+          // this.msgError(err.error)
+          // this.loading.wait = false
+        })
       })
     },
     changePwd () {
-      findAccount({name: this.registerObj.username}).then(res => {
-        console.log(res)
-        if (res.length > 0) {
-          this.msgError(this.$t('error').err_7)
-          this.loading.wait = false
-        } else {
-          this.createFile()
-        }
-      }).catch(err => {
-        this.msgError(err.error)
-        this.loading.wait = false
+      this.$socket.emit('GetUserIsRepeat', {
+        username: this.registerObj.username
       })
+      // findAccount({name: this.registerObj.username}).then(res => {
+      //   console.log(res)
+      //   if (res.length > 0) {
+      //     this.msgError(this.$t('error').err_7)
+      //     this.loading.wait = false
+      //   } else {
+      //     this.createFile()
+      //   }
+      // }).catch(err => {
+      //   this.msgError(err.error)
+      //   this.loading.wait = false
+      // })
     }
   }
 }

@@ -72,6 +72,13 @@ let publicSet = {
    * @description 默认组模式
    */
   initGroupMode: '5/5',
+  /**
+   * @description 账户开关
+   */
+  accountSwitch: {
+    person: 0,
+    group: 1
+  },
 }
 
 publicSet.appURL = 'http://139.196.26.212:8300'

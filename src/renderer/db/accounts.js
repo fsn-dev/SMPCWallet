@@ -6,7 +6,8 @@ function insertAccount (data) {
   const params = {
     name: data.name,
     ks: data.ks,
-    timestamp: Date.now()
+    address: data.address,
+    timestamp: data.timestamp ? data.timestamp : Date.now()
   }
   return new Promise((resolve, reject) => {
     ks.insert(params, (err, res) => {

@@ -2,7 +2,7 @@ import config from '@etc/js/config'
 export default {
 	error: {
 		err_1: 'Please enter the user name!',
-		err_2: '3 to 5 characters in length.',
+		err_2: 'User name can only enter 6-20 letters, numbers and underscores.',
 		err_3: 'Please input a password!',
 		err_4: 'Password can only enter 6-20 letters, numbers and underscores.',
 		err_5: 'Please enter the password again!',
@@ -11,6 +11,7 @@ export default {
 		err_8: 'Account does not exist',
 		err_9: 'Connection failed!',
 		err_10: 'Current node connection failed, please check the node!',
+		err_11: 'File format error!',
 	},
 	warn: {
 		w_1: 'Please select an account',
@@ -32,6 +33,7 @@ export default {
 		w_17: 'Can not be empty',
 		w_18: 'Incorrect format',
 		w_19: 'Insufficient Balance',
+		w_20: 'Import this account or not',
 	},
 	success: {
 		s_1: 'Created successfully!',
@@ -39,6 +41,8 @@ export default {
 		s_3: 'Account creation request sent successfully!',
 		s_4: 'Connection succeeded!',
 		s_5: 'Delete successfully!',
+		s_6: 'Export succeeded!',
+		s_7: 'Import succeeded!',
 	},
 	btn: {
 		confirm: 'Confirm',
@@ -62,7 +66,9 @@ export default {
 		setName: 'Setting aliases',
 		setNode: 'Set node',
 		review: 'Review',
-		lookHistory: 'Viewing history'
+		lookHistory: 'Viewing history',
+		exportAccount: 'Export Account',
+		importAccount: 'Import Account',
 	},
 	loading: {
 		l_1: 'Loading……'
