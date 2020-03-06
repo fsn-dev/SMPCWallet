@@ -76,7 +76,7 @@ let publicSet = {
    * @description 账户开关
    */
   accountSwitch: {
-    person: 0,
+    person: 1,
     group: 1
   },
 }

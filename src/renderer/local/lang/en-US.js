@@ -131,7 +131,8 @@ export default {
 		groupAccountId: 'Managed Account ID',
 		identity: 'Identity',
 		details: 'Details',
-		approvalTime: 'Approval Time Remaining'
+		approvalTime: 'Approval Time Remaining',
+		localNode: 'Local node'
 	},
 	state: {
 		name: 'Status',

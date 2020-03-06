@@ -133,7 +133,8 @@ export default {
 		groupAccountId: '共管账户 ID',
 		identity: '身份',
 		details: '详情',
-		approvalTime: '审批剩余时间'
+		approvalTime: '审批剩余时间',
+		localNode: '本地节点'
 	},
 	state: {
 		name: '状态',

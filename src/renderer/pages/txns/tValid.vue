@@ -33,7 +33,7 @@
             <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
           </div>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <div class="flex-bc WW100">
             <div>{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
             <div>
@@ -43,8 +43,20 @@
               <el-button @click="toUrl('/tNewsList')">{{$t('btn').back}}</el-button>
             </div>
           </div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+    </div>
+
+    <div class="WW100 fixed-action-bg flex-c" v-if="refreshAction">
+      <div class="flex-bc fixed-action-box">
+        <div class="font14">{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
+        <div>
+          <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
+          <el-button type="danger" @click="submitForm('rawTxData', 'DISAGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
+          <el-button type="success" @click="reviewApply" v-if="countDown && isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
+          <el-button @click="toUrl('/tNewsList')">{{$t('btn').back}}</el-button>
+        </div>
+      </div>
     </div>
 
     <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
@@ -79,7 +91,8 @@ export default {
       applyStatus: '',
       keyId: '',
       gForm: {},
-      countDown: 0
+      countDown: 0,
+      refreshAction: true
     }
   },
   computed: {
@@ -121,6 +134,7 @@ export default {
           gID: this.urlParams.Key,
         }
       }
+      this.refreshActionFn()
     },
     changeGroupMemberTxnsStatus (res) {
       console.log(res)
@@ -136,6 +150,12 @@ export default {
     console.log(this.urlParams)
   },
   methods: {
+    refreshActionFn () {
+      this.refreshAction = false
+      this.$nextTick(() => {
+        this.refreshAction = true
+      })
+    },
     modalClick () {
       this.eDialog.pwd = false
     },

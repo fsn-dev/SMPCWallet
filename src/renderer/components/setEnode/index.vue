@@ -51,7 +51,7 @@ export default {
       viewEnode: '',
       netUrl: this.serverRPC,
       netUrlArr: [],
-      noSaveDBnet: [],
+      noSaveDBnet: new Set(),
       loading: {
         setNode: false
       },
@@ -63,21 +63,27 @@ export default {
   },
   sockets: {
     getNodeInfos (res) {
-      // console.log(res)
+      console.log(res)
+      this.netUrlArr = [{
+        url: this.$$.config.serverRPC
+      }]
+      this.noSaveDBnet = new Set()
+      this.noSaveDBnet.add(this.$$.config.serverRPC)
       if (res.msg === 'Success' && res.info.length > 0) {
         let arr = []
         this.netUrl = this.serverRPC ? this.serverRPC : res.info[0].url
         for (let obj of res.info) {
-          arr.push({
-            name: obj.name,
-            url: obj.url
-          })
-          this.noSaveDBnet.push(obj.url)
+          if (!this.noSaveDBnet.has(obj.url)) {
+            arr.push({
+              name: obj.name,
+              url: obj.url
+            })
+            this.noSaveDBnet.add(obj.url)
+          }
         }
-        this.netUrlArr.unshift(...arr)
-        // console.log(this.netUrlArr)
-        // console.log(this.netUrl.toString())
+        this.netUrlArr = arr
       }
+      this.getNetUrl()
     }
   },
   watch: {
@@ -85,29 +91,23 @@ export default {
       // console.log(123)
       this.netUrl = this.serverRPC
     },
-    // netUrl (cur) {
-    //   console.log(cur)
-    // }
   },
   computed: {
     ...computedPub
   },
   mounted () {
     this.viewEnode = this.eNode + this.eNodeTx + this.address
-    this.getNetUrl()
+    // this.getNetUrl()
+    this.$socket.emit('getNodeInfos')
   },
   methods: {
     getNetUrl () {
       findNode().then(res => {
         // console.log(res)
-        this.netUrlArr = [{
-          url: this.$$.config.serverRPC
-        }]
-        this.noSaveDBnet = [this.$$.config.serverRPC]
         if (res.length > 0) {
           for (let obj of res) {
-            if (!this.noSaveDBnet.includes(obj.url)) {
-              this.noSaveDBnet.push(obj.url)
+            if (!this.noSaveDBnet.has(obj.url)) {
+              this.noSaveDBnet.add(obj.url)
               this.netUrlArr.push({
                 url: obj.url,
                 name: obj.url
@@ -115,14 +115,15 @@ export default {
             }
           }
         }
-        this.$socket.emit('getNodeInfos')
+        this.netUrlArr.push({
+          url: this.$$.config.serverRPC,
+          name: this.$t('label').localNode
+        })
       })
     },
     saveRpcDB () {
       let url = this.netUrl
-      // console.log(url)
-      // console.log(this.noSaveDBnet.includes(url))
-      if (!this.noSaveDBnet.includes(url)) {
+      if (!this.noSaveDBnet.has(url)) {
         findNode({url: url}).then(res => {
           if (res.length <= 0 && url !== this.$$.config.serverRPC) {
             insertNode({

@@ -27,18 +27,21 @@
             <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
           </div>
         </el-form-item>
-        <el-form-item>
-          <div class="flex-bc WW100">
-            <div>{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
-            <div>
-              <el-button type="primary" @click="openPwdDialog('AGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
-              <el-button type="danger" @click="openPwdDialog('DISAGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
-              <el-button type="success" @click="reviewApply" v-if="countDown && isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
-              <el-button @click="goBack">{{$t('btn').back}}</el-button>
-            </div>
-          </div>
-        </el-form-item>
+        <!-- <el-form-item>
+        </el-form-item> -->
       </el-form>
+      <!-- <div class="H60"></div> -->
+      <div class="WW100 fixed-action-bg flex-c" v-if="refreshAction">
+        <div class="flex-bc fixed-action-box">
+          <div class="font14">{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
+          <div>
+            <el-button type="primary" @click="openPwdDialog('AGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
+            <el-button type="danger" @click="openPwdDialog('DISAGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
+            <el-button type="success" @click="reviewApply" v-if="countDown && isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
+            <el-button @click="goBack">{{$t('btn').back}}</el-button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
@@ -49,6 +52,12 @@
 
 <style lang="scss">
 // @import '@/assets/scss/index';
+// .fixed-action-bg {
+//   position: fixed;bottom:0;left:0;right: 0;background: rgba(0,0,0,.1);padding: 8px 0;
+//   .fixed-action-box {
+//     width: 600px;padding: 0 25px;
+//   }
+// }
 </style>
 
 <script>
@@ -72,7 +81,8 @@ export default {
       dataPage: {},
       keyId: '',
       applyStatus: '',
-      countDown: 0
+      countDown: 0,
+      refreshAction: true
     }
   },
   sockets: {
@@ -115,6 +125,7 @@ export default {
           gID: this.urlParams.Key,
         }
       }
+      this.refreshActionFn()
     }
   },
   computed: {
@@ -129,7 +140,19 @@ export default {
       this.showGroupData()
     }
   },
+  // updated () {
+  //   this.refreshAction = false
+  //   this.$nextTick(() => {
+  //     this.refreshAction = true
+  //   })
+  // },
   methods: {
+    refreshActionFn () {
+      this.refreshAction = false
+      this.$nextTick(() => {
+        this.refreshAction = true
+      })
+    },
     goBack () {
       this.$router.back(-1)
     },

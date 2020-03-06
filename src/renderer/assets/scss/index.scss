@@ -15,6 +15,13 @@
   }
 }
 
+.fixed-action-bg {
+  position: fixed;bottom:0;left:0;right: 0;background: rgba(0,0,0,.1);padding: 8px 0;
+  .fixed-action-box {
+    width: 600px;padding: 0 25px;
+  }
+}
+
 .c-form-box-sm {
   width: 100%;
   .el-form-item {
@@ -141,9 +148,9 @@
   .appTitle {
     color: #fff;
   }
-  .btn-primary {
+  // .btn-primary {
     
-  }
+  // }
   .user-form-box {
     .user-form-title {
       .back, .title  {
