@@ -145,6 +145,7 @@ export default {
                               + ':'
                               + this.safeMode
         // this.drawer.send = false
+        console.log(this.dataPage)
         this.eDialog.pwd = true
       })
     },
@@ -194,7 +195,7 @@ export default {
         data.gId = this.gID
         data.key = key
       }
-      console.log(data)
+      // console.log(data)
       this.$socket.emit(dataUrl, data)
       
       this.resetForm()

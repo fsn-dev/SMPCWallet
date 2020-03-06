@@ -148,6 +148,7 @@ export default {
     let coinInfo = this.getCoinInfo(coin, 'rate')
     if (coinInfo && coinInfo.rate) {
       let d = Number(coinInfo.rate)
+      balance = Number(balance).toFixed(d)
       balance = Number(balance) * Math.pow(10, d)
       balance = new BigNumber(balance)
       balance = balance.toFormat().replace(/,/g, '')
@@ -158,6 +159,7 @@ export default {
         balance = web3.utils.toWei(balance, 'ether')
       }
     }
+    balance = Number(balance).toFixed(0)
     return balance
   },
   fixPkey (key) {
