@@ -74,12 +74,13 @@ Vue.prototype.msgWarning = function(txt) {
 Vue.prototype.quitApp = function() {
   $$.clearCookies()
   this.$store.commit('setToken', '')
-  this.$store.commit('setWallet', '')
+  // this.$store.commit('setWallet', '')
   this.$store.commit('setAddress', '')
   this.$router.push('/')
 }
 
-import pwdSure from '@/pages/public/pwdSure'
+// import pwdSure from '@/pages/public/pwdSure'
+import pwdSure from '@/components/pwdSure/index.vue'
 // import wDrawer from '@/components/drawer/index'
 import logo from '@/components/logo/index'
 import drawerLogo from '@/components/logo/drawerLogo'

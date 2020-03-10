@@ -6,8 +6,8 @@
       </div>
 
       <div class="flex-c header-top-account">
-        <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(safeMode) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
-        <p class="item" :class="Number(safeMode) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
+        <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(accountType) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
+        <p class="item" :class="Number(accountType) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
       </div>
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
@@ -27,16 +27,7 @@
         </div>
         
         <div class="header-top-user flex-c cursorP" @click="drawer.user = true" :title="token">
-          <!-- <div class="headImg box_Wshadow1" @click="isUserView = !isUserView"><img src="@etc/img/logoxs.svg"></div> -->
-          <!-- <div class="headImg box_Wshadow1 flex-c" @click="isUserView = !isUserView"><img :src="headerImg"></div> -->
-          <!-- <div class="headImg box_Wshadow1 flex-c" @click="drawer.user = true"><img :src="headerImg"></div> -->
           <el-avatar shape="square" :size="30" fit="fill" :src="headerImg"></el-avatar>
-          <!-- <ul class="user-list box_Wshadow1" v-show="isUserView">
-            <li class="item" @click="toUrl('createGroup');changeUserView()" :title="$t('btn').createAccount"><i class="el-icon-plus mr-5"></i>{{$t('btn').createAccount}}</li>
-            <li class="item" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user mr-5"></i>{{$t('title').personAccount}}</li>
-            <li class="item" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money mr-5"></i>{{$t('title').groupAccount}}</li>
-            <li class="item" @click="quitApp()" :title="$t('title').quit"><i class="el-icon-s-unfold mr-5"></i>{{$t('title').quit}}</li> -->
-          <!-- </ul> -->
         </div>
       </div>
     </header>
@@ -48,11 +39,12 @@
       </transition>
     </section>
 
-    <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false">
+    <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" v-if="drawer.create">
       <div slot="title">
         <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
       </div>
-      <create-account :formBoxClass="false" @closeModal="modalClick"></create-account>
+      <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType)"></createPerson>
+      <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
     </el-drawer>
 
     <el-drawer :visible.sync="drawer.user" :destroy-on-close="true" :show-close="false">
@@ -68,7 +60,8 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {findHeaderImg} from '@/db/headerImg'
-import createAccount from '@/pages/group/createGroup.vue'
+import createGroup from '@/pages/account/create/createGroup.vue'
+import createPerson from '@/pages/account/create/createPerson.vue'
 import personInfo from '@/components/main/personInfo.vue'
 import language from '@/components/language/index.vue'
 export default {
@@ -110,7 +103,7 @@ export default {
   computed: {
     ...computedPub
   },
-  components: {createAccount, personInfo, language},
+  components: {createGroup, createPerson, personInfo, language},
   mounted () {
     // console.log(this.$route)
     this.newsView(this.$route)
@@ -129,13 +122,13 @@ export default {
       this.drawer.create = false
     },
     openDrawerCreate () {
-      if (this.$route.path.indexOf('createGroup') !== -1) return
+      if (this.$route.path.indexOf('createGroup') !== -1 || this.$route.path.indexOf('createPerson') !== -1) return
       this.drawer.create = true
     },
     newsView (cur) {
       if (cur.path.indexOf('waitNews') !== -1) {
         this.newsActive = 1
-      } else if (cur.path.indexOf('createGroup') !== -1) {
+      } else if (cur.path.indexOf('createGroup') !== -1 || cur.path.indexOf('createPerson') !== -1) {
         this.newsActive = 2
       } else if (cur.path.indexOf('history') !== -1) {
         this.newsActive = 3
@@ -185,7 +178,8 @@ export default {
 			})
     },
     changeMode (type) {
-      this.$store.commit('setSafeMode', {info: type})
+      // this.$router.push({path: this.$route.path})
+      this.$store.commit('setAccountType', {info: type})
     },
     copyAddress (id, textId) {
       document.getElementById(id).select()

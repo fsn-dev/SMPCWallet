@@ -1,9 +1,5 @@
 <template>
   <div class="boxConntent1 container pt-30 relative">
-    <!-- <div class="history-btn">
-      <div class="font14 cursorP line-block H40" v-if="activeName === 'first'" @click="toUrl('/groupHistory')">{{$t('btn').lookHistory}}</div>
-      <div class="font14 cursorP line-block H40" v-if="activeName === 'second'" @click="toUrl('/txnsHistory')">{{$t('btn').lookHistory}}</div>
-    </div> -->
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab-box">
       <el-tab-pane name="first">
         <span slot="label">{{$t('title').groupNews + (gNewsNum ? '(' + gNewsNum + ')' : '')}}</span>

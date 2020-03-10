@@ -22,11 +22,6 @@
           </el-button>
         </el-form-item>
       </el-form>
-
-      <!-- <div class="flex-ec mt-50 font14 color_99 cursorP" @click="toUrl('/txnsHistory', {
-        coinType: sendDataObj.coinType,
-        address: sendDataObj.dcrmAddr,
-      })">{{$t('btn').lookHistory}}</div> -->
     </div>
 
     <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
@@ -143,7 +138,9 @@ export default {
                               + ':'
                               + this.gMode
                               + ':'
-                              + this.safeMode
+                              + this.accountType
+                              + ':'
+                              + Date.now()
         // this.drawer.send = false
         console.log(this.dataPage)
         this.eDialog.pwd = true
@@ -178,10 +175,12 @@ export default {
         coinType: this.sendDataObj.coinType,
         hash: '',
         status: 0,
-        pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : ''
+        pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : '',
+        key: key,
+        gId: this.gID
       }
       let dataUrl = 'GroupAddTxns'
-      if (Number(this.safeMode) === 1) {
+      if (Number(this.accountType) === 1) {
         dataUrl = 'PersonAddTxns'
         data.kId = this.address
         data.eNode = this.eNode
@@ -192,8 +191,8 @@ export default {
         for (let obj of this.gMemberInit) {
           data.gArr.push({eNode: obj.eNode, kId: '', status: 0, timestamp: '', initiate: 0})
         }
-        data.gId = this.gID
-        data.key = key
+        // data.gId = this.gID
+        // data.key = key
       }
       // console.log(data)
       this.$socket.emit(dataUrl, data)

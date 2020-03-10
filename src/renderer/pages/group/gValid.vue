@@ -251,6 +251,8 @@ export default {
                     + '0'
                     + ':' 
                     + type
+                    + ':'
+                    + Date.now()
             }
             this.eDialog.pwd = true
           } else {

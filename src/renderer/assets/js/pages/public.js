@@ -11,8 +11,8 @@ export const computedPub = {
   token () {
     return this.$store.state.token
   },
-  safeMode () {
-    return this.$store.state.safeMode
+  accountType () {
+    return this.$store.state.accountType
   },
   dayAndNight () {
     return this.$store.state.dayAndNight

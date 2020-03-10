@@ -205,7 +205,7 @@ export default {
         console.log(err)
         this.loading.history = false
       })
-      // if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
+      // if (Number(this.$$.getCookies(this.$$.config.cookies.accountType))) {
       //   this.historyLoading = false
       //   return
       // }

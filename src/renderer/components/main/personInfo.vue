@@ -83,8 +83,15 @@ export default {
       this.$emit('closeDrawer')
     },
     createAccount () {
-      this.$store.commit('setSafeMode', {info: '0'})
-      this.toUrl('/createGroup')
+      // this.$store.commit('setAccountType', {info: '0'})
+      // if () {
+      //   this.toUrl('/createGroup')
+      // }
+      if (Number(this.accountType)) {
+        this.toUrl('/createPerson')
+      } else {
+        this.toUrl('/createGroup')
+      }
       this.closeDrawer()
     },
     openUrl (url) {
@@ -92,12 +99,12 @@ export default {
       this.closeDrawer()
     },
     changeMode (type) {
-      if (Number(type)) {
-        this.toUrl('/person')
-      } else {
-        this.toUrl('/group')
-      }
-      this.$store.commit('setSafeMode', {info: type})
+      // if (Number(type)) {
+      //   this.toUrl('/person')
+      // } else {
+      //   this.toUrl('/group')
+      // }
+      this.$store.commit('setAccountType', {info: type})
       this.closeDrawer()
     },
     getAccountData () {

@@ -64,7 +64,7 @@ function createWindow () {
     // cookies.clearCookies()
     // Cookies.set(config.cookies.token, '', { expires: 0 })
     // Cookies.set(config.cookies.address, '', { expires: 0 })
-    // Cookies.set(config.cookies.safeMode, '', { expires: 0 })
+    // Cookies.set(config.cookies.accountType, '', { expires: 0 })
   })
 }
 

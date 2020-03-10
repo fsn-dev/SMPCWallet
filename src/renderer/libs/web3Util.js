@@ -495,7 +495,7 @@ let web3Utils = {
           cbData = res
           if (cbData.Status !== 'Error') {
             let arr = cbData.Data ? cbData.Data : []
-            console.log(arr)
+            // console.log(arr)
             let list = []
             for (let obj in arr) {
               // console.log(arr[obj])

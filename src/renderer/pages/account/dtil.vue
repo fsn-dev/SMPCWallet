@@ -1,6 +1,6 @@
 <template>
   <div class="boxConntent1" v-loading="loading.account" :element-loading-text="$t('loading').l_1">
-    <div class="flex-bc a-header-box" v-if="!Number(safeMode)">
+    <div class="flex-bc a-header-box" v-if="!Number(accountType)">
       <div></div>
       <div @click="gID ? drawer.member = true : ''"><i class="el-icon-menu cursorP"></i></div>
     </div>
@@ -41,7 +41,7 @@
       </el-table>
     </div>
 
-    <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(safeMode)">{{$t('warn').w_1}}</div>
+    <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(accountType)">{{$t('warn').w_1}}</div>
 
     <!-- 查看组成员 start -->
     <el-drawer :visible.sync="drawer.member" :destroy-on-close="true" :show-close="false">
@@ -118,8 +118,8 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {psMethods} from './js/person'
-import {gMethods} from './js/group'
+// import {psMethods} from './js/person'
+// import {gMethods} from './js/group'
 
 import sendTxns from '@/pages/txns/index'
 export default {
@@ -156,49 +156,95 @@ export default {
     ...computedPub,
   },
   components: {sendTxns},
-  watch: {
-    '$route' (cur) {
-      // console.log(cur)
-      if (cur.query.gID) {
-        this.initGroupData()
+  mounted () {
+    setTimeout(() => {
+      this.init()
+    }, 50)
+  },
+  methods: {
+    init () {
+      if (this.$route.query.publicKey) {
+        // console.log(1)
+        this.getAccountDataInit()
       } else {
+        // console.log(2)
         this.gID = ''
         this.gMode = ''
         this.pubKey = ''
         this.gMemberInit = []
         this.tableData = []
+        this.getGroup = []
         this.loading.account = false
       }
-      // this.refreshPage()
     },
-    safeMode (type) {
-      if (Number(type)) {
-        this.toUrl('/person')
-      } else {
-        this.toUrl('/group')
-      }
-    }
-  },
-  mounted () {
-    setTimeout(() => {
-      // console.log(this.$route)
-      if (!Number(this.safeMode)) {
-        if (this.$route.query.publicKey) {
-          this.initGroupData()
-        }
-      } else {
-        this.getGroupPersonId()
-      }
-    }, 50)
-  },
-  methods: {
-    ...psMethods,
-    ...gMethods,
     modalClick () {
       this.eDialog.send = false
       this.eDialog.pwd = false
       this.drawer.send = false
       this.gMemberSelect = []
+    },
+    getAccountDataInit () {
+      this.loading.account = true
+      this.gID = this.$route.query.gID ? this.$route.query.gID : ''
+      this.pubKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
+      this.getAccounts()
+      this.getGroupData()
+    },
+    getGroupData () {
+      this.$$.getGroup().then(res => {
+        // console.log(res)
+        this.getGroup = res.info ? res.info : []
+        if (this.$route.query.gID) {
+          this.gID = this.$route.query.gID
+        }
+        // this.gMemberInit = []
+        this.getMemberList()
+      }).catch(err => {
+        console.log(err)
+        this.msgError(err.error)
+      })
+    },
+    getMemberList () {
+      for (let obj of this.getGroup) {
+        if (this.gID === obj.Gid) {
+          this.gMode = obj.Mode
+          this.setMemberList(obj.Enodes)
+          break
+        }
+      }
+    },
+    setMemberList (data) {
+      let arr = []
+      for (let obj of data) {
+        if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue
+        arr.push({
+          p1: 'dcrm',
+          p2: 'getEnodeStatus',
+          p3: [obj]
+        })
+      }
+      this.gMemberSelect.push(this.eNode)
+      this.$$.batchRequest(arr).then(res => {
+        this.gMemberInit = []
+        // console.log(res)
+        for (let obj of res) {
+          let cbData = JSON.parse(obj), status
+          // console.log(cbData)
+          if (cbData.Data && cbData.Data.Status && cbData.Data.Status === 'OnLine') {
+            status = 'OnLine'
+          } else {
+            status = 'OffLine'
+          }
+          this.gMemberInit.push({
+            eNode: cbData.Data.Enode,
+            status: status === 'OnLine' ? 1 : 0
+          })
+          if (this.gMode.split('/')[0] === this.gMode.split('/')[1]) {
+            this.gMemberSelect.push(cbData.Data.Enode)
+          }
+        }
+        this.loading.nodeSelect = false
+      })
     },
     /**
      * 初始获取账号
@@ -214,8 +260,6 @@ export default {
           // console.log(res)
           if (res.msg === 'Success') {
             this.tableData = res.info
-          } else if (Number(this.safeMode)) {
-            this.reqPersonAccount()
           }
           this.loading.account = false
         }).catch(err => {
@@ -223,15 +267,12 @@ export default {
           this.msgError(this.$t('warn').w_2)
           this.loading.account = false
         })
-      } else if (Number(this.safeMode)) {
-        this.reqPersonAccount()
+      } else {
+        this.loading.account = false
       }
     },
     openReceive (index, item) {
-      let url = '/group/receive'
-      if (Number(this.safeMode)) {
-        url = '/person/receive'
-      }
+      let url = '/account/receive'
       this.toUrl(url, {
         address: item.DcrmAddr,
         coinType: item.Cointype,
@@ -252,7 +293,7 @@ export default {
     },
     openSendDialog (index, item) {
       this.setTxnsData(item)
-      if (!Number(this.safeMode)) {
+      if (!Number(this.accountType)) {
         this.gMemberInit = []
         this.gMemberSelect = []
         this.loading.nodeSelect = true

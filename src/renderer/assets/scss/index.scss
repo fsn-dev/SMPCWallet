@@ -32,6 +32,32 @@
   }
 }
 
+.confirm-list-box {
+  width: 100%;
+  .list-box {
+    width: 100%;
+    .item {
+      padding: size(8) size(0);color: $color-gray;
+      .label {
+        width: 20%;text-align: right;padding-right: size(10);font-weight: bold;white-space: nowrap;
+      }
+      .info {
+        width: 80%;word-break: break-all;
+      }
+    }
+  }
+}
+
+.account-box {
+  width: 100%;height: 100%;position: relative;
+  .account-nav {
+    width: 30%;max-width: 300px;min-height: 200px;height: 100%;
+  }
+  .account-dtil {
+    width: 100%;height: 100%;
+  }
+}
+
 .n-list-box {
   width: 100%;min-height: 80%;padding: 30px 15px; margin:15px 0;
   .item {
@@ -117,11 +143,6 @@
   .el-table__expanded-cell {
     padding: 20px 20px;
   }
-  // .form-sm {
-  //   .el-form-item__label {
-  //     white-space: nowrap;font-size:12px;
-  //   }
-  // }
 }
 
 .tables-expand {
@@ -148,9 +169,6 @@
   .appTitle {
     color: #fff;
   }
-  // .btn-primary {
-    
-  // }
   .user-form-box {
     .user-form-title {
       .back, .title  {

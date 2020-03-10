@@ -291,5 +291,25 @@ export default {
       let errtxt2 = 'Sorry! We don\'t recognize this type of wallet file. '
       throw errtxt2
     }
+  },
+  smallToBigSort () {
+    return (a, b) => {
+      for (let obj in arguments) {
+        if (Number(a[arguments[obj]]) > Number(b[arguments[obj]])) {
+          return 1
+        }
+      }
+      return -1
+    }
+  },
+  bigToSmallSort () {
+    return (a, b) => {
+      for (let obj in arguments) {
+        if (Number(a[arguments[obj]]) > Number(b[arguments[obj]])) {
+          return -1
+        }
+      }
+      return 1
+    }
   }
 }

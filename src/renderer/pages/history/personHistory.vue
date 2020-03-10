@@ -33,7 +33,7 @@
                       <span>{{props.row.eNode}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('label').date" width="140" align="center">
+                  <!-- <el-table-column :label="$t('label').date" width="140" align="center">
                     <template slot-scope="props">
                       {{props.row.timestamp ? $$.timeChange(props.row.timestamp, 'yyyy-mm-dd hh:mm') : ''}}
                     </template>
@@ -42,7 +42,7 @@
                     <template slot-scope="props">
                       <span :class="props.row.status === 0 || props.row.status === 1 || props.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(props.row.status)}}</span>
                     </template>
-                  </el-table-column>
+                  </el-table-column> -->
                 </el-table>
               </el-form-item>
             </el-form>
@@ -122,7 +122,7 @@ export default {
     ...computedPub,
   },
   sockets: {
-    GroupAccountsFind (res) {
+    PersonAccountsFind (res) {
       // console.log(res)
       console.log(res)
       this.loading.history = true
@@ -153,7 +153,7 @@ export default {
       this.emitUrl()
     },
     initData () {
-      this.baseUrl = 'GroupAccountsFind'
+      this.baseUrl = 'PersonAccountsFind'
       this.emitUrl()
     },
     emitUrl () {
@@ -179,43 +179,10 @@ export default {
         let dataObj = data[i]
         // console.log(dataObj.status)
         if (dataObj.status === 0) {
-          let state = 0
-          if (dataObj.member && dataObj.member.length > 0) {
-            let stateObj = { p: 0, a: 0, r: 0 }
-            for (let obj of dataObj.member) {
-              if (obj.status === 0) {
-                stateObj.p ++
-              }
-              if (obj.status === 4) {
-                stateObj.r ++
-              }
-              if (obj.status === 5) {
-                stateObj.a ++
-              }
-            }
-            // console.log(stateObj)
-            // console.log((nowTime - dataObj.timestamp) > this.$$.config.timeout)
-            // console.log((nowTime - dataObj.timestamp))
-            // console.log(this.$$.config.timeout)
-            if (stateObj.r > 0) {
-              state = 4
-              this.setAccountDBState(dataObj._id, i, '', state)
-            } else if (stateObj.a === dataObj.member.length) {
-              state = 5
-              this.getAccountPub(dataObj._id, dataObj.key, i)
-            } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
-              state = 6
-              dataObj.status = state
-              this.setAccountDBState(dataObj._id, i, '', state)
-            }
-            dataObj.status = state
-          } else {
-            this.getAccountPub(dataObj._id, dataObj.key, i)
-          }
+          this.getAccountPub(dataObj._id, dataObj.key, i)
         } else if (dataObj.status === 5 && !dataObj.hash) {
           this.getAccountPub(dataObj._id, dataObj.key, i)
         }
-        // console.log(dataObj.status)
         this.tableData.push(dataObj)
         this.loading.history = false
       }
@@ -245,7 +212,7 @@ export default {
       })
     },
     setAccountDBState (id, index, pubKey, status) {
-      this.$socket.emit('changeGroupAccountsEdit', {
+      this.$socket.emit('changePersonAccountsEdit', {
         id: id,
         pubKey: pubKey,
         status: status

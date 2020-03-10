@@ -82,7 +82,7 @@ export const methods = {
     console.log(data)
     console.log(data.signTx)
     if (data.signTx) {
-      if (Number(this.$$.getCookies(this.$$.config.cookies.safeMode))) {
+      if (Number(this.$$.getCookies(this.$$.config.cookies.accountType))) {
         this.serializedTxView = true
         this.sendInfoVisible = false
         // this.qrcode(this.signTx)

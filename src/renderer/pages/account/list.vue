@@ -11,7 +11,7 @@
         </li>
       </ul>
       <div class="flex-c boxConntent1" v-else>
-        <el-button type="primary" @click="toUrl('createGroup')" class="btn-primary">{{$t('btn').createAccount}}</el-button>
+        <el-button type="primary" @click="Number(accountType) ? toUrl('/createPerson') : toUrl('createGroup')" class="btn-primary">{{$t('btn').createAccount}}</el-button>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
 import {computedPub} from '@/assets/js/pages/public'
 import {findGaccount} from '@/db/gAccount'
 export default {
-  name: '',
+  name: 'accountList',
   data () {
     return {
       gAccountList: [],
@@ -74,34 +74,27 @@ export default {
     ...computedPub,
   },
   watch: {
-    '$route' (cur) {
-      // console.log(cur)
-      if (cur.query.gID) {
-        this.gID = this.$route.query.gID
-        this.publicKey = this.$route.query.publicKey
-      } else {
-        if (this.gAccountList.length > 0) {
-          this.changeGroup(this.gAccountList[0])
-        } else {
-          this.gID = ''
-          this.publicKey = ''
-        }
-      }
-      // this.refreshPage()
+    accountType (type) {
+      this.loading.list = true
+      this.init()
     }
   },
   mounted () {
     this.loading.list = true
     // console.log(this.$$.web3)
-    this.initGroup()
+    this.init()
   },
   methods: {
-    initGroup () {
-      
-      this.$$.getAccounts(this.address, this.safeMode).then(res => {
-        // console.log(res)
+    init () {
+      this.$$.getAccounts(this.address, this.accountType).then(res => {
+        console.log(res)
         this.gAccountList = []
         let arr = res.info ? res.info : [], arr1 = [], arr2 = []
+        if (arr.length <= 0) {
+          this.changeGroup()
+          this.loading.list = false
+          return
+        }
         for (let obj1 of arr) {
           for (let obj2 of obj1.Accounts) {
             if (!arr1.includes(obj2)) {
@@ -121,8 +114,10 @@ export default {
           this.getGName(arr2[i], i)
         }
         if (this.$route.query.gID) {
-          this.gID = this.$route.query.gID
-          this.publicKey = this.$route.query.publicKey
+          this.changeGroup({
+            gID: this.$route.query.gID,
+            publicKey: this.$route.query.publicKey,
+          })
         } else if (this.gAccountList.length > 0) {
           this.changeGroup(this.gAccountList[0])
         }
@@ -143,10 +138,15 @@ export default {
       })
     },
     changeGroup (item) {
-      // console.log(item)
-      this.gID = item.gID
-      this.publicKey = item.publicKey
-      this.toUrl('/group', {gID: item.gID, publicKey: item.publicKey})
+      console.log(item)
+      if (item) {
+        this.gID = item.gID
+        this.publicKey = item.publicKey
+        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey})
+      } else {
+        this.toUrl('/account', {gID: '', publicKey: ''})
+      }
+      this.$emit('changeAccount')
     }
   }
 }

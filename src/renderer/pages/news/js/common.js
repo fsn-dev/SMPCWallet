@@ -5,7 +5,7 @@ export const methods = {
       key: key,
       type: 1
     }).then(res => {
-      console.log(res)
+      // console.log(res)
       if (res.length > 0 && res[0].status) {
         this.newsList[i].status = 1
       } else {
@@ -25,7 +25,7 @@ export const methods = {
   async removeStatus (type) {
     let nowDate = Date.now()
     findStatus({}).then(res => {
-      console.log(res)
+      // console.log(res)
       if (res.length > 0) {
         for (let obj of res) {
           if ((nowDate - obj.updatetime) > (1000 * 60 * 15)) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-25 relative">
-      <el-breadcrumb-item :to="{ path: Number(safeMode) ? '/person' : '/group' }">{{$t('title').accountList}}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: Number(accountType) ? '/person' : '/group' }">{{$t('title').accountList}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{$t('title').gAccountSet}}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="ga-list-box">
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getAccountData () {
-      this.$$.getAccounts(this.address, this.safeMode).then(res => {
+      this.$$.getAccounts(this.address, this.accountType).then(res => {
         console.log(res)
         this.gAccountList = []
         let arr = res.info ? res.info : [], arr1 = [], arr2 = []

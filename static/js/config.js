@@ -45,7 +45,7 @@ let publicSet = {
   cookies: {
     token: 'token',
     address: 'address',
-    safeMode: 'safeMode',
+    accountType: 'accountType',
     eNodeTx: 'eNodeTx'
   },
   /**
@@ -81,8 +81,8 @@ let publicSet = {
   },
 }
 
-publicSet.appURL = 'http://139.196.26.212:8300'
-// publicSet.appURL = 'http://localhost:8300'
+// publicSet.appURL = 'http://139.196.26.212:8300'
+publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.184:8877'
 // publicSet.appURL = 'http://192.168.1.153:7700'
 

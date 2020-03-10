@@ -1,5 +1,7 @@
 export const psMethods = {
   getGroupPersonId () {
+    // this.getAccounts()
+    // return
     this.$$.getGroupPerson().then(res => {
       console.log(res)
       if (res.msg === 'Success' && res.info) {
@@ -19,7 +21,7 @@ export const psMethods = {
     })
   },
   getPersonAccount () {
-    this.$$.getAccounts(this.gID, this.safeMode).then(res => {
+    this.$$.getAccounts(this.gID, this.accountType).then(res => {
       console.log(res)
       if (res.msg === 'Success' && res.info.length > 0) {
         this.gID = res.info[0].GroupID
@@ -56,7 +58,7 @@ export const psMethods = {
       if (this.$store.state.wallet) {
         this.$$.toSign(rawTx, this.$store.state.wallet).then(res => {
           // console.log(res)
-          this.$$.reqAccount(res.signTx, this.safeMode).then(res => {
+          this.$$.reqAccount(res.signTx, this.accountType).then(res => {
           // this.$$.reqAccount(res.signTx, '0').then(res => {
             console.log(res)
             if (res.msg === 'Success') {

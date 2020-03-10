@@ -16,7 +16,10 @@ Vue.use(Router)
 const routers = new Router({
   routes
 })
-
+// routers.beforeEach((to, from, next) => {
+//   console.log(to)
+//   next()
+// })
 // routers.beforeEach((to, from, next) => {
 //   // console.log(to)
 //   const token = store.state.address

@@ -33,7 +33,8 @@ export default {
   },
   methods: {
     goHome () {
-      let url = this.token ? (Number(this.safeMode) ? '/person' : '/group') : '/'
+      // let url = this.token ? (Number(this.accountType) ? '/person' : '/group') : '/'
+      let url = '/account'
       // this.closeDrawer()
       this.$emit('click-logo')
       this.toUrl(url)

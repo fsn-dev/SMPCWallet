@@ -11,13 +11,17 @@
           </div>
           <div class="amount-box flex-bc">
             <p class="amt"><span class="label">{{$t('label').value}}:</span> {{
-
               $$.fromWei(item.Value, $$.cutERC20(item.Cointype).coinType) 
               }}</p>
             <p class="amt"><span class="label">{{$t('label').coinType}}:</span> {{item.Cointype}}</p>
           </div>
           <div class="action-box flex-bc">
-            <p class="at" :title="item.GroupId"><span class="label">{{$t('label').source}}:</span> {{$$.cutOut(item.GroupId, 16, 14)}}</p>
+            <p class="at" :title="item.Key">
+              <span class="label">{{$t('label').source}}:</span>
+              {{$$.cutOut(item.Key, 16, 14)}}
+
+            </p>
+            <p class="font12 color_99 mt-5">{{$$.timeChange(item.TimeStamp, 'yyyy-mm-dd hh:mm:ss')}}</p>
             <el-button v-if="!item.status" @click="toUrl('/tValid', item)" class="btn-primary">{{$t('btn').approval}}</el-button>
             <el-button type="success" v-if="item.status" @click="toUrl('/tValid', item)" class="">{{$t('btn').review}}</el-button>
           </div>
@@ -78,6 +82,7 @@ export default {
           }
           this.newsList.push(obj)
         }
+        this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
         this.$emit('tNewsTip', this.newsList.length)
         this.loading.list = false
       }).catch(err => {

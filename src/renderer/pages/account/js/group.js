@@ -1,5 +1,5 @@
 export const gMethods = {
-  initGroupData () {
+  getGroupDataInit () {
     this.loading.account = true
     this.gID = this.$route.query.gID ? this.$route.query.gID : ''
     this.pubKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''

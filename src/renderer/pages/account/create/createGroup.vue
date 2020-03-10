@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container" v-loading="loading.creat" element-loading-text="Loading……">
+  <div class="boxConntent1 container" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
 
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
@@ -62,21 +62,7 @@
 </template>
 
 <style lang="scss">
-.confirm-list-box {
-  width: 100%;
-  .list-box {
-    width: 100%;
-    .item {
-      padding: size(8) size(0);color: $color-gray;
-      .label {
-        width: 20%;text-align: right;padding-right: size(10);font-weight: bold;white-space: nowrap;
-      }
-      .info {
-        width: 80%;word-break: break-all;
-      }
-    }
-  }
-}
+
 </style>
 
 <script>
@@ -127,9 +113,11 @@ export default {
     }
   },
   watch: {
-    safeMode (cur) {
+    accountType (cur) {
       if (Number(cur) === 1) {
-        this.toUrl('/person')
+        this.toUrl('/createPerson')
+      } else {
+        this.toUrl('/createGroup')
       }
     },
     'groupForm.mode' (cur, old) {
@@ -207,7 +195,7 @@ export default {
         this.msgError(this.$t('warn').w_3)
         return
       }
-      let data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode
+      let data = 'REQDCRMADDR:' + this.gID + ':' + this.groupForm.mode + ':' + Date.now()
       for (let obj of this.groupForm.eNode) {
         data += ':' + this.splitTx(obj.value).signTx
       }
@@ -215,12 +203,14 @@ export default {
       this.dataPage = {
         from: this.address,
       }
+      this.loading.creat = true
       this.$$.getReqNonce(this.address).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = 0
         this.dataPage.data = data
         console.log(this.dataPage)
         this.eDialog.pwd = true
+        this.loading.creat = false
       })
     },
     getSignData (data) {
@@ -235,10 +225,10 @@ export default {
       }
     },
     reqAccount () {
-      this.$$.reqAccount(this.signTx, '0').then(res => {
+      this.$$.reqAccount(this.signTx, this.accountType).then(res => {
         console.log(res)
         if (res.msg === 'Success') {
-          this.$store.commit('setSafeMode', {info: '0'})
+          this.$store.commit('setAccountType', {info: '0'})
           this.loading.creat = false
           this.$emit('closeModal')
           this.modalClick()

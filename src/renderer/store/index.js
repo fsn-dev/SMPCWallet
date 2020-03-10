@@ -24,8 +24,8 @@ const store = new Vuex.Store({
     eNodeTx: '',
     address: '',
     token: '',
-    wallet: '',
-    safeMode: config.modeInit,
+    // wallet: '',
+    accountType: config.modeInit,
     dayAndNight: '',
     language: '',
     serverRPC: ''
@@ -55,20 +55,20 @@ const store = new Vuex.Store({
         cookies.setCookies(config.cookies.token, info)
       }
     },
-    setWallet (state, data) {
-      // state.wallet = data
-      let info = data.info ? data.info : ''
-      state.wallet = info
-      if (!data.type) {
-        cookies.setCookies('wallet', info, 0.1)
-      }
-    },
-    setSafeMode (state, data) {
+    // setWallet (state, data) {
+    //   // state.wallet = data
+    //   let info = data.info ? data.info : ''
+    //   state.wallet = info
+    //   if (!data.type) {
+    //     cookies.setCookies('wallet', info, 0.1)
+    //   }
+    // },
+    setAccountType (state, data) {
       let info = data.info ? data.info.toString() : config.modeInit
-      state.safeMode = info
+      state.accountType = info
       if (!data.type) {
         uodateBaseInfo({
-          key: config.cookies.safeMode,
+          key: config.cookies.accountType,
           value: info
         })
       }
@@ -136,24 +136,24 @@ const store = new Vuex.Store({
         commit('setToken', data)
       })
     },
-    getWallet ({commit}) {
-      cookies.getCookies('wallet').then(res => {
-        let data = { type: 1, info: res}
-        commit('setWallet', data)
-      })
-    },
-    getSafeMode ({commit}) {
+    // getWallet ({commit}) {
+    //   cookies.getCookies('wallet').then(res => {
+    //     let data = { type: 1, info: res}
+    //     commit('setWallet', data)
+    //   })
+    // },
+    getAccountType ({commit}) {
       let data = { type: 1, info: ''}
-      findBaseInfo({key: config.cookies.safeMode}).then(res => {
+      findBaseInfo({key: config.cookies.accountType}).then(res => {
         if (res.length > 0) {
           data.info = res[0].value
         } else {
           data.info = config.modeInit
         }
-        commit('setSafeMode', data)
+        commit('setAccountType', data)
       }).catch(err => {
         data.info = config.modeInit
-        commit('setSafeMode', data)
+        commit('setAccountType', data)
         console.log(err)
       })
     },

@@ -156,19 +156,6 @@ export default {
     }
   },
   sockets: {
-    PersonFindTxns (res) {
-      console.log(res)
-      this.loading.history = true
-      if (res.msg === 'Success' && res.info.length > 0) {
-        this.page.total = res.total
-        this.formatData(res.info)
-        // this.tableData = res.info
-      } else {
-        this.page.total = 0
-        this.tableData = []
-        this.loading.history = false
-      }
-    },
     GroupFindTxns (res) {
       console.log(res)
       this.loading.history = true
@@ -184,15 +171,6 @@ export default {
     },
     changeGroupTxnsStatus (res) {
       console.log(res)
-    }
-  },
-  watch: {
-    safeMode (cur) {
-      // console.log(cur)
-      this.page.cur = 0
-      this.page.total = 0
-      this.toUrl('/txnsHistory')
-      this.initData()
     }
   },
   computed: {
@@ -219,11 +197,7 @@ export default {
       console.log(urlParams)
       this.coinType = urlParams.coinType ? urlParams.coinType : ''
       this.dcrmAddr = urlParams.address ? urlParams.address : ''
-      if (Number(this.safeMode) === 1) {
-        this.baseUrl = 'PersonFindTxns'
-      } else {
-        this.baseUrl = 'GroupFindTxns'
-      }
+      this.baseUrl = 'GroupFindTxns'
       this.emitUrl()
     },
     emitUrl () {
@@ -301,10 +275,10 @@ export default {
           this.setTxnsDBState(id, index, hash, 1)
           this.tableData[index].hash = hash
           this.tableData[index].status = 1
-        } else if (res.status === 'Failure') {
+        } else if (res.status === 'Failure' || res.info === 'Failure') {
           this.setTxnsDBState(id, index, '', 2)
           this.tableData[index].status = 2
-        } else if (res.status === 'Timeout') {
+        } else if (res.status === 'Timeout' || res.info === 'Timeout') {
           this.setTxnsDBState(id, index, '', 6)
           this.tableData[index].status = 6
         }

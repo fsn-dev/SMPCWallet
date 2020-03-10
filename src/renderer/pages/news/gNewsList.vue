@@ -13,6 +13,7 @@
                 <!-- <span>{{ indexs === (item.Enodes.length - 1) ? "" : '、'}}</span> -->
               </span>
             </div>
+            <p class="font12 color_99 mt-5">{{$$.timeChange(item.TimeStamp, 'yyyy-mm-dd hh:mm:ss')}}</p>
           </div>
           <el-button v-if="!item.status" @click="toUrl('/gValid', item)" class="btn-primary">{{$t('btn').approval}}</el-button>
           <el-button type="success" v-if="item.status" @click="toUrl('/gValid', item)" class="">{{$t('btn').review}}</el-button>
@@ -84,6 +85,8 @@ export default {
             this.newsList.push(obj)
             this.getKeyStatus(obj.Key, i, '1')
           }
+          
+          this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
           this.$emit('gNewsTip', this.newsList.length)
           this.loading.list = false
         }).catch(err => {
@@ -97,41 +100,6 @@ export default {
         this.loading.list = false
       })
     },
-    // getKeyStatus (key, i) {
-    //   findStatus({
-    //     key: key,
-    //     type: 1
-    //   }).then(res => {
-    //     console.log(res)
-    //     if (res.length > 0 && res[0].status) {
-    //       this.newsList[i].status = 1
-    //     } else {
-    //       this.updateStaus(key, i)
-    //     }
-    //   })
-    // },
-    // updateStaus (key, i) {
-    //   uodateStatus({
-    //     key: key,
-    //     type: 1,
-    //     status: 0
-    //   }).then(res => {
-    //     console.log(res)
-    //   })
-    // },
-    // async removeStatus () {
-    //   let nowDate = Date.now()
-    //   findStatus({}).then(res => {
-    //     console.log(res)
-    //     if (res.length > 0) {
-    //       for (let obj of res) {
-    //         if ((nowDate - obj.updatetime) > (1000 * 60 * 30)) {
-    //           removeStatus({key: obj.key})
-    //         }
-    //       }
-    //     }
-    //   })
-    // },
     splitNode (eNode) {
       return eNode.match(/enode:\/\/(\S*)@/)[1]
     }
