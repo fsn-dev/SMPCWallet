@@ -271,7 +271,7 @@ export default {
       this.$$.getLockOutStatus(key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Success') {
-          let hash = res.info.OutTxHash.indexOf('0x') === 0 ? res.info.OutTxHash : ('0x' + res.info.OutTxHash)
+          let hash = res.hash && res.hash.indexOf('0x') === 0 ? res.hash : ('0x' + res.hash)
           this.setTxnsDBState(id, index, hash, 1)
           this.tableData[index].hash = hash
           this.tableData[index].status = 1

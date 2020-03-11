@@ -534,27 +534,20 @@ let web3Utils = {
           cbData = res
           if (cbData.Status !== 'Error') {
             // console.log(cbData.Data.result)
-            // console.log(JSON.parse(cbData.Data.result))
+            console.log(JSON.parse(cbData.Data.result))
             let result = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
             let status = result ? result.Status : 'Failure'
             let pubKey = result && result.PubKey ? result.PubKey : ''
-            // console.log(status)
-            // status = status.Status
-            data = {msg: 'Success', status: status, pubKey: pubKey}
+            let list = result && result.AllReply ? result.AllReply : []
+            data = {msg: 'Success', status: status, pubKey: pubKey, info: list,timestamp: result.TimeStamp}
           } else {
-            data = {msg: 'Error', status: 'Failure', pubKey: ''}
+            data = {msg: 'Error', status: 'Failure', pubKey: '', info: []}
           }
           resolve(data)
         }).catch(err => {
-          breakAgaing().then(res => {
-            this.reqAccountStatus(key).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
+          console.log(err)
+          data = {msg: 'Error', error: err.toString(), info: []}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -657,23 +650,17 @@ let web3Utils = {
           if (cbData.Status !== 'Error') {
             // console.log(JSON.parse(cbData.Data.result))
             let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
-            // console.log(status)
+            console.log(status)
             // status = status.Status
-            data = {msg: 'Success', status: status.Status, info: status}
+            data = {msg: 'Success', status: status.Status, info: status.AllReply, hash: status.OutTxHash, timestamp: status.TimeStamp}
           } else {
-            data = {msg: 'Error', info: 'Failure'}
+            data = {msg: 'Error', status: 'Failure', info: []}
           }
           resolve(data)
         }).catch(err => {
-          breakAgaing().then(res => {
-            this.getLockOutStatus(key).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
+          console.log(err)
+          data = {msg: 'Error', error: err.toString(), info: []}
+          reject(data)
         })
       } catch (error) {
         console.log(error)

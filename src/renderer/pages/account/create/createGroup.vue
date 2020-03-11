@@ -4,12 +4,6 @@
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form :model="groupForm" ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
-          <!-- <el-form-item :label="$t('label').group">
-            <el-select v-model="gID" :placeholder="$t('warn').w_4" class="WW100" @change="changeGroup">
-              <el-option :label="$t('btn').newBuild" :value="0"></el-option>
-              <el-option v-for="(item, index) in getGroup" :key="index" :label="item.name" :value="item.Gid"></el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item :label="$t('label').mode"
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
@@ -51,7 +45,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
-        <el-button type="primary" @click="reqAccount">{{$t('btn').confirm}}</el-button>
+        <el-button type="primary" @click="reqAccount" :disabled="!loading.confirm">{{$t('btn').confirm}}</el-button>
       </div>
     </el-dialog>
 
@@ -87,7 +81,8 @@ export default {
         confirm: false
       },
       loading: {
-        creat: false
+        creat: false,
+        confirm: true
       },
       gID: 0,
       dataPage: {},
@@ -225,6 +220,14 @@ export default {
       }
     },
     reqAccount () {
+      if (!this.loading.confirm) return
+      this.loading.confirm = false
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.loading.confirm = true
+        })
+      }, 3000)
+      // return
       this.$$.reqAccount(this.signTx, this.accountType).then(res => {
         console.log(res)
         if (res.msg === 'Success') {

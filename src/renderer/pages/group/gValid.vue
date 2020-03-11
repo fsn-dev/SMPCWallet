@@ -19,18 +19,14 @@
             <div class="flex-bc WW100">
               <div class="flex-sc">
                 {{eNode.initiate ? ($t('label').initiator + '：') : ($t('label').approver + '：')}}
-                <span slot="label" :class="eNode.status === 5 || eNode.status === 0 ? 'color_green' : 'color_red'">{{$$.changeState(eNode.status)}}</span>
+                <span slot="label" :class="eNode.status === 'Agree' || eNode.status === 'Pending' ? 'color_green' : 'color_red'">{{eNode.status}}</span>
               </div>
-              <!-- <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span> -->
             </div>
             <el-input v-model="eNode.eNode" disabled="disabled" :title="eNode.eNode"></el-input>
-            <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
           </div>
         </el-form-item>
-        <!-- <el-form-item>
-        </el-form-item> -->
       </el-form>
-      <!-- <div class="H60"></div> -->
+      <div class="H60"></div>
       <div class="WW100 fixed-action-bg flex-c" v-if="refreshAction">
         <div class="flex-bc fixed-action-box">
           <div class="font14">{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
@@ -51,13 +47,6 @@
 </template>
 
 <style lang="scss">
-// @import '@/assets/scss/index';
-// .fixed-action-bg {
-//   position: fixed;bottom:0;left:0;right: 0;background: rgba(0,0,0,.1);padding: 8px 0;
-//   .fixed-action-box {
-//     width: 600px;padding: 0 25px;
-//   }
-// }
 </style>
 
 <script>
@@ -79,7 +68,7 @@ export default {
       applyType: '',
       urlParams: this.$route.query,
       dataPage: {},
-      keyId: '',
+      key: '',
       applyStatus: '',
       countDown: 0,
       refreshAction: true
@@ -96,14 +85,13 @@ export default {
         let aObj = {}
         aObj = res.info[0]
         console.log(aObj)
-        this.keyId = aObj.keyId
+        this.key = aObj.key
         for (let obj of aObj.member) {
           if (obj.kId === this.address && obj.status === 0) {
             this.isReplySet = true
           }
           arr.push(obj)
         }
-        // console.log(this.isReplySet)
         this.gForm = {
           name: aObj.key,
           mode: aObj.mode,
@@ -132,20 +120,17 @@ export default {
     ...computedPub
   },
   mounted () {
+    console.log(this.$route.query)
+    // this.key = aObj.key
     if (this.$route.query.key) {
       this.$socket.emit('GroupAccountsFind', {
-        keyId: this.$route.query.key,
+        key: this.$route.query.key,
       })
     } else {
+      this.key = this.$route.query.Key
       this.showGroupData()
     }
   },
-  // updated () {
-  //   this.refreshAction = false
-  //   this.$nextTick(() => {
-  //     this.refreshAction = true
-  //   })
-  // },
   methods: {
     refreshActionFn () {
       this.refreshAction = false
@@ -173,12 +158,15 @@ export default {
         } else {
           this.countDown = parseInt((timeout - (Date.now() - this.gForm.timestamp)) / 1000)
         }
+        // console.log(this.countDown)
       }, 500)
     },
     async showGroupData () {
-      this.$socket.emit('GroupAccountsFind', {
-        key: this.urlParams.Key,
-      })
+      let enodeObj = {}
+      for (let obj of this.urlParams.Enodes) {
+        let obj1 = this.splitTx(obj)
+        enodeObj[obj1.eNodeId] = obj
+      }
       this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Pending') {
@@ -186,9 +174,51 @@ export default {
         } else {
           this.isApplySataus = false
         }
+        let arr = [], initiator = {}
+        for (let obj of res.info) {
+          if (obj.initiate && Number(obj.initiate)) {
+            initiator = {
+              eNode: enodeObj[obj.Enode],
+              status: 'Agree',
+              initiate: 1,
+              timestamp: obj.TimeStamp
+            }
+          } else {
+            arr.push({
+              eNode: enodeObj[obj.Enode],
+              status: obj.Status,
+              initiate: 0,
+              timestamp: obj.TimeStamp
+            })
+          }
+          if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
+            this.isReplySet = true
+          }
+        }
+        if  (initiator.eNode) {
+          arr.unshift(initiator)
+        }
+        this.gForm = {
+          name: this.urlParams.Key,
+          mode: this.urlParams.LimitNum,
+          eNode: arr,
+          gID: this.urlParams.GroupId,
+          timestamp: Number(this.urlParams.TimeStamp)
+        }
+        this.countDownFn()
+        this.refreshActionFn()
       }).catch(err => {
-        this.msgError(err.error.toString())
+        console.log(err)
+        this.msgError(err.toString())
       })
+    },
+    splitTx (enode) {
+      if (!enode) return
+      let eNodeKey = enode.match(/enode:\/\/(\S*)@/)
+      return {
+        eNode: enode,
+        eNodeId: eNodeKey[1]
+      }
     },
     getSignData (data) {
       if (data && data.signTx) {
@@ -196,16 +226,13 @@ export default {
           let cbData = res
           if (cbData.Status === 'Success') {
             this.msgSuccess('Success!')
-            if (this.keyId) {
+            if (this.key) {
               this.$socket.emit('GroupAccountsEdit', {
-                keyId: this.keyId,
+                key: this.key,
                 kId: this.address,
                 status: this.applyStatus === 'AGREE' ? 5 : 4
               })
             }
-            // if (this.applyStatus === 'AGREE') {
-            //   this.updateStatus(this.urlParams.Key)
-            // }
             this.updateStatus(this.urlParams.Key)
             this.toUrl('/waitNews')
           } else {

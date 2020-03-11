@@ -177,12 +177,7 @@ export default {
       let nowTime = Date.now()
       for (let i = 0, len = data.length; i < len; i++) {
         let dataObj = data[i]
-        // console.log(dataObj.status)
-        if (dataObj.status === 0) {
-          this.getAccountPub(dataObj._id, dataObj.key, i)
-        } else if (dataObj.status === 5 && !dataObj.hash) {
-          this.getAccountPub(dataObj._id, dataObj.key, i)
-        }
+        this.getAccountPub(dataObj._id, dataObj.key, i)
         this.tableData.push(dataObj)
         this.loading.history = false
       }
@@ -190,7 +185,7 @@ export default {
     getAccountPub (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
         console.log(res)
-        if (res.msg === 'Success' && res.status === 'Success') {
+        if (res.msg === 'Success' && (res.status === 'Success' || res.pubKey)) {
           let pubKey = res.pubKey
           this.setAccountDBState(id, index, pubKey, 1)
           this.tableData[index].pubKey = pubKey

@@ -30,20 +30,8 @@
               <!-- <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span> -->
             </div>
             <el-input v-model="eNode.eNode" disabled="disabled" :title="eNode.eNode"></el-input>
-            <!-- <el-button @click.prevent="removeDomain(eNode)" class="ml-10" v-if="Number(index) !== 0">删除</el-button> -->
           </div>
         </el-form-item>
-        <!-- <el-form-item>
-          <div class="flex-bc WW100">
-            <div>{{$t('label').approvalTime}}：<span :class="countDown > 60 ? 'color_green' : 'color_red'">{{countDown ? (countDown + ' s') : $t('state').end}}</span></div>
-            <div>
-              <el-button type="primary" @click="submitForm('rawTxData', 'AGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').agree}}</el-button>
-              <el-button type="danger" @click="submitForm('rawTxData', 'DISAGREE')" v-if="countDown && isApplySataus && isReplySet">{{$t('btn').refuse}}</el-button>
-              <el-button type="success" @click="reviewApply" v-if="countDown && isApplySataus && !isReplySet">{{$t('btn').review}}</el-button>
-              <el-button @click="toUrl('/tNewsList')">{{$t('btn').back}}</el-button>
-            </div>
-          </div>
-        </el-form-item> -->
       </el-form>
     </div>
 
@@ -89,7 +77,7 @@ export default {
       isApplySataus: false,
       isReplySet: true,
       applyStatus: '',
-      keyId: '',
+      key: '',
       gForm: {},
       countDown: 0,
       refreshAction: true
@@ -106,7 +94,7 @@ export default {
         let aObj = {}
         aObj = res.info[0]
         console.log(aObj)
-        this.keyId = aObj.keyId
+        this.key = aObj.key
         for (let obj of aObj.member) {
           if (obj.kId === this.address && obj.status !== 0) {
             this.isReplySet = false
@@ -142,10 +130,7 @@ export default {
   },
   mounted () {
     this.urlParams = this.$route.query
-    // this.rawTxData = {
-    //   to: this.urlParams.DcrmTo,
-    //   value: this.urlParams.Value 
-    // }
+    this.key = this.urlParams.Key
     this.showGroupData()
     console.log(this.urlParams)
   },
@@ -178,9 +163,6 @@ export default {
         to: this.urlParams.DcrmTo,
         value: this.$$.fromWei(this.urlParams.Value, this.$$.cutERC20(this.urlParams.Cointype).coinType) 
       }
-      this.$socket.emit('GroupFindTxns', {
-        key: this.urlParams.Key,
-      })
       this.$$.getLockOutStatus(this.urlParams.Key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Pending') {
@@ -188,9 +170,50 @@ export default {
         } else {
           this.isApplySataus = false
         }
+        let arr = [], initiator = {}
+        for (let obj of res.info) {
+          if (obj.initiate && Number(obj.initiate)) {
+            initiator = {
+              eNode: obj.Enode,
+              status: 'Agree',
+              initiate: 1,
+              timestamp: obj.TimeStamp
+            }
+          } else {
+            arr.push({
+              eNode: obj.Enode,
+              status: obj.Status,
+              initiate: 0,
+              timestamp: obj.TimeStamp
+            })
+          }
+          if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
+            this.isReplySet = true
+          }
+        }
+        if  (initiator.eNode) {
+          arr.unshift(initiator)
+        }
+        this.gForm = {
+          name: this.urlParams.Key,
+          mode: this.urlParams.LimitNum,
+          eNode: arr,
+          gID: this.urlParams.GroupId,
+          timestamp: Number(this.urlParams.TimeStamp)
+        }
+        this.countDownFn()
+        this.refreshActionFn()
       }).catch(err => {
         this.msgError(err.error.toString())
       })
+    },
+    splitTx (enode) {
+      if (!enode) return
+      let eNodeKey = enode.match(/enode:\/\/(\S*)@/)
+      return {
+        eNode: enode,
+        eNodeId: eNodeKey[1]
+      }
     },
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
@@ -253,7 +276,7 @@ export default {
           console.log(res)
           if (cbData.msg === 'Success') {
             this.$socket.emit('changeGroupMemberTxnsStatus', {
-              keyId: this.keyId,
+              key: this.key,
               kId: this.address,
               eNode: this.eNode,
               status: this.applyStatus === 'AGREE' ? 5 : 4

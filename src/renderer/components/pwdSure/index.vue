@@ -15,16 +15,10 @@
                   <el-input type="password" v-model="sureForm.password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="inputFileBtn">{{$t('btn').unlock}}</el-button>
+                  <el-button type="primary" @click="inputFileBtn" :disabled="!loading.unlock">{{$t('btn').unlock}}</el-button>
                   <el-button native-type="submit" @click="elDialogView">{{$t('btn').cancel}}</el-button>
                 </el-form-item>
               </el-form>
-              <!-- <div class="selectType_contTnput">
-                <input type="password" :placeholder="$t('PLACEHOLDER').ENTER_PASSWORD" class="input-text input" v-model="password">
-              </div>
-              <div class="createInfo_btn flex-c">
-                <button class="btn" @click="inputFileBtn" id="UnlockBtn">{{$t('BTN').UNLOCK}}</button>
-              </div> -->
             </div>
           <!-- </div> -->
         </div>
@@ -53,7 +47,8 @@ export default {
     return {
       sureForm: {},
       loading: {
-        wait: false
+        wait: false,
+        unlock: true
       }
     }
   },
@@ -65,6 +60,13 @@ export default {
   },
   methods: {
     inputFileBtn () {
+      if (!this.loading.unlock) return
+      this.loading.unlock = false
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.loading.unlock = true
+        })
+      }, 3000)
       let username = this.token
       this.loading.wait = true
       // console.log(username)

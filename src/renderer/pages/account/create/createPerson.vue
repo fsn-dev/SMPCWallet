@@ -36,7 +36,14 @@
       <div class="confirm-list-box" v-loading="loading.enode" :element-loading-text="$t('loading').l_1">
         <ul class="list-box">
           <li class="item flex-ai-fs" v-for="(item, index) in createEnodeArr" :key="index">
-            <p class="label">{{$t('label').admins}} {{index + 1}}:</p>
+            <div class="label flex-sc">
+              {{$t('label').admins}} {{index + 1}}
+              <div class="flex-sc" style="font-weight: normal">
+                （
+                <span class="color_green flex-bc" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                <span class="color_red flex-bc" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>）：
+              </div>
+            </div>
             <p class="info">{{item.name}}</p>
           </li>
         </ul>
@@ -119,11 +126,11 @@ export default {
             this.noSaveDBnet.add(obj.url)
           }
         }
-        // this.node.init = arr
+        this.node.init = arr
         // console.log(arr)
         this.node.init = [
-          // {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
-          {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
+          {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
+          // {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
           {name: 3, url: 'http://47.92.168.85:9013', disabled: false},
           {name: 4, url: 'http://47.92.168.85:9014', disabled: false},
           {name: 5, url: 'http://47.92.168.85:9015', disabled: false},
@@ -191,7 +198,7 @@ export default {
         arr.push(this.getEnode(obj))
       }
       this.createEnodeArr = [{
-        name: this.$t('label').localNode,
+        name: 'Current Node',
         url: this.serverRPC,
         enode: this.eNode,
         status: 1,

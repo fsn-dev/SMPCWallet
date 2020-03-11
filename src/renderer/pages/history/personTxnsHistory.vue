@@ -185,13 +185,7 @@ export default {
       let nowTime = Date.now()
       for (let i = 0, len = data.length; i < len; i++) {
         let dataObj = data[i]
-        // console.log(dataObj.status)
-        if (dataObj.status === 0) {
-          this.getTxnsHash(dataObj._id, dataObj.key, i)
-        } else if (dataObj.status === 5 && !dataObj.hash) {
-          this.getTxnsHash(dataObj._id, dataObj.key, i)
-        }
-        // console.log(dataObj.status)
+        this.getTxnsHash(dataObj._id, dataObj.key, i)
         this.tableData.push(dataObj)
         this.loading.history = false
       }
@@ -200,7 +194,8 @@ export default {
       this.$$.getLockOutStatus(key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Success') {
-          let hash = res.info.OutTxHash.indexOf('0x') === 0 ? res.info.OutTxHash : ('0x' + res.info.OutTxHash)
+          console.log(res.hash.indexOf('0x'))
+          let hash = res.hash && res.hash.indexOf('0x') === 0 ? res.hash : ('0x' + res.hash)
           this.setTxnsDBState(id, index, hash, 1)
           this.tableData[index].hash = hash
           this.tableData[index].status = 1
