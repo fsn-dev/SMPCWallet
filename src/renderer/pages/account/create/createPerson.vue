@@ -128,13 +128,13 @@ export default {
         }
         this.node.init = arr
         // console.log(arr)
-        this.node.init = [
-          {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
-          // {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
-          {name: 3, url: 'http://47.92.168.85:9013', disabled: false},
-          {name: 4, url: 'http://47.92.168.85:9014', disabled: false},
-          {name: 5, url: 'http://47.92.168.85:9015', disabled: false},
-        ]
+        // this.node.init = [
+        //   {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
+        //   // {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
+        //   {name: 3, url: 'http://47.92.168.85:9013', disabled: false},
+        //   {name: 4, url: 'http://47.92.168.85:9014', disabled: false},
+        //   {name: 5, url: 'http://47.92.168.85:9015', disabled: false},
+        // ]
         console.log(this.node.init)
       }
     }
