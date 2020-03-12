@@ -76,6 +76,7 @@ export default {
   },
   data () {
     return {
+      baseUrl: '',
       mode: {
         init: this.$$.mode,
         select: this.$$.config.initGroupMode
@@ -107,36 +108,10 @@ export default {
   },
   sockets: {
     getNodeInfos (res) {
-      console.log(res)
-      // this.node.init = [{
-      //   url: this.$$.config.serverRPC
-      // }]
-      this.noSaveDBnet = new Set()
-      this.noSaveDBnet.add(this.$$.config.serverRPC)
-      if (res.msg === 'Success' && res.info.length > 0) {
-        let arr = []
-        for (let obj of res.info) {
-          if (!this.noSaveDBnet.has(obj.url) && this.serverRPC !== obj.url) {
-            // console.log(obj)
-            arr.push({
-              name: obj.name,
-              url: obj.url,
-              disabled: false
-            })
-            this.noSaveDBnet.add(obj.url)
-          }
-        }
-        this.node.init = arr
-        // console.log(arr)
-        // this.node.init = [
-        //   {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
-        //   // {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
-        //   {name: 3, url: 'http://47.92.168.85:9013', disabled: false},
-        //   {name: 4, url: 'http://47.92.168.85:9014', disabled: false},
-        //   {name: 5, url: 'http://47.92.168.85:9015', disabled: false},
-        // ]
-        console.log(this.node.init)
-      }
+       this.setNetUrl(res)
+    },
+    getNodeInfosDev (res) {
+       this.setNetUrl(res)
     }
   },
   watch: {
@@ -154,8 +129,31 @@ export default {
   },
   methods: {
     init () {
-      this.$socket.emit('getNodeInfos')
+      if (this.$$.config.env === 'dev') {
+        this.baseUrl = 'getNodeInfosDev'
+      }
+      this.$socket.emit(this.baseUrl)
       this.changeMode()
+    },
+    setNetUrl (res) {
+      this.noSaveDBnet = new Set()
+      this.noSaveDBnet.add(this.$$.config.serverRPC)
+      if (res.msg === 'Success' && res.info.length > 0) {
+        let arr = []
+        for (let obj of res.info) {
+          if (!this.noSaveDBnet.has(obj.url) && this.serverRPC !== obj.url) {
+            // console.log(obj)
+            arr.push({
+              name: obj.name,
+              url: obj.url,
+              disabled: false
+            })
+            this.noSaveDBnet.add(obj.url)
+          }
+        }
+        this.node.init = arr
+        console.log(this.node.init)
+      }
     },
     modalClick () {
       this.eDialog.pwd = false

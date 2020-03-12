@@ -1,6 +1,7 @@
 const path = require('path').resolve('.')
 
 let publicSet = {
+  env: 'dev',
   appURL: 'http://139.196.26.212:8300',
   /**
    * @description 版本号

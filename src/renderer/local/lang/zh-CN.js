@@ -59,7 +59,7 @@ export default {
 		out: '转出',
 		code: '二维码',
 		copy: '复制',
-		createAccount: '创建共管账户',
+		createAccount: '创建账户',
 		createPersson: '创建个人账户',
 		restart: '重置',
 		agree: '同意',

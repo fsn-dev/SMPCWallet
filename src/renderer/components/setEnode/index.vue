@@ -48,6 +48,7 @@ export default {
   },
   data () {
     return {
+      baseUrl: 'getNodeInfos',
       viewEnode: '',
       netUrl: this.serverRPC,
       netUrlArr: [],
@@ -62,11 +63,39 @@ export default {
     }
   },
   sockets: {
+    disconnect () {
+      this.getNetUrl()
+    },
     getNodeInfos (res) {
-      console.log(res)
-      this.netUrlArr = [{
-        url: this.$$.config.serverRPC
-      }]
+      // console.log(res)
+      this.setNetUrl(res)
+    },
+    getNodeInfosDev (res) {
+      // console.log(res)
+       this.setNetUrl(res)
+    }
+  },
+  watch: {
+    serverRPC () {
+      // console.log(123)
+      this.netUrl = this.serverRPC
+    },
+  },
+  computed: {
+    ...computedPub
+  },
+  mounted () {
+    this.viewEnode = this.eNode + this.eNodeTx + this.address
+    // this.getNetUrl()
+    // console.log(this.$$)
+    if (this.$$.config.env === 'dev') {
+      this.baseUrl = 'getNodeInfosDev'
+    }
+    this.$socket.emit(this.baseUrl)
+  },
+  methods: {
+    setNetUrl (res) {
+      this.netUrlArr = []
       this.noSaveDBnet = new Set()
       this.noSaveDBnet.add(this.$$.config.serverRPC)
       if (res.msg === 'Success' && res.info.length > 0) {
@@ -84,23 +113,7 @@ export default {
         this.netUrlArr = arr
       }
       this.getNetUrl()
-    }
-  },
-  watch: {
-    serverRPC () {
-      // console.log(123)
-      this.netUrl = this.serverRPC
     },
-  },
-  computed: {
-    ...computedPub
-  },
-  mounted () {
-    this.viewEnode = this.eNode + this.eNodeTx + this.address
-    // this.getNetUrl()
-    this.$socket.emit('getNodeInfos')
-  },
-  methods: {
     getNetUrl () {
       findNode().then(res => {
         // console.log(res)

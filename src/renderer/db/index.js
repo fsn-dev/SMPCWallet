@@ -38,44 +38,27 @@ const status = new Datastore({
   filename: path.join(remote.app.getPath('userData'), '/db/status.db')
 })
 
+function cb (err) {
+  if (err) {
+    console.log(err)
+  }
+}
 
+ks.removeIndex('address', cb)
+ks.removeIndex('name', cb)
+node.removeIndex('url', cb)
+headerImg.removeIndex('address', cb)
+headerImg.removeIndex('name', cb)
+group.removeIndex('gId', cb)
+gAccount.removeIndex('pubKey', cb)
+status.removeIndex('key', cb)
 setTimeout(() => {
-  ks.ensureIndex({fieldName: 'address', unique: true}, err => {
-    // console.log(123)
-    if (err) {
-      console.log(err)
-    }
-  })
-
-  node.ensureIndex({fieldName: 'url', unique: true}, err => {
-    if (err) {
-      console.log(err)
-    }
-  })
-
-  headerImg.ensureIndex({fieldName: 'address', unique: true}, err => {
-    if (err) {
-      console.log(err)
-    }
-  })
-
-  group.ensureIndex({fieldName: 'gId', unique: true}, err => {
-    if (err) {
-      console.log(err)
-    }
-  })
-
-  gAccount.ensureIndex({fieldName: 'pubKey', unique: true}, err => {
-    if (err) {
-      console.log(err)
-    }
-  })
-
-  status.ensureIndex({fieldName: 'key', unique: true}, err => {
-    if (err) {
-      console.log(err)
-    }
-  })
+  ks.ensureIndex({fieldName: 'address', unique: true}, cb)
+  node.ensureIndex({fieldName: 'url', unique: true}, cb)
+  headerImg.ensureIndex({fieldName: 'address', unique: true}, cb)
+  group.ensureIndex({fieldName: 'gId', unique: true}, cb)
+  gAccount.ensureIndex({fieldName: 'pubKey', unique: true}, cb)
+  status.ensureIndex({fieldName: 'key', unique: true}, cb)
 }, 0)
 
 export {

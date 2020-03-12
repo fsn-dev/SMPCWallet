@@ -57,7 +57,7 @@ export default {
 		out: 'Send',
 		code: 'QR Code',
 		copy: 'Copy',
-		createAccount: 'Create Managed Account',
+		createAccount: 'Create Account',
 		createPersson: 'Create Private Account',
 		restart: 'Reset',
 		agree: 'Agree',
