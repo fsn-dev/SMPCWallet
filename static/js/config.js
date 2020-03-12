@@ -65,7 +65,7 @@ let publicSet = {
   /**
    * @description 初始模式设置
    */
-  modeInit: '0', // '0': 共管模式；'1'：个人模式
+  modeInit: '1', // '0': 共管模式；'1'：个人模式
   /**
    * @description 日夜模式设置
    */
