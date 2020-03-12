@@ -239,7 +239,7 @@ export default {
           this.saveDB(res.info)
           this.msgSuccess(this.$t('success').s_3)
         }
-        // this.toUrl('/waitNews')
+        this.toUrl('/waitNews')
       }).catch(err => {
         console.log(err)
         this.msgError(err.error)

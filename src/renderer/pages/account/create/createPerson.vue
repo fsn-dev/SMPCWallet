@@ -152,7 +152,7 @@ export default {
           }
         }
         this.node.init = arr
-        console.log(this.node.init)
+        // console.log(this.node.init)
       }
     },
     modalClick () {
@@ -206,13 +206,19 @@ export default {
         // console.log(this.$$.web3)
         this.$$.web3.setProvider(this.serverRPC)
         // console.log(this.$$.web3)
-        console.log(res)
+        // console.log(res)
         for (let i = 0, len = res.length; i < len; i++) {
           let obj = {
-            name: this.node.init[i].name,
-            url: this.node.init[i].url,
+            // name: this.node.select[i],
+            url: this.node.select[i],
             enode: res[i].enode,
             initiate: 0
+          }
+          for (let obj1 of this.node.init) {
+            if (obj1.url === this.node.select[i]) {
+              obj.name = obj1.name
+              break
+            }
           }
           if (res[i].status === 'Success') {
             obj.status = 1
@@ -222,7 +228,7 @@ export default {
           this.createEnodeArr.push(obj)
         }
         this.loading.enode = false
-        console.log(this.createEnodeArr)
+        // console.log(this.createEnodeArr)
       })
     },
     createGroup () {
