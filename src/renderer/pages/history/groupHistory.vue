@@ -59,7 +59,7 @@
         </el-table-column>
         <el-table-column label="Key ID" align="center">
           <template slot-scope="scope">
-            <span class="cursorP" :title="scope.row.key" @click="toUrl('/gValid', {key: scope.row.keyId})">{{ $$.cutOut(scope.row.key, 10, 12) }}</span>
+            <span class="cursorP" :title="scope.row.key">{{ $$.cutOut(scope.row.key, 10, 12) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').groupId" align="center">
