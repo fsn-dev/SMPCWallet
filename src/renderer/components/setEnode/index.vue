@@ -6,7 +6,7 @@
         {{viewEnode ? viewEnode.substr(0, 128) + '...' : ''}}
       </div>
       <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
-      <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" :disabled="!isSetNode">
+      <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" :disabled="!isSetNode" no-data-text="Null">
         <el-option
           v-for="(item, index) in netUrlArr"
           :key="index"

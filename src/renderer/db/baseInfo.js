@@ -1,6 +1,7 @@
 import {baseInfo} from './index.js'
 
 function uodateBaseInfo (data) {
+  if (!data.key) return
   const params = {
     key: data.key,
     value: data.value,

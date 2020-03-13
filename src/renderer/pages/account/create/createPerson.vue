@@ -11,21 +11,26 @@
               <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item v-if="node.refresh">
+            <el-tag @close="removeNode(item, index)" v-for="(item, index) in node.select" :key="index" closable :type="item.url" class="WW100 flex-bc H40" :class="node.select.length !== (index + 1) ? 'mb-20' : ''" :title="item.url">
+              {{item.name}}
+            </el-tag>
+          </el-form-item>
           <el-form-item>
-            <el-checkbox-group
-              v-model="node.select"
-              @change="changeNode"
-              v-if="node.refresh"
-            >
-              <el-checkbox v-for="(item, index) in node.init" :label="item.url" :key="index" :disabled="item.disabled">
-                <div class="flex-bc">
-                  {{item.name}}
-                </div>
-              </el-checkbox>
-            </el-checkbox-group>
+            <div class="flex-bc">
+              <el-select class="WW100" v-model="node.add" filterable allow-create default-first-option  :title="node.add" no-data-text="Null" :placeholder="$t('error').err_12">
+                <el-option
+                  v-for="(item, index) in node.init"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.url">
+                </el-option>
+              </el-select>
+              <el-button class="ml-10" @click="addNode">{{$t('btn').select}}</el-button>
+            </div>
           </el-form-item>
           <el-form-item class="mt-30">
-            <el-button type="primary" native-type="submit" @click="submitForm('groupForm')">{{$t('btn').createPersson}}</el-button>
+            <el-button type="primary" native-type="submit" @click="submitForm('groupForm')">{{$t('btn').createAccount}}</el-button>
             <el-button @click="resetForm('groupForm')">{{$t('btn').restart}}</el-button>
           </el-form-item>
         </el-form>
@@ -66,6 +71,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {insertNode, findNode} from '@/db/node'
 export default {
   name: 'createPerson',
   props: {
@@ -86,6 +92,7 @@ export default {
         select: [],
         min: 0,
         max: 0,
+        add: '',
         refresh: true
       },
       noSaveDBnet: new Set(),
@@ -135,8 +142,80 @@ export default {
       this.$socket.emit(this.baseUrl)
       this.changeMode()
     },
+    addNode () {
+      console.log(this.node.add)
+      if (!this.node.add) {
+        this.msgError(this.$t('error').err_12)
+        return
+      }
+      if (this.node.select.length >= this.node.max) {
+        this.msgError(this.$t('error').err_14)
+        this.node.add = ''
+        return
+      }
+      let isExist = true, nowSelect = {}
+      for (let obj of this.node.init) {
+        if (obj.url === this.node.add) {
+          isExist = false
+          nowSelect = obj
+          break
+        }
+      }
+      if (!isExist) {
+        let isRepeat = false
+        for (let obj of this.node.select) {
+          if (obj.url === nowSelect.url) {
+            isRepeat = true
+            break
+          }
+        }
+        if (!isRepeat) {
+          this.node.select.push(nowSelect)
+        } else {
+          this.msgError(this.$t('error').err_13)
+        }
+      } else {
+        let url = this.node.add
+        if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+          url = 'http://' + url
+        }
+        let newNode = {
+          name: url,
+          url: url
+        }
+        this.node.select.push(newNode)
+        this.saveRpcDB(newNode)
+      }
+      this.node.add = ''
+    },
+    saveRpcDB (data) {
+      let url = data.url
+      if (!this.noSaveDBnet.has(url)) {
+        findNode({url: url}).then(res => {
+          if (res.length <= 0 && url !== this.$$.config.serverRPC) {
+            insertNode({
+              url: url
+            }).then(res1 => {
+              console.log(res1)
+              this.getNetUrl()
+            })
+          }
+        })
+      }
+    },
+    removeNode (item, index) {
+      console.log(item)
+      this.node.select.splice(index, 1)
+    },
+    refreshNode () {
+      this.node.refresh = false
+      this.$nextTick(() => {
+        this.node.refresh = true
+      })
+    },
     setNetUrl (res) {
       this.noSaveDBnet = new Set()
+      this.node.init = []
       this.noSaveDBnet.add(this.$$.config.serverRPC)
       if (res.msg === 'Success' && res.info.length > 0) {
         let arr = []
@@ -152,8 +231,32 @@ export default {
           }
         }
         this.node.init = arr
+        // this.node.init = [
+        //   {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
+        //   {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
+        //   {name: 3, url: 'http://47.92.168.85:9013', disabled: false},
+        //   {name: 4, url: 'http://47.92.168.85:9014', disabled: false},
+        //   {name: 5, url: 'http://47.92.168.85:9015', disabled: false},
+        // ]
         // console.log(this.node.init)
       }
+      this.getNetUrl()
+    },
+    getNetUrl () {
+      findNode().then(res => {
+        // console.log(res)
+        if (res.length > 0) {
+          for (let obj of res) {
+            if (!this.noSaveDBnet.has(obj.url)) {
+              this.noSaveDBnet.add(obj.url)
+              this.node.init.push({
+                url: obj.url,
+                name: obj.url
+              })
+            }
+          }
+        }
+      })
     },
     modalClick () {
       this.eDialog.pwd = false
@@ -193,7 +296,7 @@ export default {
     getAllEnode () {
       let arr = []
       for (let obj of this.node.select) {
-        arr.push(this.getEnode(obj))
+        arr.push(this.getEnode(obj.url))
       }
       this.createEnodeArr = [{
         name: 'Current Node',
@@ -209,16 +312,10 @@ export default {
         // console.log(res)
         for (let i = 0, len = res.length; i < len; i++) {
           let obj = {
-            // name: this.node.select[i],
-            url: this.node.select[i],
+            name: this.node.select[i].name,
+            url: this.node.select[i].url,
             enode: res[i].enode,
             initiate: 0
-          }
-          for (let obj1 of this.node.init) {
-            if (obj1.url === this.node.select[i]) {
-              obj.name = obj1.name
-              break
-            }
           }
           if (res[i].status === 'Success') {
             obj.status = 1
@@ -333,59 +430,11 @@ export default {
       this.node.min = Number(modeArr[0]) - 1
       this.node.max = Number(modeArr[1]) - 1
       this.node.select = []
-      this.resetNode()
-    },
-    changeNode () {
-      if (this.node.select.length === this.node.min && this.node.min !== this.node.max) {
-        for (let i = 0, len = this.node.init.length; i < len; i++) {
-          let obj = this.node.init[i]
-          if (this.node.select.includes(obj.url)) {
-            this.node.init[i].disabled = true
-          } else {
-            this.node.init[i].disabled = false
-          }
-        }
-      } else if (this.node.select.length === this.node.max && this.node.min !== this.node.max) {
-        for (let i = 0, len = this.node.init.length; i < len; i++) {
-          let obj = this.node.init[i]
-          if (this.node.select.includes(obj.url)) {
-            this.node.init[i].disabled = false
-          } else {
-            this.node.init[i].disabled = true
-          }
-        }
-      } else if (this.node.select.length === this.node.max && this.node.select.length === this.node.min) {
-        for (let i = 0, len = this.node.init.length; i < len; i++) {
-          let obj = this.node.init[i]
-          if (this.node.select.includes(obj.url)) {
-            this.node.init[i].disabled = false
-          } else {
-            this.node.init[i].disabled = true
-          }
-        }
-      } else {
-        this.resetNode()
-      }
-      this.refreshNode()
-    },
-    refreshNode () {
-      this.node.refresh = false
-      this.$nextTick(() => {
-        this.node.refresh = true
-      })
-    },
-    resetNode () {
-      for (let i = 0, len = this.node.init.length; i < len; i++) {
-        let obj = this.node.init[i]
-        this.node.init[i].disabled = false
-      }
     },
     resetForm(formName) {
       this.mode.select = this.$$.config.initGroupMode
       this.node.select = []
       this.gID = ''
-      this.resetNode()
-      // this.changeMode()
     },
   }
 }

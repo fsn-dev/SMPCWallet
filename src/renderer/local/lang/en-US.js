@@ -13,6 +13,8 @@ export default {
 		err_10: 'Current node connection failed, please check the node!',
 		err_11: 'File format error!',
 		err_12: 'Please select node!',
+		err_13: 'Repeat！',
+		err_14: 'The limit has been reached!',
 	},
 	warn: {
 		w_1: 'Please select an account',
@@ -72,6 +74,7 @@ export default {
 		lookHistory: 'Viewing history',
 		exportAccount: 'Export Account',
 		importAccount: 'Import Account',
+		select: 'Selected',
 	},
 	loading: {
 		l_1: 'Loading……'

@@ -3,6 +3,7 @@ import {gAccount} from './index.js'
 // console.log(gAccount)
 
 function updateGaccount (data) {
+  if (!data.publicKey) return
   const params = {
     name: data.name,
     publicKey: data.publicKey,

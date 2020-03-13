@@ -1,6 +1,7 @@
 import {status} from './index.js'
 
 function uodateStatus (data) {
+  if (!data.key) return
   const params = {
     key: data.key,
     type: data.type,

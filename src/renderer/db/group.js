@@ -1,6 +1,7 @@
 import {group} from './index.js'
 
 function uodateGroup (data) {
+  if (!data.gId) return
   const params = {
     gId: data.gId,
     name: data.name,

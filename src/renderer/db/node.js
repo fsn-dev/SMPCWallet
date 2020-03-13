@@ -1,6 +1,7 @@
 import {node} from './index.js'
 
 function insertNode (data) {
+  if (!data.url) return
   const params = {
     url: data.url,
     timestamp: Date.now()

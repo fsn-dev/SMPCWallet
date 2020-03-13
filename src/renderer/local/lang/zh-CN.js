@@ -13,6 +13,8 @@ export default {
 		err_10: '当前节点连接失败，请检查节点！',
 		err_11: '文件格式错误！',
 		err_12: '请选择节点！',
+		err_13: '已存在！',
+		err_14: '已达到限制！',
 	},
 	warn: {
 		w_1: '请选择账户',
@@ -74,6 +76,7 @@ export default {
 		lookHistory: '查看历史',
 		exportAccount: '导出账户',
 		importAccount: '导入账户',
+		select: '选中',
 	},
 	loading: {
 		l_1: '账户获取中……'

@@ -3,6 +3,7 @@ import {ks} from './index.js'
 // console.log(ks)
 
 function insertAccount (data) {
+  if (!data.address) return
   const params = {
     name: data.name,
     ks: data.ks,

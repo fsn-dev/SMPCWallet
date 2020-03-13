@@ -1,6 +1,7 @@
 import {headerImg} from './index.js'
 
 function insertHeaderImg (data) {
+  if (!data.address) return
   const params = {
     name: data.name,
     address: data.address,
