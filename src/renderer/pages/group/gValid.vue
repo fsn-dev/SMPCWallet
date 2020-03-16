@@ -71,7 +71,8 @@ export default {
       key: '',
       applyStatus: '',
       countDown: 0,
-      refreshAction: true
+      refreshAction: false,
+      countInterval: ''
     }
   },
   sockets: {
@@ -123,9 +124,9 @@ export default {
     console.log(this.$route.query)
     // this.key = aObj.key
     if (this.$route.query.key) {
-      this.$socket.emit('GroupAccountsFind', {
-        key: this.$route.query.key,
-      })
+      // this.$socket.emit('GroupAccountsFind', {
+      //   key: this.$route.query.key,
+      // })
     } else {
       this.key = this.$route.query.Key
       this.showGroupData()
@@ -133,10 +134,12 @@ export default {
   },
   methods: {
     refreshActionFn () {
-      this.refreshAction = false
-      this.$nextTick(() => {
-        this.refreshAction = true
-      })
+      setTimeout(() => {
+        this.refreshAction = false
+        this.$nextTick(() => {
+          this.refreshAction = true
+        })
+      }, 200)
     },
     goBack () {
       this.$router.back(-1)
@@ -151,10 +154,10 @@ export default {
     },
     countDownFn () {
       let timeout = this.$$.config.timeout
-      let countInterval = setInterval(() => {
+      this.countInterval = setInterval(() => {
         if (Date.now() - this.gForm.timestamp > timeout) {
           this.countDown = 0
-          clearInterval(countInterval)
+          clearInterval(this.countInterval)
         } else {
           this.countDown = parseInt((timeout - (Date.now() - this.gForm.timestamp)) / 1000)
         }
@@ -168,7 +171,7 @@ export default {
         enodeObj[obj1.eNodeId] = obj
       }
       this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.msg === 'Success' && res.status === 'Pending') {
           this.isApplySataus = true
         } else {
@@ -209,6 +212,7 @@ export default {
         this.refreshActionFn()
       }).catch(err => {
         console.log(err)
+        this.refreshActionFn()
         this.msgError(err.toString())
       })
     },
@@ -294,6 +298,9 @@ export default {
       this.applyType = type
       this.eDialog.confirm = true
     },
+  },
+  beforeDestroy () {
+    clearInterval(this.countInterval)
   }
 }
 </script>

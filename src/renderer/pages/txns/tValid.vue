@@ -80,7 +80,8 @@ export default {
       key: '',
       gForm: {},
       countDown: 0,
-      refreshAction: true
+      refreshAction: false,
+      countInterval: ''
     }
   },
   computed: {
@@ -136,10 +137,12 @@ export default {
   },
   methods: {
     refreshActionFn () {
-      this.refreshAction = false
-      this.$nextTick(() => {
-        this.refreshAction = true
-      })
+      setTimeout(() => {
+        this.refreshAction = false
+        this.$nextTick(() => {
+          this.refreshAction = true
+        })
+      }, 200)
     },
     modalClick () {
       this.eDialog.pwd = false
@@ -149,10 +152,10 @@ export default {
     },
     countDownFn () {
       let timeout = this.$$.config.timeout
-      let countInterval = setInterval(() => {
+      this.countInterval = setInterval(() => {
         if (Date.now() - this.gForm.timestamp > timeout) {
           this.countDown = 0
-          clearInterval(countInterval)
+          clearInterval(this.countInterval)
         } else {
           this.countDown = parseInt((timeout - (Date.now() - this.gForm.timestamp)) / 1000)
         }
@@ -204,6 +207,7 @@ export default {
         this.countDownFn()
         this.refreshActionFn()
       }).catch(err => {
+        this.refreshActionFn()
         this.msgError(err.error.toString())
       })
     },
@@ -309,6 +313,9 @@ export default {
         value: ''
       }
     },
+  },
+  beforeDestroy () {
+    clearInterval(this.countInterval)
   }
 }
 </script>

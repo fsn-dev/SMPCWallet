@@ -83,10 +83,14 @@ export default {
             obj.Enodes = this.gInfo[obj.GroupId] && this.gInfo[obj.GroupId].Enodes ? this.gInfo[obj.GroupId].Enodes : []
             obj.status = 0
             this.newsList.push(obj)
-            this.getKeyStatus(obj.Key, i, '1')
+            // this.getKeyStatus(obj.Key, i, '1')
           }
           
           this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
+          for (let i = 0, len = this.newsList.length; i < len; i++) {
+            let obj = this.newsList[i]
+            this.getKeyStatus(obj.Key, i, '1')
+          }
           this.$emit('gNewsTip', this.newsList.length)
           this.loading.list = false
         }).catch(err => {

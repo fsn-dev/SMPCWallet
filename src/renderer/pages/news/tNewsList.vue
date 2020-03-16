@@ -78,11 +78,17 @@ export default {
             obj.status = 1
           } else {
             obj.status = 0
-            this.getKeyStatus(obj.Key, i, '2')
+            // this.getKeyStatus(obj.Key, i, '2')
           }
           this.newsList.push(obj)
         }
         this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
+        for (let i = 0, len = this.newsList.length; i < len; i++) {
+          let obj = this.newsList[i]
+          if (this.address === obj.Account) {
+            this.getKeyStatus(obj.Key, i, '1')
+          }
+        }
         this.$emit('tNewsTip', this.newsList.length)
         this.loading.list = false
       }).catch(err => {
