@@ -12,7 +12,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/css.css'
 import './assets/css/style.css'
 
-// import {test} from '@/libs/menu'
+
+
 
 import ElementUI from 'element-ui'
 Vue.use(ElementUI)
@@ -27,7 +28,6 @@ Vue.use(new VueSocketIO({
 Vue.config.productionTip = false
 
 Vue.prototype.$$ = $$
-// Vue.prototype.$message = Message
 Vue.prototype.$axios = axios
 
 Vue.prototype.toUrl = function(url, params) {
@@ -74,18 +74,14 @@ Vue.prototype.msgWarning = function(txt) {
 Vue.prototype.quitApp = function() {
   $$.clearCookies()
   this.$store.commit('setToken', '')
-  // this.$store.commit('setWallet', '')
   this.$store.commit('setAddress', '')
   this.$router.push('/')
 }
 
-// import pwdSure from '@/pages/public/pwdSure'
 import pwdSure from '@/components/pwdSure/index.vue'
-// import wDrawer from '@/components/drawer/index'
 import logo from '@/components/logo/index'
 import drawerLogo from '@/components/logo/drawerLogo'
 Vue.component('pwdSure', pwdSure)
-// Vue.component('wDrawer', wDrawer)
 Vue.component('logo', logo)
 Vue.component('drawerLogo', drawerLogo)
 

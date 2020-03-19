@@ -3,39 +3,62 @@ import Datastore from 'nedb'
 import path from 'path'
 import { remote } from 'electron'
 console.log(remote.app.getPath('userData'))
+
+function getPath (name) {
+  let url = '/db/' + name + '.db'
+  return path.join(remote.app.getPath('userData'), url)
+}
+
 const ks = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/ks.db')
+  filename: getPath('ks')
 })
 
 const node = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/node.db')
+  filename: getPath('node')
 })
 
 const headerImg = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/headerImg.db')
+  filename: getPath('headerImg')
 })
 
 const group = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/group.db')
+  filename: getPath('group')
 })
 
 const gAccount = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/gAccount.db')
+  filename: getPath('gAccount')
 })
 
 const baseInfo = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/baseInfo.db')
+  filename: getPath('baseInfo')
 })
 
 const status = new Datastore({
   autoload: true,
-  filename: path.join(remote.app.getPath('userData'), '/db/status.db')
+  filename: getPath('status')
+})
+
+const historyPersonAccpunts = new Datastore({
+  autoload: true,
+  filename: getPath('historyPersonAccpunts')
+})
+const historyPersonTxns = new Datastore({
+  autoload: true,
+  filename: getPath('historyPersonTxns')
+})
+const historyGroupAccpunts = new Datastore({
+  autoload: true,
+  filename: getPath('historyGroupAccpunts')
+})
+const historyGroupTxns = new Datastore({
+  autoload: true,
+  filename: getPath('historyGroupTxns')
 })
 
 function cb (err) {
@@ -52,14 +75,14 @@ headerImg.removeIndex('name', cb)
 group.removeIndex('gId', cb)
 gAccount.removeIndex('pubKey', cb)
 status.removeIndex('key', cb)
-setTimeout(() => {
-  ks.ensureIndex({fieldName: 'address', unique: true}, cb)
-  node.ensureIndex({fieldName: 'url', unique: true}, cb)
-  headerImg.ensureIndex({fieldName: 'address', unique: true}, cb)
-  group.ensureIndex({fieldName: 'gId', unique: true}, cb)
-  gAccount.ensureIndex({fieldName: 'pubKey', unique: true}, cb)
-  status.ensureIndex({fieldName: 'key', unique: true}, cb)
-}, 0)
+
+ks.ensureIndex({fieldName: 'address', unique: true}, cb)
+node.ensureIndex({fieldName: 'url', unique: true}, cb)
+headerImg.ensureIndex({fieldName: 'address', unique: true}, cb)
+group.ensureIndex({fieldName: 'gId', unique: true}, cb)
+gAccount.ensureIndex({fieldName: 'pubKey', unique: true}, cb)
+status.ensureIndex({fieldName: 'key', unique: true}, cb)
+
 
 export {
   ks,
@@ -68,7 +91,11 @@ export {
   group,
   gAccount,
   baseInfo,
-  status
+  status,
+  historyPersonAccpunts,
+  historyPersonTxns,
+  historyGroupAccpunts,
+  historyGroupTxns,
 }
 
 

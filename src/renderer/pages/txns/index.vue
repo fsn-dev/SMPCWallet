@@ -36,6 +36,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {AddPersonTxnsFn, AddGroupTxnsFn} from '@/api/index.js'
 export default {
   name: '',
   props: {
@@ -73,14 +74,6 @@ export default {
           // { type: 'number', message: '请输入数字', trigger: 'blur' }
         ],
       }
-    }
-  },
-  sockets: {
-    GroupAddTxns (res) {
-      console.log(res)
-    },
-    PersonAddTxns (res) {
-      console.log(res)
     }
   },
   computed: {
@@ -195,7 +188,12 @@ export default {
         // data.key = key
       }
       // console.log(data)
-      this.$socket.emit(dataUrl, data)
+      // this.$socket.emit(dataUrl, data)AddPersonTxnsFn, AddGroupTxnsFn
+      if (Number(this.accountType) === 1) {
+        AddPersonTxnsFn(this, dataUrl, data)
+      } else {
+        AddGroupTxnsFn(this, dataUrl, data)
+      }
       
       this.resetForm()
     },

@@ -72,6 +72,8 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {insertNode, findNode} from '@/db/node'
+
+import {GetNodes, AddNodes, AddPersonAccountsFn} from '@/api/index.js'
 export default {
   name: 'createPerson',
   props: {
@@ -95,7 +97,6 @@ export default {
         add: '',
         refresh: true
       },
-      noSaveDBnet: new Set(),
       loading: {
         creat: false,
         enode: false
@@ -113,14 +114,6 @@ export default {
   computed: {
     ...computedPub,
   },
-  sockets: {
-    getNodeInfos (res) {
-       this.setNetUrl(res)
-    },
-    getNodeInfosDev (res) {
-       this.setNetUrl(res)
-    }
-  },
   watch: {
     accountType (cur) {
       if (Number(cur) === 1) {
@@ -131,7 +124,7 @@ export default {
     },
   },
   mounted () {
-    console.log(this.serverRPC)
+    // console.log(this.serverRPC)
     this.init()
   },
   methods: {
@@ -139,8 +132,15 @@ export default {
       if (this.$$.config.env === 'dev') {
         this.baseUrl = 'getNodeInfosDev'
       }
-      this.$socket.emit(this.baseUrl)
+      // this.$socket.emit(this.baseUrl)
+      this.getNetUrl()
       this.changeMode()
+    },
+    getNetUrl () {
+      GetNodes(this, this.baseUrl).then(res => {
+        console.log(res)
+        this.node.init = res
+      })
     },
     addNode () {
       console.log(this.node.add)
@@ -150,6 +150,11 @@ export default {
       }
       if (this.node.select.length >= this.node.max) {
         this.msgError(this.$t('error').err_14)
+        this.node.add = ''
+        return
+      }
+      if (this.node.add === this.serverRPC) {
+        this.msgError(this.$t('error').err_13)
         this.node.add = ''
         return
       }
@@ -186,76 +191,26 @@ export default {
         this.node.select.push(newNode)
         this.saveRpcDB(newNode)
       }
+      // console.log(123)
       this.node.add = ''
     },
     saveRpcDB (data) {
       let url = data.url
-      if (!this.noSaveDBnet.has(url)) {
-        findNode({url: url}).then(res => {
-          if (res.length <= 0 && url !== this.$$.config.serverRPC) {
-            insertNode({
-              url: url
-            }).then(res1 => {
-              console.log(res1)
-              this.getNetUrl()
-            })
-          }
-        })
-      }
+      AddNodes(this, '', {url: url}).then(res => {
+        // console.log(res)
+        if (res) {
+          this.getNetUrl()
+        }
+      })
     },
     removeNode (item, index) {
-      console.log(item)
+      // console.log(item)
       this.node.select.splice(index, 1)
     },
     refreshNode () {
       this.node.refresh = false
       this.$nextTick(() => {
         this.node.refresh = true
-      })
-    },
-    setNetUrl (res) {
-      this.noSaveDBnet = new Set()
-      this.node.init = []
-      this.noSaveDBnet.add(this.$$.config.serverRPC)
-      if (res.msg === 'Success' && res.info.length > 0) {
-        let arr = []
-        for (let obj of res.info) {
-          if (!this.noSaveDBnet.has(obj.url) && this.serverRPC !== obj.url) {
-            // console.log(obj)
-            arr.push({
-              name: obj.name,
-              url: obj.url,
-              disabled: false
-            })
-            this.noSaveDBnet.add(obj.url)
-          }
-        }
-        this.node.init = arr
-        // this.node.init = [
-        //   {name: 1, url: 'http://47.92.168.85:9011', disabled: false},
-        //   {name: 2, url: 'http://47.92.168.85:9012', disabled: false},
-        //   {name: 3, url: 'http://47.92.168.85:9013', disabled: false},
-        //   {name: 4, url: 'http://47.92.168.85:9014', disabled: false},
-        //   {name: 5, url: 'http://47.92.168.85:9015', disabled: false},
-        // ]
-        // console.log(this.node.init)
-      }
-      this.getNetUrl()
-    },
-    getNetUrl () {
-      findNode().then(res => {
-        // console.log(res)
-        if (res.length > 0) {
-          for (let obj of res) {
-            if (!this.noSaveDBnet.has(obj.url)) {
-              this.noSaveDBnet.add(obj.url)
-              this.node.init.push({
-                url: obj.url,
-                name: obj.url
-              })
-            }
-          }
-        }
       })
     },
     modalClick () {
@@ -349,6 +304,8 @@ export default {
       }).catch(err => {
         this.msgError(err)
         this.loading.creat = false
+        this.$emit('closeModal')
+        this.modalClick()
       })
     },
     openPwdDialog () {
@@ -400,6 +357,7 @@ export default {
         console.log(err)
         this.msgError(err.error)
         this.loading.creat = false
+        this.$emit('closeModal')
         this.modalClick()
       })
     },
@@ -423,7 +381,8 @@ export default {
         }
         data.member.push(obj1)
       }
-      this.$socket.emit('PersonAccountsAdd', data)
+      // this.$socket.emit('PersonAccountsAdd', data)
+      AddPersonAccountsFn(this, 'PersonAccountsAdd', data)
     },
     changeMode () {
       let modeArr = this.mode.select.split('/')

@@ -45,7 +45,7 @@ export default {
     ...computedPub,
   },
   mounted () {
-    console.log(this.$route)
+    // console.log(this.$route)
     let at = this.$route.query.activeTab ? this.$route.query.activeTab : (this.$$.config.accountSwitch.person ? 'personHistory' : 'groupHistory')
     // console.log(at)
     this.activeName = at

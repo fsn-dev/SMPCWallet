@@ -57,11 +57,6 @@ export default {
   computed: {
     ...computedPub,
   },
-  sockets: {
-    GroupFindTxns (res) {
-      console.log(res)
-    }
-  },
   mounted () {
     this.initTxnsList()
   },

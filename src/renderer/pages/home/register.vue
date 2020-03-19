@@ -40,6 +40,7 @@
 import regExp from '@etc/js/config/RegExp'
 import headerImg from './js/headerImg'
 import {insertAccount, findAccount} from '@/db/accounts'
+import server from '@/api/common/server.js'
 export default {
   name: '',
   data () {
@@ -98,17 +99,6 @@ export default {
       },
     }
   },
-  sockets: {
-    GetUserIsRepeat (res) {
-      console.log(res)
-      if (res.info > 0) {
-        this.msgError(this.$t('error').err_7)
-        this.loading.wait = false
-      } else {
-        this.createFile()
-      }
-    }
-  },
   mounted () {
     // console.log(headerImg)
   },
@@ -160,25 +150,6 @@ export default {
         this.msgError(err)
         this.loading.wait = false
       })
-      // this.insertLocalAccount(JSON.stringify(walletJSON))
-      // insertAccount({
-      //   name: this.registerObj.username,
-      //   ks: JSON.stringify(walletJSON)
-      // }).then(res => {
-      //   console.log(res)
-      //   this.msgSuccess(this.$t('success').s_1)
-      //   this.createHeader(
-      //     walletInit.getPublicKeyString(),
-      //     walletInit.getChecksumAddressString(),
-      //     this.registerObj.username
-      //   )
-      //   this.registerObj = {}
-      //   this.loading.wait = false
-      //   this.toUrl('/')
-      // }).catch(err => {
-      //   this.msgError(err.error)
-      //   this.loading.wait = false
-      // })
     },
     cutPwd (name, pwd) {
       pwd = pwd.toString()
@@ -186,17 +157,19 @@ export default {
     },
     insertServerAccount (walletInit, walletJSON) {
       return new Promise((resolve, reject) => {
-        this.$socket.emit('UserInfoAdd', {
+        if (!this.$$.config.networkMode) {
+          resolve(1)
+          return
+        }
+        server(this, 'UserInfoAdd', {
           username: this.registerObj.username,
           address: walletInit.getChecksumAddressString(),
           password: this.cutPwd(this.registerObj.username, this.registerObj.password),
           ks: walletJSON,
-        })
-        this.sockets.subscribe('UserInfoAdd', (res) => {
+        }).then(res => {
           resolve(res)
         })
       })
-      // this.sockets.unsubscribe('UserInfoAdd')
     },
     insertLocalAccount (walletInit, walletJSON) {
       return new Promise((resolve, reject) => {
@@ -207,38 +180,37 @@ export default {
         }).then(res => {
           console.log(res)
           resolve(res)
-          // this.msgSuccess(this.$t('success').s_1)
-          // this.createHeader(
-          //   walletInit.getPublicKeyString(),
-          //   walletInit.getChecksumAddressString(),
-          //   this.registerObj.username
-          // )
-          // this.registerObj = {}
-          // this.loading.wait = false
-          // this.toUrl('/')
         }).catch(err => {
           reject(err)
-          // this.msgError(err.error)
-          // this.loading.wait = false
         })
       })
     },
     changePwd () {
-      this.$socket.emit('GetUserIsRepeat', {
-        username: this.registerObj.username
-      })
-      // findAccount({name: this.registerObj.username}).then(res => {
-      //   console.log(res)
-      //   if (res.length > 0) {
-      //     this.msgError(this.$t('error').err_7)
-      //     this.loading.wait = false
-      //   } else {
-      //     this.createFile()
-      //   }
-      // }).catch(err => {
-      //   this.msgError(err.error)
-      //   this.loading.wait = false
-      // })
+      if (this.$$.config.networkMode) {
+        server(this, 'GetUserIsRepeat', {
+          username: this.registerObj.username
+        }).then(res => {
+          if (res.info > 0) {
+            this.msgError(this.$t('error').err_7)
+            this.loading.wait = false
+          } else {
+            this.createFile()
+          }
+        })
+      } else {
+        findAccount({name: this.registerObj.username}).then(res => {
+          console.log(res)
+          if (res.length > 0) {
+            this.msgError(this.$t('error').err_7)
+            this.loading.wait = false
+          } else {
+            this.createFile()
+          }
+        }).catch(err => {
+          this.msgError(err.error)
+          this.loading.wait = false
+        })
+      }
     }
   }
 }

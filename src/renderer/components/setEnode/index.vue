@@ -33,7 +33,8 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {insertNode, findNode} from '@/db/node'
+// import {insertNode, findNode} from '@/db/node'
+import {GetNodes, AddNodes} from '@/api/index.js'
 export default {
   name: 'setEnode',
   props: {
@@ -52,7 +53,6 @@ export default {
       viewEnode: '',
       netUrl: this.serverRPC,
       netUrlArr: [],
-      noSaveDBnet: new Set(),
       loading: {
         setNode: false
       },
@@ -60,19 +60,6 @@ export default {
       eDialog: {
         pwd: false
       }
-    }
-  },
-  sockets: {
-    disconnect () {
-      this.getNetUrl()
-    },
-    getNodeInfos (res) {
-      // console.log(res)
-      this.setNetUrl(res)
-    },
-    getNodeInfosDev (res) {
-      // console.log(res)
-       this.setNetUrl(res)
     }
   },
   watch: {
@@ -91,43 +78,15 @@ export default {
     if (this.$$.config.env === 'dev') {
       this.baseUrl = 'getNodeInfosDev'
     }
-    this.$socket.emit(this.baseUrl)
+    // this.$socket.emit(this.baseUrl)
+    this.getNetUrl()
   },
   methods: {
-    setNetUrl (res) {
-      this.netUrlArr = []
-      this.noSaveDBnet = new Set()
-      this.noSaveDBnet.add(this.$$.config.serverRPC)
-      if (res.msg === 'Success' && res.info.length > 0) {
-        let arr = []
-        this.netUrl = this.serverRPC ? this.serverRPC : res.info[0].url
-        for (let obj of res.info) {
-          if (!this.noSaveDBnet.has(obj.url)) {
-            arr.push({
-              name: obj.name,
-              url: obj.url
-            })
-            this.noSaveDBnet.add(obj.url)
-          }
-        }
-        this.netUrlArr = arr
-      }
-      this.getNetUrl()
-    },
     getNetUrl () {
-      findNode().then(res => {
+      GetNodes(this, this.baseUrl).then(res => {
         // console.log(res)
-        if (res.length > 0) {
-          for (let obj of res) {
-            if (!this.noSaveDBnet.has(obj.url)) {
-              this.noSaveDBnet.add(obj.url)
-              this.netUrlArr.push({
-                url: obj.url,
-                name: obj.url
-              })
-            }
-          }
-        }
+        this.netUrlArr = res
+        this.netUrl = this.serverRPC ? this.serverRPC : res[0].url
         this.netUrlArr.push({
           url: this.$$.config.serverRPC,
           name: this.$t('label').localNode
@@ -136,18 +95,13 @@ export default {
     },
     saveRpcDB () {
       let url = this.netUrl
-      if (!this.noSaveDBnet.has(url)) {
-        findNode({url: url}).then(res => {
-          if (res.length <= 0 && url !== this.$$.config.serverRPC) {
-            insertNode({
-              url: url
-            }).then(res => {
-              // console.log(res)
-              this.getNetUrl()
-            })
-          }
-        })
-      }
+      // let url = data.url
+      AddNodes(this, '', {url: url}).then(res => {
+        // console.log(res)
+        if (res) {
+          this.getNetUrl()
+        }
+      })
     },
     setNet () {
       this.loading.setNode = true

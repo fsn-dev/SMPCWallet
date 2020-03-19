@@ -534,7 +534,7 @@ let web3Utils = {
           cbData = res
           if (cbData.Status !== 'Error') {
             // console.log(cbData.Data.result)
-            console.log(JSON.parse(cbData.Data.result))
+            // console.log(JSON.parse(cbData.Data.result))
             let result = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
             let status = result ? result.Status : 'Failure'
             let pubKey = result && result.PubKey ? result.PubKey : ''

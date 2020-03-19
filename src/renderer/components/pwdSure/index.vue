@@ -77,7 +77,7 @@ export default {
         this.loading.wait = false
       } else {
         findAccount({name: username}).then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.length > 0) {
             let keystore = res[0].ks
             try {

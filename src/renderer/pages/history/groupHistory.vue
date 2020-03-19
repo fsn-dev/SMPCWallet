@@ -100,6 +100,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {FindGroupAccountsFn, EditGroupAccountsFn} from '@/api/index.js'
 export default {
   name: 'txnsHistory',
   data () {
@@ -121,47 +122,37 @@ export default {
   computed: {
     ...computedPub,
   },
-  sockets: {
-    GroupAccountsFind (res) {
-      // console.log(res)
-      console.log(res)
-      this.loading.history = true
-      if (res.msg === 'Success' && res.info.length > 0) {
-        this.page.total = res.total
-        this.formatData(res.info)
-        // this.tableData = res.info
-      } else {
-        this.page.total = 0
-        this.tableData = []
-        this.loading.history = false
-      }
-    },
-  },
   mounted () {
     let urlParams = this.$route.query
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
     this.initData()
-    // this.$$.reqAccountStatus('0xd4b0c2c5830ae6869364761f03eeebf694ea839722ae37916db98325808f75f0').then(res => {
-    //   console.log(res)
-    // })
   },
   methods: {
     handleCurrentChange (val) {
       this.page.cur = val
-      this.emitUrl()
+      this.initData()
     },
     initData () {
       this.baseUrl = 'GroupAccountsFind'
-      this.emitUrl()
-    },
-    emitUrl () {
-      this.$socket.emit(this.baseUrl, {
+      FindGroupAccountsFn(this, this.baseUrl, {
         // eNode: this.eNode,
         kId: this.address,
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
+      }).then(res => {
+        console.log(res)
+        this.loading.history = true
+        if (res.msg === 'Success' && res.info.length > 0) {
+          this.page.total = res.total
+          this.formatData(res.info)
+          // this.tableData = res.info
+        } else {
+          this.page.total = 0
+          this.tableData = []
+          this.loading.history = false
+        }
       })
     },
     /**
@@ -193,46 +184,42 @@ export default {
                 stateObj.a ++
               }
             }
-            // console.log(stateObj)
-            // console.log((nowTime - dataObj.timestamp) > this.$$.config.timeout)
-            // console.log((nowTime - dataObj.timestamp))
-            // console.log(this.$$.config.timeout)
             if (stateObj.r > 0) {
               state = 4
-              this.setAccountDBState(dataObj._id, i, '', state)
+              this.setDBState(dataObj._id, i, '', state)
             } else if (stateObj.a === dataObj.member.length) {
               state = 5
-              this.getAccountPub(dataObj._id, dataObj.key, i)
+              this.getHistoryState(dataObj._id, dataObj.key, i)
             } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
               state = 6
               dataObj.status = state
-              this.setAccountDBState(dataObj._id, i, '', state)
+              this.setDBState(dataObj._id, i, '', state)
             }
             dataObj.status = state
           } else {
-            this.getAccountPub(dataObj._id, dataObj.key, i)
+            this.getHistoryState(dataObj._id, dataObj.key, i)
           }
         } else if (dataObj.status === 5 && !dataObj.hash) {
-          this.getAccountPub(dataObj._id, dataObj.key, i)
+          this.getHistoryState(dataObj._id, dataObj.key, i)
         }
         // console.log(dataObj.status)
         this.tableData.push(dataObj)
         this.loading.history = false
       }
     },
-    getAccountPub (id, key, index) {
+    getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Success') {
           let pubKey = res.pubKey
-          this.setAccountDBState(id, index, pubKey, 1)
+          this.setDBState(id, index, pubKey, 1)
           this.tableData[index].pubKey = pubKey
           this.tableData[index].status = 1
         } else if (res.status === 'Failure') {
-          this.setAccountDBState(id, index, '', 2)
+          this.setDBState(id, index, '', 2)
           this.tableData[index].status = 2
         } else if (res.status === 'Timeout') {
-          this.setAccountDBState(id, index, '', 6)
+          this.setDBState(id, index, '', 6)
           this.tableData[index].status = 6
         }
       }).catch(err => {
@@ -244,12 +231,13 @@ export default {
         }
       })
     },
-    setAccountDBState (id, index, pubKey, status) {
-      this.$socket.emit('changeGroupAccountsEdit', {
+    setDBState (id, index, pubKey, status) {
+      let data = {
         id: id,
         pubKey: pubKey,
         status: status
-      })
+      }
+      EditGroupAccountsFn(this, 'changeGroupAccountsEdit', data)
     },
   }
 }

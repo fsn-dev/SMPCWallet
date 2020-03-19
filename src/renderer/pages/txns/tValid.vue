@@ -60,6 +60,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {uodateStatus} from '@/db/status'
+import {EditGroupMemberTxnsFn} from '@/api/index.js'
 export default {
   name: '',
   data () {
@@ -86,48 +87,6 @@ export default {
   },
   computed: {
     ...computedPub,
-  },
-  sockets: {
-    GroupFindTxns (res) {
-      console.log(res)
-      let arr = []
-      if (res.msg === 'Success' && res.info.length > 0) {
-        let aObj = {}
-        aObj = res.info[0]
-        console.log(aObj)
-        this.key = aObj.key
-        for (let obj of aObj.member) {
-          if (obj.kId === this.address && obj.status !== 0) {
-            this.isReplySet = false
-          }
-          arr.push(obj)
-        }
-        this.gForm = {
-          name: aObj.key,
-          mode: aObj.mode,
-          eNode: arr,
-          gID: aObj.key,
-          timestamp: aObj.timestamp
-        }
-        this.countDownFn()
-      } else {
-        for (let obj of this.urlParams.Enodes) {
-          arr.push({
-            eNode: obj,
-          })
-        }
-        this.gForm = {
-          name: this.urlParams.Gname,
-          mode: this.urlParams.LimitNum,
-          eNode: arr,
-          gID: this.urlParams.Key,
-        }
-      }
-      this.refreshActionFn()
-    },
-    changeGroupMemberTxnsStatus (res) {
-      console.log(res)
-    },
   },
   mounted () {
     this.urlParams = this.$route.query
@@ -279,7 +238,7 @@ export default {
           let cbData = res
           console.log(res)
           if (cbData.msg === 'Success') {
-            this.$socket.emit('changeGroupMemberTxnsStatus', {
+            EditGroupMemberTxnsFn(this, 'changeGroupMemberTxnsStatus', {
               key: this.key,
               kId: this.address,
               eNode: this.eNode,

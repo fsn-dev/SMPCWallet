@@ -81,6 +81,10 @@ let publicSet = {
     person: 1,
     group: 1
   },
+  /**
+   * @description 账户开关
+   */
+  networkMode: 0, // '0': 离线； '1': 在线
 }
 
 publicSet.appURL = 'http://139.196.26.212:8300'

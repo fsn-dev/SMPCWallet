@@ -63,6 +63,7 @@
 import {computedPub} from '@/assets/js/pages/public'
 import {findGroup} from '@/db/group'
 import {uodateStatus} from '@/db/status'
+import {AddGroupAccountsFn} from '@/api/index.js'
 export default {
   name: 'createAccount',
   props: {
@@ -100,11 +101,6 @@ export default {
           { min: 3, max: 20, message: this.$t('warn').w_9, trigger: 'blur' }
         ],
       }
-    }
-  },
-  sockets: {
-    GroupAccountsAdd (res) {
-      console.log(res)
     }
   },
   watch: {
@@ -281,7 +277,8 @@ export default {
         }
         data.member.push(obj1)
       }
-      this.$socket.emit('GroupAccountsAdd', data)
+      // this.$socket.emit('GroupAccountsAdd', data)
+      AddGroupAccountsFn(this, 'GroupAccountsAdd', data)
     },
     changeGroup () {
       this.gMember = ''

@@ -52,6 +52,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {uodateStatus} from '@/db/status'
+import {EditGroupMemberAccountsFn} from '@/api/index.js'
 export default {
   name: '',
   data () {
@@ -75,59 +76,13 @@ export default {
       countInterval: ''
     }
   },
-  sockets: {
-    GroupAccountsEdit (res) {
-      console.log(res)
-    },
-    GroupAccountsFind (res) {
-      console.log(res)
-      let arr = []
-      if (res.msg === 'Success' && res.info.length > 0) {
-        let aObj = {}
-        aObj = res.info[0]
-        console.log(aObj)
-        this.key = aObj.key
-        for (let obj of aObj.member) {
-          if (obj.kId === this.address && obj.status === 0) {
-            this.isReplySet = true
-          }
-          arr.push(obj)
-        }
-        this.gForm = {
-          name: aObj.key,
-          mode: aObj.mode,
-          eNode: arr,
-          gID: aObj.key,
-          timestamp: aObj.timestamp
-        }
-        this.countDownFn()
-      } else {
-        for (let obj of this.urlParams.Enodes) {
-          arr.push({
-            eNode: obj,
-          })
-        }
-        this.gForm = {
-          name: this.urlParams.Gname,
-          mode: this.urlParams.LimitNum,
-          eNode: arr,
-          gID: this.urlParams.Key,
-        }
-      }
-      this.refreshActionFn()
-    }
-  },
   computed: {
     ...computedPub
   },
   mounted () {
     console.log(this.$route.query)
     // this.key = aObj.key
-    if (this.$route.query.key) {
-      // this.$socket.emit('GroupAccountsFind', {
-      //   key: this.$route.query.key,
-      // })
-    } else {
+    if (this.$route.query.Key) {
       this.key = this.$route.query.Key
       this.showGroupData()
     }
@@ -231,7 +186,7 @@ export default {
           if (cbData.Status === 'Success') {
             this.msgSuccess('Success!')
             if (this.key) {
-              this.$socket.emit('GroupAccountsEdit', {
+              EditGroupMemberAccountsFn(this, 'GroupAccountsEdit', {
                 key: this.key,
                 kId: this.address,
                 status: this.applyStatus === 'AGREE' ? 5 : 4

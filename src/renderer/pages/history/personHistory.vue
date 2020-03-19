@@ -100,6 +100,9 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+
+import {FindPersonAccountsFn, EditPersonAccountsFn} from '@/api/index.js'
+
 export default {
   name: 'txnsHistory',
   data () {
@@ -121,47 +124,37 @@ export default {
   computed: {
     ...computedPub,
   },
-  sockets: {
-    PersonAccountsFind (res) {
-      // console.log(res)
-      console.log(res)
-      this.loading.history = true
-      if (res.msg === 'Success' && res.info.length > 0) {
-        this.page.total = res.total
-        this.formatData(res.info)
-        // this.tableData = res.info
-      } else {
-        this.page.total = 0
-        this.tableData = []
-        this.loading.history = false
-      }
-    },
-  },
   mounted () {
     let urlParams = this.$route.query
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
     this.initData()
-    // this.$$.reqAccountStatus('0xd4b0c2c5830ae6869364761f03eeebf694ea839722ae37916db98325808f75f0').then(res => {
-    //   console.log(res)
-    // })
   },
   methods: {
     handleCurrentChange (val) {
       this.page.cur = val
-      this.emitUrl()
+      this.initData()
     },
     initData () {
       this.baseUrl = 'PersonAccountsFind'
-      this.emitUrl()
-    },
-    emitUrl () {
-      this.$socket.emit(this.baseUrl, {
+      FindPersonAccountsFn(this, this.baseUrl, {
         // eNode: this.eNode,
         kId: this.address,
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
+      }).then(res => {
+        console.log(res)
+        this.loading.history = true
+        if (res.msg === 'Success' && res.info.length > 0) {
+          this.page.total = res.total
+          this.formatData(res.info)
+          // this.tableData = res.info
+        } else {
+          this.page.total = 0
+          this.tableData = []
+          this.loading.history = false
+        }
       })
     },
     /**
@@ -177,24 +170,26 @@ export default {
       let nowTime = Date.now()
       for (let i = 0, len = data.length; i < len; i++) {
         let dataObj = data[i]
-        this.getAccountPub(dataObj._id, dataObj.key, i)
+        if (dataObj.status === 0) {
+          this.getHistoryState(dataObj._id, dataObj.key, i)
+        }
         this.tableData.push(dataObj)
         this.loading.history = false
       }
     },
-    getAccountPub (id, key, index) {
+    getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && (res.status === 'Success' || res.pubKey)) {
           let pubKey = res.pubKey
-          this.setAccountDBState(id, index, pubKey, 1)
+          this.setDBState(id, index, pubKey, 1)
           this.tableData[index].pubKey = pubKey
           this.tableData[index].status = 1
         } else if (res.status === 'Failure') {
-          this.setAccountDBState(id, index, '', 2)
+          this.setDBState(id, index, '', 2)
           this.tableData[index].status = 2
         } else if (res.status === 'Timeout') {
-          this.setAccountDBState(id, index, '', 6)
+          this.setDBState(id, index, '', 6)
           this.tableData[index].status = 6
         }
       }).catch(err => {
@@ -206,12 +201,14 @@ export default {
         }
       })
     },
-    setAccountDBState (id, index, pubKey, status) {
-      this.$socket.emit('changePersonAccountsEdit', {
+    setDBState (id, index, pubKey, status) {
+      console.log(123)
+      let data = {
         id: id,
         pubKey: pubKey,
         status: status
-      })
+      }
+      EditPersonAccountsFn(this, 'changePersonAccountsEdit', data)
     },
   }
 }

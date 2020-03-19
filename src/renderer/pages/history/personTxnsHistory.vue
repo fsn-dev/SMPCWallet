@@ -102,6 +102,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {FindPersonTxnsFn, EditPersonTxnsFn} from '@/api/index.js'
 export default {
   name: 'txnsHistory',
   data () {
@@ -120,28 +121,14 @@ export default {
       },
     }
   },
-  sockets: {
-    PersonFindTxns (res) {
-      console.log(res)
-      this.loading.history = true
-      if (res.msg === 'Success' && res.info.length > 0) {
-        this.page.total = res.total
-        this.formatData(res.info)
-        // this.tableData = res.info
-      } else {
-        this.page.total = 0
-        this.tableData = []
-        this.loading.history = false
-      }
-    },
-    changePersonTxnsStatus (res) {
-      console.log(res)
-    }
-  },
   computed: {
     ...computedPub,
   },
   mounted () {
+    let urlParams = this.$route.query
+    console.log(urlParams)
+    this.coinType = urlParams.coinType ? urlParams.coinType : ''
+    this.dcrmAddr = urlParams.address ? urlParams.address : ''
     setTimeout(() => {
       this.initData()
     }, 100)
@@ -151,17 +138,10 @@ export default {
       // console.log(val)
       // console.log(this.page.cur)
       this.page.cur = val
-      this.emitUrl()
+      this.initData()
     },
     initData () {
-      let urlParams = this.$route.query
-      console.log(urlParams)
-      this.coinType = urlParams.coinType ? urlParams.coinType : ''
-      this.dcrmAddr = urlParams.address ? urlParams.address : ''
       this.baseUrl = 'PersonFindTxns'
-      this.emitUrl()
-    },
-    emitUrl () {
       let data = {
         kId: this.address,
         coinType: this.coinType,
@@ -169,8 +149,17 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
-      console.log(data)
-      this.$socket.emit(this.baseUrl, data)
+      FindPersonTxnsFn(this, this.baseUrl, data).then(res => {
+        if (res.msg === 'Success' && res.info.length > 0) {
+          this.page.total = res.total
+          this.formatData(res.info)
+          // this.tableData = res.info
+        } else {
+          this.page.total = 0
+          this.tableData = []
+          this.loading.history = false
+        }
+      })
     },
     /**
      * 0: Pending;
@@ -185,25 +174,27 @@ export default {
       let nowTime = Date.now()
       for (let i = 0, len = data.length; i < len; i++) {
         let dataObj = data[i]
-        this.getTxnsHash(dataObj._id, dataObj.key, i)
+        if (dataObj.status === 0) {
+          this.getHistoryState(dataObj._id, dataObj.key, i)
+        }
         this.tableData.push(dataObj)
         this.loading.history = false
       }
     },
-    getTxnsHash (id, key, index) {
+    getHistoryState (id, key, index) {
       this.$$.getLockOutStatus(key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Success') {
           console.log(res.hash.indexOf('0x'))
           let hash = res.hash && res.hash.indexOf('0x') === 0 ? res.hash : ('0x' + res.hash)
-          this.setTxnsDBState(id, index, hash, 1)
+          this.setDBState(id, index, hash, 1)
           this.tableData[index].hash = hash
           this.tableData[index].status = 1
         } else if (res.status === 'Failure' || res.info === 'Failure') {
-          this.setTxnsDBState(id, index, '', 2)
+          this.setDBState(id, index, '', 2)
           this.tableData[index].status = 2
         } else if (res.status === 'Timeout' || res.info === 'Timeout') {
-          this.setTxnsDBState(id, index, '', 6)
+          this.setDBState(id, index, '', 6)
           this.tableData[index].status = 6
         }
       }).catch(err => {
@@ -215,12 +206,13 @@ export default {
         }
       })
     },
-    setTxnsDBState (id, index, hash, status) {
-      this.$socket.emit('changePersonTxnsStatus', {
+    setDBState (id, index, hash, status) {
+      let data = {
         id: id,
         hash: hash,
         status: status
-      })
+      }
+      EditPersonTxnsFn(this, 'changePersonTxnsStatus', data)
     },
   }
 }

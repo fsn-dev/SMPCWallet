@@ -72,7 +72,7 @@ export default {
     ...computedPub
   },
   mounted () {
-    console.log(this.$$.config)
+    // console.log(this.$$.config)
   },
   methods: {
     closeDrawer () {
@@ -109,7 +109,7 @@ export default {
     },
     getAccountData () {
       findAccount({address: this.address}).then(res => {
-        console.log(res)
+        // console.log(res)
         this.accountData.account = {
           address: res[0].address,
           ks: res[0].ks,

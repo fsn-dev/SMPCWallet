@@ -94,7 +94,7 @@ export default {
       this.newsView(cur)
     },
     serverRPC (cur) {
-      console.log(cur)
+      // console.log(cur)
       setTimeout(() => {
         this.reload()
       }, 500)

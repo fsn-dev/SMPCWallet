@@ -64,28 +64,9 @@ export default {
   computed: {
     ...computedPub
   },
-  sockets: {
-    kline (res) {
-      console.log(res)
-    }
-  },
   mounted () {
   },
   methods: {
-    testWs () {
-      // let ws = new WebSocket(this.$$.config.appURL)
-      let ws = new WebSocket('ws://192.168.1.184:8866/kline')
-      ws.onopen = () => {
-        ws.send('{"id":123,"method":"kline","params":["CCD/BTC","5m","1576208100","1576208700"]}')
-        console.log('start')
-      }
-      ws.onmessage = (res) => {
-        console.log(res)
-      }
-      ws.onclose = () => {
-        console.log('end')
-      }
-    },
     modalClick () {
       this.eDialog.import = false
       this.accountData = {}
