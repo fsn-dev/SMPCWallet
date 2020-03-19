@@ -73,8 +73,7 @@ export default {
   },
   mounted () {
     this.viewEnode = this.eNode + this.eNodeTx + this.address
-    // this.getNetUrl()
-    // console.log(this.$$)
+
     if (this.$$.config.env === 'dev') {
       this.baseUrl = 'getNodeInfosDev'
     }
@@ -86,11 +85,11 @@ export default {
       GetNodes(this, this.baseUrl).then(res => {
         // console.log(res)
         this.netUrlArr = res
-        this.netUrl = this.serverRPC ? this.serverRPC : res[0].url
         this.netUrlArr.push({
           url: this.$$.config.serverRPC,
           name: this.$t('label').localNode
         })
+        this.netUrl = this.serverRPC ? this.serverRPC : (res.length > 0 ? res[0].url : this.$$.config.serverRPC)
       })
     },
     saveRpcDB () {
