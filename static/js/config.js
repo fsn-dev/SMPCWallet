@@ -1,7 +1,7 @@
 const path = require('path').resolve('.')
 
 let publicSet = {
-  appURL: 'http://139.196.26.212:8300',
+  appURL: 'wss://smpcwallet.com',
   /**
    * @description 版本类型
    */
@@ -84,7 +84,10 @@ let publicSet = {
   networkMode: 1, // '0': 离线； '1': 在线
 }
 
-publicSet.appURL = 'http://139.196.26.212:8300'
+// publicSet.appURL = 'http://smpcwallet.com'
+publicSet.appURL = 'http://smpcwallet.com:8300'
+// publicSet.appURL = 'http://47.56.150.104:8300'
+// publicSet.appURL = 'http://139.196.26.212:8300'
 // publicSet.appURL = 'http://localhost:8300'
 // publicSet.appURL = 'http://192.168.1.184:8877'
 // publicSet.appURL = 'http://192.168.1.153:7700'

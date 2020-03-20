@@ -102,7 +102,7 @@ const FindPersonTxns = (that, url, params) => {
         query.status = params.status
       }
     }
-    historyPersonTxns.count({}, (err, count) => {
+    historyPersonTxns.count(query, (err, count) => {
       if (err) {
         data.error = err
         reject(data)

@@ -146,7 +146,7 @@ const FindGroupTxns = (that, url, params) => {
         query.member = {$elemMatch: {kId: params.kId}}
       }
     }
-    historyGroupTxns.count({}, (err, count) => {
+    historyGroupTxns.count(query, (err, count) => {
       if (err) {
         data.error = err
         reject(data)

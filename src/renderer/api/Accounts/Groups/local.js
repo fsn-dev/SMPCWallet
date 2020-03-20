@@ -90,40 +90,6 @@ const EditGroupMemberAccounts = (that, url, params) => {
         resolve(data)
       }
     })
-    // let query = {}, updateParams = {}
-    // let data = { msg: 'Error', info: [] }
-    // if (params) {
-    //   if (params.key || params.key === 0) {
-    //     query.key = params.key
-    //   }
-    //   if (params.keyId || params.keyId === 0) {
-    //     query.keyId = params.keyId
-    //   }
-    //   if (params.kId || params.kId === 0) {
-    //     query['member.kId'] = params.kId
-    //   }
-    //   if (params.status || params.status === 0) {
-    //     updateParams['member.$.status'] = params.status
-    //     updateParams['member.$.timestamp'] = Date.now()
-    //     if (params.status === 4 || params.status === 6) {
-    //       updateParams.status = params.status
-    //     }
-    //   }
-    // }
-    // console.log(query)
-    // console.log(updateParams)
-    // historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
-    //   if (err) {
-    //     // console.log(err)
-    //     data.error = err
-    //     reject(data)
-    //   } else {
-    //     // console.log(res)
-    //     data.msg = 'Success'
-    //     data.info = res
-    //     resolve(data)
-    //   }
-    // })
   })
 }
 
