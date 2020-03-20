@@ -350,23 +350,38 @@ let web3Utils = {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
-        let obj = {}
-        // let gArr = this.getGroup()
-        let gArr = []
-        this.getGroup().then(res => {
-          gArr = res.info
-          for (let obj1 of gArr) {
-            if (gID === obj1.Gid) {
-              obj = obj1
-              break
-            }
+        let cbData = ''
+        web3.dcrm.getGroupByID(gID).then(res => {
+          cbData = res && JSON.parse(res) ? JSON.parse(res) : ''
+          console.log(cbData)
+          if (cbData.Status !== 'Error') {
+            data = {msg: 'Success', info: cbData.Data.Enodes}
+            resolve(data)
+          } else {
+            data = {msg: 'Error', error: cbData.Tip}
+            reject(data)
           }
-          data = {msg: 'Success', info: obj}
-          resolve(data)
         }).catch(err => {
-          data = err
+          data = {msg: 'Error', error: err.toString()}
           reject(data)
         })
+        // let obj = {}
+        // // let gArr = this.getGroup()
+        // let gArr = []
+        // this.getGroup().then(res => {
+        //   gArr = res.info
+        //   for (let obj1 of gArr) {
+        //     if (gID === obj1.Gid) {
+        //       obj = obj1
+        //       break
+        //     }
+        //   }
+        //   data = {msg: 'Success', info: obj}
+        //   resolve(data)
+        // }).catch(err => {
+        //   data = err
+        //   reject(data)
+        // })
       } catch (error) {
         console.log(error)
         data = {msg: 'Error', error: error.toString()}

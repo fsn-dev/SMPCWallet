@@ -57,6 +57,7 @@ export default {
       // this.getWallet()
       this.getLanguage()
       this.getServerRPC()
+      // this.getNetworkMode()
       // let url = this.serverRPC
       // this.$$.web3.setProvider(url)
       // console.log(url)

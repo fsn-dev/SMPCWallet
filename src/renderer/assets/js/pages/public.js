@@ -22,5 +22,9 @@ export const computedPub = {
   },
   serverRPC () {
     return this.$store.state.serverRPC
+  },
+  networkMode () {
+    // console.log(this.$store.state.networkMode)
+    return this.$store.state.networkMode
   }
 } 

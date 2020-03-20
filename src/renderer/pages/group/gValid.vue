@@ -67,7 +67,7 @@ export default {
       isApplySataus: false,
       isReplySet: false,
       applyType: '',
-      urlParams: this.$route.query,
+      urlParams: '',
       dataPage: {},
       key: '',
       applyStatus: '',
@@ -80,10 +80,11 @@ export default {
     ...computedPub
   },
   mounted () {
-    console.log(this.$route.query)
+    this.urlParams = this.$route.query
+    console.log(this.urlParams)
     // this.key = aObj.key
-    if (this.$route.query.Key) {
-      this.key = this.$route.query.Key
+    if (this.urlParams.Key) {
+      this.key = this.urlParams.Key
       this.showGroupData()
     }
   },
@@ -186,10 +187,40 @@ export default {
           if (cbData.Status === 'Success') {
             this.msgSuccess('Success!')
             if (this.key) {
+              let localData = {}
+              if (!this.networkMode) {
+                localData = {
+                  key: this.urlParams.Key,
+                  gId: this.urlParams.GroupId,
+                  mode: this.urlParams.LimitNum,
+                  nonce: Number(this.urlParams.Nonce),
+                  member: [{
+                    eNode: this.eNode,
+                    kId: this.address,
+                    status: 0,
+                    initiate: 0,
+                    timestamp: Date.now()
+                  }],
+                  timestamp: Number(this.urlParams.TimeStamp),
+                }
+                for (let obj of this.urlParams.Enodes) {
+                  // console.log(obj)
+                  if (obj === this.eNode) continue
+                  localData.member.push({
+                    eNode: obj,
+                    kId: '',
+                    status: 0,
+                    initiate: 0,
+                    timestamp: ''
+                  })
+                }
+              }
+              // console.log(localData)
               EditGroupMemberAccountsFn(this, 'GroupAccountsEdit', {
                 key: this.key,
                 kId: this.address,
-                status: this.applyStatus === 'AGREE' ? 5 : 4
+                status: this.applyStatus === 'AGREE' ? 5 : 4,
+                local: localData
               })
             }
             this.updateStatus(this.urlParams.Key)

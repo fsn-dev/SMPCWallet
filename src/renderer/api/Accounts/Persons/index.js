@@ -9,7 +9,7 @@ import {
 
 const AddPersonAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -23,7 +23,7 @@ const AddPersonAccountsFn = (that, url, params) => {
 
 const EditPersonAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -37,7 +37,7 @@ const EditPersonAccountsFn = (that, url, params) => {
 
 const FindPersonAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })

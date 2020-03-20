@@ -1,18 +1,15 @@
 const path = require('path').resolve('.')
 
 let publicSet = {
-  env: 'dev',
   appURL: 'http://139.196.26.212:8300',
+  /**
+   * @description 版本类型
+   */
+  env: 'dev',
   /**
    * @description 版本号
    */
   version: '0.1.0',
-  /**
-   * @description 版本号
-   * @param 0: 测试
-   * @param 1: 生产
-   */
-  versionType: 0,
   /**
    * @description 区块节点请求地址
    */
@@ -84,7 +81,7 @@ let publicSet = {
   /**
    * @description 账户开关
    */
-  networkMode: 0, // '0': 离线； '1': 在线
+  networkMode: 1, // '0': 离线； '1': 在线
 }
 
 publicSet.appURL = 'http://139.196.26.212:8300'

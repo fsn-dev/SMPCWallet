@@ -1,6 +1,9 @@
 <template>
   <div class="h-bg bg container relative">
-    <language class="lang-fixed" @changeLang="reload"></language>
+    <div class="lang-fixed flex-ec">
+      <language @changeLang="reload"></language>
+      <networkMode @changeNetworkMode="reload"></networkMode>
+    </div>
     <router-view v-if="isRefresh"></router-view>
   </div>
 </template>
@@ -23,6 +26,7 @@
 
 <script>
 import language from '@/components/language/index.vue'
+import networkMode from '@/components/netMode/index.vue'
 export default {
   name: 'bg',
   data () {
@@ -30,13 +34,14 @@ export default {
       isRefresh: true
     }
   },
-  components: {language},
+  components: {language, networkMode},
   // components: {enterPage},
   mounted () {
     
   },
   methods: {
     reload () {
+      // console.log(123)
       this.isRefresh = false
       this.$nextTick(() => {
         this.isRefresh = true

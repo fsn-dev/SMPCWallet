@@ -30,6 +30,19 @@
         <el-button type="primary" @click="importAccount">{{$t('btn').confirm}}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="$t('btn').importAccount" :visible.sync="eDialog.changeName" width="300px" :before-close="modalClick"  :close-on-click-modal="false" :modal-append-to-body='false'>
+      <div>
+        {{$t('error').err_7}}：{{accountData && accountData.account && accountData.account.name ? accountData.account.name : ''}} ！{{$t('warn').w_22}}：
+      </div>
+      <div>
+        <el-input v-model="newAccountName" :placeholder="$t('warn').w_22"></el-input>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
+        <el-button type="primary" @click="changeNewAccount">{{$t('btn').confirm}}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,6 +59,7 @@
 <script>
 import wButton from '@/components/btn/index.vue'
 import setEnode from '@/components/setEnode/index.vue'
+import regExp from '@etc/js/config/RegExp'
 import {computedPub} from '@/assets/js/pages/public'
 import {insertAccount, findAccount} from '@/db/accounts'
 // import {insertNode, findNode} from '@/db/node'
@@ -55,9 +69,11 @@ export default {
   data () {
     return {
       eDialog: {
-        import: false
+        import: false,
+        changeName: false
       },
-      accountData: {}
+      accountData: {},
+      newAccountName: ''
     }
   },
   components: {wButton, setEnode},
@@ -69,12 +85,27 @@ export default {
   methods: {
     modalClick () {
       this.eDialog.import = false
+      this.eDialog.changeName = false
       this.accountData = {}
+      this.newAccountName = ''
+    },
+    changeNewAccount () {
+      if (this.newAccountName) {
+        if (!regExp.username.test(this.newAccountName)) {
+          this.msgError(this.$t('error').err_2)
+        } else {
+          this.accountData.account.name = this.newAccountName
+          this.importAccount()
+        }
+      } else {
+        this.msgError(this.$t('error').err_1)
+      }
     },
     importAccount () {
       let account = this.accountData.account
-      findAccount({address: account.address}).then(list => {
-        console.log(list)
+      // console.log(account)
+      findAccount({$or: [{address: account.address}, {name: account.name}]}).then(list => {
+        // console.log(list)
         if (list.length <= 0) {
           insertAccount({
             name: account.name,
@@ -91,12 +122,15 @@ export default {
             this.modalClick()
           })
         } else {
-          this.msgError(this.$t('error').err_7)
-          this.modalClick()
+          this.eDialog.import = false
+          this.eDialog.changeName = true
+          // this.msgError(this.$t('error').err_7)
+          // this.modalClick()
         }
       }).catch(err => {
         console.log(err)
-        this.msgError(err.toString())
+        // this.msgError(err.toString())
+        this.msgError(this.$t('error').err_7)
         this.modalClick()
       })
     },

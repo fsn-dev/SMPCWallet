@@ -37,6 +37,7 @@
 </style>
 
 <script>
+import {computedPub} from '@/assets/js/pages/public'
 import regExp from '@etc/js/config/RegExp'
 import headerImg from './js/headerImg'
 import {insertAccount, findAccount} from '@/db/accounts'
@@ -99,6 +100,9 @@ export default {
       },
     }
   },
+  computed: {
+    ...computedPub,
+  },
   mounted () {
     // console.log(headerImg)
   },
@@ -157,7 +161,7 @@ export default {
     },
     insertServerAccount (walletInit, walletJSON) {
       return new Promise((resolve, reject) => {
-        if (!this.$$.config.networkMode) {
+        if (!this.networkMode) {
           resolve(1)
           return
         }
@@ -186,7 +190,7 @@ export default {
       })
     },
     changePwd () {
-      if (this.$$.config.networkMode) {
+      if (this.networkMode) {
         server(this, 'GetUserIsRepeat', {
           username: this.registerObj.username
         }).then(res => {

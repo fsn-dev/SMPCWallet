@@ -15,39 +15,6 @@ try {
   web3 = new Web3()
 }
 
-// let web3 = new Web3()
-
-// findBaseInfo({key: 'serverRPC'}).then(res => {
-//   let url = config.serverRPC
-//   if (res.length > 0) {
-//     url = res[0].value
-//   }
-//   web3.setProvider(url)
-// }).catch(err => {
-//   console.log(err)
-//   web3.setProvider(config.serverRPC)
-// })
-
-
-
-// let serverUrl = ''
-// function getUrl () { 
-//   return new Promise(resolve => {
-//     findBaseInfo({key: 'serverRPC'}).then(res => {
-//       let url = config.serverRPC
-//       if (res.length > 0) {
-//         url = res[0].value
-//       }
-//       // serverUrl = url
-//       resolve(url)
-//     })
-//   })
-// }
-
-// let url = await getUrl()
-// console.log(url)
-// web3 = new Web3(new Web3.providers.HttpProvider(url))
-// console.log(url)
 
 web3.extend({
   property: 'dcrm',
@@ -139,6 +106,13 @@ web3.extend({
     {
       name: 'getSDKGroup',
       call: 'dcrm_getSDKGroup',
+      params: 1,
+      inputFormatter: [null],
+      outputFormatter: null
+    },
+    {
+      name: 'getGroupByID',
+      call: 'dcrm_getGroupByID',
       params: 1,
       inputFormatter: [null],
       outputFormatter: null

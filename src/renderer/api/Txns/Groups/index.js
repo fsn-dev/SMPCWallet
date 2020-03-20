@@ -10,7 +10,7 @@ import {
 
 const AddGroupTxnsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -24,7 +24,7 @@ const AddGroupTxnsFn = (that, url, params) => {
 
 const EditGroupTxnsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -38,7 +38,7 @@ const EditGroupTxnsFn = (that, url, params) => {
 
 const EditGroupMemberTxnsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -52,7 +52,7 @@ const EditGroupMemberTxnsFn = (that, url, params) => {
 
 const FindGroupTxnsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })

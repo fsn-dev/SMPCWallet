@@ -11,7 +11,7 @@
               <el-form-item :label="$t('label').groupId + ':'">
                 <span>{{ scope.row.gId }}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').groupAccountId + ':'">
+              <el-form-item :label="$t('label').groupAccountId + ':'" v-if="networkMode">
                 <span>{{ scope.row.pubKey }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').from + ':'">
@@ -45,12 +45,12 @@
                       <span>{{props.row.eNode}}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('label').date" width="140" align="center">
+                  <el-table-column :label="$t('label').date" width="140" align="center" v-if="networkMode">
                     <template slot-scope="props">
                       {{props.row.timestamp ? $$.timeChange(props.row.timestamp, 'yyyy-mm-dd hh:mm') : ''}}
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('state').name" width="90" align="center">
+                  <el-table-column :label="$t('state').name" width="90" align="center" v-if="networkMode">
                     <template slot-scope="props">
                       <span :class="props.row.status === 0 || props.row.status === 1 || props.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(props.row.status)}}</span>
                     </template>
@@ -74,7 +74,7 @@
             {{ $$.cutERC20(scope.row.coinType).coinType}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').groupAccountId" width="180" align="center">
+        <el-table-column :label="$t('label').groupAccountId" width="180" align="center" v-if="networkMode">
           <template slot-scope="scope">
             <span :title="scope.row.pubKey" @click="copyTxt(scope.row.pubKey)" class="cursorP">{{$$.cutOut(scope.row.pubKey, 8, 6)}}</span>
           </template>
@@ -210,32 +210,36 @@ export default {
         let dataObj = data[i]
         // console.log(dataObj.status)
         if (dataObj.status === 0) {
-          let state = 0
-          if (dataObj.member && dataObj.member.length > 0) {
-            let stateObj = { p: 0, a: 0, r: 0 }
-            for (let obj of dataObj.member) {
-              if (obj.status === 0) {
-                stateObj.p ++
+          if (this.networkMode) {
+            let state = 0
+            if (dataObj.member && dataObj.member.length > 0) {
+              let stateObj = { p: 0, a: 0, r: 0 }
+              for (let obj of dataObj.member) {
+                if (obj.status === 0) {
+                  stateObj.p ++
+                }
+                if (obj.status === 4) {
+                  stateObj.r ++
+                }
+                if (obj.status === 5) {
+                  stateObj.a ++
+                }
               }
-              if (obj.status === 4) {
-                stateObj.r ++
+              if (stateObj.r > 0) {
+                state = 4
+                this.setDBState(dataObj._id, i, '', state)
+              } else if (stateObj.a === dataObj.member.length) {
+                state = 5
+                this.getHistoryState(dataObj._id, dataObj.key, i)
+              } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
+                state = 6
+                dataObj.status = state
+                this.setDBState(dataObj._id, i, '', state)
               }
-              if (obj.status === 5) {
-                stateObj.a ++
-              }
-            }
-            if (stateObj.r > 0) {
-              state = 4
-              this.setDBState(dataObj._id, i, '', state)
-            } else if (stateObj.a === dataObj.member.length) {
-              state = 5
-              this.getHistoryState(dataObj._id, dataObj.key, i)
-            } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
-              state = 6
               dataObj.status = state
-              this.setDBState(dataObj._id, i, '', state)
+            } else {
+              this.getHistoryState(dataObj._id, dataObj.key, i)
             }
-            dataObj.status = state
           } else {
             this.getHistoryState(dataObj._id, dataObj.key, i)
           }

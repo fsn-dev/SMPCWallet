@@ -205,27 +205,6 @@ export default {
         console.log(err)
         this.loading.history = false
       })
-      // if (Number(this.$$.getCookies(this.$$.config.cookies.accountType))) {
-      //   this.historyLoading = false
-      //   return
-      // }
-      // if (!this.address || !this.selectData.coinType) {
-      //   this.historyLoading = false
-      //   return
-      // }
-      // if (!this.selectData.isConfirm && this.selectData.coinType !== this.$$.config.initCoin) {
-      //   this.historyLoading = false
-      //   return
-      // }
-      // this.isRefreshStart = false
-      // this.$socket.emit('receiveHistory', {
-      //   status: 1,
-      //   to: this.address,
-      //   coin: this.selectData.ERC20coin,
-      //   pageSize: this.pageInfo.pageSize,
-      //   pageNum: this.pageInfo.pageNum,
-      //   url: this.$store.state.network.url
-      // })
     }
   },
   beforeDestroy () {

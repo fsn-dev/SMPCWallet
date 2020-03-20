@@ -63,27 +63,22 @@ const EditGroupAccounts = (that, url, params) => {
 
 const EditGroupMemberAccounts = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    let query = {}, updateParams = {}
-    let data = { msg: 'Error', info: [] }
-    if (params) {
-      if (params.key || params.key === 0) {
-        query.key = params.key
-      }
-      if (params.keyId || params.keyId === 0) {
-        query.keyId = params.keyId
-      }
-      if (params.kId || params.kId === 0) {
-        query['member.kId'] = params.kId
-      }
-      if (params.status || params.status === 0) {
-        updateParams['member.$.status'] = params.status
-        updateParams['member.$.timestamp'] = Date.now()
-        if (params.status === 4 || params.status === 6) {
-          updateParams.status = params.status
-        }
-      }
+    let data = {
+      msg: 'Error',
+      info: ''
     }
-    historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
+    let dateNow = Date.now()
+    let query = {
+      keyId: dateNow + params.local.key,
+      key: params.local.key ? params.local.key : '',
+      member: params.local.member ? params.local.member : [],
+      gId: params.local.gId ? params.local.gId : '',
+      nonce: params.local.nonce ? params.local.nonce : 0,
+      timestamp: params.local.timestamp ? params.local.timestamp : 0,
+      status: 0,
+      mode: params.local.mode ? params.local.mode : 0,
+    }
+    historyGroupAccpunts.insert(query, (err, res) => {
       if (err) {
         // console.log(err)
         data.error = err
@@ -95,6 +90,40 @@ const EditGroupMemberAccounts = (that, url, params) => {
         resolve(data)
       }
     })
+    // let query = {}, updateParams = {}
+    // let data = { msg: 'Error', info: [] }
+    // if (params) {
+    //   if (params.key || params.key === 0) {
+    //     query.key = params.key
+    //   }
+    //   if (params.keyId || params.keyId === 0) {
+    //     query.keyId = params.keyId
+    //   }
+    //   if (params.kId || params.kId === 0) {
+    //     query['member.kId'] = params.kId
+    //   }
+    //   if (params.status || params.status === 0) {
+    //     updateParams['member.$.status'] = params.status
+    //     updateParams['member.$.timestamp'] = Date.now()
+    //     if (params.status === 4 || params.status === 6) {
+    //       updateParams.status = params.status
+    //     }
+    //   }
+    // }
+    // console.log(query)
+    // console.log(updateParams)
+    // historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
+    //   if (err) {
+    //     // console.log(err)
+    //     data.error = err
+    //     reject(data)
+    //   } else {
+    //     // console.log(res)
+    //     data.msg = 'Success'
+    //     data.info = res
+    //     resolve(data)
+    //   }
+    // })
   })
 }
 
@@ -132,7 +161,8 @@ const FindGroupAccounts = (that, url, params) => {
         query.status = params.status
       }
     }
-    historyGroupAccpunts.count({}, (err, count) => {
+    console.log(query)
+    historyGroupAccpunts.count(query, (err, count) => {
       if (err) {
         data.error = err
         reject(data)

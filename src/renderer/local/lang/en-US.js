@@ -38,6 +38,7 @@ export default {
 		w_19: 'Insufficient Balance',
 		w_20: 'Import this account or not',
 		w_21: 'Export this account or not',
+		w_22: 'Please create a new username',
 	},
 	success: {
 		s_1: 'Created successfully!',

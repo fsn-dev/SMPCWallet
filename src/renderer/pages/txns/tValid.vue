@@ -163,6 +163,16 @@ export default {
           gID: this.urlParams.GroupId,
           timestamp: Number(this.urlParams.TimeStamp)
         }
+        this.$$.getGroupObj(this.urlParams.GroupId).then(res => {
+          if (res.msg === 'Success') {
+            this.gForm.eNodeArr = res.info
+          } else {
+            this.gForm.eNodeArr = []
+          }
+        }).catch(err => {
+          console.log(err)
+          this.gForm.eNodeArr = []
+        })
         this.countDownFn()
         this.refreshActionFn()
       }).catch(err => {
@@ -238,11 +248,41 @@ export default {
           let cbData = res
           console.log(res)
           if (cbData.msg === 'Success') {
+            let localData = {}
+            if (!this.networkMode) {
+              localData = {
+                from: this.urlParams.DcrmFrom ,
+                to: this.urlParams.DcrmTo,
+                value: this.urlParams.Value,
+                nonce: this.urlParams.Nonce,
+                coinType: this.urlParams.Cointype,
+                hash: '',
+                status: 0,
+                pubKey: '',
+                key: this.urlParams.Key,
+                gId: this.urlParams.GroupId,
+                gArr: [
+                  {eNode: this.eNode, kId: this.address, status: 0, timestamp: Date.now(), initiate: 0}
+                ]
+              }
+              for (let obj of this.gForm.eNodeArr) {
+                // console.log(obj)
+                if (obj === this.eNode) continue
+                localData.gArr.push({
+                  eNode: obj,
+                  kId: '',
+                  status: 0,
+                  timestamp: '',
+                  initiate: 0
+                })
+              }
+            }
             EditGroupMemberTxnsFn(this, 'changeGroupMemberTxnsStatus', {
               key: this.key,
               kId: this.address,
               eNode: this.eNode,
-              status: this.applyStatus === 'AGREE' ? 5 : 4
+              status: this.applyStatus === 'AGREE' ? 5 : 4,
+              local: localData
             })
             this.updateStatus(this.urlParams.Key)
             this.msgSuccess('Success!')

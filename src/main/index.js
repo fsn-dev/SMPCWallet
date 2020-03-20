@@ -53,7 +53,7 @@ function createWindow () {
     }
   })
   mainWindow.loadURL(winURL)
-  mainWindow.openDevTools()
+  // mainWindow.openDevTools()
   mainWindow.on('closed', () => {
     try {
       mainWindow.close()
@@ -61,10 +61,6 @@ function createWindow () {
     } catch (error) {
       console.log(error)
     }
-    // cookies.clearCookies()
-    // Cookies.set(config.cookies.token, '', { expires: 0 })
-    // Cookies.set(config.cookies.address, '', { expires: 0 })
-    // Cookies.set(config.cookies.accountType, '', { expires: 0 })
   })
 }
 

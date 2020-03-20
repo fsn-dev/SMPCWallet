@@ -4,8 +4,7 @@ import local from './local'
 
 function commonFn (that, url, params) {
   return new Promise((resolve, reject) => {
-    // console.log(that.$$)
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })

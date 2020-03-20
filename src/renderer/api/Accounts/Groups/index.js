@@ -11,7 +11,7 @@ import {
 const AddGroupAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
     // console.log(that.$$)
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -25,7 +25,7 @@ const AddGroupAccountsFn = (that, url, params) => {
 
 const EditGroupAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -39,7 +39,7 @@ const EditGroupAccountsFn = (that, url, params) => {
 
 const EditGroupMemberAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })
@@ -53,7 +53,7 @@ const EditGroupMemberAccountsFn = (that, url, params) => {
 
 const FindGroupAccountsFn = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    if (that.$$.config.networkMode) {
+    if (that.$store.state.networkMode) {
       server(that, url, params).then(res => {
         resolve(res)
       })

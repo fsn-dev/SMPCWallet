@@ -28,7 +28,8 @@ const store = new Vuex.Store({
     accountType: config.modeInit,
     dayAndNight: '',
     language: '',
-    serverRPC: ''
+    serverRPC: '',
+    networkMode: config.networkMode
   },
   mutations: {
     setEnode (state, data) {
@@ -55,14 +56,6 @@ const store = new Vuex.Store({
         cookies.setCookies(config.cookies.token, info)
       }
     },
-    // setWallet (state, data) {
-    //   // state.wallet = data
-    //   let info = data.info ? data.info : ''
-    //   state.wallet = info
-    //   if (!data.type) {
-    //     cookies.setCookies('wallet', info, 0.1)
-    //   }
-    // },
     setAccountType (state, data) {
       let info = data.info ? data.info.toString() : config.modeInit
       state.accountType = info
@@ -105,6 +98,10 @@ const store = new Vuex.Store({
         })
       }
     },
+    setNetworkMode (state, data) {
+      let info = data.info ? data.info : ''
+      state.networkMode = info
+    },
   },
   actions: {
     getEnode ({commit}) {
@@ -136,12 +133,6 @@ const store = new Vuex.Store({
         commit('setToken', data)
       })
     },
-    // getWallet ({commit}) {
-    //   cookies.getCookies('wallet').then(res => {
-    //     let data = { type: 1, info: res}
-    //     commit('setWallet', data)
-    //   })
-    // },
     getAccountType ({commit}) {
       let data = { type: 1, info: ''}
       findBaseInfo({key: config.cookies.accountType}).then(res => {
@@ -203,7 +194,7 @@ const store = new Vuex.Store({
         commit('setServerRPC', data)
         console.log(err)
       })
-    }
+    },
   }
 })
 

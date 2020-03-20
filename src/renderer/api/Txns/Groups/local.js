@@ -73,31 +73,28 @@ const EditGroupTxns = (that, url, params) => {
 
 const EditGroupMemberTxns = (that, url, params) => {
   return new Promise((resolve, reject) => {
-    let query = {}, updateParams = {}
+    let dateNow = Date.now()
+    let query = {
+      keyId: dateNow + params.local.key,
+      key: params.local.key ? params.local.key : '',
+      from: params.local.from ? params.local.from : '',
+      to: params.local.to ? params.local.to : '',
+      value: params.local.value ? params.local.value : 0,
+      nonce: params.local.nonce ? params.local.nonce : 0,
+      member: params.local.gArr ? params.local.gArr : [],
+      gId: params.local.gId ? params.local.gId : '',
+      txnId: params.local.txnId ? params.local.txnId : '',
+      coinType: params.local.coinType ? params.local.coinType : 0,
+      hash: params.local.hash ? params.local.hash : '',
+      status: params.local.status ? params.local.status : 0,
+      timestamp: dateNow,
+      pubKey: params.local.pubKey ? params.local.pubKey : '',
+    }
     let data = {
       msg: 'Error',
       info: ''
     }
-    if (params) {
-      if (params.key || params.key === 0) {
-        query.key = params.key
-      }
-      if (params.keyId || params.keyId === 0) {
-        query.keyId = params.keyId
-      }
-      if (params.eNode) {
-        query['member.eNode'] = params.eNode
-      }
-
-      if (params.status || params.status === 0) {
-        updateParams['member.$.status'] = params.status
-      }
-      if (params.kId || params.kId === 0) {
-        updateParams['member.$.kId'] = params.kId
-        updateParams['member.$.timestamp'] = Date.now()
-      }
-    }
-    historyGroupTxns.update(query, {$set: updateParams}, {}, (err, res) => {
+    historyGroupTxns.insert(query, (err, res) => {
       if (err) {
         // console.log(err)
         data.error = err
