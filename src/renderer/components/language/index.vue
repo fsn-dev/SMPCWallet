@@ -19,7 +19,7 @@
 </style>
 
 <script>
-// import initMenu from '@/libs/menu'
+import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: 'language',
   data () {
@@ -30,6 +30,14 @@ export default {
         {value: 'zh-CN', label: '中文简体'}
       ],
     }
+  },
+  watch: {
+    language () {
+      this.lang = this.language
+    }
+  },
+  computed: {
+    ...computedPub
   },
   mounted () {
     // initMenu(this)

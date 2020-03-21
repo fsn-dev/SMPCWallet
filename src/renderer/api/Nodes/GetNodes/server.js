@@ -30,7 +30,7 @@ function GetNodes (that, url, params) {
         resolve(arr)
       })
     }).catch(error => {
-      // console.log(error)
+      console.log(error)
       findNode().then(res => {
         // console.log(res)
         for (let obj of res) {
