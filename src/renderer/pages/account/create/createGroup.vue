@@ -175,10 +175,15 @@ export default {
           this.openPwdDialog()
         } else {
           this.msgError(gInfo.info.toString())
+          this.loading.creat = false
+          this.$emit('closeModal')
+          this.modalClick()
         }
       }).catch(err => {
         this.msgError(err)
         this.loading.creat = false
+        this.$emit('closeModal')
+        this.modalClick()
       })
     },
     openPwdDialog () {

@@ -37,8 +37,8 @@
       </div>
     </div>
 
-    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false">
-      <div class="confirm-list-box" v-loading="loading.enode" :element-loading-text="$t('loading').l_1">
+    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false" v-loading="loading.enode" :element-loading-text="$t('loading').l_1">
+      <div class="confirm-list-box">
         <ul class="list-box">
           <li class="item flex-ai-fs" v-for="(item, index) in createEnodeArr" :key="index">
             <div class="label flex-sc">
@@ -216,6 +216,7 @@ export default {
     modalClick () {
       this.eDialog.pwd = false
       this.eDialog.confirm = false
+      this.$$.web3.setProvider(this.serverRPC)
       this.$emit('closeModal')
     },
     submitForm () {
@@ -300,6 +301,9 @@ export default {
           this.openPwdDialog()
         } else {
           this.msgError(gInfo.info.toString())
+          this.loading.creat = false
+          this.$emit('closeModal')
+          this.modalClick()
         }
       }).catch(err => {
         this.msgError(err)
