@@ -99,6 +99,7 @@ const store = new Vuex.Store({
       }
     },
     setNetworkMode (state, data) {
+      // console.log(data)
       let info = data.info ? data.info : ''
       state.networkMode = info
     },

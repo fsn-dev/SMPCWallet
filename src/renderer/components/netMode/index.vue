@@ -24,6 +24,10 @@ export default {
   },
   watch: {
     networkMode () {
+      // console.log(this.networkMode)
+      this.networkModeVal = this.networkMode ? this.$t('state').on : this.$t('state').off
+    },
+    language () {
       this.networkModeVal = this.networkMode ? this.$t('state').on : this.$t('state').off
     }
   },
