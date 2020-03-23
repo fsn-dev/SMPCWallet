@@ -5,6 +5,7 @@ function uodateStatus (data) {
   const params = {
     key: data.key,
     type: data.type,
+    address: data.address,
     status: data.status,
     updatetime: Date.now()
   }

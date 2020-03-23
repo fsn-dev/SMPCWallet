@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container">
+  <div class="boxConntent1 container" v-loading="loading.data" :element-loading-text="$t('loading').l_1">
     <div class="c-form-box">
       <el-form :model="gForm" ref="gForm" label-width="100px" label-position="top">
         <!-- <el-form-item label="账户名" prop="name">
@@ -60,6 +60,9 @@ export default {
       eDialog: {
         confirm: false,
         pwd: false
+      },
+      loading: {
+        data: true
       },
       gForm: {},
       modeArr: this.$$.mode,
@@ -164,12 +167,15 @@ export default {
           gID: this.urlParams.GroupId,
           timestamp: Number(this.urlParams.TimeStamp)
         }
+        console.log(this.gForm)
+        this.loading.data = false
         this.countDownFn()
         this.refreshActionFn()
       }).catch(err => {
         console.log(err)
+        this.loading.data = false
         this.refreshActionFn()
-        this.msgError(err.toString())
+        this.msgError(err)
       })
     },
     splitTx (enode) {
@@ -237,6 +243,7 @@ export default {
       uodateStatus({
         key: key,
         type: 1,
+        address: this.address,
         status: 1
       }).then(res => {
         console.log(res)

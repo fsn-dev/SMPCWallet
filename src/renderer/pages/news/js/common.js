@@ -3,6 +3,7 @@ export const methods = {
   getKeyStatus (key, i, type) {
     findStatus({
       key: key,
+      address: this.address,
       type: 1
     }).then(res => {
       // console.log(res)
@@ -16,6 +17,7 @@ export const methods = {
   updateStaus (key, i, type) {
     uodateStatus({
       key: key,
+      address: this.address,
       type: 1,
       status: 0
     }).then(res => {

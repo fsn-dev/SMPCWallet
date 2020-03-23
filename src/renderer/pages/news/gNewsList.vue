@@ -40,7 +40,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-// import {uodateStatus, findStatus, removeStatus} from '@/db/status'
 import {methods} from './js/common'
 export default {
   name: 'gNewsList',

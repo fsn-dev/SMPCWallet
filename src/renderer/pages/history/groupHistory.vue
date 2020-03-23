@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.history" element-loading-text="Loading……">
+  <div class="boxConntent1" v-loading="loading.history" :element-loading-text="$t('loading').l_1">
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%" :empty-text="$t('warn').w_12">
         <el-table-column type="expand">

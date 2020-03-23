@@ -137,7 +137,7 @@ export default {
 		version: 'Version',
 		versionTest: 'Testnet',
 		groupId: 'Group ID',
-		groupAccountId: 'Managed Account ID',
+		groupAccountId: 'Account ID',
 		identity: 'Identity',
 		details: 'Details',
 		approvalTime: 'Approval Time Remaining',

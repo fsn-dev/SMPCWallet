@@ -45,6 +45,9 @@ Vue.prototype.copyTxt = function(txt, isShowCont) {
 }
 
 Vue.prototype.msgError = function(txt) {
+  if (txt.error) {
+    txt = txt.error
+  }
   this.$message({
     showClose: true,
     message: txt,

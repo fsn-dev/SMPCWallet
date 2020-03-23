@@ -251,6 +251,7 @@ export default {
       uodateStatus({
         key: key,
         type: 1,
+        address: this.address,
         status: 1
       }).then(res => {
         console.log(res)

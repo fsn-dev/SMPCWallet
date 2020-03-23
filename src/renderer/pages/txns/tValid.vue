@@ -298,6 +298,7 @@ export default {
     updateStatus (key) {
       uodateStatus({
         key: key,
+        address: this.address,
         type: 1,
         status: 1
       }).then(res => {
