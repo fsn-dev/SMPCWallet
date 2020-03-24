@@ -101,22 +101,13 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {FindGroupAccountsFn, EditGroupAccountsFn} from '@/api/index.js'
+import {datas, commonMethods} from './js/common.js'
+import {methods} from './js/group.js'
 export default {
   name: 'txnsHistory',
   data () {
     return {
-      tableData: [],
-      coinType: '',
-      dcrmAddr: '',
-      baseUrl: '',
-      page: {
-        cur: 0,
-        pageSize: 10,
-        total: 0
-      },
-      loading: {
-        history: true
-      }
+      ...datas
     }
   },
   computed: {
@@ -127,106 +118,30 @@ export default {
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
-    this.initData()
+    setTimeout(() => {
+      this.init()
+    }, 100)
   },
   methods: {
-    handleCurrentChange (val) {
-      this.page.cur = val
-      this.initData()
-    },
-    initData () {
-      this.baseUrl = 'GroupAccountsFind'
-      FindGroupAccountsFn(this, this.baseUrl, {
+    ...commonMethods,
+    ...methods,
+    init () {
+      let data = {
         // eNode: this.eNode,
         kId: this.address,
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
-      }).then(res => {
-        console.log(res)
-        this.loading.history = true
-        if (res.msg === 'Success' && res.info.length > 0) {
-          this.page.total = res.total
-          this.formatData(res.info)
-          // this.tableData = res.info
-        } else {
-          this.page.total = 0
-          this.tableData = []
-          this.loading.history = false
-        }
-      })
-    },
-    /**
-     * 0: Pending;
-     * 1: Success;
-     * 2: Failure;
-     * 4: Refuse;
-     * 5: Agree;
-     * 6: Timeout
-     */
-    formatData (data) {
-      this.tableData = []
-      let nowTime = Date.now()
-      for (let i = 0, len = data.length; i < len; i++) {
-        let dataObj = data[i]
-        // console.log(dataObj.status)
-        if (dataObj.status === 0) {
-          if (this.networkMode) {
-            let state = 0
-            if (dataObj.member && dataObj.member.length > 0) {
-              let stateObj = { p: 0, a: 0, r: 0 }
-              for (let obj of dataObj.member) {
-                if (obj.status === 0) stateObj.p ++ 
-                if (obj.status === 4) stateObj.r ++ 
-                if (obj.status === 5) stateObj.a ++ 
-              }
-              if (stateObj.r > 0) {
-                state = 4
-                this.setDBState(dataObj._id, i, '', state)
-              } else if (stateObj.a === dataObj.member.length) {
-                state = 5
-                this.getHistoryState(dataObj._id, dataObj.key, i)
-              } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
-                state = 6
-                dataObj.status = state
-                this.setDBState(dataObj._id, i, '', state)
-              }
-              dataObj.status = state
-            } else {
-              this.getHistoryState(dataObj._id, dataObj.key, i)
-            }
-          } else {
-            this.getHistoryState(dataObj._id, dataObj.key, i)
-          }
-        } else if (dataObj.status === 5 && !dataObj.hash) {
-          this.getHistoryState(dataObj._id, dataObj.key, i)
-        }
-        // console.log(dataObj.status)
-        this.tableData.push(dataObj)
-        this.loading.history = false
       }
+      FindGroupAccountsFn(this, 'GroupAccountsFind', data).then(res => {
+        this.initFormat(res)
+      })
     },
     getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
-        console.log(res)
-        if (res.msg === 'Success' && res.status === 'Success') {
-          let pubKey = res.pubKey
-          this.setDBState(id, index, pubKey, 1)
-          this.tableData[index].pubKey = pubKey
-          this.tableData[index].status = 1
-        } else if (res.status === 'Failure') {
-          this.setDBState(id, index, '', 2)
-          this.tableData[index].status = 2
-        } else if (res.status === 'Timeout') {
-          this.setDBState(id, index, '', 6)
-          this.tableData[index].status = 6
-        }
+        this.getStateFormat(res)
       }).catch(err => {
         console.log(err)
-        if (err.error) {
-          this.msgError(err.error.toString())
-        } else {
-          this.msgError(err.toString())
-        }
+        this.msgError(err)
       })
     },
     setDBState (id, index, pubKey, status) {

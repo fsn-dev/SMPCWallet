@@ -1,6 +1,7 @@
 <template>
   <div class="boxConntent1 container" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
-    <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
+    <div class="c-form-box">
+    <!-- <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'"> -->
       <div class="WW100">
         <el-form ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
           <el-form-item :label="$t('label').mode"
@@ -37,7 +38,7 @@
       </div>
     </div>
 
-    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false" v-loading="loading.enode" :element-loading-text="$t('loading').l_1">
+    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false" v-loading="loading.confirm" :element-loading-text="$t('loading').l_1">
       <div class="confirm-list-box">
         <ul class="list-box">
           <li class="item flex-ai-fs" v-for="(item, index) in createEnodeArr" :key="index">
@@ -74,6 +75,7 @@ import {computedPub} from '@/assets/js/pages/public'
 import {insertNode, findNode} from '@/db/node'
 
 import {GetNodes, AddNodes, AddPersonAccountsFn} from '@/api/index.js'
+import {datas, watchs, methods} from './js/common.js'
 export default {
   name: 'createPerson',
   props: {
@@ -84,29 +86,7 @@ export default {
   },
   data () {
     return {
-      baseUrl: '',
-      mode: {
-        init: this.$$.mode,
-        select: this.$$.config.initGroupMode
-      },
-      node: {
-        init: [],
-        select: [],
-        min: 0,
-        max: 0,
-        add: '',
-        refresh: true
-      },
-      loading: {
-        creat: false,
-        enode: false
-      },
-      eDialog: {
-        pwd: false,
-        confirm: false
-      },
-      dataPage: {},
-      gID: '',
+      ...datas,
       rules: {},
       createEnodeArr: []
     }
@@ -115,29 +95,16 @@ export default {
     ...computedPub,
   },
   watch: {
-    accountType (cur) {
-      if (Number(cur) === 1) {
-        this.toUrl('/createPerson')
-      } else {
-        this.toUrl('/createGroup')
-      }
-    },
+    ...watchs,
   },
   mounted () {
-    // console.log(this.serverRPC)
     this.init()
+    this.getNetUrl()
   },
   methods: {
-    init () {
-      if (this.$$.config.env === 'dev') {
-        this.baseUrl = 'getNodeInfosDev'
-      }
-      // this.$socket.emit(this.baseUrl)
-      this.getNetUrl()
-      this.changeMode()
-    },
+    ...methods,
     getNetUrl () {
-      GetNodes(this, this.baseUrl).then(res => {
+      GetNodes(this, 'getNodeInfosDev').then(res => {
         console.log(res)
         this.node.init = res
       })
@@ -207,28 +174,6 @@ export default {
       // console.log(item)
       this.node.select.splice(index, 1)
     },
-    refreshNode () {
-      this.node.refresh = false
-      this.$nextTick(() => {
-        this.node.refresh = true
-      })
-    },
-    modalClick () {
-      this.eDialog.pwd = false
-      this.eDialog.confirm = false
-      this.$$.web3.setProvider(this.serverRPC)
-      this.$emit('closeModal')
-    },
-    submitForm () {
-      if (this.node.select.length < this.node.min) {
-        this.msgError(this.$t('error').err_12)
-      } else {
-        // this.createGroup()
-        this.eDialog.confirm = true
-        this.loading.enode = true
-        this.getAllEnode()
-      }
-    },
     getEnode (url) {
       return new Promise((resolve, reject) => {
         let enodeObj = {status: 'Error', enode: ''}
@@ -262,10 +207,7 @@ export default {
         initiate: 1
       }]
       Promise.all(arr).then(res => {
-        // console.log(this.$$.web3)
         this.$$.web3.setProvider(this.serverRPC)
-        // console.log(this.$$.web3)
-        // console.log(res)
         for (let i = 0, len = res.length; i < len; i++) {
           let obj = {
             name: this.node.select[i].name,
@@ -280,90 +222,26 @@ export default {
           }
           this.createEnodeArr.push(obj)
         }
-        this.loading.enode = false
+        this.loading.confirm = false
         // console.log(this.createEnodeArr)
       })
     },
+    submitForm () {
+      if (this.node.select.length < this.node.min) {
+        this.msgError(this.$t('error').err_12)
+      } else {
+        this.eDialog.confirm = true
+        this.loading.confirm = true
+        this.getAllEnode()
+      }
+    },
     createGroup () {
-      this.eDialog.confirm = false
-      this.loading.creat = true
-      // this.eDialog.pwd = true;
       let arr = []
       for (let obj of this.createEnodeArr) {
         arr.push(obj.enode)
       }
       console.log(arr)
-      this.$$.createGroup(this.mode.select, arr).then(res => {
-        let gInfo = res
-        console.log(gInfo)
-        if (gInfo.msg === 'Success') {
-          this.gID = res.info.Gid
-          this.openPwdDialog()
-        } else {
-          this.msgError(gInfo.info.toString())
-          this.loading.creat = false
-          this.$emit('closeModal')
-          this.modalClick()
-        }
-      }).catch(err => {
-        this.msgError(err)
-        this.loading.creat = false
-        this.$emit('closeModal')
-        this.modalClick()
-      })
-    },
-    openPwdDialog () {
-      if (!this.gID) {
-        this.msgError(this.$t('warn').w_3)
-        return
-      }
-      let data = 'REQDCRMADDR:' + this.gID + ':' + this.mode.select + ':' + Date.now()
-
-      console.log(data)
-      this.dataPage = {
-        from: this.address,
-      }
-      this.$$.getReqNonce(this.address).then(nonce => {
-        this.dataPage.nonce = nonce
-        this.dataPage.value = 0
-        this.dataPage.data = data
-        console.log(this.dataPage)
-        this.eDialog.pwd = true
-        this.loading.creat = false
-      })
-    },
-    getSignData (data) {
-      // this.modalClick()
-      this.eDialog.pwd = false
-      this.loading.creat = true
-      // this.loading.creat = true
-      if (data.signTx) {
-        this.signTx = data.signTx
-        this.reqAccount()
-      } else {
-        this.msgError('Error')
-        this.loading.creat = false
-      }
-    },
-    reqAccount () {
-      this.$$.reqAccount(this.signTx, this.accountType).then(res => {
-        console.log(res)
-        if (res.msg === 'Success') {
-          this.$emit('closeModal')
-          this.modalClick()
-          // this.updateStatus(res.info)
-          this.saveDB(res.info)
-          this.msgSuccess(this.$t('success').s_3)
-        }
-        this.loading.creat = false
-        // this.toUrl('/waitNews')
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err.error)
-        this.loading.creat = false
-        this.$emit('closeModal')
-        this.modalClick()
-      })
+      this.createAndGetGid(this.mode.select, arr)
     },
     saveDB (key) {
       let data = {
@@ -393,11 +271,6 @@ export default {
       this.node.min = Number(modeArr[0]) - 1
       this.node.max = Number(modeArr[1]) - 1
       this.node.select = []
-    },
-    resetForm(formName) {
-      this.mode.select = this.$$.config.initGroupMode
-      this.node.select = []
-      this.gID = ''
     },
   }
 }

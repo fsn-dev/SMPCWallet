@@ -149,9 +149,12 @@ export default {
               timestamp: obj.TimeStamp
             })
           }
-          if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
-            this.isReplySet = true
-          }
+          // if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
+          //   this.isReplySet = true
+          // }
+        }
+        if (this.urlParams.status) {
+          this.isReplySet = false
         }
         if  (initiator.eNode) {
           arr.unshift(initiator)

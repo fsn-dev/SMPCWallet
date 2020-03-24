@@ -16,12 +16,8 @@
       </el-select>
       <el-button type="primary" class="mt-20" @click="setNet" v-if="isSetNode">{{$t('btn').setNode}}</el-button>
       <el-button type="success" class="mt-20" @click="copyTxt(viewEnode)" v-if="isShowEnode">{{$t('btn').copy}} ENODE</el-button>
-      <!-- <el-button type="success" class="mt-20" @click="openPwdDialog">生成注册码</el-button> -->
     </div>
 
-    <!-- <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick">
-      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
-    </el-dialog> -->
   </div>
 </template>
 

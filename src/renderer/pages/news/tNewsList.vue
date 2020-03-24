@@ -80,9 +80,9 @@ export default {
         this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
         for (let i = 0, len = this.newsList.length; i < len; i++) {
           let obj = this.newsList[i]
-          if (this.address === obj.Account) {
-            this.getKeyStatus(obj.Key, i, '1')
-          }
+          this.getKeyStatus(obj.Key, i, '1')
+          // if (this.address !== obj.Account) {
+          //   }
         }
         this.$emit('tNewsTip', this.newsList.length)
         this.loading.list = false

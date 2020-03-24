@@ -365,23 +365,6 @@ let web3Utils = {
           data = {msg: 'Error', error: err.toString()}
           reject(data)
         })
-        // let obj = {}
-        // // let gArr = this.getGroup()
-        // let gArr = []
-        // this.getGroup().then(res => {
-        //   gArr = res.info
-        //   for (let obj1 of gArr) {
-        //     if (gID === obj1.Gid) {
-        //       obj = obj1
-        //       break
-        //     }
-        //   }
-        //   data = {msg: 'Success', info: obj}
-        //   resolve(data)
-        // }).catch(err => {
-        //   data = err
-        //   reject(data)
-        // })
       } catch (error) {
         console.log(error)
         data = {msg: 'Error', error: error.toString()}
@@ -552,11 +535,11 @@ let web3Utils = {
             // console.log(JSON.parse(cbData.Data.result))
             let result = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
             let status = result ? result.Status : 'Failure'
-            let pubKey = result && result.PubKey ? result.PubKey : ''
+            let hash = result && result.PubKey ? result.PubKey : ''
             let list = result && result.AllReply ? result.AllReply : []
-            data = {msg: 'Success', status: status, pubKey: pubKey, info: list,timestamp: result.TimeStamp}
+            data = {msg: 'Success', status: status, hash: hash, info: list,timestamp: result.TimeStamp}
           } else {
-            data = {msg: 'Error', status: 'Failure', pubKey: '', info: []}
+            data = {msg: 'Error', status: 'Failure', hash: '', info: []}
           }
           resolve(data)
         }).catch(err => {
@@ -591,19 +574,8 @@ let web3Utils = {
             resolve(data)
           }).catch(err => {
             console.log(err)
-            // data = {msg: 'Error', error: err.toString()}
-            // reject(data)
-
-            breakAgaing().then(res => {
-              console.log(address)
-              this.getTxnsList(address).then(res => {
-                resolve(res)
-              })
-            }).catch(e => {
-              console.log(err)
-              data = {msg: 'Error', error: err.toString()}
-              reject(data)
-            })
+            data = {msg: 'Error', error: err.toString()}
+            reject(data)
           })
         } else {
           setTimeout(() => {
@@ -634,19 +606,9 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
-          breakAgaing().then(res => {
-            this.lockout(signTx).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
+          console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         data = {msg: 'Error', error: error.toString()}
@@ -665,7 +627,7 @@ let web3Utils = {
           if (cbData.Status !== 'Error') {
             // console.log(JSON.parse(cbData.Data.result))
             let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
-            console.log(status)
+            // console.log(status)
             // status = status.Status
             data = {msg: 'Success', status: status.Status, info: status.AllReply, hash: status.OutTxHash, timestamp: status.TimeStamp}
           } else {

@@ -3,7 +3,7 @@
     <div class="g-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item flex-bc" v-for="(item, index) in newsList" :key="index">
-          <!-- <div class="labelType rotate_45 flex-c self" v-if="address === item.Account">{{$t('label').initiator}}</div> -->
+          <div class="labelType rotate_45 flex-c self" v-if="address === item.Account">{{$t('label').initiator}}</div>
           <div class="left">
             <p class="p1">{{item.Key}}</p>
             <div class="flex-sc node-view-style flex-wrap">

@@ -102,23 +102,13 @@
 import {computedPub} from '@/assets/js/pages/public'
 
 import {FindPersonAccountsFn, EditPersonAccountsFn} from '@/api/index.js'
-
+import {datas, commonMethods} from './js/common.js'
+import {methods} from './js/person.js'
 export default {
   name: 'txnsHistory',
   data () {
     return {
-      tableData: [],
-      coinType: '',
-      dcrmAddr: '',
-      baseUrl: '',
-      page: {
-        cur: 0,
-        pageSize: 10,
-        total: 0
-      },
-      loading: {
-        history: true
-      }
+      ...datas
     }
   },
   computed: {
@@ -129,80 +119,33 @@ export default {
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
-    this.initData()
+    setTimeout(() => {
+      this.init()
+    }, 100)
   },
   methods: {
-    handleCurrentChange (val) {
-      this.page.cur = val
-      this.initData()
-    },
-    initData () {
-      this.baseUrl = 'PersonAccountsFind'
-      FindPersonAccountsFn(this, this.baseUrl, {
+    ...commonMethods,
+    ...methods,
+    init () {
+      let data = {
         // eNode: this.eNode,
         kId: this.address,
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
-      }).then(res => {
-        console.log(res)
-        this.loading.history = true
-        if (res.msg === 'Success' && res.info.length > 0) {
-          this.page.total = res.total
-          this.formatData(res.info)
-          // this.tableData = res.info
-        } else {
-          this.page.total = 0
-          this.tableData = []
-          this.loading.history = false
-        }
-      })
-    },
-    /**
-     * 0: Pending;
-     * 1: Success;
-     * 2: Failure;
-     * 4: Refuse;
-     * 5: Agree;
-     * 6: Timeout
-     */
-    formatData (data) {
-      this.tableData = []
-      let nowTime = Date.now()
-      for (let i = 0, len = data.length; i < len; i++) {
-        let dataObj = data[i]
-        if (dataObj.status === 0) {
-          this.getHistoryState(dataObj._id, dataObj.key, i)
-        }
-        this.tableData.push(dataObj)
-        this.loading.history = false
       }
+      FindPersonAccountsFn(this, 'PersonAccountsFind', data).then(res => {
+        this.initFormat(res)
+      })
     },
     getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
-        console.log(res)
-        if (res.msg === 'Success' && (res.status === 'Success' || res.pubKey)) {
-          let pubKey = res.pubKey
-          this.setDBState(id, index, pubKey, 1)
-          this.tableData[index].pubKey = pubKey
-          this.tableData[index].status = 1
-        } else if (res.status === 'Failure') {
-          this.setDBState(id, index, '', 2)
-          this.tableData[index].status = 2
-        } else if (res.status === 'Timeout') {
-          this.setDBState(id, index, '', 6)
-          this.tableData[index].status = 6
-        }
+        this.getStateFormat(res)
       }).catch(err => {
         console.log(err)
-        if (err.error) {
-          this.msgError(err.error.toString())
-        } else {
-          this.msgError(err.toString())
-        }
+        this.msgError(err)
       })
     },
     setDBState (id, index, pubKey, status) {
-      console.log(123)
       let data = {
         id: id,
         pubKey: pubKey,

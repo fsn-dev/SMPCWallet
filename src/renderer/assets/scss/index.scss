@@ -130,7 +130,7 @@
 .labelType {
   width: size(200);height: size(40);position: absolute;top: size(25);left:size(-55);z-index: 3;
   &.self {
-    border: 1px solid $color-info;color: $color-info;background: $color-info-sm;
+    border: 1px solid $color-info;color: $color-info;background: rgba(187,227,207,.3);
   }
 }
 
