@@ -1,7 +1,7 @@
 .g-news-list-box {
   width: 100%;min-height: 80%;padding: size(0) size(0) size(10); margin:0 0 size(15);
   .item {
-    width: 100%;border: size(1) solid $color-primary-sm;border-radius: size(8);font-size: $text-normal;color: #333;cursor: pointer;padding:size(20) size(20) size(20);margin-bottom: size(25);
+    width: 100%;border: size(1) solid $color-primary-sm;border-radius: size(8);font-size: $text-normal;color: #333;cursor: pointer;padding:size(20) size(20) size(20);margin-bottom: size(25);position:relative;overflow:hidden;
     .left {
       .p1 {
         width:100%;font-size: $text-sm;font-weight: bold;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
