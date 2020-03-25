@@ -143,7 +143,8 @@ export default {
 		identity: '身份',
 		details: '详情',
 		approvalTime: '审批剩余时间',
-		localNode: '本地节点'
+		localNode: '本地节点',
+		oneSelf: '自定义',
 	},
 	state: {
 		name: '状态',

@@ -102,11 +102,11 @@
     <!-- 节点选择 end -->
 
     <!-- 发送交易 start -->
-    <el-drawer :visible.sync="drawer.send" :destroy-on-close="true" :show-close="false">
+    <el-drawer :visible.sync="drawer.send" :destroy-on-close="true" :show-close="false" v-if="drawer.send">
       <div slot="title">
         <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
       </div>
-      <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberInit="gMemberInit" @closeModal="modalClick"></send-txns>
+      <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
     </el-drawer>
     <!-- 发送交易 end -->
   </div>
@@ -118,10 +118,8 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-// import {psMethods} from './js/person'
-// import {gMethods} from './js/group'
 
-import sendTxns from '@/pages/txns/index'
+import sendTxns from '@/pages/txns/index.vue'
 export default {
   name: '',
   inject: ['reload'],
@@ -137,12 +135,11 @@ export default {
       },
       gMemberInit: [],
       gMemberSelect: [],
-      dataPage: {},
-      rawTx: {},
       sendDataObj: {},
       gID: '',
       pubKey: '',
       gMode: '',
+      eNodeArr: [],
       tableData: [],
       drawer: {
         member: false,
@@ -162,10 +159,19 @@ export default {
     }, 50)
   },
   methods: {
+    modalClick () {
+      this.eDialog.send = false
+      this.eDialog.pwd = false
+      this.drawer.send = false
+      this.gMemberSelect = []
+    },
     init () {
       if (this.$route.query.publicKey) {
-        // console.log(1)
-        this.getAccountDataInit()
+        this.loading.account = true
+        this.gID = this.$route.query.gID ? this.$route.query.gID : ''
+        this.pubKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
+        this.getAccounts()
+        this.getGroupData()
       } else {
         // console.log(2)
         this.gID = ''
@@ -177,45 +183,25 @@ export default {
         this.loading.account = false
       }
     },
-    modalClick () {
-      this.eDialog.send = false
-      this.eDialog.pwd = false
-      this.drawer.send = false
-      this.gMemberSelect = []
-    },
-    getAccountDataInit () {
-      this.loading.account = true
-      this.gID = this.$route.query.gID ? this.$route.query.gID : ''
-      this.pubKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
-      this.getAccounts()
-      this.getGroupData()
-    },
     getGroupData () {
-      this.$$.getGroup().then(res => {
-        // console.log(res)
-        this.getGroup = res.info ? res.info : []
-        if (this.$route.query.gID) {
-          this.gID = this.$route.query.gID
+      this.$$.getGroupObj(this.gID).then(res => {
+        console.log(res)
+        if (res.msg === 'Success') {
+          this.gMode = res.mode
+          this.eNodeArr = res.info
+          this.setMemberList()
+        } else {
+          this.msgError(res.error)
         }
-        // this.gMemberInit = []
-        this.getMemberList()
       }).catch(err => {
         console.log(err)
-        this.msgError(err.error)
+        this.msgError(err)
       })
     },
-    getMemberList () {
-      for (let obj of this.getGroup) {
-        if (this.gID === obj.Gid) {
-          this.gMode = obj.Mode
-          this.setMemberList(obj.Enodes)
-          break
-        }
-      }
-    },
-    setMemberList (data) {
+    setMemberList () {
+      // console.log(data)
       let arr = []
-      for (let obj of data) {
+      for (let obj of this.eNodeArr) {
         if (obj.substr(0, obj.indexOf('@')) === this.eNode.substr(0, this.eNode.indexOf('@'))) continue
         arr.push({
           p1: 'dcrm',
@@ -298,10 +284,12 @@ export default {
         this.gMemberSelect = []
         this.loading.nodeSelect = true
         this.drawer.select = true
-        setTimeout(() => {
-          this.getMemberList()
-        }, 500)
+        this.setMemberList()
       } else {
+        this.gMemberSelect = []
+        for (let obj of this.gMemberInit) {
+          this.gMemberSelect.push(obj.eNode)
+        }
         this.toSendTxnsUrl()
       }
     },

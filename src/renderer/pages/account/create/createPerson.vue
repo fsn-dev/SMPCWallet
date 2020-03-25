@@ -4,13 +4,20 @@
     <!-- <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'"> -->
       <div class="WW100">
         <el-form ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
-          <el-form-item :label="$t('label').mode"
+          <!-- <el-form-item :label="$t('label').mode"
             :rules="{
               required: true, message: $t('warn').w_5, trigger: 'blur'
             }">
             <el-select v-model="mode.select" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode">
               <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
             </el-select>
+          </el-form-item> -->
+          <el-form-item>
+            <div slot="label" class="flex-sc">
+              <span class="color_red">*</span>
+              {{$t('label').mode}}
+            </div>
+            <setMode @setMode="getMode"></setMode>
           </el-form-item>
           <el-form-item v-if="node.refresh">
             <el-tag @close="removeNode(item, index)" v-for="(item, index) in node.select" :key="index" closable :type="item.url" class="WW100 flex-bc H40" :class="node.select.length !== (index + 1) ? 'mb-20' : ''" :title="item.url">
@@ -76,6 +83,7 @@ import {insertNode, findNode} from '@/db/node'
 
 import {GetNodes, AddNodes, AddPersonAccountsFn} from '@/api/index.js'
 import {datas, watchs, methods} from './js/common.js'
+import setMode from '@/components/setMode/index.vue'
 export default {
   name: 'createPerson',
   props: {
@@ -91,6 +99,7 @@ export default {
       createEnodeArr: []
     }
   },
+  components: {setMode},
   computed: {
     ...computedPub,
   },
@@ -227,7 +236,8 @@ export default {
       })
     },
     submitForm () {
-      if (this.node.select.length < this.node.min) {
+      // console.log(this.node.select)
+      if (this.node.select <= 0 || this.node.select < this.node.min || this.node.select.length < this.node.max) {
         this.msgError(this.$t('error').err_12)
       } else {
         this.eDialog.confirm = true

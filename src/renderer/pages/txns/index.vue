@@ -49,7 +49,7 @@ export default {
     gMode: {
       type: String
     },
-    gMemberInit: {
+    gMemberSelect: {
       type: Array,
       default: []
     }
@@ -59,6 +59,7 @@ export default {
       eDialog: {
         pwd: false
       },
+      childGroupID: '',
       dataPage: {},
       rawTx: {
         to: '',
@@ -81,28 +82,48 @@ export default {
   },
   mounted () {
     this.initTxnsData = this.$route.query
-    console.log(this.initTxnsData)
+    // console.log(this.initTxnsData)
+    // console.log(this.gMemberSelect)
     // console.log(this.sendDataObj)
   },
   methods: {
     modalClick () {
-      console.log(12)
       this.eDialog.pwd = false
       this.$emit('closeModal')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // this.createGroup()
-          this.openPwdDialog()
+          this.createGroup()
+          // this.openPwdDialog()
         } else {
           console.log('error submit!!');
           return false;
         }
       });
     },
+    createGroup () {
+      let arr = [this.eNode]
+      for (let obj of this.gMemberSelect) {
+        arr.push(obj)
+      }
+      this.$$.createGroup(this.gMode, arr).then(res => {
+        let gInfo = res
+        console.log(gInfo)
+        if (gInfo.msg === 'Success') {
+          this.childGroupID = res.info.Gid
+          this.openPwdDialog()
+        } else {
+          this.msgError(gInfo.info.toString())
+          this.modalClick()
+        }
+      }).catch(err => {
+        this.msgError(err)
+        this.modalClick()
+      })
+    },
     openPwdDialog () {
-      if (!this.gID) {
+      if (!this.childGroupID) {
         this.msgError(this.$t('warn').w_1)
         return
       }
@@ -127,14 +148,13 @@ export default {
                               + ':'
                               + this.sendDataObj.coinType
                               + ':'
-                              + this.gID
+                              + this.childGroupID
                               + ':'
                               + this.gMode
                               + ':'
                               + this.accountType
                               + ':'
                               + Date.now()
-        // this.drawer.send = false
         console.log(this.dataPage)
         this.eDialog.pwd = true
       })
@@ -181,14 +201,10 @@ export default {
         data.gArr = [
           {eNode: this.eNode, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
         ]
-        for (let obj of this.gMemberInit) {
+        for (let obj of this.gMemberSelect) {
           data.gArr.push({eNode: obj.eNode, kId: '', status: 0, timestamp: '', initiate: 0})
         }
-        // data.gId = this.gID
-        // data.key = key
       }
-      // console.log(data)
-      // this.$socket.emit(dataUrl, data)AddPersonTxnsFn, AddGroupTxnsFn
       if (Number(this.accountType) === 1) {
         AddPersonTxnsFn(this, dataUrl, data)
       } else {

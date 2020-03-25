@@ -4,11 +4,18 @@
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form ref="node" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
-          <el-form-item :label="$t('label').mode" >
+          <el-form-item>
+            <div slot="label" class="flex-sc">
+              <span class="color_red">*</span>
+              {{$t('label').mode}}
+            </div>
+            <setMode @setMode="getMode"></setMode>
+          </el-form-item>
+          <!-- <el-form-item :label="$t('label').mode" >
             <el-select v-model="mode.select" :placeholder="$t('warn').w_4" class="WW100">
               <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item
             v-for="(item, index) in node.select" :key="index" :prop="'eNode.' + index + '.value'"
           >
@@ -72,6 +79,8 @@ import {uodateStatus} from '@/db/status'
 import {AddGroupAccountsFn} from '@/api/index.js'
 
 import {datas, watchs, methods} from './js/common.js'
+
+import setMode from '@/components/setMode/index.vue'
 export default {
   name: 'createAccount',
   props: {
@@ -87,11 +96,9 @@ export default {
       rules: {}
     }
   },
+  components: {setMode},
   watch: {
     ...watchs,
-    'mode.select' (cur, old) {
-      this.changeMode(cur, old)
-    }
   },
   computed: {
     ...computedPub,
@@ -102,7 +109,11 @@ export default {
   methods: {
     ...methods,
     submitForm(formName) {
-      console.log(this.node.select)
+      // console.log(this.node.select)
+      if (this.node.select <= 0) {
+        this.msgError(this.$t('error').err_12)
+        return
+      }
       let _flag = false
       for (let obj of this.node.select) {
         if (!obj.value) {
@@ -115,14 +126,6 @@ export default {
         return
       }
       this.eDialog.confirm = true
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     this.eDialog.confirm = true
-      //   } else {
-      //     console.log('error submit!!');
-      //     return false;
-      //   }
-      // })
     },
     createGroup () {
       let arr = [], signStr = ''

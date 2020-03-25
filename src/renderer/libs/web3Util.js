@@ -355,7 +355,7 @@ let web3Utils = {
           cbData = res && JSON.parse(res) ? JSON.parse(res) : ''
           console.log(cbData)
           if (cbData.Status !== 'Error') {
-            data = {msg: 'Success', info: cbData.Data.Enodes}
+            data = {msg: 'Success', info: cbData.Data.Enodes, mode: cbData.Data.Mode}
             resolve(data)
           } else {
             data = {msg: 'Error', error: cbData.Tip}

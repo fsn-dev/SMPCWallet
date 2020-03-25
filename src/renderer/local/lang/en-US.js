@@ -141,7 +141,8 @@ export default {
 		identity: 'Identity',
 		details: 'Details',
 		approvalTime: 'Approval Time Remaining',
-		localNode: 'Local node'
+		localNode: 'Local node',
+		oneSelf: 'Custom',
 	},
 	state: {
 		name: 'Status',

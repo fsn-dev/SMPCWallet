@@ -6,7 +6,7 @@ export const methods = {
       address: this.address,
       type: 1
     }).then(res => {
-      // console.log(res)
+      console.log(res)
       if (res.length > 0 && res[0].status) {
         this.newsList[i].status = 1
       } else {

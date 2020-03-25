@@ -32,13 +32,13 @@ export const watchs = {
       this.toUrl('/createGroup')
     }
   },
+  'mode.select' (cur, old) {
+    this.changeMode(cur, old)
+  }
 }
 
 export const methods = {
   init () {
-    // if (Number(this.accountType) === 1) {
-    //   this.getNetUrl()
-    // }
     this.mode = {
       init: this.$$.mode,
       select: this.$$.config.initGroupMode
@@ -51,6 +51,10 @@ export const methods = {
     this.loading.creat = false
     this.$$.web3.setProvider(this.serverRPC)
     this.$emit('closeModal')
+  },
+  getMode (mode) {
+    console.log(mode)
+    this.mode.select = mode
   },
   createAndGetGid (mode, arr, signStr) {
     this.eDialog.confirm = false
