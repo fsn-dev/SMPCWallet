@@ -29,7 +29,7 @@ export const commonMethods ={
     this.page.cur = val
     this.init()
   },
-  getStateFormat (res) {
+  getStateFormat (id, index, res) {
     console.log(res)
     if (res.msg === 'Success' && res.status === 'Success') {
       let hash = res.hash && res.hash.indexOf('0x') === 0 ? res.hash : ('0x' + res.hash)

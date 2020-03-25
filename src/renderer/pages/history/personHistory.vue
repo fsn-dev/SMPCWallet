@@ -139,7 +139,7 @@ export default {
     },
     getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
-        this.getStateFormat(res)
+        this.getStateFormat(id, index, res)
       }).catch(err => {
         console.log(err)
         this.msgError(err)
