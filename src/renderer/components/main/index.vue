@@ -19,7 +19,7 @@
           </ul>
         </div>
         <language @changeLang="reload"></language>
-        <div class="header-top-refresh cursorP" @click="Refresh" :title="$t('title').refrsh">
+        <div class="header-top-refresh cursorP" @click="reload" :title="$t('title').refrsh">
           <i class="el-icon-refresh-right"></i>
         </div>
         <div class="header-top-dn cursorP" @click="changeDn">
@@ -60,15 +60,18 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {findHeaderImg} from '@/db/headerImg'
+
 import createGroup from '@/pages/account/create/createGroup.vue'
 import createPerson from '@/pages/account/create/createPerson.vue'
 import personInfo from '@/components/main/personInfo.vue'
 import language from '@/components/language/index.vue'
+
+import {approvalMethods} from './js/approvalInterval.js'
 export default {
   name: 'index',
   provide () {
     return {
-      reload: this.Refresh
+      reload: this.reload
     }
   },
   data () {
@@ -108,8 +111,11 @@ export default {
     // console.log(this.$route)
     this.newsView(this.$route)
     this.getHeaderImg()
+
+    // this.getAllApproval()
   },
   methods: {
+    ...approvalMethods,
     async getHeaderImg () {
       findHeaderImg({address: this.address}).then(res => {
         // console.log(res)
@@ -143,39 +149,14 @@ export default {
         this.$store.commit('setDayAndNight', {info: '1'})
       }
     },
-    intervalNews () {
-      this.$$.getPendingGroup().then(res => {
-        if (res.info.length > 0) {
-          this.news.g = true
-        } else {
-          this.news.g = false
-        }
-      }).catch(err => {
-        console.log(err)
-        this.news.g = false
-      })
-      this.$$.getTxnsList().then(res => {
-        if (res.info.length > 0) {
-          this.news.t = true
-        } else {
-          this.news.t = false
-        }
-      }).catch(err => {
-        console.log(err)
-        this.news.t = false
-      })
-    },
-    Refresh () {
-      this.isRouterAlive = false
-			this.$nextTick(() => {
-				this.isRouterAlive = true
-			})
-    },
     reload () {
 			this.isRouterAlive = false
 			this.$nextTick(() => {
 				this.isRouterAlive = true
-			})
+      })
+      
+
+      // this.getAllApproval()
     },
     changeMode (type) {
       // this.$router.push({path: this.$route.path})

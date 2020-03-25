@@ -97,14 +97,16 @@ export default {
         }
         for (let obj1 of arr) {
           for (let obj2 of obj1.Accounts) {
-            if (!arr1.includes(obj2)) {
+            if (!arr1.includes(obj2.PubKey)) {
+              // console.log(obj2)
               let obj3 = {
-                publicKey: obj2,
+                publicKey: obj2.PubKey,
                 gID: obj1.GroupID,
-                name: obj2.substr(2)
+                mode: obj2.ThresHold,
+                name: obj2.PubKey.substr(2)
               }
               arr2.push(obj3)
-              arr1.push(obj2)
+              arr1.push(obj2.PubKey)
             }
           }
         }
@@ -117,6 +119,7 @@ export default {
           this.changeGroup({
             gID: this.$route.query.gID,
             publicKey: this.$route.query.publicKey,
+            mode: this.$route.query.mode,
           })
         } else if (this.gAccountList.length > 0) {
           this.changeGroup(this.gAccountList[0])
@@ -138,11 +141,11 @@ export default {
       })
     },
     changeGroup (item) {
-      console.log(item)
+      // console.log(item)
       if (item) {
         this.gID = item.gID
         this.publicKey = item.publicKey
-        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey})
+        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode})
       } else {
         this.toUrl('/account', {gID: '', publicKey: ''})
       }

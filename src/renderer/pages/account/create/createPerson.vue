@@ -1,7 +1,7 @@
 <template>
   <div class="boxConntent1 container" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
-    <div class="c-form-box">
-    <!-- <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'"> -->
+    <!-- <div class="c-form-box"> -->
+    <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
           <!-- <el-form-item :label="$t('label').mode"
@@ -19,8 +19,8 @@
             </div>
             <setMode @setMode="getMode"></setMode>
           </el-form-item>
-          <el-form-item v-if="node.refresh">
-            <el-tag @close="removeNode(item, index)" v-for="(item, index) in node.select" :key="index" closable :type="item.url" class="WW100 flex-bc H40" :class="node.select.length !== (index + 1) ? 'mb-20' : ''" :title="item.url">
+          <el-form-item v-if="node.refresh && node.select.length > 0">
+            <el-tag @close="removeNode(item, index)" v-for="(item, index) in node.select" :key="index" closable :type="item.url" class="WW100 flex-bc H40" :class="node.select.length !== (index + 1) ? 'mb-10' : ''" :title="item.url">
               {{item.name}}
             </el-tag>
           </el-form-item>

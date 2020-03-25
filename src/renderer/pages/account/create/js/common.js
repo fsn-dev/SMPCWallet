@@ -53,7 +53,7 @@ export const methods = {
     this.$emit('closeModal')
   },
   getMode (mode) {
-    console.log(mode)
+    // console.log(mode)
     this.mode.select = mode
   },
   createAndGetGid (mode, arr, signStr) {

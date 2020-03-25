@@ -82,6 +82,7 @@ export default {
   },
   mounted () {
     this.initTxnsData = this.$route.query
+    this.childGroupID = this.initTxnsData.mode ? this.initTxnsData.mode : ''
     // console.log(this.initTxnsData)
     // console.log(this.gMemberSelect)
     // console.log(this.sendDataObj)
@@ -111,7 +112,7 @@ export default {
         let gInfo = res
         console.log(gInfo)
         if (gInfo.msg === 'Success') {
-          this.childGroupID = res.info.Gid
+          // this.childGroupID = res.info.Gid
           this.openPwdDialog()
         } else {
           this.msgError(gInfo.info.toString())
