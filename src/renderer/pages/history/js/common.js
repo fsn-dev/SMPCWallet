@@ -30,11 +30,14 @@ export const commonMethods ={
     this.init()
   },
   getStateFormat (id, index, res) {
-    console.log(res)
-    if (res.msg === 'Success' && res.status === 'Success') {
+    // console.log(res)
+    if (res.msg === 'Success' && (res.status === 'Success' || res.hash)) {
       let hash = res.hash && res.hash.indexOf('0x') === 0 ? res.hash : ('0x' + res.hash)
       this.setDBState(id, index, hash, 1)
       this.tableData[index].hash = hash
+      if (!this.tableData[index].pubKey) {
+        this.tableData[index].pubKey = hash
+      }
       this.tableData[index].status = 1
     } else if (res.status === 'Failure' || res.info === 'Failure') {
       this.setDBState(id, index, '', 2)

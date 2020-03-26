@@ -74,7 +74,9 @@ export default {
       this.baseUrl = 'getNodeInfosDev'
     }
     // this.$socket.emit(this.baseUrl)
-    this.getNetUrl()
+    setTimeout(() => {
+      this.getNetUrl()
+    }, 300)
   },
   methods: {
     getNetUrl () {

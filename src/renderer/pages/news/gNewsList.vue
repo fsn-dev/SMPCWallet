@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.list" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1">
     <div class="g-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item flex-bc" v-for="(item, index) in newsList" :key="index">
@@ -40,68 +40,52 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {methods} from './js/common'
 export default {
   name: 'gNewsList',
+  props: {
+    gNewsData: {
+      type: Object ,
+      default: {}
+    }
+  },
   data () {
     return {
       newsList: [],
-      loading: {
-        list: true
-      },
       gInfo: {}
     }
   },
   computed: {
     ...computedPub,
   },
+  watch: {
+    gNewsData (cur) {
+      // console.log(cur)
+      this.setList(cur.info)
+    }
+  },
   mounted () {
-    setTimeout(() => {
-      this.initTxnsList()
-      this.removeStatus()
-    }, 100)
-    // this.$$.reqAccountList()
+    this.init()
   },
   methods: {
-    ...methods,
-    async initTxnsList () {
-      this.$$.reqAccountList(this.address).then(res => {
-        console.log(res)
-        this.$$.getGroup().then(gList => {
-          // console.log(gList)
-          this.gInfo = {}
-          if (gList.msg === 'Success') {
-            for (let obj of gList.info) {
-              this.gInfo[obj.Gid] = obj
-            }
+    init () {
+      this.$$.getGroup().then(gList => {
+        // console.log(gList)
+        this.gInfo = {}
+        if (gList.msg === 'Success') {
+          for (let obj of gList.info) {
+            this.gInfo[obj.Gid] = obj
           }
-          this.newsList = []
-          // for (let obj of res.info) {
-          for (let i = 0, len = res.info.length; i < len; i++) {
-            let obj = res.info[i]
-            obj.Enodes = this.gInfo[obj.GroupId] && this.gInfo[obj.GroupId].Enodes ? this.gInfo[obj.GroupId].Enodes : []
-            obj.status = 0
-            this.newsList.push(obj)
-            // this.getKeyStatus(obj.Key, i, '1')
-          }
-          
-          this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
-          for (let i = 0, len = this.newsList.length; i < len; i++) {
-            let obj = this.newsList[i]
-            this.getKeyStatus(obj.Key, i, '1')
-          }
-          this.$emit('gNewsTip', this.newsList.length)
-          this.loading.list = false
-        }).catch(err => {
-          console.log(err)
-          this.msgError(err.error)
-          this.loading.list = false
-        })
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err.error)
-        this.loading.list = false
+        }
+        this.setList(this.gNewsData.info)
       })
+    },
+    setList (data) {
+      this.newsList = []
+      for (let i = 0, len = data.length; i < len; i++) {
+        let obj = data[i]
+        obj.Enodes = this.gInfo[obj.GroupId] && this.gInfo[obj.GroupId].Enodes ? this.gInfo[obj.GroupId].Enodes : []
+        this.newsList.push(obj)
+      }
     },
     splitNode (eNode) {
       return eNode.match(/enode:\/\/(\S*)@/)[1]

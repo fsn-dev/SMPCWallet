@@ -78,8 +78,15 @@
       <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
+          <!-- <el-checkbox class="mb-20" disabled="disabled" v-model="oneself">
+            <div class="flex-bc">
+              {{$$.cutOut(eNode, 12, 16)}}
+              <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
+            </div>
+          </el-checkbox> -->
           <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? Number(gMode.split('/')[0]) : 1" class="">
-            <el-checkbox :label="eNode">
+          <!-- <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? (Number(gMode.split('/')[0]) - 1) : 1" class=""> -->
+            <el-checkbox :label="eNode" disabled="disabled">
               <div class="flex-bc">
                 {{$$.cutOut(eNode, 12, 16)}}
                 <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
@@ -147,6 +154,7 @@ export default {
         send: false
       },
       getGroup: [],
+      oneself: true,
     }
   },
   computed: {
@@ -170,6 +178,7 @@ export default {
         this.loading.account = true
         this.gID = this.$route.query.gID ? this.$route.query.gID : ''
         this.pubKey = this.$route.query.publicKey ? this.$route.query.publicKey : ''
+        this.gMode = this.$route.query.mode ? this.$route.query.mode : ''
         this.getAccounts()
         this.getGroupData()
       } else {
@@ -187,7 +196,7 @@ export default {
       this.$$.getGroupObj(this.gID).then(res => {
         console.log(res)
         if (res.msg === 'Success') {
-          this.gMode = res.mode
+          // this.gMode = res.mode
           this.eNodeArr = res.info
           this.setMemberList()
         } else {
@@ -279,14 +288,13 @@ export default {
     },
     openSendDialog (index, item) {
       this.setTxnsData(item)
+      this.gMemberSelect = []
       if (!Number(this.accountType)) {
-        this.gMemberInit = []
-        this.gMemberSelect = []
+        // this.gMemberInit = []
         this.loading.nodeSelect = true
         this.drawer.select = true
         this.setMemberList()
       } else {
-        this.gMemberSelect = []
         for (let obj of this.gMemberInit) {
           this.gMemberSelect.push(obj.eNode)
         }

@@ -29,7 +29,8 @@ const store = new Vuex.Store({
     dayAndNight: '',
     language: '',
     serverRPC: '',
-    networkMode: config.networkMode
+    networkMode: config.networkMode,
+    approvalObj: {}
   },
   mutations: {
     setEnode (state, data) {
@@ -103,14 +104,22 @@ const store = new Vuex.Store({
       let info = data.info ? data.info : ''
       state.networkMode = info
     },
+    setApprovalObj (state, data) {
+      state.approvalObj = data
+    },
   },
   actions: {
     getEnode ({commit}) {
       try {
         if (this.state.serverRPC) {
-          web3.getEnode().then(res => {
-            commit('setEnode', res)
-          })
+          setTimeout(() => {
+            web3.getEnode().then(res => {
+              commit('setEnode', res)
+            })
+          }, 500)
+          // web3.getEnode().then(res => {
+          //   commit('setEnode', res)
+          // })
         }
       } catch (error) {
         commit('setEnode', '')

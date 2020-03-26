@@ -12,10 +12,28 @@
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="openDrawerCreate" :title="$t('btn').create">{{$t('btn').create}}</li>
-            <li class="item flex-c" :class="newsActive === 1 ? 'active' : ''" @click="toUrl('/waitNews')" :title="$t('title').wait"><el-badge :value="news.g > 0 ? news.g : ''" :max="99" class="flex-c">{{$t('btn').approval}}</el-badge></li>
-            <li class="item flex-c" :class="newsActive === 3 ? 'active' : ''" @click="toUrl('/history')" :title="$t('btn').history">{{$t('title').history}}</li>
-            <!-- <li class="item flex-c" :class="newsActive === 2 ? 'active' : ''" @click="toUrl('/tNewsList')" title="交易消息"><el-badge :value="news.t > 0 ? news.t : ''" :max="99" class="flex-c">通知</el-badge></li> -->
+            <li
+              class="item flex-c"
+              :class="newsActive === 2 ? 'active' : ''"
+              @click="openDrawerCreate"
+              :title="$t('btn').create"
+            >{{$t('btn').create}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 1 ? 'active' : ''"
+              @click="toUrl('/waitNews')"
+              :title="$t('title').wait"
+            >
+              <el-badge :value="newsLen ? newsLen : ''" :max="99" class="flex-c">
+                {{$t('btn').approval}}
+              </el-badge>
+            </li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 3 ? 'active' : ''"
+              @click="toUrl('/history')"
+              :title="$t('btn').history"
+            >{{$t('title').history}}</li>
           </ul>
         </div>
         <language @changeLang="reload"></language>
@@ -59,6 +77,8 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {approvalMethods} from '@/assets/js/pages/approval.js'
+
 import {findHeaderImg} from '@/db/headerImg'
 
 import createGroup from '@/pages/account/create/createGroup.vue'
@@ -66,7 +86,6 @@ import createPerson from '@/pages/account/create/createPerson.vue'
 import personInfo from '@/components/main/personInfo.vue'
 import language from '@/components/language/index.vue'
 
-import {approvalMethods} from './js/approvalInterval.js'
 export default {
   name: 'index',
   provide () {
@@ -77,12 +96,8 @@ export default {
   data () {
     return {
       isRouterAlive: true,
-      news: {
-        g: 0,
-        t: 0
-      },
+      newsLen: 0,
       intervalSwitch: '',
-      // isUserView: false,
       newsActive: 0,
       drawer: {
         user: false,
@@ -93,7 +108,6 @@ export default {
   },
   watch: {
     '$route' (cur) {
-      // console.log(cur)
       this.newsView(cur)
     },
     serverRPC (cur) {
@@ -111,11 +125,28 @@ export default {
     // console.log(this.$route)
     this.newsView(this.$route)
     this.getHeaderImg()
-
-    // this.getAllApproval()
+    setTimeout(() => {
+      this.getAllApprovalData()
+      this.intervalNews()
+    }, 500)
   },
   methods: {
     ...approvalMethods,
+    getAllApprovalData () {
+      this.getAllApproval().then(res => {
+        console.log(res)
+        this.newsLen = res[0].approved + res[1].approved
+        // this.newsLen = res[0].total + res[1].total
+        this.$store.commit('setApprovalObj', res)
+        clearTimeout(this.intervalSwitch)
+        this.intervalNews()
+      })
+    },
+    intervalNews () {
+      this.intervalSwitch = setTimeout(() => {
+        this.getAllApprovalData()
+      }, 1000 * 35)
+    },
     async getHeaderImg () {
       findHeaderImg({address: this.address}).then(res => {
         // console.log(res)
@@ -154,9 +185,6 @@ export default {
 			this.$nextTick(() => {
 				this.isRouterAlive = true
       })
-      
-
-      // this.getAllApproval()
     },
     changeMode (type) {
       // this.$router.push({path: this.$route.path})
@@ -169,7 +197,7 @@ export default {
     },
   },
   beforeDestroy () {
-    clearInterval(this.intervalSwitch)
+    clearTimeout(this.intervalSwitch)
     this.intervalSwitch = null
   }
 }

@@ -117,7 +117,7 @@ export default {
   },
   mounted () {
     let urlParams = this.$route.query
-    console.log(urlParams)
+    // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
     setTimeout(() => {

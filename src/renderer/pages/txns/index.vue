@@ -104,9 +104,12 @@ export default {
       });
     },
     createGroup () {
-      let arr = [this.eNode]
+      // let arr = [this.eNode]
+      let arr = []
       for (let obj of this.gMemberSelect) {
-        arr.push(obj)
+        if (!arr.includes(obj)) {
+          arr.push(obj)
+        }
       }
       this.$$.createGroup(this.gMode, arr).then(res => {
         let gInfo = res

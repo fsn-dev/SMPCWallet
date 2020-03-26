@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.list" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1">
     <div class="t-news-list-box" v-if="newsList.length > 0">
       <ul>
         <li class="item" v-for="(item, index) in newsList" :key="index">
@@ -42,55 +42,38 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import wButton from '@/components/btn/index'
-import {methods} from './js/common'
 export default {
-  name: '',
+  name: 'tNewsList',
+  props: {
+    tNewsData: {
+      type: Object ,
+      default: {}
+    }
+  },
   data () {
     return {
       newsList: [],
-      loading: {
-        list: true
-      },
     }
   },
   components: {wButton},
   computed: {
     ...computedPub,
   },
+  watch: {
+    tNewsData (cur) {
+      // console.log(cur)
+      this.setList(cur.info)
+    }
+  },
   mounted () {
-    this.initTxnsList()
+    this.init()
   },
   methods: {
-    ...methods,
-    initTxnsList () {
-      console.log(this.address)
-      this.$$.getTxnsList(this.address).then(res => {
-        console.log(res)
-        this.newsList = []
-        for (let i = 0, len = res.info.length; i < len; i++) {
-          let obj = res.info[i]
-          if (this.address === obj.Account) {
-            obj.status = 1
-          } else {
-            obj.status = 0
-            // this.getKeyStatus(obj.Key, i, '2')
-          }
-          this.newsList.push(obj)
-        }
-        this.newsList = this.newsList.sort(this.$$.bigToSmallSort('TimeStamp'))
-        for (let i = 0, len = this.newsList.length; i < len; i++) {
-          let obj = this.newsList[i]
-          this.getKeyStatus(obj.Key, i, '1')
-          // if (this.address !== obj.Account) {
-          //   }
-        }
-        this.$emit('tNewsTip', this.newsList.length)
-        this.loading.list = false
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err.error)
-        this.loading.list = false
-      })
+    init () {
+      this.setList(this.tNewsData.info)
+    },
+    setList (data) {
+      this.newsList = data
     }
   }
 }
