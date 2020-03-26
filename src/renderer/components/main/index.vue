@@ -134,7 +134,7 @@ export default {
     ...approvalMethods,
     getAllApprovalData () {
       this.getAllApproval().then(res => {
-        console.log(res)
+        // console.log(res)
         this.newsLen = res[0].approved + res[1].approved
         // this.newsLen = res[0].total + res[1].total
         this.$store.commit('setApprovalObj', res)

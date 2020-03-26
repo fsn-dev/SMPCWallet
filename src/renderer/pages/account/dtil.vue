@@ -295,6 +295,7 @@ export default {
         this.drawer.select = true
         this.setMemberList()
       } else {
+        this.gMemberSelect.push(this.eNode)
         for (let obj of this.gMemberInit) {
           this.gMemberSelect.push(obj.eNode)
         }

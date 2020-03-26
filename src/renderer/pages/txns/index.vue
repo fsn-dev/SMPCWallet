@@ -106,6 +106,7 @@ export default {
     createGroup () {
       // let arr = [this.eNode]
       let arr = []
+      console.log()
       for (let obj of this.gMemberSelect) {
         if (!arr.includes(obj)) {
           arr.push(obj)
