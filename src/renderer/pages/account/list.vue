@@ -64,7 +64,6 @@ export default {
     return {
       gAccountList: [],
       publicKey: '',
-      gID: '',
       loading: {
         list: true
       }
@@ -123,6 +122,8 @@ export default {
           })
         } else if (this.gAccountList.length > 0) {
           this.changeGroup(this.gAccountList[0])
+        } else {
+          this.changeGroup()
         }
         this.loading.list = false
       }).catch(err => {
@@ -141,13 +142,12 @@ export default {
       })
     },
     changeGroup (item) {
-      // console.log(item)
+      console.log(item)
       if (item) {
-        this.gID = item.gID
         this.publicKey = item.publicKey
         this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode})
       } else {
-        this.toUrl('/account', {gID: '', publicKey: ''})
+        this.toUrl('/account', {gID: '', publicKey: '', mode: ''})
       }
       this.$emit('changeAccount')
     }

@@ -68,10 +68,10 @@ export default {
       initTxnsData: {},
       rules: {
         to: [
-          { required: true, message: '请输入目标地址', trigger: 'blur' }
+          { required: true, message: this.$t('warn').w_14, trigger: 'blur' }
         ],
         value: [
-          { required: true, message: '请输入金额', trigger: 'blur' },
+          { required: true, message: this.$t('warn').w_15, trigger: 'blur' },
           // { type: 'number', message: '请输入数字', trigger: 'blur' }
         ],
       }
@@ -137,7 +137,6 @@ export default {
         this.msgError(this.$t('warn').w_19)
         return
       }
-      // this.gMode = '3/3'
       this.dataPage = {
         from: this.address,
       }

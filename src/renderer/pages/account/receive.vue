@@ -147,19 +147,9 @@ export default {
     this.selectData = this.$route.query
   },
   mounted () {
-    // if (this.selectData.coinType) {
-    //   }
     this.getSendHistory()
   },
   methods: {
-    // prevClick () {
-    //   this.pageInfo --
-    //   this.getSendHistory()
-    // },
-    // nextClick () {
-    //   this.pageInfo ++
-    //   this.getSendHistory()
-    // },
     qrcode (cont) {
       this.codeViewVisible = true
 			this.$nextTick(() => {
@@ -169,7 +159,7 @@ export default {
     getHistoryUrl () {
       const coin = this.$$.cutERC20(this.selectData.coinType).coinType
       const coininfo = this.$$.getCoinInfo(coin)
-      console.log(coininfo)
+      // console.log(coininfo)
     },
     getSendHistory () {
       // this.loading.history = false

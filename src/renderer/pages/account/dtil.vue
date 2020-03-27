@@ -165,6 +165,7 @@ export default {
     setTimeout(() => {
       this.init()
     }, 50)
+    // console.log(this.$route.query)
   },
   methods: {
     modalClick () {
@@ -196,7 +197,6 @@ export default {
       this.$$.getGroupObj(this.gID).then(res => {
         console.log(res)
         if (res.msg === 'Success') {
-          // this.gMode = res.mode
           this.eNodeArr = res.info
           this.setMemberList()
         } else {
@@ -273,7 +273,8 @@ export default {
         coinType: item.Cointype,
         ERC20Coin: item.Cointype,
         gID: this.gID,
-        publicKey: this.pubKey
+        publicKey: this.pubKey,
+        mode: this.gMode
       })
     },
     setTxnsData (item) {
