@@ -196,49 +196,6 @@ let web3Utils = {
       })
     })
   },
-  async getGroupPerson () {
-    let data = {msg: '', info: ''}
-    return new Promise((resolve, reject) => {
-      try {
-        // console.log(eNodeInit)
-        if (eNodeInit) {
-          let cbData = ''
-          web3.dcrm.getSDKGroupPerson(eNodeInit).then(res => {
-            cbData = JSON.parse(res)
-            if (cbData.Status !== 'Error') {
-              data = {msg: 'Success', info: cbData.Data.GroupList[0]}
-              resolve(data)
-            } else {
-              data = {msg: 'Error', error: cbData.Tip}
-              reject(data)
-            }
-          }).catch(err => {
-            // console.log(err)
-            // data = {msg: 'Error', error: cbData.Tip}
-            // reject(data)
-
-            breakAgaing().then(res => {
-              this.getGroupPerson().then(res => {
-                resolve(res)
-              })
-            }).catch(e => {
-              console.log(err)
-              data = {msg: 'Error', error: cbData.Tip}
-              reject(data)
-            })
-          })
-        } else {
-          setTimeout(() => {
-            this.getGroupPerson()
-          }, this.againTmie)
-        }
-      } catch (error) {
-        console.log(error)
-        data = {msg: 'Error', error: error.toString()}
-        reject(data)
-      }
-    })
-  },
   async getAccounts (address, mode) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
@@ -388,19 +345,9 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
-          breakAgaing().then(res => {
-            this.createGroup(mode, nodeArr).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
+          console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -425,19 +372,9 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
-          breakAgaing().then(res => {
-            this.validGroup(name, eNode, type).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
+          console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -463,57 +400,9 @@ let web3Utils = {
             reject(data)
           }
         }).catch(err => {
-          // console.log(err)
-          // data = {msg: 'Error', error: err.toString()}
-          // reject(data)
-
-          breakAgaing().then(res => {
-            this.reqAccount(signTx, mode).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
-        })
-      } catch (error) {
-        console.log(error)
-        data = {msg: 'Error', error: error.toString()}
-        reject(data)
-      }
-    })
-  },
-  async reqAccountList (address) {
-    let data = {msg: '', info: ''}
-    return new Promise((resolve, reject) => {
-      try {
-        let cbData = ''
-        web3.dcrm.getCurNodeReqAddrInfo(address).then(res => {
-          cbData = res
-          if (cbData.Status !== 'Error') {
-            let arr = cbData.Data ? cbData.Data : []
-            // console.log(arr)
-            let list = []
-            for (let obj in arr) {
-              // console.log(arr[obj])
-              list.push(JSON.parse(arr[obj]))
-            }
-            data = {msg: 'Success', info: list}
-          } else {
-            data = {msg: 'Error', info: []}
-          }
-          resolve(data)
-        }).catch(err => {
-          breakAgaing().then(res => {
-            this.reqAccountList(address).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
+          console.log(err)
+          data = {msg: 'Error', error: err.toString()}
+          reject(data)
         })
       } catch (error) {
         console.log(error)
@@ -547,41 +436,6 @@ let web3Utils = {
           data = {msg: 'Error', error: err.toString(), info: []}
           reject(data)
         })
-      } catch (error) {
-        console.log(error)
-        data = {msg: 'Error', error: error.toString()}
-        reject(data)
-      }
-    })
-  },
-  async getTxnsList (address) {
-    let data = {msg: 'Success', info: []}
-    return new Promise((resolve, reject) => {
-      try {
-        if (eNodeInit) {
-          let arr = [], cbData = ''
-          web3.dcrm.getCurNodeLockOutInfo(address).then(res => {
-            cbData = res
-            if (cbData.Status !== 'Error') {
-              cbData = cbData.Data
-              for (let obj in cbData) {
-                let obj1 = cbData[obj]
-                obj1 = JSON.parse(obj1)
-                arr.push(obj1)
-              }
-            }
-            data = {msg: 'Success', info: arr}
-            resolve(data)
-          }).catch(err => {
-            console.log(err)
-            data = {msg: 'Error', error: err.toString()}
-            reject(data)
-          })
-        } else {
-          setTimeout(() => {
-            this.getTxnsList()
-          }, this.againTmie)
-        }
       } catch (error) {
         console.log(error)
         data = {msg: 'Error', error: error.toString()}
@@ -683,10 +537,10 @@ let web3Utils = {
     pwd = new Buffer(pwd, "hex")
     // console.log(data)
     let rawTx = {
-      gasPrice: data.gasPrice ? Number(data.gasPrice) : config.rawTx.gasPrice,
-      gasLimit: data.gasLimit ? Number(data.gasLimit) : config.rawTx.gasLimit,
-      to: data.to ? data.to : config.rawTx.to,
-      from: data.from,
+      // gasPrice: data.gasPrice ? Number(data.gasPrice) : config.rawTx.gasPrice,
+      // gasLimit: data.gasLimit ? Number(data.gasLimit) : config.rawTx.gasLimit,
+      // to: data.to ? data.to : config.rawTx.to,
+      // from: data.from,
       value: Number(data.value),
       nonce: data.nonce ? Number(data.nonce) : 0,
       data: data.data ? data.data : ''

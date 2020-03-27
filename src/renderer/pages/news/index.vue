@@ -41,12 +41,9 @@ export default {
   components: {gNewsList, tNewsList},
   computed: {
     ...computedPub,
-    approvalList () {
-      return this.$store.state.approvalObj
-    }
   },
   watch: {
-    approvalList (cur) {
+    approvalAll (cur) {
       // console.log(cur)
       this.setData(cur)
       this.removeStatus()
@@ -63,6 +60,7 @@ export default {
       this.getAllApproval().then(res => {
         console.log(res)
         this.setData(res)
+        this.$store.commit('setApprovalObj', res)
         this.isReload = true
       })
     },

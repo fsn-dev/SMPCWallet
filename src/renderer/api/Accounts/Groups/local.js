@@ -128,7 +128,7 @@ const FindGroupAccounts = (that, url, params) => {
         query.status = params.status
       }
     }
-    console.log(query)
+    // console.log(query)
     historyGroupAccpunts.count(query, (err, count) => {
       if (err) {
         data.error = err

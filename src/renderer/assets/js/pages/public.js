@@ -26,5 +26,8 @@ export const computedPub = {
   networkMode () {
     // console.log(this.$store.state.networkMode)
     return this.$store.state.networkMode
+  },
+  approvalAll () {
+    return this.$store.state.approvalObj
   }
 } 

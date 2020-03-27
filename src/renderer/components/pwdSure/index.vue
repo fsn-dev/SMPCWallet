@@ -5,17 +5,14 @@
       <div class="flex-bc selectType_box">
 
         <div class="selectType_content">
-          <!-- <div class="selectType_keystore" id="keystore" data-view="keystore"> -->
-            <!-- <hgroup class="selectType_contTitle">
-              <h3 class="title">{{$t('PLACEHOLDER').ENTER_PASSWORD}}</h3>
-            </hgroup> -->
             <div class="selectType_contentBox">
               <el-form ref="userInfoForm" :model="sureForm" label-width="120px" label-position="top" @submit.native.prevent>
                 <el-form-item :label="$t('label').password">
-                  <el-input type="password" v-model="sureForm.password"></el-input>
+                  <el-input type="password" v-model="sureForm.password" id="passwordIpt"></el-input>
+                  <!-- <el-input type="password" v-model="sureForm.password" @keyup.native="changePwd"></el-input> -->
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="inputFileBtn" :disabled="!loading.unlock">{{$t('btn').unlock}}</el-button>
+                  <el-button type="primary" @click="unlock" :disabled="!loading.unlock">{{$t('btn').unlock}}</el-button>
                   <el-button native-type="submit" @click="elDialogView">{{$t('btn').cancel}}</el-button>
                 </el-form-item>
               </el-form>
@@ -57,9 +54,16 @@ export default {
   },
   mounted () {
     // console.log(this.sendDataPage)
+    document.getElementById("passwordIpt").addEventListener('keydown' , e  => {
+      // console.log(e)
+      if (e.which === 13) {
+        this.unlock()
+        e.preventDefault()
+      }
+    })
   },
   methods: {
-    inputFileBtn () {
+    unlock () {
       if (!this.loading.unlock) return
       this.loading.unlock = false
       setTimeout(() => {

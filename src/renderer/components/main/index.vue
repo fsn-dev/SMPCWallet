@@ -115,10 +115,13 @@ export default {
       setTimeout(() => {
         this.reload()
       }, 500)
-    }
+    },
   },
   computed: {
-    ...computedPub
+    ...computedPub,
+    approvalAll () {
+      return this.$store.state.approvalObj
+    }
   },
   components: {createGroup, createPerson, personInfo, language},
   mounted () {
