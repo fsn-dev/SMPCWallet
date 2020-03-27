@@ -74,7 +74,7 @@ const EditGroupTxns = (that, url, params) => {
 const EditGroupMemberTxns = (that, url, params) => {
   return new Promise((resolve, reject) => {
     let dateNow = Date.now()
-    let query = {
+    let updateParams = {
       keyId: dateNow + params.local.key,
       key: params.local.key ? params.local.key : '',
       from: params.local.from ? params.local.from : '',
@@ -94,7 +94,8 @@ const EditGroupMemberTxns = (that, url, params) => {
       msg: 'Error',
       info: ''
     }
-    historyGroupTxns.insert(query, (err, res) => {
+    // historyGroupTxns.insert(query, (err, res) => {
+    historyGroupTxns.update({key: params.local.key}, {$set: updateParams}, {}, (err, res) => {
       if (err) {
         // console.log(err)
         data.error = err

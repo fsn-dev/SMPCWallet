@@ -76,12 +76,22 @@ group.removeIndex('gId', cb)
 gAccount.removeIndex('pubKey', cb)
 status.removeIndex('key', cb)
 
+historyPersonAccpunts.removeIndex('key', cb)
+historyPersonTxns.removeIndex('key', cb)
+historyGroupAccpunts.removeIndex('key', cb)
+historyGroupTxns.removeIndex('key', cb)
+
 ks.ensureIndex({fieldName: 'address', unique: true}, cb)
 node.ensureIndex({fieldName: 'url', unique: true}, cb)
 headerImg.ensureIndex({fieldName: 'address', unique: true}, cb)
 group.ensureIndex({fieldName: 'gId', unique: true}, cb)
 gAccount.ensureIndex({fieldName: 'pubKey', unique: true}, cb)
 status.ensureIndex({fieldName: 'key', unique: true}, cb)
+
+historyPersonAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
+historyPersonTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
+historyGroupAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
+historyGroupTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 
 
 export {

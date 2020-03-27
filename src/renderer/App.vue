@@ -15,8 +15,8 @@ export default {
       mouse1: '',
       mouse2: '',
       eventID: '',
-      // timeout: 20 * 1000,
-      timeout: this.$$.config.watchPageTime,
+      timeout: 60 * 1000 * 60,
+      // timeout: this.$$.config.timeout,
       currentSecond: 0
     }
   },

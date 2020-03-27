@@ -68,7 +68,7 @@ const EditGroupMemberAccounts = (that, url, params) => {
       info: ''
     }
     let dateNow = Date.now()
-    let query = {
+    let updateParams = {
       keyId: dateNow + params.local.key,
       key: params.local.key ? params.local.key : '',
       member: params.local.member ? params.local.member : [],
@@ -78,7 +78,8 @@ const EditGroupMemberAccounts = (that, url, params) => {
       status: 0,
       mode: params.local.mode ? params.local.mode : 0,
     }
-    historyGroupAccpunts.insert(query, (err, res) => {
+    // historyGroupAccpunts.insert(query, (err, res) => {
+    historyGroupAccpunts.update({key: params.local.key}, {$set: updateParams}, {}, (err, res) => {
       if (err) {
         // console.log(err)
         data.error = err
