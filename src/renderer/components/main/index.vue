@@ -116,12 +116,12 @@ export default {
         this.reload()
       }, 500)
     },
+    approvalList (cur) {
+      this.newsLen = cur[0].approved + cur[1].approved
+    }
   },
   computed: {
     ...computedPub,
-    approvalAll () {
-      return this.$store.state.approvalObj
-    }
   },
   components: {createGroup, createPerson, personInfo, language},
   mounted () {
