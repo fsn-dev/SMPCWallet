@@ -116,7 +116,7 @@ export default {
         this.reload()
       }, 500)
     },
-    approvalList (cur) {
+    approvalAll (cur) {
       this.newsLen = cur[0].approved + cur[1].approved
     }
   },
