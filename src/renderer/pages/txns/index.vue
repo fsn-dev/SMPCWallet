@@ -206,9 +206,11 @@ export default {
           {eNode: this.eNode, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
         ]
         for (let obj of this.gMemberSelect) {
-          data.gArr.push({eNode: obj.eNode, kId: '', status: 0, timestamp: '', initiate: 0})
+          if (obj === this.eNode) continue
+          data.gArr.push({eNode: obj, kId: '', status: 0, timestamp: '', initiate: 0})
         }
       }
+      console.log(data)
       if (Number(this.accountType) === 1) {
         AddPersonTxnsFn(this, dataUrl, data)
       } else {
