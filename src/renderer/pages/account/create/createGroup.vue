@@ -105,6 +105,7 @@ export default {
   },
   mounted () {
     this.init()
+    // console.log(this.$$.eNodeCut(this.eNode))
   },
   methods: {
     ...methods,
@@ -154,6 +155,7 @@ export default {
         nonce: Number(this.dataPage.nonce),
         member: [{
           eNode: this.eNode,
+          nodeKey: this.$$.eNodeCut(this.eNode).key,
           kId: this.address,
           status: 5,
           initiate: 1,
@@ -165,6 +167,7 @@ export default {
         if (this.eNode.indexOf(obj2.eNodeId) !== -1) continue
         let obj1 = {
           eNode: obj2.eNode,
+          nodeKey: obj2.eNodeId,
           kId: obj2.address,
           status: 0,
           initiate: 0,
@@ -188,11 +191,11 @@ export default {
       let arr = new Set()
       for (let i = 0, len = enodeArr.length; i < len; i++) {
         if (i !== index && enodeArr[i].value) {
-          let eNodeKey = enodeArr[i].value.match(/enode:\/\/(\S*)@/)[1]
+          let eNodeKey = this.$$.eNodeCut(enodeArr[i].value).key
           arr.add(eNodeKey)
         }
       }
-      let enode1 = enode.match(/enode:\/\/(\S*)@/)[1]
+      let enode1 = this.$$.eNodeCut(enode).key
       if (arr.has(enode1)) {
         this.node.select[index].value = ''
         this.msgError('Repeat')
@@ -233,12 +236,12 @@ export default {
     splitTx (tx) {
       if (!tx) return
       tx = tx.split('0x')
-      let eNodeKey = tx[0].match(/enode:\/\/(\S*)@/)
+      let eNodeKey = this.$$.eNodeCut(tx[0]).key
       return {
         address: '0x' + tx[2],
         signTx: '0x' + tx[1],
         eNode: tx[0],
-        eNodeId: eNodeKey[1]
+        eNodeId: eNodeKey
       }
     },
   }

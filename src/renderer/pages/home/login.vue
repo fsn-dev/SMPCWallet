@@ -64,18 +64,6 @@ export default {
     ...computedPub
   },
   mounted () {
-    // let eNodeKey = this.eNode.match(/enode:\/\/(\S*)@/)
-    // console.log(eNodeKey)
-    // findAccount({}).then(res => {
-    //   console.log(res)
-    // })
-    // insertAccount({
-    //   name: 'test',
-    //   ks: '123',
-    //   timestamp: Date.now()
-    // }).then(res => {
-    //   console.log(res)
-    // })
   },
   methods: {
     ...headerImg,
@@ -164,7 +152,7 @@ export default {
       })
     },
     async signEnode (pwd, address) {
-      let eNodeKey = this.eNode.match(/enode:\/\/(\S*)@/)[1]
+      let eNodeKey = this.$$.eNodeCut(this.eNode).key
       // console.log(eNodeKey)
       let rawTx = {
         from: address,

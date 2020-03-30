@@ -61,6 +61,7 @@ const EditGroupAccounts = (that, url, params) => {
   })
 }
 
+
 const EditGroupMemberAccounts = (that, url, params) => {
   return new Promise((resolve, reject) => {
     let data = {
@@ -68,6 +69,7 @@ const EditGroupMemberAccounts = (that, url, params) => {
       info: ''
     }
     let dateNow = Date.now()
+    let query = {key: params.local.key}
     let updateParams = {
       keyId: dateNow + params.local.key,
       key: params.local.key ? params.local.key : '',
@@ -79,16 +81,42 @@ const EditGroupMemberAccounts = (that, url, params) => {
       mode: params.local.mode ? params.local.mode : 0,
     }
     // historyGroupAccpunts.insert(query, (err, res) => {
-    historyGroupAccpunts.update({key: params.local.key}, {$set: updateParams}, {}, (err, res) => {
+    historyGroupAccpunts.find(query).exec((err, res) => {
       if (err) {
-        // console.log(err)
         data.error = err
         reject(data)
       } else {
         // console.log(res)
-        data.msg = 'Success'
-        data.info = res
-        resolve(data)
+        if (res < 0 || res.length <= 0) {
+          historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
+            if (err) {
+              // console.log(err)
+              data.error = err
+              reject(data)
+            } else {
+              // console.log(res)
+              data.msg = 'Success'
+              data.info = res
+              resolve(data)
+            }
+          })
+        } else {
+          data.msg = 'Success'
+          data.info = res
+          resolve(data)
+          // historyGroupAccpunts.update({key: params.local.key, 'member.nodeKey': params.local.nodeKey}, {$set: {'member.$.kId': params.local.kId}}, {}, (err, res) => {
+          //   if (err) {
+          //     // console.log(err)
+          //     data.error = err
+          //     reject(data)
+          //   } else {
+          //     console.log(res)
+          //     data.msg = 'Success'
+          //     data.info = res
+          //     resolve(data)
+          //   }
+          // })
+        }
       }
     })
   })

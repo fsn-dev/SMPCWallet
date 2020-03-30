@@ -74,6 +74,7 @@ const EditGroupTxns = (that, url, params) => {
 const EditGroupMemberTxns = (that, url, params) => {
   return new Promise((resolve, reject) => {
     let dateNow = Date.now()
+    let query = {key: params.local.key}
     let updateParams = {
       keyId: dateNow + params.local.key,
       key: params.local.key ? params.local.key : '',
@@ -94,17 +95,50 @@ const EditGroupMemberTxns = (that, url, params) => {
       msg: 'Error',
       info: ''
     }
+    // console.log(query)
+    // console.log(updateParams)
     // historyGroupTxns.insert(query, (err, res) => {
-    historyGroupTxns.update({key: params.local.key}, {$set: updateParams}, {}, (err, res) => {
+    historyGroupTxns.find(query).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
-        // console.log(err)
         data.error = err
         reject(data)
       } else {
-        // console.log(res)
-        data.msg = 'Success'
-        data.info = res
-        resolve(data)
+        console.log(res)
+        if (res < 0 || res.length <= 0) {
+          historyGroupTxns.insert(updateParams, (err, res) => {
+            if (err) {
+              // console.log(err)
+              data.error = err
+              reject(data)
+            } else {
+              console.log(res)
+              data.msg = 'Success'
+              data.info = res
+              resolve(data)
+            }
+          })
+        } else {
+          let oldParams = res[0], arr = []
+          for (let obj of oldParams.member) {
+            if (obj.nodeKey === params.local.nodeKey) {
+              obj.kId = params.local.kId
+            }
+            arr.push(obj)
+          }
+          updateParams.member = arr
+          historyGroupTxns.update(query, updateParams, {}, (err, res) => {
+            if (err) {
+              // console.log(err)
+              data.error = err
+              reject(data)
+            } else {
+              // console.log(res)
+              data.msg = 'Success'
+              data.info = res
+              resolve(data)
+            }
+          })
+        }
       }
     })
   })

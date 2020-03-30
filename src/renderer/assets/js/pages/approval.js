@@ -28,10 +28,12 @@ export const approvalMethods = {
             let obj1 = cbData[obj]
             obj1 = JSON.parse(obj1)
             this.getStatusInfo(obj1.Key).then(status => {
-              Object.assign(obj1, {status: status})
-              if (!status) {
+              let _s = 1
+              if (!status && obj1.Account !== this.address) {
+                _s = 0
                 data.approved ++
               }
+              Object.assign(obj1, {status: _s})
               // console.log(obj1)
               arr.push(obj1)
               if (data.total === arr.length) {

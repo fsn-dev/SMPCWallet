@@ -165,7 +165,7 @@ export default {
     setTimeout(() => {
       this.init()
     }, 50)
-    // console.log(this.$route.query)
+    console.log(this.$route.query)
   },
   methods: {
     modalClick () {

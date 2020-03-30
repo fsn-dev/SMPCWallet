@@ -183,14 +183,6 @@ export default {
         this.msgError(err.error.toString())
       })
     },
-    splitTx (enode) {
-      if (!enode) return
-      let eNodeKey = enode.match(/enode:\/\/(\S*)@/)
-      return {
-        eNode: enode,
-        eNodeId: eNodeKey[1]
-      }
-    },
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -265,14 +257,17 @@ export default {
                 key: this.urlParams.Key,
                 gId: this.urlParams.GroupId,
                 gArr: [
-                  {eNode: this.eNode, kId: this.address, status: 0, timestamp: Date.now(), initiate: 0}
-                ]
+                  {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 0, timestamp: Date.now(), initiate: 0}
+                ],
+                kId: this.address,
+                nodeKey: this.$$.eNodeCut(this.eNode).key,
               }
               for (let obj of this.gForm.eNodeArr) {
                 // console.log(obj)
                 if (obj === this.eNode) continue
                 localData.gArr.push({
                   eNode: obj,
+                  nodeKey: this.$$.eNodeCut(obj).key,
                   kId: '',
                   status: 0,
                   timestamp: '',

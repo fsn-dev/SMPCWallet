@@ -73,7 +73,7 @@ export default {
       this.setList(this.tNewsData.info)
     },
     setList (data) {
-      this.newsList = data
+      this.newsList = data ? data : []
     }
   }
 }

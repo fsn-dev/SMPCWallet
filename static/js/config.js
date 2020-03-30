@@ -82,6 +82,7 @@ let publicSet = {
    * @description 账户开关
    */
   networkMode: 1, // '0': 离线； '1': 在线
+  // networkMode: 0, // '0': 离线； '1': 在线
 }
 
 // publicSet.appURL = 'http://smpcwallet.com'

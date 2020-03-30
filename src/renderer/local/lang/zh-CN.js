@@ -81,7 +81,7 @@ export default {
 		select: '选中',
 	},
 	loading: {
-		l_1: '账户获取中……'
+		l_1: 'Loading……'
 	},
 	title: {
 		walletTitle: '<span>SMPC</span> Wallet',

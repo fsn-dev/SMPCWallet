@@ -126,8 +126,8 @@ export default {
     async showGroupData () {
       let enodeObj = {}
       for (let obj of this.urlParams.Enodes) {
-        let obj1 = this.splitTx(obj)
-        enodeObj[obj1.eNodeId] = obj
+        let obj1 = this.$$.eNodeCut(obj).key
+        enodeObj[obj1] = obj
       }
       this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
         // console.log(res)
@@ -178,14 +178,6 @@ export default {
         this.msgError(err)
       })
     },
-    splitTx (enode) {
-      if (!enode) return
-      let eNodeKey = enode.match(/enode:\/\/(\S*)@/)
-      return {
-        eNode: enode,
-        eNodeId: eNodeKey[1]
-      }
-    },
     getSignData (data) {
       if (data && data.signTx) {
         this.$$.web3.dcrm.acceptReqAddr(data.signTx).then(res => {
@@ -202,11 +194,14 @@ export default {
                   nonce: Number(this.urlParams.Nonce),
                   member: [{
                     eNode: this.eNode,
+                    nodeKey: this.$$.eNodeCut(this.eNode).key,
                     kId: this.address,
                     status: 0,
                     initiate: 0,
                     timestamp: Date.now()
                   }],
+                  kId: this.address,
+                  nodeKey: this.$$.eNodeCut(this.eNode).key,
                   timestamp: Number(this.urlParams.TimeStamp),
                 }
                 for (let obj of this.urlParams.Enodes) {
@@ -214,6 +209,7 @@ export default {
                   if (obj === this.eNode) continue
                   localData.member.push({
                     eNode: obj,
+                    nodeKey: this.$$.eNodeCut(obj).key,
                     kId: '',
                     status: 0,
                     initiate: 0,
@@ -252,11 +248,11 @@ export default {
       })
     },
     openPwdDialog (type) {
-      console.log(type)
+      // console.log(type)
       this.applyStatus = type
       try {
         this.$$.getReqNonce(this.urlParams.Account).then(nonce => {
-          console.log(nonce)
+          // console.log(nonce)
           if (!isNaN(nonce)) {
             this.dataPage = {
               from: this.address,

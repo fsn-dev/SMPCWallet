@@ -11,54 +11,65 @@ function getPath (name) {
 
 const ks = new Datastore({
   autoload: true,
-  filename: getPath('ks')
+  filename: getPath('ks'),
+  corruptAlertThreshold: 1
 })
 
 const node = new Datastore({
   autoload: true,
-  filename: getPath('node')
+  filename: getPath('node'),
+  corruptAlertThreshold: 1
 })
 
 const headerImg = new Datastore({
   autoload: true,
-  filename: getPath('headerImg')
+  filename: getPath('headerImg'),
+  corruptAlertThreshold: 1
 })
 
 const group = new Datastore({
   autoload: true,
-  filename: getPath('group')
+  filename: getPath('group'),
+  corruptAlertThreshold: 1
 })
 
 const gAccount = new Datastore({
   autoload: true,
-  filename: getPath('gAccount')
+  filename: getPath('gAccount'),
+  corruptAlertThreshold: 1
 })
 
 const baseInfo = new Datastore({
   autoload: true,
-  filename: getPath('baseInfo')
+  filename: getPath('baseInfo'),
+  corruptAlertThreshold: 1
 })
 
 const status = new Datastore({
   autoload: true,
-  filename: getPath('status')
+  filename: getPath('status'),
+  corruptAlertThreshold: 1
 })
 
 const historyPersonAccpunts = new Datastore({
   autoload: true,
-  filename: getPath('historyPersonAccpunts')
+  filename: getPath('historyPersonAccpunts'),
+  corruptAlertThreshold: 1
 })
 const historyPersonTxns = new Datastore({
   autoload: true,
-  filename: getPath('historyPersonTxns')
+  filename: getPath('historyPersonTxns'),
+  corruptAlertThreshold: 1
 })
 const historyGroupAccpunts = new Datastore({
   autoload: true,
-  filename: getPath('historyGroupAccpunts')
+  filename: getPath('historyGroupAccpunts'),
+  corruptAlertThreshold: 1
 })
 const historyGroupTxns = new Datastore({
   autoload: true,
-  filename: getPath('historyGroupTxns')
+  filename: getPath('historyGroupTxns'),
+  corruptAlertThreshold: 1
 })
 
 function cb (err) {
@@ -67,19 +78,19 @@ function cb (err) {
   }
 }
 
-ks.removeIndex('address', cb)
-ks.removeIndex('name', cb)
-node.removeIndex('url', cb)
-headerImg.removeIndex('address', cb)
-headerImg.removeIndex('name', cb)
-group.removeIndex('gId', cb)
-gAccount.removeIndex('pubKey', cb)
-status.removeIndex('key', cb)
+// ks.removeIndex('address', cb)
+// ks.removeIndex('name', cb)
+// node.removeIndex('url', cb)
+// headerImg.removeIndex('address', cb)
+// headerImg.removeIndex('name', cb)
+// group.removeIndex('gId', cb)
+// gAccount.removeIndex('pubKey', cb)
+// status.removeIndex('key', cb)
 
-historyPersonAccpunts.removeIndex('key', cb)
-historyPersonTxns.removeIndex('key', cb)
-historyGroupAccpunts.removeIndex('key', cb)
-historyGroupTxns.removeIndex('key', cb)
+// historyPersonAccpunts.removeIndex('key', cb)
+// historyPersonTxns.removeIndex('key', cb)
+// historyGroupAccpunts.removeIndex('key', cb)
+// historyGroupTxns.removeIndex('key', cb)
 
 ks.ensureIndex({fieldName: 'address', unique: true}, cb)
 node.ensureIndex({fieldName: 'url', unique: true}, cb)
@@ -93,7 +104,9 @@ historyPersonTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 historyGroupAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
 historyGroupTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 
-
+// Datastore.onload((err, res) => {
+//   console.log(err, res)
+// })
 export {
   ks,
   node,

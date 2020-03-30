@@ -9,7 +9,7 @@
             <div class="flex-sc node-view-style flex-wrap">
               <span v-for="(eNode, indexs) in item.Enodes" :key="indexs" class="eNode flex-sc" :title="eNode">
                 <!-- <i class="i">{{$$.cutOut(eNode, 12, 10)}}</i> -->
-                <i class="i">{{splitNode(eNode)}}</i>
+                <i class="i">{{$$.eNodeCut(eNode).key}}</i>
                 <!-- <span>{{ indexs === (item.Enodes.length - 1) ? "" : '、'}}</span> -->
               </span>
             </div>
@@ -87,9 +87,6 @@ export default {
         this.newsList.push(obj)
       }
     },
-    splitNode (eNode) {
-      return eNode.match(/enode:\/\/(\S*)@/)[1]
-    }
   }
 }
 </script>

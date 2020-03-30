@@ -311,5 +311,14 @@ export default {
       }
       return 1
     }
+  },
+  eNodeCut (enode) {
+    if (!enode) return
+    let enodeObj = enode.match(/enode:\/\/(\S*)@/)
+    // console.log(enodeObj)
+    return {
+      key: enodeObj[1],
+      enode: enodeObj.input
+    }
   }
 }
