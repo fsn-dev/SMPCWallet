@@ -541,7 +541,7 @@ let web3Utils = {
       // gasLimit: data.gasLimit ? Number(data.gasLimit) : config.rawTx.gasLimit,
       // to: data.to ? data.to : config.rawTx.to,
       // from: data.from,
-      value: Number(data.value),
+      value: data.value ? Number(data.value) : 0,
       nonce: data.nonce ? Number(data.nonce) : 0,
       data: data.data ? data.data : ''
     }

@@ -190,31 +190,28 @@ export default {
       })
     },
     changePwd () {
-      if (this.networkMode) {
-        server(this, 'GetUserIsRepeat', {
-          username: this.registerObj.username
-        }).then(res => {
-          if (res.info > 0) {
-            this.msgError(this.$t('error').err_7)
-            this.loading.wait = false
-          } else {
-            this.createFile()
-          }
-        })
-      } else {
-        findAccount({name: this.registerObj.username}).then(res => {
-          console.log(res)
-          if (res.length > 0) {
-            this.msgError(this.$t('error').err_7)
-            this.loading.wait = false
-          } else {
-            this.createFile()
-          }
-        }).catch(err => {
-          this.msgError(err.error)
+      findAccount({name: this.registerObj.username}).then(res => {
+        if (res.length > 0) {
+          this.msgError(this.$t('error').err_7)
           this.loading.wait = false
-        })
-      }
+        } else if (this.networkMode) {
+          server(this, 'GetUserIsRepeat', {
+            username: this.registerObj.username
+          }).then(res => {
+            if (res.info > 0) {
+              this.msgError(this.$t('error').err_7)
+              this.loading.wait = false
+            } else {
+              this.createFile()
+            }
+          })
+        } else {
+          this.createFile()
+        }
+      }).catch(err => {
+        this.msgError(err.error)
+        this.loading.wait = false
+      })
     }
   }
 }

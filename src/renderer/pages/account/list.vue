@@ -142,7 +142,7 @@ export default {
       })
     },
     changeGroup (item) {
-      console.log(item)
+      // console.log(item)
       if (item) {
         this.publicKey = item.publicKey
         this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode})
