@@ -1,16 +1,18 @@
 import db from '@/db/db.js'
 function updateStatus (data) {
   if (!data.key) return
+  
+  let dataNow = Date.now()
   const params = {
+    keyId: dataNow + data.key,
     key: data.key,
-    type: data.type,
     address: data.address,
     status: data.status,
-    updatetime: Date.now()
+    updatetime: dataNow
   }
-  
+  console.log(params)
   return new Promise((resolve, reject) => {
-    db.status.update({key: data.key, type: data.type}, params, {upsert: true}, (err, res) => {
+    db.status.update({key: data.key, address: data.address,}, params, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)

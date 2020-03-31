@@ -128,7 +128,7 @@ export default {
         enodeObj[obj1] = obj
       }
       this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
-        // console.log(res)
+        console.log(res)
         if (res.msg === 'Success' && res.status === 'Pending') {
           this.isApplySataus = true
         } else {
@@ -238,7 +238,6 @@ export default {
     updateStatus (key) {
       this.$db.updateStatus({
         key: key,
-        type: 1,
         address: this.address,
         status: 1
       }).then(res => {

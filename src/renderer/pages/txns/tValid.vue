@@ -306,7 +306,6 @@ export default {
       this.$db.updateStatus({
         key: key,
         address: this.address,
-        type: 1,
         status: 1
       }).then(res => {
         console.log(res)
