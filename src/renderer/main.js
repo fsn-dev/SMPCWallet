@@ -12,7 +12,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/css.css'
 import './assets/css/style.css'
 
-
+import db from '@/db/index.js'
 
 
 import ElementUI from 'element-ui'
@@ -29,6 +29,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$$ = $$
 Vue.prototype.$axios = axios
+Vue.prototype.$db = db
 
 Vue.prototype.toUrl = function(url, params) {
   this.$router.push({path: url, query: params})
@@ -45,7 +46,7 @@ Vue.prototype.copyTxt = function(txt, isShowCont) {
 }
 
 Vue.prototype.msgError = function(txt) {
-  if (txt.error) {
+  if (txt && txt.error) {
     txt = txt.error
   }
   this.$message({

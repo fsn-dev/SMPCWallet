@@ -1,5 +1,5 @@
 import SocketIO from '@/api/socketIO/index.js'
-import {findNode} from '@/db/node'
+import {findNode} from '@/db/node/node'
 
 function GetNodes (that, url, params) {
   let noRepeat = new Set()

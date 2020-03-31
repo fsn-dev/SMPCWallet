@@ -36,7 +36,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {AddPersonTxnsFn, AddGroupTxnsFn} from '@/api/index.js'
 export default {
   name: '',
   props: {
@@ -196,9 +195,7 @@ export default {
         key: key,
         gId: this.gID
       }
-      let dataUrl = 'GroupAddTxns'
       if (Number(this.accountType) === 1) {
-        dataUrl = 'PersonAddTxns'
         data.kId = this.address
         data.eNode = this.eNode
       } else {
@@ -212,9 +209,19 @@ export default {
       }
       console.log(data)
       if (Number(this.accountType) === 1) {
-        AddPersonTxnsFn(this, dataUrl, data)
+        // AddPersonTxns(this, dataUrl, data)
+        if (this.networkMode) {
+          this.$socket.emit('PersonAddTxns', data)
+        } else {
+          this.$db.AddPersonTxns(data)
+        }
       } else {
-        AddGroupTxnsFn(this, dataUrl, data)
+        // AddGroupTxns(this, dataUrl, data)
+        if (this.networkMode) {
+          this.$socket.emit('GroupAddTxns', data)
+        } else {
+          this.$db.AddGroupTxns(data)
+        }
       }
       
       this.resetForm()

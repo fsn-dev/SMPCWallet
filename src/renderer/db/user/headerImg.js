@@ -1,17 +1,15 @@
-import {ks} from './index.js'
+import db from '@/db/db.js'
 
-// console.log(ks)
-
-function insertAccount (data) {
+function insertHeaderImg (data) {
   if (!data.address) return
   const params = {
     name: data.name,
-    ks: data.ks,
     address: data.address,
-    timestamp: data.timestamp ? data.timestamp : Date.now()
+    imgData: data.imgData,
+    timestamp: Date.now()
   }
   return new Promise((resolve, reject) => {
-    ks.insert(params, (err, res) => {
+    db.headerImg.insert(params, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -23,11 +21,11 @@ function insertAccount (data) {
   })
 }
 
-function findAccount (params) {
+function findHeaderImg (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
-    console.log(params)
-    ks.find(params).sort({ timestamp: -1 }).exec((err, res) => {
+    // console.log(params)
+    db.headerImg.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -40,6 +38,6 @@ function findAccount (params) {
 }
 
 export {
-  insertAccount,
-  findAccount
+  insertHeaderImg,
+  findHeaderImg
 }

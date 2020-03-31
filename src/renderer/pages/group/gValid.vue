@@ -51,8 +51,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {uodateStatus} from '@/db/status'
-import {EditGroupMemberAccountsFn} from '@/api/index.js'
 export default {
   name: '',
   data () {
@@ -186,6 +184,11 @@ export default {
             this.msgSuccess('Success!')
             if (this.key) {
               let localData = {}
+              let params = {
+                key: this.key,
+                kId: this.address,
+                status: this.applyStatus === 'AGREE' ? 5 : 4,
+              }
               if (!this.networkMode) {
                 localData = {
                   key: this.urlParams.Key,
@@ -216,14 +219,11 @@ export default {
                     timestamp: ''
                   })
                 }
+                params.local = localData
+                this.$db.EditGroupMemberAccounts(params)
+              } else {
+                this.$socket.emit('GroupAccountsEdit', params)
               }
-              // console.log(localData)
-              EditGroupMemberAccountsFn(this, 'GroupAccountsEdit', {
-                key: this.key,
-                kId: this.address,
-                status: this.applyStatus === 'AGREE' ? 5 : 4,
-                local: localData
-              })
             }
             this.updateStatus(this.urlParams.Key)
             this.toUrl('/waitNews')
@@ -236,7 +236,7 @@ export default {
       this.eDialog.pwd = false
     },
     updateStatus (key) {
-      uodateStatus({
+      this.$db.updateStatus({
         key: key,
         type: 1,
         address: this.address,

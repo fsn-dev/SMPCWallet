@@ -1,5 +1,5 @@
 import db from '@/db/db.js'
-const AddPersonAccounts = (that, url, params) => {
+const AddPersonAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let data = {
       msg: 'Error',
@@ -32,7 +32,7 @@ const AddPersonAccounts = (that, url, params) => {
   })
 }
 
-const EditPersonAccounts = (that, url, params) => {
+const EditPersonAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let query = {}, updateParams = {}
     let data = { msg: 'Error', info: [] }
@@ -62,7 +62,7 @@ const EditPersonAccounts = (that, url, params) => {
   })
 }
 
-const FindPersonAccounts = (that, url, params) => {
+const FindPersonAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let _params = {
       pageSize: params && params.pageSize ? params.pageSize : 50,

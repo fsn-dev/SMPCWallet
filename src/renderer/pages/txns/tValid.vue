@@ -59,8 +59,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {uodateStatus} from '@/db/status'
-import {EditGroupMemberTxnsFn} from '@/api/index.js'
 export default {
   name: '',
   data () {
@@ -244,6 +242,13 @@ export default {
           console.log(res)
           if (cbData.msg === 'Success') {
             let localData = {}
+            let params = {
+              key: this.key,
+              kId: this.address,
+              eNode: this.eNode,
+              status: this.applyStatus === 'AGREE' ? 5 : 4,
+              local: localData
+            }
             if (!this.networkMode) {
               localData = {
                 from: this.urlParams.DcrmFrom ,
@@ -274,14 +279,18 @@ export default {
                   initiate: 0
                 })
               }
+              params.local = localData
+              this.$db.EditGroupMemberTxns(params)
+            } else {
+              this.$socket.emit('changeGroupMemberTxnsStatus', params)
             }
-            EditGroupMemberTxnsFn(this, 'changeGroupMemberTxnsStatus', {
-              key: this.key,
-              kId: this.address,
-              eNode: this.eNode,
-              status: this.applyStatus === 'AGREE' ? 5 : 4,
-              local: localData
-            })
+            // EditGroupMemberTxnsFn(this, 'changeGroupMemberTxnsStatus', {
+            //   key: this.key,
+            //   kId: this.address,
+            //   eNode: this.eNode,
+            //   status: this.applyStatus === 'AGREE' ? 5 : 4,
+            //   local: localData
+            // })
             this.updateStatus(this.urlParams.Key)
             this.msgSuccess('Success!')
             this.toUrl('/waitNews')
@@ -294,7 +303,7 @@ export default {
       this.eDialog.pwd = false
     },
     updateStatus (key) {
-      uodateStatus({
+      this.$db.updateStatus({
         key: key,
         address: this.address,
         type: 1,

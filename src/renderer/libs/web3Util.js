@@ -1,7 +1,7 @@
 import web3 from '@/assets/js/web3'
 import Tx from 'ethereumjs-tx'
 import config from '@etc/js/config.js'
-import {findBaseInfo} from '@/db/baseInfo'
+import db from '@/db/index.js'
 let eNodeInit
 
 let connectNum = 0
@@ -10,7 +10,7 @@ function breakAgaing () {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (connectNum < 5) {
-        findBaseInfo({key: 'serverRPC'}).then(res => {
+        db.findBaseInfo({key: 'serverRPC'}).then(res => {
           let url = config.serverRPC
           if (res.length > 0) {
             url = res[0].value

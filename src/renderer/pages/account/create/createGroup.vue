@@ -74,9 +74,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {findGroup} from '@/db/group'
-import {uodateStatus} from '@/db/status'
-import {AddGroupAccountsFn} from '@/api/index.js'
 
 import {datas, watchs, methods} from './js/common.js'
 
@@ -138,7 +135,7 @@ export default {
       this.createAndGetGid(this.mode.select, arr, signStr)
     },
     updateStatus (key) {
-      uodateStatus({
+      this.$db.updateStatus({
         key: key,
         type: 1,
         address: this.address,
@@ -175,7 +172,12 @@ export default {
         }
         data.member.push(obj1)
       }
-      AddGroupAccountsFn(this, 'GroupAccountsAdd', data)
+      if (this.networkMode) {
+        this.$socket.emit('GroupAccountsAdd', data)
+      } else {
+        this.$db.AddGroupAccounts(data)
+      }
+      // AddGroupAccountsFn(this, 'GroupAccountsAdd', data)
     },
     changeState (item, index) {
       if (!item.value) {

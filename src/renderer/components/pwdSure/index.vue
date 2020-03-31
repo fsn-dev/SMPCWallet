@@ -31,7 +31,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {findAccount} from '@/db/accounts'
 export default {
   name: "pwdSure",
   // props: ["sendDataPage"],
@@ -80,7 +79,7 @@ export default {
         this.sureForm.password = ''
         this.loading.wait = false
       } else {
-        findAccount({name: username}).then(res => {
+        this.$db.findAccount({name: username}).then(res => {
           // console.log(res)
           if (res.length > 0) {
             let keystore = res[0].ks

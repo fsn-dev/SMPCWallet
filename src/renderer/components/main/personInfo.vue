@@ -52,7 +52,6 @@
 </style>
 
 <script>
-import {findAccount} from '@/db/accounts'
 import {computedPub} from '@/assets/js/pages/public'
 import setEnode from '@/components/setEnode/index'
 export default {
@@ -108,7 +107,7 @@ export default {
       this.closeDrawer()
     },
     getAccountData () {
-      findAccount({address: this.address}).then(res => {
+      this.$db.findAccount({address: this.address}).then(res => {
         // console.log(res)
         this.accountData.account = {
           address: res[0].address,

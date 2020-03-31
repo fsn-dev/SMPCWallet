@@ -1,6 +1,6 @@
-import {group} from './index.js'
+import db from '@/db/db.js'
 
-function uodateGroup (data) {
+function updateGroup (data) {
   if (!data.gId) return
   const params = {
     gId: data.gId,
@@ -8,7 +8,7 @@ function uodateGroup (data) {
     updatetime: Date.now()
   }
   return new Promise((resolve, reject) => {
-    group.update({gId: data.gId}, params, {upsert: true}, (err, res) => {
+    db.group.update({gId: data.gId}, params, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -24,7 +24,7 @@ function findGroup (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    group.find(params).sort({ timestamp: -1 }).exec((err, res) => {
+    db.group.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -40,7 +40,7 @@ function removeGroup (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    group.remove(params, {}, (err, res) => {
+    db.group.remove(params, {}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -53,7 +53,7 @@ function removeGroup (params) {
 }
 
 export {
-  uodateGroup,
+  updateGroup,
   findGroup,
   removeGroup
 }

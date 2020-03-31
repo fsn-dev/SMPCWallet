@@ -12,7 +12,6 @@ export const datas = {
     select: ''
   },
   node: {
-    init: [],
     select: [],
     min: 0,
     max: 0,

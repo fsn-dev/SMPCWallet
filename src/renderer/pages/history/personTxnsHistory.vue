@@ -102,7 +102,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {FindPersonTxnsFn, EditPersonTxnsFn} from '@/api/index.js'
 import {datas, commonMethods} from './js/common.js'
 import {methods} from './js/person.js'
 export default {
@@ -114,6 +113,11 @@ export default {
   },
   computed: {
     ...computedPub,
+  },
+  sockets: {
+    PersonFindTxns (res) {
+      this.initFormat(res)
+    }
   },
   mounted () {
     let urlParams = this.$route.query
@@ -135,9 +139,17 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
-      FindPersonTxnsFn(this, 'PersonFindTxns', data).then(res => {
-        this.initFormat(res)
-      })
+      
+      if (this.networkMode) {
+        this.$socket.emit('PersonFindTxns', data)
+      } else {
+        this.$db.FindPersonTxns(data).then(res => {
+          this.initFormat(res)
+        })
+      }
+      // FindPersonTxnsFn(this, 'PersonFindTxns', data).then(res => {
+      //   this.initFormat(res)
+      // })
     },
     getHistoryState (id, key, index) {
       this.$$.getLockOutStatus(key).then(res => {
@@ -153,7 +165,12 @@ export default {
         hash: hash,
         status: status
       }
-      EditPersonTxnsFn(this, 'changePersonTxnsStatus', data)
+      // EditPersonTxnsFn(this, 'changePersonTxnsStatus', data)
+      if (this.networkMode) {
+        this.$socket.emit('changePersonTxnsStatus', data)
+      } else {
+        this.$db.EditPersonTxns(data)
+      }
     },
   }
 }

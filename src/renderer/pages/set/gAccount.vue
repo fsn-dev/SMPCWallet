@@ -47,7 +47,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {updateGaccount, findGaccount} from '@/db/gAccount'
 export default {
   name: 'gAccount',
   data () {
@@ -97,7 +96,7 @@ export default {
       })
     },
     getGName (item, i) {
-      findGaccount({publicKey: item.publicKey}).then(res => {
+      this.$db.findGaccount({publicKey: item.publicKey}).then(res => {
         console.log(res)
         if (res.length > 0) {
           this.gAccountList[i].name = res[0].name
@@ -110,7 +109,7 @@ export default {
       this.gAname = item.name
     },
     editGroup () {
-      updateGaccount({
+      this.$db.updateGaccount({
         publicKey: this.selectionGinfo.publicKey,
         name: this.gAname
       }).then(res => {

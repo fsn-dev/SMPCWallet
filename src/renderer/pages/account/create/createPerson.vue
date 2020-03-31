@@ -26,9 +26,9 @@
           </el-form-item>
           <el-form-item>
             <div class="flex-bc">
-              <el-select class="WW100" v-model="node.add" filterable allow-create default-first-option  :title="node.add" no-data-text="Null" :placeholder="$t('error').err_12">
+              <el-select class="WW100" v-model="node.add" filterable allow-create default-first-option  :title="node.add" no-data-text="Null" :placeholder="$t('error').err_12" :loading="loadingSelect" :loading-text="$t('loading').l_1">
                 <el-option
-                  v-for="(item, index) in node.init"
+                  v-for="(item, index) in netUrlArr"
                   :key="index"
                   :label="item.name"
                   :value="item.url">
@@ -79,10 +79,9 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {insertNode, findNode} from '@/db/node'
 
-import {GetNodes, AddNodes, AddPersonAccountsFn} from '@/api/index.js'
 import {datas, watchs, methods} from './js/common.js'
+import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 import setMode from '@/components/setMode/index.vue'
 export default {
   name: 'createPerson',
@@ -95,6 +94,7 @@ export default {
   data () {
     return {
       ...datas,
+      ...nodeDatas,
       rules: {},
       createEnodeArr: []
     }
@@ -106,18 +106,16 @@ export default {
   watch: {
     ...watchs,
   },
+  sockets: {
+    ...nodeSockets,
+  },
   mounted () {
     this.init()
     this.getNetUrl()
   },
   methods: {
     ...methods,
-    getNetUrl () {
-      GetNodes(this, 'getNodeInfosDev').then(res => {
-        console.log(res)
-        this.node.init = res
-      })
-    },
+    ...nodeMethods,
     addNode () {
       console.log(this.node.add)
       if (!this.node.add) {
@@ -135,7 +133,7 @@ export default {
         return
       }
       let isExist = true, nowSelect = {}
-      for (let obj of this.node.init) {
+      for (let obj of this.netUrlArr) {
         if (obj.url === this.node.add) {
           isExist = false
           nowSelect = obj
@@ -165,19 +163,10 @@ export default {
           url: url
         }
         this.node.select.push(newNode)
-        this.saveRpcDB(newNode)
+        this.saveRpcDB(newNode.url)
       }
       // console.log(123)
       this.node.add = ''
-    },
-    saveRpcDB (data) {
-      let url = data.url
-      AddNodes(this, '', {url: url}).then(res => {
-        // console.log(res)
-        if (res) {
-          this.getNetUrl()
-        }
-      })
     },
     removeNode (item, index) {
       // console.log(item)
@@ -273,8 +262,13 @@ export default {
         }
         data.member.push(obj1)
       }
+      if (this.networkMode) {
+        this.$socket.emit('PersonAccountsAdd', data)
+      } else {
+        this.$db.AddPersonAccounts(data)
+      }
       // this.$socket.emit('PersonAccountsAdd', data)
-      AddPersonAccountsFn(this, 'PersonAccountsAdd', data)
+      // AddPersonAccountsFn(this, 'PersonAccountsAdd', data)
     },
     changeMode () {
       let modeArr = this.mode.select.split('/')

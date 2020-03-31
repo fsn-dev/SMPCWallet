@@ -1,4 +1,4 @@
-import {insertNode, findNode} from '@/db/node'
+import {insertNode, findNode} from '@/db/node/node'
 // import findLocalNode from '@/api/Nodes/common/index'
 function AddNodes (that, url, params) {
   // console.log(params)

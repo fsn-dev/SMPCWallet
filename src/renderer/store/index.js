@@ -15,7 +15,7 @@ import web3 from '@/libs/web3Util'
 /**
  * @description 基本信息设置
  */
-import {findBaseInfo, uodateBaseInfo} from '@/db/baseInfo'
+import db from '@/db/index.js'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -61,7 +61,7 @@ const store = new Vuex.Store({
       let info = data.info ? data.info.toString() : config.modeInit
       state.accountType = info
       if (!data.type) {
-        uodateBaseInfo({
+        db.updateBaseInfo({
           key: config.cookies.accountType,
           value: info
         })
@@ -73,7 +73,7 @@ const store = new Vuex.Store({
       // console.log(info)
       state.dayAndNight = info
       if (!data.type) {
-        uodateBaseInfo({
+        db.updateBaseInfo({
           key: 'dayAndNight',
           value: info
         })
@@ -83,7 +83,7 @@ const store = new Vuex.Store({
       let info = data.info ? data.info : ''
       state.language = info
       if (!data.type) {
-        uodateBaseInfo({
+        db.updateBaseInfo({
           key: 'language',
           value: info
         })
@@ -93,7 +93,7 @@ const store = new Vuex.Store({
       let info = data.info ? data.info : ''
       state.serverRPC = info
       if (!data.type) {
-        uodateBaseInfo({
+        db.updateBaseInfo({
           key: 'serverRPC',
           value: info
         })
@@ -145,7 +145,7 @@ const store = new Vuex.Store({
     },
     getAccountType ({commit}) {
       let data = { type: 1, info: ''}
-      findBaseInfo({key: config.cookies.accountType}).then(res => {
+      db.findBaseInfo({key: config.cookies.accountType}).then(res => {
         if (res.length > 0) {
           data.info = res[0].value
         } else {
@@ -160,7 +160,7 @@ const store = new Vuex.Store({
     },
     getDayAndNight ({commit}) {
       let data = { type: 1, info: ''}
-      findBaseInfo({key: 'dayAndNight'}).then(res => {
+      db.findBaseInfo({key: 'dayAndNight'}).then(res => {
         if (res.length > 0) {
           data.info = res[0].value
         } else {
@@ -175,7 +175,7 @@ const store = new Vuex.Store({
     },
     getLanguage ({commit}) {
       let data = { type: 1, info: ''}
-      findBaseInfo({key: 'language'}).then(res => {
+      db.findBaseInfo({key: 'language'}).then(res => {
         // console.log(res)
         if (res.length > 0) {
           data.info = res[0].value
@@ -191,7 +191,7 @@ const store = new Vuex.Store({
     },
     getServerRPC ({commit}) {
       let data = { type: 1, info: ''}
-      findBaseInfo({key: 'serverRPC'}).then(res => {
+      db.findBaseInfo({key: 'serverRPC'}).then(res => {
         // console.log(res)
         if (res.length > 0) {
           data.info = res[0].value

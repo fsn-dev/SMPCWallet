@@ -6,7 +6,6 @@ import config from '@etc/js/config.js'
 /**
  * @description 基本信息设置
  */
-// import {findBaseInfo} from '@/db/baseInfo'
 
 let web3
 try {

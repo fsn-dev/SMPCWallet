@@ -1,4 +1,4 @@
-import {historyPersonTxns} from '@/db/index.js'
+import db from '@/db/db.js'
 const AddPersonTxns = (that, url, params) => {
   return new Promise((resolve, reject) => {
     let dateNow = Date.now()
@@ -22,7 +22,7 @@ const AddPersonTxns = (that, url, params) => {
       msg: 'Error',
       info: ''
     }
-    historyPersonTxns.insert(query, (err, res) => {
+    db.historyPersonTxns.insert(query, (err, res) => {
       if (err) {
         // console.log(err)
         data.error = err
@@ -56,7 +56,7 @@ const EditPersonTxns = (that, url, params) => {
         updateParams['hash'] = params.hash
       }
     }
-    historyPersonTxns.update(query, {$set: updateParams}, {}, (err, res) => {
+    db.historyPersonTxns.update(query, {$set: updateParams}, {}, (err, res) => {
       if (err) {
         // console.log(err)
         data.error = err
@@ -102,12 +102,12 @@ const FindPersonTxns = (that, url, params) => {
         query.status = params.status
       }
     }
-    historyPersonTxns.count(query, (err, count) => {
+    db.historyPersonTxns.count(query, (err, count) => {
       if (err) {
         data.error = err
         reject(data)
       } else {
-        historyPersonTxns.find(query).sort({ timestamp: -1 }).skip(Number(_params.skip)).limit(Number(_params.pageSize)).exec((err, res) => {
+        db.historyPersonTxns.find(query).sort({ timestamp: -1 }).skip(Number(_params.skip)).limit(Number(_params.pageSize)).exec((err, res) => {
           if (err) {
             data.error = err
             reject(data)

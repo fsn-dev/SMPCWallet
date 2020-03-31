@@ -17,7 +17,6 @@
 </style>
 
 <script>
-import {uodateStatus, findStatus, removeStatus} from '@/db/status'
 import {computedPub} from '@/assets/js/pages/public'
 import gNewsList from './gNewsList'
 import tNewsList from './tNewsList'
@@ -91,12 +90,12 @@ export default {
     },
   async removeStatus () {
     let nowDate = Date.now()
-    findStatus({}).then(res => {
+    this.$db.findStatus({}).then(res => {
       // console.log(res)
       if (res.length > 0) {
         for (let obj of res) {
           if ((nowDate - obj.updatetime) > (1000 * 60 * 15)) {
-            removeStatus({key: obj.key})
+            this.$db.removeStatus({key: obj.key})
           }
         }
       }

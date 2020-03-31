@@ -100,7 +100,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {FindGroupAccountsFn, EditGroupAccountsFn} from '@/api/index.js'
 import {datas, commonMethods} from './js/common.js'
 import {methods} from './js/group.js'
 export default {
@@ -112,6 +111,11 @@ export default {
   },
   computed: {
     ...computedPub,
+  },
+  sockets: {
+    GroupAccountsFind (res) {
+      this.initFormat(res)
+    }
   },
   mounted () {
     let urlParams = this.$route.query
@@ -132,9 +136,16 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
-      FindGroupAccountsFn(this, 'GroupAccountsFind', data).then(res => {
-        this.initFormat(res)
-      })
+      if (this.networkMode) {
+        this.$socket.emit('GroupAccountsFind', data)
+      } else {
+        this.$db.FindGroupAccounts(data).then(res => {
+          this.initFormat(res)
+        })
+      }
+      // FindGroupAccountsFn(this, 'GroupAccountsFind', data).then(res => {
+      //   this.initFormat(res)
+      // })
     },
     getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
@@ -150,7 +161,12 @@ export default {
         pubKey: pubKey,
         status: status
       }
-      EditGroupAccountsFn(this, 'changeGroupAccountsEdit', data)
+      // EditGroupAccountsFn(this, 'changeGroupAccountsEdit', data)
+      if (this.networkMode) {
+        this.$socket.emit('changeGroupAccountsEdit', data)
+      } else {
+        this.$db.EditGroupAccounts(data)
+      }
     },
   }
 }

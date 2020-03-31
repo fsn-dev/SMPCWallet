@@ -1,12 +1,12 @@
 <template>
-  <div v-loading="loading.setNode" element-loading-text="Loading……">
+  <div v-loading="loading.setNode" :element-loading-text="$t('loading').l_1">
     <div class="WW100 flex-c flex-wrap">
       <!-- <el-input class="WW100 mt-10" v-model="viewEnode" type="textarea" :autosize="{ minRows: 2, maxRows: 20}" :disabled="true"></el-input> -->
       <div class="e-node-box" v-if="isShowEnode && viewEnode" :title="viewEnode">
         {{viewEnode ? viewEnode.substr(0, 128) + '...' : ''}}
       </div>
       <!-- <el-input v-model="netUrl" class="mt-10"></el-input> -->
-      <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" :disabled="!isSetNode" no-data-text="Null">
+      <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" :disabled="!isSetNode" no-data-text="Null" :loading="loadingSelect" :loading-text="$t('loading').l_1">
         <el-option
           v-for="(item, index) in netUrlArr"
           :key="index"
@@ -28,9 +28,8 @@
 </style>
 
 <script>
-import {computedPub} from '@/assets/js/pages/public'
-// import {insertNode, findNode} from '@/db/node'
-import {GetNodes, AddNodes} from '@/api/index.js'
+import {computedPub} from '@/assets/js/pages/public.js'
+import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 export default {
   name: 'setEnode',
   props: {
@@ -45,60 +44,37 @@ export default {
   },
   data () {
     return {
-      baseUrl: 'getNodeInfos',
+      ...nodeDatas,
       viewEnode: '',
-      netUrl: this.serverRPC,
-      netUrlArr: [],
+      netUrl: '',
       loading: {
-        setNode: false
+        setNode: false,
       },
-      dataPage: {},
-      eDialog: {
-        pwd: false
-      }
     }
   },
   watch: {
     serverRPC () {
-      // console.log(123)
       this.netUrl = this.serverRPC
     },
   },
   computed: {
     ...computedPub
   },
+  sockets: {
+    ...nodeSockets,
+  },
   mounted () {
-    this.viewEnode = this.eNode + this.eNodeTx + this.address
-
-    if (this.$$.config.env === 'dev') {
-      this.baseUrl = 'getNodeInfosDev'
-    }
-    // this.$socket.emit(this.baseUrl)
-    setTimeout(() => {
-      this.getNetUrl()
-    }, 300)
+    this.init()
   },
   methods: {
-    getNetUrl () {
-      GetNodes(this, this.baseUrl).then(res => {
-        // console.log(res)
-        this.netUrlArr = res
-        this.netUrlArr.push({
-          url: this.$$.config.serverRPC,
-          name: this.$t('label').localNode
-        })
-        this.netUrl = this.serverRPC ? this.serverRPC : (res.length > 0 ? res[0].url : this.$$.config.serverRPC)
-      })
+    ...nodeMethods,
+    init () {
+      this.viewEnode = this.eNode + this.eNodeTx + this.address
+      this.getNetUrl()
+      this.setSelected()
     },
-    saveRpcDB () {
-      let url = this.netUrl
-      // let url = data.url
-      AddNodes(this, '', {url: url}).then(res => {
-        // console.log(res)
-        if (res) {
-          this.getNetUrl()
-        }
-      })
+    setSelected () {
+      this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
     },
     setNet () {
       this.loading.setNode = true
@@ -106,35 +82,29 @@ export default {
       if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
         url = this.netUrl = 'http://' + url
       }
-      try {
-        this.$$.web3.setProvider(url)
-        this.$$.web3.dcrm.getEnode().then(res => {
-          let cbData = res
-          cbData = JSON.parse(cbData)
-          // console.log(cbData)
-          if (cbData.Status === "Success") {
-            let eNodeInit = cbData.Data.Enode
-            this.viewEnode = eNodeInit
-            this.saveRpcDB()
-            this.$store.commit('setServerRPC', {info: url})
-            this.$store.commit('setEnode', eNodeInit)
-            this.msgSuccess(this.$t('success').s_4)
-          } else {
-            this.viewEnode = ''
-            this.msgError(this.$t('error').err_9)
-          }
-          this.loading.setNode = false
-        }).catch(err => {
-          console.log(err)
+      this.$$.web3.setProvider(url)
+      this.$$.web3.dcrm.getEnode().then(res => {
+        let cbData = res
+        cbData = JSON.parse(cbData)
+        // console.log(cbData)
+        if (cbData.Status === "Success") {
+          let eNodeInit = cbData.Data.Enode
+          this.viewEnode = eNodeInit
+          this.saveRpcDB(url)
+          this.$store.commit('setServerRPC', {info: url})
+          this.$store.commit('setEnode', eNodeInit)
+          this.msgSuccess(this.$t('success').s_4)
+        } else {
           this.viewEnode = ''
           this.msgError(this.$t('error').err_9)
-          this.loading.setNode = false
-        })
-      } catch (error) {
-        console.log(error)
+        }
+        this.loading.setNode = false
+      }).catch(err => {
+        console.log(err)
+        this.viewEnode = ''
         this.msgError(this.$t('error').err_9)
         this.loading.setNode = false
-      }
+      })
     }
   }
 }

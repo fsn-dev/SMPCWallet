@@ -79,8 +79,6 @@
 import {computedPub} from '@/assets/js/pages/public'
 import {approvalMethods} from '@/assets/js/pages/approval.js'
 
-import {findHeaderImg} from '@/db/headerImg'
-
 import createGroup from '@/pages/account/create/createGroup.vue'
 import createPerson from '@/pages/account/create/createPerson.vue'
 import personInfo from '@/components/main/personInfo.vue'
@@ -151,7 +149,7 @@ export default {
       }, 1000 * 35)
     },
     async getHeaderImg () {
-      findHeaderImg({address: this.address}).then(res => {
+      this.$db.findHeaderImg({address: this.address}).then(res => {
         // console.log(res)
         if (res.length > 0) {
           this.headerImg = res[0].imgData

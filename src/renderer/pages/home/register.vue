@@ -40,7 +40,6 @@
 import {computedPub} from '@/assets/js/pages/public'
 import regExp from '@etc/js/config/RegExp'
 import headerImg from './js/headerImg'
-import {insertAccount, findAccount} from '@/db/accounts'
 import server from '@/api/common/server.js'
 export default {
   name: '',
@@ -177,7 +176,7 @@ export default {
     },
     insertLocalAccount (walletInit, walletJSON) {
       return new Promise((resolve, reject) => {
-        insertAccount({
+        this.$db.insertAccount({
           name: this.registerObj.username,
           address:  walletInit.getChecksumAddressString(),
           ks: walletJSON
@@ -190,7 +189,7 @@ export default {
       })
     },
     changePwd () {
-      findAccount({name: this.registerObj.username}).then(res => {
+      this.$db.findAccount({name: this.registerObj.username}).then(res => {
         if (res.length > 0) {
           this.msgError(this.$t('error').err_7)
           this.loading.wait = false

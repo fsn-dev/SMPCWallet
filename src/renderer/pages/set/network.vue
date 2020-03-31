@@ -44,7 +44,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {insertNode, findNode, removeNode} from '@/db/node'
 export default {
   name: '',
   data () {
@@ -66,7 +65,7 @@ export default {
   },
   methods: {
     getNetUrl () {
-      findNode().then(res => {
+      this.$db.findNode().then(res => {
         this.netUrlArr = []
         if (res.length > 0) {
           this.netUrlArr.push(...res)
@@ -83,7 +82,7 @@ export default {
         this.msgWarning(this.$t('warn').w_17)
         return
       }
-      insertNode({
+      this.$db.insertNode({
         url: this.netUrl
       }).then(res => {
         // console.log(res)
@@ -96,7 +95,7 @@ export default {
       })
     },
     removeNode () {
-      removeNode(
+      this.$db.removeNode(
         {url: this.netObj.url}
       ).then(res => {
         console.log(res)

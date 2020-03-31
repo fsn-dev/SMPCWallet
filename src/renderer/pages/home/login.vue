@@ -37,8 +37,6 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
-import {findHeaderImg} from '@/db/headerImg'
-import {findAccount} from '@/db/accounts'
 export default {
   name: '',
   data () {
@@ -97,7 +95,7 @@ export default {
       });
     },
     inputFileBtn () {
-      findAccount({name: this.loginObj.username}).then(res => {
+      this.$db.findAccount({name: this.loginObj.username}).then(res => {
         console.log(res)
         if (res.length > 0) {
           let keystore = res[0].ks
@@ -144,7 +142,7 @@ export default {
       })
     },
     async getHeaderImg (hex, address, name) {
-      findHeaderImg({address: address}).then(res => {
+      this.$db.findHeaderImg({address: address}).then(res => {
         // console.log(res)
         if (res.length <= 0) {
           this.createHeader(hex, address, name)

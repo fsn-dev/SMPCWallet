@@ -1,9 +1,8 @@
-import {findStatus} from '@/db/status'
 
 export const approvalMethods = {
   getStatusInfo (key) {
     return new Promise((resolve) => {
-      findStatus({
+      this.$db.findStatus({
         key: key,
         address: this.address
       }).then(res => {

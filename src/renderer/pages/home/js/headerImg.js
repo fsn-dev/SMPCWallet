@@ -1,6 +1,5 @@
 
 import Identicon from 'identicon.js'
-import {insertHeaderImg} from '@/db/headerImg'
 export default {
   createHeader (hex, address, name) {
     // let fileUrl = this.$$.config.file.img.url + address + this.$$.config.file.img.type
@@ -13,7 +12,7 @@ export default {
       imgData: imgInfo
     }
     // console.log(data)
-    insertHeaderImg(data).then(res => {
+    this.$db.insertHeaderImg(data).then(res => {
       console.log(res)
     })
   },

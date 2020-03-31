@@ -1,5 +1,5 @@
 import db from '@/db/db.js'
-const AddGroupAccounts = (that, url, params) => {
+const AddGroupAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let data = {
       msg: 'Error',
@@ -31,7 +31,7 @@ const AddGroupAccounts = (that, url, params) => {
   })
 }
 
-const EditGroupAccounts = (that, url, params) => {
+const EditGroupAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let query = {}, updateParams = {}
     let data = { msg: 'Error', info: [] }
@@ -62,7 +62,7 @@ const EditGroupAccounts = (that, url, params) => {
 }
 
 
-const EditGroupMemberAccounts = (that, url, params) => {
+const EditGroupMemberAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let data = {
       msg: 'Error',
@@ -122,7 +122,7 @@ const EditGroupMemberAccounts = (that, url, params) => {
   })
 }
 
-const FindGroupAccounts = (that, url, params) => {
+const FindGroupAccounts = (params) => {
   return new Promise((resolve, reject) => {
     let _params = {
       pageSize: params && params.pageSize ? params.pageSize : 50,

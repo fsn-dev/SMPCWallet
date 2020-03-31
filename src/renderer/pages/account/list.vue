@@ -57,7 +57,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {findGaccount} from '@/db/gAccount'
 export default {
   name: 'accountList',
   data () {
@@ -134,7 +133,7 @@ export default {
       })
     },
     getGName (item, i) {
-      findGaccount({publicKey: item.publicKey}).then(res => {
+      this.$db.findGaccount({publicKey: item.publicKey}).then(res => {
         // console.log(res)
         if (res.length > 0) {
           this.gAccountList[i].name = res[0].name

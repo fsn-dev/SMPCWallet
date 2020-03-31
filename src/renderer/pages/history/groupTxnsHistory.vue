@@ -128,7 +128,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {FindGroupTxnsFn, EditGroupTxnsFn} from '@/api/index.js'
 import {datas, commonMethods} from './js/common.js'
 import {methods} from './js/group.js'
 export default {
@@ -140,6 +139,11 @@ export default {
   },
   computed: {
     ...computedPub,
+  },
+  sockets: {
+    GroupFindTxns (res) {
+      this.initFormat(res)
+    }
   },
   mounted () {
     let urlParams = this.$route.query
@@ -161,9 +165,16 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
-      FindGroupTxnsFn(this, 'GroupFindTxns', data).then(res => {
-        this.initFormat(res)
-      })
+      if (this.networkMode) {
+        this.$socket.emit('GroupFindTxns', data)
+      } else {
+        this.$db.FindGroupTxns(data).then(res => {
+          this.initFormat(res)
+        })
+      }
+      // FindGroupTxnsFn(this, 'GroupFindTxns', data).then(res => {
+      //   this.initFormat(res)
+      // })
     },
     getHistoryState (id, key, index) {
       this.$$.getLockOutStatus(key).then(res => {
@@ -179,7 +190,12 @@ export default {
         hash: hash,
         status: status
       }
-      EditGroupTxnsFn(this, 'changeGroupTxnsStatus', data)
+      // EditGroupTxnsFn(this, 'changeGroupTxnsStatus', data)
+      if (this.networkMode) {
+        this.$socket.emit('changeGroupTxnsStatus', data)
+      } else {
+        this.$db.EditGroupTxns(data)
+      }
     },
   }
 }

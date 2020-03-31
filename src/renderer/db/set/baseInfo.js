@@ -1,13 +1,12 @@
-import {baseInfo} from './index.js'
-
-function uodateBaseInfo (data) {
+import db from '@/db/db.js'
+function updateBaseInfo (data) {
   if (!data.key) return
   const params = {
     key: data.key,
     value: data.value,
   }
   return new Promise((resolve, reject) => {
-    baseInfo.update({key: data.key}, params, {upsert: true}, (err, res) => {
+    db.baseInfo.update({key: data.key}, params, {upsert: true}, (err, res) => {
       if (err) {
         reject(err)
       } else {
@@ -21,7 +20,7 @@ function findBaseInfo (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    baseInfo.find(params).sort({ timestamp: -1 }).exec((err, res) => {
+    db.baseInfo.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -35,6 +34,6 @@ function findBaseInfo (params) {
 
 
 export {
-  uodateBaseInfo,
+  updateBaseInfo,
   findBaseInfo
 }

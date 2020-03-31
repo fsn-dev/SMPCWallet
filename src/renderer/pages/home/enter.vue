@@ -61,8 +61,6 @@ import wButton from '@/components/btn/index.vue'
 import setEnode from '@/components/setEnode/index.vue'
 import regExp from '@etc/js/config/RegExp'
 import {computedPub} from '@/assets/js/pages/public'
-import {insertAccount, findAccount} from '@/db/accounts'
-// import {insertNode, findNode} from '@/db/node'
 
 export default {
   name: '',
@@ -81,6 +79,7 @@ export default {
     ...computedPub
   },
   mounted () {
+    // console.log(this.$db)
   },
   methods: {
     modalClick () {
@@ -104,10 +103,10 @@ export default {
     importAccount () {
       let account = this.accountData.account
       // console.log(account)
-      findAccount({$or: [{address: account.address}, {name: account.name}]}).then(list => {
+      this.$db.findAccount({$or: [{address: account.address}, {name: account.name}]}).then(list => {
         // console.log(list)
         if (list.length <= 0) {
-          insertAccount({
+          this.$db.insertAccount({
             name: account.name,
             address: account.address,
             ks: account.ks,

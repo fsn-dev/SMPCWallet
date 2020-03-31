@@ -52,7 +52,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {uodateGroup, findGroup} from '@/db/group'
 export default {
   name: '',
   data () {
@@ -88,7 +87,7 @@ export default {
       })
     },
     getGName (item, i) {
-      findGroup({gId: item.Gid}).then(res => {
+      this.$db.findGroup({gId: item.Gid}).then(res => {
         console.log(res)
         if (res.length > 0) {
           this.getGroup[i].name = res[0].name
@@ -101,7 +100,7 @@ export default {
       this.gName = item.name
     },
     editGroup () {
-      uodateGroup({
+      this.$db.updateGroup({
         gId: this.selectionGinfo.Gid,
         name: this.gName
       }).then(res => {

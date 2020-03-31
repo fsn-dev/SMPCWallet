@@ -1,6 +1,4 @@
-import {gAccount} from './index.js'
-
-// console.log(gAccount)
+import db from '@/db/db.js'
 
 function updateGaccount (data) {
   if (!data.publicKey) return
@@ -10,7 +8,7 @@ function updateGaccount (data) {
     updatetime: Date.now()
   }
   return new Promise((resolve, reject) => {
-    gAccount.update({publicKey: data.publicKey}, params, {upsert: true}, (err, res) => {
+    db.gAccount.update({publicKey: data.publicKey}, params, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -26,7 +24,7 @@ function findGaccount (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    gAccount.find(params).sort({ timestamp: -1 }).exec((err, res) => {
+    db.gAccount.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)

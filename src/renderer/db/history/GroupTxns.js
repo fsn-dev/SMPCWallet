@@ -1,5 +1,5 @@
 import db from '@/db/db.js'
-const AddGroupTxns = (that, url, params) => {
+const AddGroupTxns = (params) => {
   return new Promise((resolve, reject) => {
     let dateNow = Date.now()
     let query = {
@@ -37,7 +37,7 @@ const AddGroupTxns = (that, url, params) => {
   })
 }
 
-const EditGroupTxns = (that, url, params) => {
+const EditGroupTxns = (params) => {
   return new Promise((resolve, reject) => {
     let query = {}, updateParams = {}
     let data = {
@@ -71,7 +71,7 @@ const EditGroupTxns = (that, url, params) => {
   })
 }
 
-const EditGroupMemberTxns = (that, url, params) => {
+const EditGroupMemberTxns = (params) => {
   return new Promise((resolve, reject) => {
     let dateNow = Date.now()
     let query = {key: params.local.key}
@@ -144,7 +144,7 @@ const EditGroupMemberTxns = (that, url, params) => {
   })
 }
 
-const FindGroupTxns = (that, url, params) => {
+const FindGroupTxns = (params) => {
   return new Promise((resolve, reject) => {
     let _params = {
       pageSize: params && params.pageSize ? params.pageSize : 50,

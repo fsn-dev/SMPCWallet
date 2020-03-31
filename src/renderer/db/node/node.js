@@ -1,17 +1,12 @@
-import {status} from './index.js'
-
-function uodateStatus (data) {
-  if (!data.key) return
+import db from '@/db/db.js'
+function insertNode (data) {
+  if (!data.url) return
   const params = {
-    key: data.key,
-    type: data.type,
-    address: data.address,
-    status: data.status,
-    updatetime: Date.now()
+    url: data.url,
+    timestamp: Date.now()
   }
-  
   return new Promise((resolve, reject) => {
-    status.update({key: data.key, type: data.type}, params, {upsert: true}, (err, res) => {
+    db.node.insert(params, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -23,11 +18,11 @@ function uodateStatus (data) {
   })
 }
 
-function findStatus (params) {
+function findNode (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    status.find(params).sort({ timestamp: -1 }).exec((err, res) => {
+    db.node.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -39,11 +34,11 @@ function findStatus (params) {
   })
 }
 
-function removeStatus (params) {
+function removeNode (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)
-    status.remove(params, {}, (err, res) => {
+    db.node.remove(params, {}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
@@ -56,7 +51,7 @@ function removeStatus (params) {
 }
 
 export {
-  uodateStatus,
-  findStatus,
-  removeStatus
+  insertNode,
+  findNode,
+  removeNode
 }

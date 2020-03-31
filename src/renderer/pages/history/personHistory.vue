@@ -101,7 +101,6 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 
-import {FindPersonAccountsFn, EditPersonAccountsFn} from '@/api/index.js'
 import {datas, commonMethods} from './js/common.js'
 import {methods} from './js/person.js'
 export default {
@@ -113,6 +112,11 @@ export default {
   },
   computed: {
     ...computedPub,
+  },
+  sockets: {
+    PersonAccountsFind (res) {
+      this.initFormat(res)
+    }
   },
   mounted () {
     let urlParams = this.$route.query
@@ -133,9 +137,16 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
-      FindPersonAccountsFn(this, 'PersonAccountsFind', data).then(res => {
-        this.initFormat(res)
-      })
+      if (this.networkMode) {
+        this.$socket.emit('PersonAccountsFind', data)
+      } else {
+        this.$db.FindPersonAccounts(data).then(res => {
+          this.initFormat(res)
+        })
+      }
+      // FindPersonAccountsFn(this, 'PersonAccountsFind', data).then(res => {
+      //   this.initFormat(res)
+      // })
     },
     getHistoryState (id, key, index) {
       this.$$.reqAccountStatus(key).then(res => {
@@ -151,7 +162,12 @@ export default {
         pubKey: pubKey,
         status: status
       }
-      EditPersonAccountsFn(this, 'changePersonAccountsEdit', data)
+      // EditPersonAccountsFn(this, 'changePersonAccountsEdit', data)
+      if (this.networkMode) {
+        this.$socket.emit('changePersonAccountsEdit', data)
+      } else {
+        this.$db.EditPersonAccounts(data)
+      }
     },
   }
 }
