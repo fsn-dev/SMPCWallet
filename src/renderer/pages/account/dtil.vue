@@ -84,7 +84,7 @@
               <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
             </div>
           </el-checkbox> -->
-          <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? Number(gMode.split('/')[0]) : 1" class="">
+          <el-checkbox-group v-model="gMemberSelect"  @change="changeMember">
           <!-- <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? (Number(gMode.split('/')[0]) - 1) : 1" class=""> -->
             <el-checkbox :label="eNode" disabled="disabled">
               <div class="flex-bc">
@@ -92,7 +92,7 @@
                 <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
               </div>
             </el-checkbox>
-            <el-checkbox v-for="(item, index) in gMemberInit" :label="item.eNode" :key="index">
+            <el-checkbox v-for="(item, index) in gMemberInit" :label="item.eNode" :key="index" :disabled="item.disabled">
               <div class="flex-bc">
                 {{$$.cutOut(item.eNode, 12, 16)}}
                 <span class="color_green flex-bc ml-10" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
@@ -168,6 +168,28 @@ export default {
     console.log(this.$route.query)
   },
   methods: {
+    changeMember (val) {
+      // console.log(val)
+      let minNum = this.gMode.indexOf('/') > 0 && this.gMode.split('/')[0] ? Number(this.gMode.split('/')[0]) : 1
+      let curLen = val.length
+      if (minNum >= curLen) {
+        for (let i = 0, len = this.gMemberInit.length; i < len; i++) {
+          let obj = this.gMemberInit[i]
+          if (val.includes(obj.eNode)) {
+            this.gMemberInit[i].disabled = true
+          } else {
+            this.gMemberInit[i].disabled = false
+          }
+        }
+      } else {
+        for (let i = 0, len = this.gMemberInit.length; i < len; i++) {
+          let obj = this.gMemberInit[i]
+          if (val.includes(obj.eNode)) {
+            this.gMemberInit[i].disabled = false
+          }
+        }
+      }
+    },
     modalClick () {
       this.eDialog.send = false
       this.eDialog.pwd = false
@@ -230,13 +252,16 @@ export default {
           } else {
             status = 'OffLine'
           }
-          this.gMemberInit.push({
-            eNode: cbData.Data.Enode,
-            status: status === 'OnLine' ? 1 : 0
-          })
+          let _disabled = false
           if (this.gMode.split('/')[0] === this.gMode.split('/')[1]) {
             this.gMemberSelect.push(cbData.Data.Enode)
+            _disabled = true
           }
+          this.gMemberInit.push({
+            eNode: cbData.Data.Enode,
+            status: status === 'OnLine' ? 1 : 0,
+            disabled: _disabled
+          })
         }
         this.loading.nodeSelect = false
       })

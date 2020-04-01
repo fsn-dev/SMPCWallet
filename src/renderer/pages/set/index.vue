@@ -70,7 +70,7 @@ export default {
   methods: {
     setNavBg () {
       let path = this.$route.path
-      console.log(path)
+      // console.log(path)
       if (path === '/set') {
         this.navActive = 0
       } else if (path === '/set/groupSet') {

@@ -62,6 +62,11 @@ export default {
   computed: {
     ...computedPub,
   },
+  watch: {
+    accountType () {
+      this.getAccountData()
+    }
+  },
   mounted () {
     this.getAccountData()
   },
@@ -75,16 +80,16 @@ export default {
           for (let obj2 of obj1.Accounts) {
             if (!arr1.includes(obj2)) {
               let obj3 = {
-                publicKey: obj2,
+                publicKey: obj2.PubKey,
                 gID: obj1.GroupID,
-                name: obj2
+                name: obj2.PubKey
               }
               arr2.push(obj3)
               arr1.push(obj2)
             }
           }
         }
-
+        // console.log(arr2)
         for (let i = 0, len = arr2.length; i < len; i++) {
           this.gAccountList.push(arr2[i])
           this.getGName(arr2[i], i)
