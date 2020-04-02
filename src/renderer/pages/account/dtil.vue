@@ -165,7 +165,7 @@ export default {
     setTimeout(() => {
       this.init()
     }, 50)
-    console.log(this.$route.query)
+    // console.log(this.$route.query)
   },
   methods: {
     changeMember (val) {
@@ -217,7 +217,7 @@ export default {
     },
     getGroupData () {
       this.$$.getGroupObj(this.gID).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.msg === 'Success') {
           this.eNodeArr = res.info
           this.setMemberList()

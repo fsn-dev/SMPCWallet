@@ -45,8 +45,8 @@
       </div>
     </div>
 
-    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false" v-loading="loading.confirm" :element-loading-text="$t('loading').l_1">
-      <div class="confirm-list-box">
+    <el-dialog :title="$t('title').createGroup" :visible.sync="eDialog.confirm" width="70%" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="false" >
+      <div class="confirm-list-box" v-loading="loading.confirm" :element-loading-text="$t('loading').l_1">
         <ul class="list-box">
           <li class="item flex-ai-fs" v-for="(item, index) in createEnodeArr" :key="index">
             <div class="label flex-sc">

@@ -242,7 +242,7 @@ export default {
         address: this.address,
         status: 1
       }).then(res => {
-        console.log(res)
+        // console.log(res)
       }).catch(err => {
         console.log(err)
       })
