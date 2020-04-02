@@ -25,7 +25,7 @@
             <div class="flex-bc WW100">
               <div class="flex-sc">
                 {{eNode.initiate ? ($t('label').initiator + '：') : ($t('label').approver + '：')}}
-                <span slot="label" :class="eNode.status === 5 || eNode.status === 0 ? 'color_green' : 'color_red'">{{$$.changeState(eNode.status)}}</span>
+                <span slot="label" :class="eNode.status === 'Agree' || eNode.status === 'Pending' ? 'color_green' : 'color_red'">{{eNode.status}}</span>
               </div>
               <!-- <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span> -->
             </div>

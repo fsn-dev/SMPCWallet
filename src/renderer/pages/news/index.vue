@@ -68,6 +68,7 @@ export default {
       this.gNews.num = res[0].total
       this.tNews.data = res[1]
       this.tNews.num = res[1].total
+      this.initTabView()
     },
     refreshApproval () {
       this.isReload = false
@@ -80,9 +81,9 @@ export default {
     },
     initTabView () {
       let at = this.$route.query.activeTab ? this.$route.query.activeTab : ''
-      if (this.gNewsNum === 0 && this.tNewsNum > 0) {
+      if (this.gNews.num === 0 && this.tNews.num > 0) {
         this.activeName = 'txns'
-      } else if (((this.gNewsNum > 0 && this.tNewsNum > 0) || (this.gNewsNum === 0 && this.tNewsNum === 0)) && at) {
+      } else if (((this.gNews.num > 0 && this.tNews.num > 0) || (this.gNews.num === 0 && this.tNews.num === 0)) && at) {
         this.activeName = at
       } else {
         this.activeName = 'account'

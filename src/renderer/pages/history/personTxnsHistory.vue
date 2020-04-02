@@ -124,6 +124,7 @@ export default {
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
+    this.page.cur = 0
     setTimeout(() => {
       this.init()
     }, 100)
@@ -147,9 +148,6 @@ export default {
           this.initFormat(res)
         })
       }
-      // FindPersonTxnsFn(this, 'PersonFindTxns', data).then(res => {
-      //   this.initFormat(res)
-      // })
     },
     getHistoryState (id, key, index) {
       this.$$.getLockOutStatus(key).then(res => {

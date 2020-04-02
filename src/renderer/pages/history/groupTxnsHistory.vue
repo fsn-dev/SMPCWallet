@@ -150,6 +150,7 @@ export default {
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
+    this.page.cur = 0
     setTimeout(() => {
       this.init()
     }, 100)
