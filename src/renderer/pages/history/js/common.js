@@ -14,7 +14,6 @@ export const datas = {
 
 export const commonMethods ={
   initFormat (res) {
-    this.loading.history = true
     if (res.msg === 'Success' && res.info.length > 0) {
       this.page.total = res.total
       this.formatData(res.info)

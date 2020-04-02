@@ -135,6 +135,7 @@ export default {
     ...commonMethods,
     ...methods,
     init () {
+      this.loading.history = true
       let data = {
         // eNode: this.eNode,
         kId: this.address,

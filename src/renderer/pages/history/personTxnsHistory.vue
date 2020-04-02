@@ -136,6 +136,7 @@ export default {
     ...commonMethods,
     ...methods,
     init () {
+      this.loading.history = true
       let data = {
         kId: this.address,
         coinType: this.coinType,

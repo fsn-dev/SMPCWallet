@@ -1,20 +1,4 @@
 export const methods = {
-  // initFormat (res) {
-  //   this.loading.history = true
-  //   if (res.msg === 'Success' && res.info.length > 0) {
-  //     this.page.total = res.total
-  //     this.formatData(res.info)
-  //     // this.tableData = res.info
-  //   } else {
-  //     this.page.total = 0
-  //     this.tableData = []
-  //     this.loading.history = false
-  //   }
-  // },
-  // handleCurrentChange (val) {
-  //   this.page.cur = val
-  //   this.init()
-  // },
   /**
    * 0: Pending;
    * 1: Success;
