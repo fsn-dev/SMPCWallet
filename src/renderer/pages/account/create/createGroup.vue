@@ -51,6 +51,12 @@
         </ul>
         <el-collapse v-model="activeNames">
           <el-collapse-item :title="$t('label').admins + ' ' + (index + 1)" :name="index + 1" v-for="(item, index) in node.select" :key="index">
+            <template slot="title">
+              <div class="flex-sc">
+                <span>{{item.isSelf ? $t('label').initiator : ($t('label').admins + ' ' + index)}}</span>
+                <span class="flex-sc ml-10" v-if="!item.isSelf">(IP: {{item.value ? (splitTx(item.value) && splitTx(item.value).ip ?  splitTx(item.value).ip : '') : ''}})</span>
+              </div>
+            </template>
             <div>{{item.value}}</div>
           </el-collapse-item>
         </el-collapse>
@@ -101,7 +107,9 @@ export default {
     ...computedPub,
   },
   mounted () {
-    this.init()
+    setTimeout(() => {
+      this.init()
+    },  300)
     // console.log(this.$$.eNodeCut(this.eNode))
   },
   methods: {
@@ -235,14 +243,16 @@ export default {
       }
     },
     splitTx (tx) {
-      if (!tx) return
+      if (!tx || !this.eNode) return
       tx = tx.split('0x')
-      let eNodeKey = this.$$.eNodeCut(tx[0]).key
+      // let eNodeKey = this.$$.eNodeCut(tx[0]).key
+      let obj = this.$$.eNodeCut(tx[0])
       return {
         address: '0x' + tx[2],
         signTx: '0x' + tx[1],
         eNode: tx[0],
-        eNodeId: eNodeKey
+        ip: obj && obj.ip ? obj.ip : '',
+        eNodeId: obj && obj.key ? obj.key : ''
       }
     },
   }

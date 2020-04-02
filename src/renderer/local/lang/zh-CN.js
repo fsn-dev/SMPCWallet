@@ -72,7 +72,7 @@ export default {
 		create: '创建',
 		newBuild: '新建',
 		set: '设置',
-		setName: '设置别名',
+		setName: '设置备注名',
 		setNode: '设置节点',
 		review: '重审',
 		lookHistory: '查看历史',

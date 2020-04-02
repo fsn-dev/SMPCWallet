@@ -315,9 +315,12 @@ export default {
   eNodeCut (enode) {
     if (!enode) return
     let enodeObj = enode.match(/enode:\/\/(\S*)@/)
+    let ip = enode.match(/@(\S*)/)[1]
     // console.log(enodeObj)
+    // console.log(ip)
     return {
       key: enodeObj[1],
+      ip: ip,
       enode: enodeObj.input
     }
   }

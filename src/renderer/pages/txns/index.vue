@@ -193,6 +193,7 @@ export default {
         status: 0,
         pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : '',
         key: key,
+        mode: this.gMode,
         gId: this.gID
       }
       if (Number(this.accountType) === 1) {

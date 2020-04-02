@@ -14,6 +14,9 @@
               <el-form-item :label="$t('label').groupAccountId + ':'" v-if="networkMode">
                 <span>{{ scope.row.pubKey }}</span>
               </el-form-item>
+              <el-form-item :label="$t('label').mode + ':'">
+                <span>{{scope.row.mode}}</span>
+              </el-form-item>
               <el-form-item :label="$t('label').from + ':'">
                 <span>{{ scope.row.from }}</span>
               </el-form-item>

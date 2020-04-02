@@ -14,6 +14,9 @@
               <el-form-item :label="$t('label').groupAccountId + ':'">
                 <span>{{ scope.row.pubKey }}</span>
               </el-form-item>
+              <el-form-item :label="$t('label').mode + ':'">
+                <span>{{scope.row.mode}}</span>
+              </el-form-item>
               <el-form-item :label="$t('label').date + ':'">
                 <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
               </el-form-item>

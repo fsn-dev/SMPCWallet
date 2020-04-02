@@ -1,18 +1,37 @@
 <template>
-  <div class="boxConntent1" v-loading="loading.list" element-loading-text="Loading……">
-    <!-- <div>
-      <el-button>Create Group</el-button>
-    </div> -->
+  <div class="boxConntent1 pb-20" v-loading="loading.list" element-loading-text="Loading……">
     <div class="g-list-box">
       <ul class="boxConntent1" v-if="gAccountList.length > 0">
-        <li class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)" :title="item.publicKey">
-          <div class="label">{{item.name ? $$.titleCase(item.name) : 'G'}}</div>
-          {{item.name.length > 16 ? '04' + $$.cutOut(item.name, 8 ,4) : item.name}}
+        <li v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)">
+          <el-popover placement="right" trigger="hover">
+            <div class="pubKeyTip">
+              <p class="flex-sc info"><span class="flex-ec label">ID:</span> {{$$.cutOut(item.publicKey, 8 ,8)}}</p>
+              <p class="mt-5 flex-sc info"><span class="flex-ec label">GID:</span> {{$$.cutOut(item.gID, 8 ,8)}}</p>
+              <p class="mt-5 flex-sc info"><span class="flex-ec label">Mode:</span> {{item.mode}}</p>
+              <p class="mt-5 flex-sc info"><span class="flex-ec label">Date:</span> {{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</p>
+              <div class="flex-ec">
+                <el-button type="primary" size="mini" @click="toUrl('/set/gAccount')">{{$t('btn').setName}}</el-button>
+              </div>
+            </div>
+            <div class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" slot="reference">
+              <div class="label">{{item.name ? $$.titleCase(item.name) : 'A'}}</div>
+              <div class="flex-sc flex-wrap">
+                <p class="WW100 pubkey">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 8 ,4) : item.name}}</p>
+                <div class="flex-bc font12 color_99 info">
+                  <span>{{item.mode}}</span>
+                  <span>{{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</span>
+                </div>
+              </div>
+            </div>
+          </el-popover>
         </li>
       </ul>
       <div class="flex-c boxConntent1" v-else>
         <el-button type="primary" @click="Number(accountType) ? toUrl('/createPerson') : toUrl('createGroup')" class="btn-primary">{{$t('btn').createAccount}}</el-button>
       </div>
+    </div>
+    <div class="account-num flex-c">
+      Total: {{gAccountList.length}} 
     </div>
 
   </div>
@@ -23,7 +42,7 @@
   width: 100%;height: 100%;padding: size(0) 0;overflow: auto;border-right:size(1) solid #f2f2f2;
   .item {
     width: 100%; cursor: pointer;padding: size(8) size(12);
-    $label-h: 30px;
+    $label-h: 36px;
     &:hover{
       background: #c7c6c6;
     }
@@ -33,10 +52,27 @@
     .label {
       width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;
     }
+    .pubkey {
+      line-height: 18px;margin-bottom: 3px;font-size: 14px;color: #333;color: #666;
+    }
+    .info {
+      line-height: 12px;
+    }
     // .el-collapse-item__header {
     //   background: none;
     // }
   }
+}
+
+.pubKeyTip {
+  font-size: 12px;
+  .label {
+    width: 40px;margin-right: 5px;
+  }
+}
+
+.account-num {
+  position: absolute;bottom:0;left: 0;right: 0;font-size: 12px;background: #f2f2f2;color: #999;border-right:size(1) solid #f2f2f2;
 }
 
 .night {
@@ -52,6 +88,9 @@
       }
     }
   }
+  .account-num {
+    background: $night-line-color;
+  }
 }
 </style>
 
@@ -65,7 +104,8 @@ export default {
       publicKey: '',
       loading: {
         list: true
-      }
+      },
+      visible: false
     }
   },
   computed: {
@@ -101,7 +141,8 @@ export default {
                 publicKey: obj2.PubKey,
                 gID: obj1.GroupID,
                 mode: obj2.ThresHold,
-                name: obj2.PubKey.substr(2)
+                name: obj2.PubKey.substr(2),
+                timestamp: obj2.TimeStamp
               }
               arr2.push(obj3)
               arr1.push(obj2.PubKey)

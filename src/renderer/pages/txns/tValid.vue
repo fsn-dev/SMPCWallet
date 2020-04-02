@@ -25,7 +25,8 @@
             <div class="flex-bc WW100">
               <div class="flex-sc">
                 {{eNode.initiate ? ($t('label').initiator + '：') : ($t('label').approver + '：')}}
-                <span slot="label" :class="eNode.status === 'Agree' || eNode.status === 'Pending' ? 'color_green' : 'color_red'">{{eNode.status}}</span>
+                <span :class="eNode.status === 'Agree' || eNode.status === 'Pending' ? 'color_green' : 'color_red'">{{eNode.status}}</span>
+                <span class="font12 color_99 flex-sc ml-10">(IP: {{eNode.ip}})</span>
               </div>
               <!-- <span class="font12 color_99 ml-10">（{{eNode.kId}}）</span> -->
             </div>
@@ -89,7 +90,8 @@ export default {
   mounted () {
     this.urlParams = this.$route.query
     this.key = this.urlParams.Key
-    this.showGroupData()
+    // this.showGroupData()
+    this.init()
     console.log(this.urlParams)
   },
   methods: {
@@ -118,6 +120,22 @@ export default {
         }
       }, 500)
     },
+    init () {
+      this.$$.getGroupObj(this.urlParams.GroupId).then(res => {
+        // console.log(res)
+        if (res.msg === 'Success') {
+          let enodeObj = {}
+          for (let obj of res.info) {
+            let obj1 = this.$$.eNodeCut(obj)
+            enodeObj[obj1.key] = obj1
+          }
+          this.gForm.enodeObj = enodeObj
+        }
+        this.showGroupData()
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     async showGroupData () {
       this.rawTxData = {
         to: this.urlParams.DcrmTo,
@@ -132,24 +150,26 @@ export default {
         }
         let arr = [], initiator = {}
         for (let obj of res.info) {
-          if (obj.initiate && Number(obj.initiate)) {
+          let obj1 = this.gForm.enodeObj[obj.Enode]
+          if (obj.Initiate && Number(obj.Initiate)) {
             initiator = {
-              eNode: obj.Enode,
+              key: obj1.key,
+              eNode: obj1.enode,
+              ip: obj1.ip,
               status: 'Agree',
               initiate: 1,
               timestamp: obj.TimeStamp
             }
           } else {
             arr.push({
-              eNode: obj.Enode,
+              key: obj1.key,
+              eNode: obj1.enode,
+              ip: obj1.ip,
               status: obj.Status,
               initiate: 0,
               timestamp: obj.TimeStamp
             })
           }
-          // if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
-          //   this.isReplySet = true
-          // }
         }
         if (this.urlParams.status) {
           this.isReplySet = false
@@ -164,16 +184,6 @@ export default {
           gID: this.urlParams.GroupId,
           timestamp: Number(this.urlParams.TimeStamp)
         }
-        this.$$.getGroupObj(this.urlParams.GroupId).then(res => {
-          if (res.msg === 'Success') {
-            this.gForm.eNodeArr = res.info
-          } else {
-            this.gForm.eNodeArr = []
-          }
-        }).catch(err => {
-          console.log(err)
-          this.gForm.eNodeArr = []
-        })
         this.countDownFn()
         this.refreshActionFn()
       }).catch(err => {
@@ -267,12 +277,12 @@ export default {
                 kId: this.address,
                 nodeKey: this.$$.eNodeCut(this.eNode).key,
               }
-              for (let obj of this.gForm.eNodeArr) {
+              for (let obj of this.gForm.eNode) {
                 // console.log(obj)
                 if (obj === this.eNode) continue
                 localData.gArr.push({
-                  eNode: obj,
-                  nodeKey: this.$$.eNodeCut(obj).key,
+                  eNode: obj.eNode,
+                  nodeKey: obj.key,
                   kId: '',
                   status: 0,
                   timestamp: '',

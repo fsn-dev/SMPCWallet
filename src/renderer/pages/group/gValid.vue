@@ -19,7 +19,8 @@
             <div class="flex-bc WW100">
               <div class="flex-sc">
                 {{eNode.initiate ? ($t('label').initiator + '：') : ($t('label').approver + '：')}}
-                <span slot="label" :class="eNode.status === 'Agree' || eNode.status === 'Pending' ? 'color_green' : 'color_red'">{{eNode.status}}</span>
+                <span :class="eNode.status === 'Agree' || eNode.status === 'Pending' ? 'color_green' : 'color_red'">{{eNode.status}}</span>
+                <span class="font12 color_99 flex-sc ml-10">(IP: {{$$.eNodeCut(eNode.eNode).ip}})</span>
               </div>
             </div>
             <el-input v-model="eNode.eNode" disabled="disabled" :title="eNode.eNode"></el-input>
@@ -136,7 +137,7 @@ export default {
         }
         let arr = [], initiator = {}
         for (let obj of res.info) {
-          if (obj.initiate && Number(obj.initiate)) {
+          if (obj.Initiate && Number(obj.Initiate)) {
             initiator = {
               eNode: enodeObj[obj.Enode],
               status: 'Agree',
