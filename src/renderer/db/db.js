@@ -46,7 +46,17 @@ db.historyPersonTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyGroupAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyGroupTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 
-// db.ks.persistence.setAutocompactionInterval()
-// db.status.persistence.setAutocompactionInterval()
+let compactionInterval = 30000
+
+db.ks.persistence.setAutocompactionInterval(compactionInterval)
+db.node.persistence.setAutocompactionInterval(compactionInterval)
+db.headerImg.persistence.setAutocompactionInterval(compactionInterval)
+db.group.persistence.setAutocompactionInterval(compactionInterval)
+db.gAccount.persistence.setAutocompactionInterval(compactionInterval)
+db.status.persistence.setAutocompactionInterval(compactionInterval)
+db.historyPersonAccpunts.persistence.setAutocompactionInterval(compactionInterval)
+db.historyPersonTxns.persistence.setAutocompactionInterval(compactionInterval)
+db.historyGroupAccpunts.persistence.setAutocompactionInterval(compactionInterval)
+db.historyGroupTxns.persistence.setAutocompactionInterval(compactionInterval)
 
 export default db

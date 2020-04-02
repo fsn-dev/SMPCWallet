@@ -36,21 +36,19 @@ export const methods = {
             let stateObj = { p: 0, a: 0, r: 0 }
             for (let obj of dataObj.member) {
               if (obj.status === 0) stateObj.p ++ 
-              if (obj.status === 4) stateObj.r ++ 
+              // if (obj.status === 4) stateObj.r ++ 
               if (obj.status === 5) stateObj.a ++ 
             }
-            // if (stateObj.r > 0) {
-            //   state = 4
-            //   this.setDBState(dataObj._id, i, '', state)
-            // } else 
             if (stateObj.a === dataObj.member.length) {
               state = 5
-              this.getHistoryState(dataObj._id, dataObj.key, i)
-            } else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
-              state = 6
-              dataObj.status = state
-              this.setDBState(dataObj._id, i, '', state)
+              // this.getHistoryState(dataObj._id, dataObj.key, i)
             }
+            // else if ((nowTime - dataObj.timestamp) > this.$$.config.timeout && stateObj.p > 0) {
+            //   state = 6
+            //   dataObj.status = state
+            //   this.setDBState(dataObj._id, i, '', state)
+            // }
+            this.getHistoryState(dataObj._id, dataObj.key, i)
             dataObj.status = state
           } else {
             this.getHistoryState(dataObj._id, dataObj.key, i)
@@ -66,19 +64,4 @@ export const methods = {
       this.loading.history = false
     }
   },
-  // getStateFormat (res) {
-  //   console.log(res)
-  //   if (res.msg === 'Success' && res.status === 'Success') {
-  //     let hash = res.hash && res.hash.indexOf('0x') === 0 ? res.hash : ('0x' + res.hash)
-  //     this.setDBState(id, index, hash, 1)
-  //     this.tableData[index].hash = hash
-  //     this.tableData[index].status = 1
-  //   } else if (res.status === 'Failure' || res.info === 'Failure') {
-  //     this.setDBState(id, index, '', 2)
-  //     this.tableData[index].status = 2
-  //   } else if (res.status === 'Timeout' || res.info === 'Timeout') {
-  //     this.setDBState(id, index, '', 6)
-  //     this.tableData[index].status = 6
-  //   }
-  // }
 }
