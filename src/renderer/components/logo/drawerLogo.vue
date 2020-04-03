@@ -1,5 +1,5 @@
 <template>
-  <el-tooltip placement="top">
+  <el-tooltip placement="top" :open-delay="1000">
     <div slot="content">
       <p class="flex-sc"><span class="flex-ec mr-5 W40">App:</span> {{$$.config.AppName}}</p>
       <p class="mt-5 flex-sc" v-if="token"><span class="flex-ec mr-5 W40">User:</span> {{token}}</p>

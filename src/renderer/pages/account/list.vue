@@ -3,7 +3,7 @@
     <div class="g-list-box">
       <ul class="boxConntent1" v-if="gAccountList.length > 0">
         <li v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)">
-          <el-popover placement="right" trigger="hover">
+          <el-popover placement="right" trigger="hover" :open-delay="2000">
             <div class="pubKeyTip">
               <p class="flex-sc info"><span class="flex-ec label">ID:</span> {{$$.cutOut(item.publicKey, 8 ,8)}}</p>
               <p class="mt-5 flex-sc info"><span class="flex-ec label">GID:</span> {{$$.cutOut(item.gID, 8 ,8)}}</p>
