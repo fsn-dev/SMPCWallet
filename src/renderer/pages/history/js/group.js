@@ -43,6 +43,12 @@ export const methods = {
       } else if (dataObj.status === 5 && !dataObj.hash) {
         this.getHistoryState(dataObj._id, dataObj.key, i)
       }
+      if (dataObj.gId) {
+        this.getGName(dataObj.gId, i)
+      }
+      if (dataObj.pubKey) {
+        this.getAccountName(dataObj.pubKey, i)
+      }
       // console.log(dataObj.status)
       this.tableData.push(dataObj)
       this.loading.history = false

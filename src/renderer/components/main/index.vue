@@ -57,12 +57,17 @@
       </transition>
     </section>
 
-    <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" v-if="drawer.create">
-      <div slot="title">
+    <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" :append-to-body="true" :withHeader="false">
+      <!-- <div slot="title">
+        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
+      </div> -->
+      <div class="plr15">
         <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
       </div>
-      <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType)"></createPerson>
-      <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
+      <div>
+        <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType)"></createPerson>
+        <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
+      </div>
     </el-drawer>
 
     <el-drawer :visible.sync="drawer.user" :destroy-on-close="true" :show-close="false">
@@ -73,6 +78,9 @@
 
 <style lang="scss">
 @import './scss/index';
+// .testDrawer {
+//   overflow: auto;
+// }
 </style>
 
 <script>

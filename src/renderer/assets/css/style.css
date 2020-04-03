@@ -55,3 +55,5 @@ body{display:block;padding:0;margin:0;}
 
 /* .mzindex, .el-select-dropdown.el-popper {z-index: 3009!important} */
 .el-badge__content.is-fixed{ top: -3px;right: 0;}
+.el-drawer {overflow: auto;}
+.el-drawer__header {height: 40px;display: none;}

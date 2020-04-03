@@ -9,10 +9,10 @@
                 <span>{{ scope.row.key }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').groupId + ':'">
-                <span>{{ scope.row.gId }}</span>
+                <span v-if="refresh.g">{{ scope.row.gName ? scope.row.gName : scope.row.gId }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').groupAccountId + ':'" v-if="networkMode">
-                <span>{{ scope.row.pubKey }}</span>
+                <span v-if="refresh.a">{{ scope.row.aName ? scope.row.aName : scope.row.pubKey }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').mode + ':'">
                 <span>{{scope.row.mode}}</span>
@@ -79,7 +79,7 @@
         </el-table-column>
         <el-table-column :label="$t('label').groupAccountId" width="180" align="center" v-if="networkMode">
           <template slot-scope="scope">
-            <span :title="scope.row.pubKey" @click="copyTxt(scope.row.pubKey)" class="cursorP">{{$$.cutOut(scope.row.pubKey, 8, 6)}}</span>
+            <span :title="scope.row.pubKey" @click="copyTxt(scope.row.pubKey)" class="cursorP" v-if="refresh.a">{{scope.row.aName ? scope.row.aName : $$.cutOut(scope.row.pubKey, 8, 6)}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').from" width="150" align="center">

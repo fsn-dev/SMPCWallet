@@ -72,8 +72,11 @@
 
     <!-- 节点选择 start -->
     <el-drawer :visible.sync="drawer.select" :destroy-on-close="true" :show-close="false">
-      <div slot="title">
+      <!-- <div slot="title">
         <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
+      </div> -->
+      <div class="plr15">
+        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
       </div>
       <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
@@ -110,8 +113,11 @@
 
     <!-- 发送交易 start -->
     <el-drawer :visible.sync="drawer.send" :destroy-on-close="true" :show-close="false" v-if="drawer.send">
-      <div slot="title">
+      <!-- <div slot="title">
         <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
+      </div> -->
+      <div class="plr15">
+        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
       </div>
       <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
     </el-drawer>

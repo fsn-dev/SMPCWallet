@@ -87,8 +87,8 @@ export default {
       })
     },
     getGName (item, i) {
-      this.$db.findGroup({gId: item.Gid}).then(res => {
-        console.log(res)
+      this.$db.findGroup({gId: item.Gid, address: this.address,}).then(res => {
+        // console.log(res)
         if (res.length > 0) {
           this.getGroup[i].name = res[0].name
         }
@@ -102,9 +102,10 @@ export default {
     editGroup () {
       this.$db.updateGroup({
         gId: this.selectionGinfo.Gid,
+        address: this.address,
         name: this.gName
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.eDialog.setName = false
         this.msgSuccess(this.$t('success').s_5)
         this.getGroupData()

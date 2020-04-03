@@ -9,10 +9,10 @@
                 <span>{{ scope.row.key }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').groupId + ':'">
-                <span>{{ scope.row.gId }}</span>
+                <span v-if="refresh.g">{{ scope.row.gName ? scope.row.gName : scope.row.gId }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').groupAccountId + ':'">
-                <span>{{ scope.row.pubKey }}</span>
+                <span v-if="refresh.a">{{ scope.row.aName ? scope.row.aName : scope.row.pubKey }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').mode + ':'">
                 <span>{{scope.row.mode}}</span>
@@ -67,12 +67,12 @@
         </el-table-column>
         <el-table-column :label="$t('label').groupId" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.gId">{{ $$.cutOut(scope.row.gId, 10, 12) }}</span>
+            <span :title="scope.row.gId" v-if="refresh.g">{{ scope.row.gName ? scope.row.gName : $$.cutOut(scope.row.gId, 10, 12) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').groupAccountId" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.pubKey">{{ $$.cutOut(scope.row.pubKey, 10, 12) }}</span>
+            <span :title="scope.row.pubKey" v-if="refresh.a">{{ scope.row.aName ? scope.row.aName : $$.cutOut(scope.row.pubKey, 10, 12) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').date" width="200" align="center">

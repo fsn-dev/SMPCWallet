@@ -10,6 +10,10 @@ export const datas = {
     pageSize: 10,
     total: 0
   },
+  refresh: {
+    g: true,
+    a: true
+  }
 }
 
 export const commonMethods ={
@@ -45,5 +49,29 @@ export const commonMethods ={
       this.setDBState(id, index, '', 6)
       this.tableData[index].status = 6
     }
-  }
+  },
+  getGName (id, index) {
+    this.$db.findGroup({gId: id, address: this.address,}).then(res => {
+      // console.log(res)
+      if (res.length > 0) {
+        this.tableData[index].gName = res[0].name
+        this.refresh.g = false
+        this.$nextTick(() => {
+          this.refresh.g = true
+        })
+      }
+    })
+  },
+  getAccountName (id, index) {
+    this.$db.findGaccount({publicKey: id, address: this.address}).then(res => {
+      // console.log(res)
+      if (res.length > 0) {
+        this.tableData[index].aName = res[0].name
+        this.refresh.a = false
+        this.$nextTick(() => {
+          this.refresh.a = true
+        })
+      }
+    })
+  },
 }

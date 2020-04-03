@@ -3,12 +3,14 @@ import db from '@/db/db.js'
 function updateGroup (data) {
   if (!data.gId) return
   const params = {
+    key: data.gId + data.address,
     gId: data.gId,
+    address: data.address,
     name: data.name,
     updatetime: Date.now()
   }
   return new Promise((resolve, reject) => {
-    db.group.update({gId: data.gId}, params, {upsert: true}, (err, res) => {
+    db.group.update({key: data.gId + data.address}, params, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)

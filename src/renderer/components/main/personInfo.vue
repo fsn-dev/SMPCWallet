@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 plr15">
+  <div class="boxConntent1 plr15" id="personInfoBox">
     <div class="flex-bc t-logo-box">
       <logo @click-logo="closeDrawer"></logo>
       <div class="quit-box cursorP" @click="quitApp()"> {{$t('title').quit}} </div>
@@ -11,7 +11,7 @@
       <li class="item flex-sc" @click="getAccountData" :title="$t('title').exportAccount"><i class="el-icon-download icon"></i>{{$t('btn').exportAccount}}</li>
       <li class="item flex-sc" @click="openUrl('/set')" :title="$t('btn').set"><i class="el-icon-setting icon"></i>{{$t('btn').set}}</li>
     </ul>
-    <set-enode class="mt-20 set-node-box" :isSetNode="false"></set-enode>
+    <set-enode class="mt-20" :class="nodeClass ? 'set-node-box' : ''" :isSetNode="false"></set-enode>
 
 
     <el-dialog :title="$t('btn').exportAccount" :visible.sync="eDialog.export" width="300px" :before-close="closeDrawer"  :close-on-click-modal="false" :modal-append-to-body='false'>
@@ -63,7 +63,8 @@ export default {
         export: false
       },
       ksName: '',
-      ksUrl: ''
+      ksUrl: '',
+      nodeClass: true
     }
   },
   components: {setEnode},
@@ -72,8 +73,21 @@ export default {
   },
   mounted () {
     // console.log(this.$$.config)
+    this.getNowPageHeight()
+    window.onresize = () => {
+      this.getNowPageHeight()
+    }
   },
   methods: {
+    getNowPageHeight () {
+      let h = document.getElementById('personInfoBox').clientHeight
+      if (h < 720) {
+        this.nodeClass = false
+      } else {
+        this.nodeClass = true
+      }
+      // console.log(h)
+    },
     closeDrawer () {
       this.eDialog.export = false
       this.accountData = {}
@@ -82,10 +96,6 @@ export default {
       this.$emit('closeDrawer')
     },
     createAccount () {
-      // this.$store.commit('setAccountType', {info: '0'})
-      // if () {
-      //   this.toUrl('/createGroup')
-      // }
       if (Number(this.accountType)) {
         this.toUrl('/createPerson')
       } else {
@@ -98,11 +108,6 @@ export default {
       this.closeDrawer()
     },
     changeMode (type) {
-      // if (Number(type)) {
-      //   this.toUrl('/person')
-      // } else {
-      //   this.toUrl('/group')
-      // }
       this.$store.commit('setAccountType', {info: type})
       this.closeDrawer()
     },

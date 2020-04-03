@@ -92,7 +92,7 @@ export default {
         // console.log(arr2)
         for (let i = 0, len = arr2.length; i < len; i++) {
           this.gAccountList.push(arr2[i])
-          this.getGName(arr2[i], i)
+          this.getAccountName(arr2[i], i)
         }
       }).catch(err => {
         if (err.error) {
@@ -100,8 +100,8 @@ export default {
         }
       })
     },
-    getGName (item, i) {
-      this.$db.findGaccount({publicKey: item.publicKey}).then(res => {
+    getAccountName (item, i) {
+      this.$db.findGaccount({publicKey: item.publicKey, address: this.address}).then(res => {
         console.log(res)
         if (res.length > 0) {
           this.gAccountList[i].name = res[0].name
@@ -116,6 +116,7 @@ export default {
     editGroup () {
       this.$db.updateGaccount({
         publicKey: this.selectionGinfo.publicKey,
+        address: this.address,
         name: this.gAname
       }).then(res => {
         console.log(res)

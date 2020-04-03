@@ -15,6 +15,12 @@ export const methods = {
       if (dataObj.status === 0) {
         this.getHistoryState(dataObj._id, dataObj.key, i)
       }
+      if (dataObj.gId) {
+        this.getGName(dataObj.gId, i)
+      }
+      if (dataObj.pubKey) {
+        this.getAccountName(dataObj.pubKey, i)
+      }
       this.tableData.push(dataObj)
       this.loading.history = false
     }

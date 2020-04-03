@@ -50,6 +50,8 @@ export const methods = {
     this.loading.creat = false
     this.$$.web3.setProvider(this.serverRPC)
     this.$emit('closeModal')
+    // console.log(123)
+    // this.$emit('closeDrawer')
   },
   getMode (mode) {
     // console.log(mode)

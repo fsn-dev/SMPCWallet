@@ -3,12 +3,14 @@ import db from '@/db/db.js'
 function updateGaccount (data) {
   if (!data.publicKey) return
   const params = {
+    key: data.publicKey + data.address,
     name: data.name,
+    address: data.address,
     publicKey: data.publicKey,
     updatetime: Date.now()
   }
   return new Promise((resolve, reject) => {
-    db.gAccount.update({publicKey: data.publicKey}, params, {upsert: true}, (err, res) => {
+    db.gAccount.update({key: data.publicKey + data.address}, params, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
