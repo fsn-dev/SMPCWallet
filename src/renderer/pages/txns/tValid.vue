@@ -151,7 +151,7 @@ export default {
         let arr = [], initiator = {}
         for (let obj of res.info) {
           let obj1 = this.gForm.enodeObj[obj.Enode]
-          if (obj.Initiate && Number(obj.Initiate)) {
+          if (obj.Initiator && Number(obj.Initiator)) {
             initiator = {
               key: obj1.key,
               eNode: obj1.enode,
