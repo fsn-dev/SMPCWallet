@@ -44,11 +44,15 @@ export const nodeMethods = {
       if (this.networkMode) {
         this.$socket.emit(this.baseUrl)
       } else {
+        let arr = []
         for (let obj of this.localUrlArr) {
-          this.netUrlArr.push({
-            url: obj.url,
-            name: obj.name ? obj.name : obj.url
-          })
+          if (!arr.includes(obj.url)) {
+            this.netUrlArr.push({
+              url: obj.url,
+              name: obj.name ? obj.name : obj.url
+            })
+            arr.push(obj.url)
+          }
         }
         // this.netUrlArr = this.localUrlArr
         this.loadingSelect = false

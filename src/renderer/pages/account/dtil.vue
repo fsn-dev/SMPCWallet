@@ -91,15 +91,26 @@
           <!-- <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? (Number(gMode.split('/')[0]) - 1) : 1" class=""> -->
             <el-checkbox :label="eNode" disabled="disabled">
               <div class="flex-bc">
-                {{$$.cutOut(eNode, 12, 16)}}
+                {{$$.cutOut(eNode, 12, 10)}}
                 <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
               </div>
             </el-checkbox>
             <el-checkbox v-for="(item, index) in gMemberInit" :label="item.eNode" :key="index" :disabled="item.disabled">
               <div class="flex-bc">
-                {{$$.cutOut(item.eNode, 12, 16)}}
-                <span class="color_green flex-bc ml-10" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-                <span class="color_red flex-bc ml-10" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                {{$$.cutOut(item.eNode, 12, 10)}}
+                <div>
+                  <span class="color_green flex-bc ml-10" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                  <span class="color_red flex-bc ml-10" v-else><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                </div>
+                <div v-if="!networkMode" class="cursorP">
+                  <i class="el-icon-edit ml-10 font16" v-if="!item.isEdit" @click="changeEnode(item, index)"></i>
+                  <i class="el-icon-finished ml-10 font16" v-else @click="changeEnode(item, index)"></i>
+                </div>
+              </div>
+              <div v-if="!networkMode && item.isEdit">
+                <!-- <el-input class="H30"></el-input> -->
+                <el-input size="mini" v-model="item.eNode" v-if="!Number(accountType)"> </el-input>
+                <el-input size="mini" v-model="item.url" v-if="Number(accountType)"> </el-input>
               </div>
             </el-checkbox>
           </el-checkbox-group>
@@ -174,6 +185,71 @@ export default {
     // console.log(this.$route.query)
   },
   methods: {
+    changeEnode (item, index) {
+      if (Number(this.accountType)) {
+        if (item.isEdit) {
+          if (!item.url) {
+            this.gMemberInit[index].url = this.$$.eNodeCut(item.oldEnode).ip
+            this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
+            this.msgError(this.$t('warn').w_17)
+            return
+          }
+          if (item.url !== this.$$.eNodeCut(item.oldEnode).ip) {
+            let url = item.url.indexOf('http://') === 0 || item.url.indexOf('https://') === 0 ? item.url : ('http://' + item.url)
+            this.$$.web3.setProvider(url)
+            this.$$.web3.dcrm.getEnode().then(res => {
+              let cbData = res
+              cbData = JSON.parse(cbData)
+              // console.log(cbData)
+              if (cbData.Status === "Success") {
+                let _enode = cbData.Data.Enode
+                if (!this.$$.eNodeCut(_enode).key || item.oldEnode.indexOf(this.$$.eNodeCut(_enode).key) === -1) {
+                  this.gMemberInit[index].eNode = item.oldEnode
+                  this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
+                  this.msgError(this.$t('warn').w_18)
+                  return
+                } else {
+                  this.gMemberInit[index].status = 1
+                  this.gMemberInit[index].eNode = _enode
+                }
+              } else {
+                this.gMemberInit[index].eNode = item.oldEnode
+              }
+              this.$$.web3.setProvider(this.serverRPC)
+            }).catch(err => {
+              console.log(err)
+              this.gMemberInit[index].eNode = item.oldEnode
+              this.gMemberInit[index].url = this.$$.eNodeCut(item.oldEnode).ip
+              this.$$.web3.setProvider(this.serverRPC)
+            })
+          }
+        }
+      } else {
+        if (item.isEdit) {
+          if (!item.eNode) {
+            this.gMemberInit[index].eNode = item.oldEnode
+            this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
+            this.msgError(this.$t('warn').w_17)
+            return
+          }
+          if (item.eNode.indexOf('0x') !== -1) {
+            item.eNode = this.$$.splitTx(item.eNode).eNode
+          }
+          if (!this.$$.eNodeCut(item.eNode).key || item.oldEnode.indexOf(this.$$.eNodeCut(item.eNode).key) === -1) {
+            this.gMemberInit[index].eNode = item.oldEnode
+            this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
+            this.msgError(this.$t('warn').w_18)
+            return
+          }
+          this.$$.getEnodeState(item.eNode).then(res  => {
+            // console.log(res)
+            this.gMemberInit[index].status = res === 'OnLine' ? 1 : 0
+          })
+        }
+      }
+      this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
+      console.log(item)
+    },
     changeMember (val) {
       // console.log(val)
       let minNum = this.gMode.indexOf('/') > 0 && this.gMode.split('/')[0] ? Number(this.gMode.split('/')[0]) : 1
@@ -259,14 +335,17 @@ export default {
             status = 'OffLine'
           }
           let _disabled = false
-          if (this.gMode.split('/')[0] === this.gMode.split('/')[1]) {
+          if (this.gMode.split('/')[0] === this.gMode.split('/')[1] || Number(this.accountType)) {
             this.gMemberSelect.push(cbData.Data.Enode)
             _disabled = true
           }
           this.gMemberInit.push({
+            oldEnode: cbData.Data.Enode,
             eNode: cbData.Data.Enode,
             status: status === 'OnLine' ? 1 : 0,
-            disabled: _disabled
+            disabled: _disabled,
+            url: this.$$.eNodeCut(cbData.Data.Enode).ip,
+            isEdit: false
           })
         }
         this.loading.nodeSelect = false
@@ -321,18 +400,21 @@ export default {
     openSendDialog (index, item) {
       this.setTxnsData(item)
       this.gMemberSelect = []
-      if (!Number(this.accountType)) {
-        // this.gMemberInit = []
-        this.loading.nodeSelect = true
-        this.drawer.select = true
-        this.setMemberList()
-      } else {
-        this.gMemberSelect.push(this.eNode)
-        for (let obj of this.gMemberInit) {
-          this.gMemberSelect.push(obj.eNode)
-        }
-        this.toSendTxnsUrl()
-      }
+      this.loading.nodeSelect = true
+
+      this.drawer.select = true
+      this.setMemberList()
+      // if (!Number(this.accountType)) {
+      //   this.loading.nodeSelect = true
+      //   this.drawer.select = true
+      //   this.setMemberList()
+      // } else {
+      //   this.gMemberSelect.push(this.eNode)
+      //   for (let obj of this.gMemberInit) {
+      //     this.gMemberSelect.push(obj.eNode)
+      //   }
+      //   this.toSendTxnsUrl()
+      // }
     },
     toSendTxnsUrl (obj) {
       this.drawer.select = false

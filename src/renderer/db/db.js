@@ -36,7 +36,7 @@ const db = {
 }
 
 db.ks.ensureIndex({fieldName: 'address', unique: true}, cb)
-db.node.ensureIndex({fieldName: 'url', unique: true}, cb)
+// db.node.ensureIndex({fieldName: 'url', unique: true}, cb)
 db.headerImg.ensureIndex({fieldName: 'address', unique: true}, cb)
 db.group.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.gAccount.ensureIndex({fieldName: 'key', unique: true}, cb)

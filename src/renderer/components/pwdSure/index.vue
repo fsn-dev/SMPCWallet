@@ -12,7 +12,7 @@
                   <!-- <el-input type="password" v-model="sureForm.password" @keyup.native="changePwd"></el-input> -->
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="unlock" :disabled="!loading.unlock">{{$t('btn').unlock}}</el-button>
+                  <el-button type="primary" @click="unlock" :disabled="!loading.unlock || !sureForm.password || sureForm.password.length < 6">{{$t('btn').unlock}}</el-button>
                   <el-button native-type="submit" @click="elDialogView">{{$t('btn').cancel}}</el-button>
                 </el-form-item>
               </el-form>

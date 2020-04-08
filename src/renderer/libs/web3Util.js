@@ -77,18 +77,9 @@ let web3Utils = {
           }
           resolve(data)
         }).catch(err => {
-          // console.log(err)
-          // data = 'OffLine'
-          // resolve(data)
-          breakAgaing().then(res => {
-            this.getEnodeState(eNode).then(res => {
-              resolve(res)
-            })
-          }).catch(e => {
-            console.log(err)
-            data = 'OffLine'
-            resolve(data)
-          })
+          console.log(err)
+          data = 'OffLine'
+          resolve(data)
         })
       } catch (error) {
         console.log(error)

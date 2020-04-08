@@ -313,7 +313,12 @@ export default {
     }
   },
   eNodeCut (enode) {
-    if (!enode) return
+    let obj = {
+      key: '',
+      ip: '',
+      enode: ''
+    }
+    if (!enode || enode.indexOf('enode://') === -1 || enode.indexOf('@') === -1) return obj
     let enodeObj = enode.match(/enode:\/\/(\S*)@/)
     let ip = enode.match(/@(\S*)/)[1]
     // console.log(enodeObj)
@@ -323,5 +328,23 @@ export default {
       ip: ip,
       enode: enodeObj.input
     }
-  }
+  },
+  splitTx (tx) {
+    if (!tx) return{
+      address: '',
+      signTx: '',
+      eNode: '',
+      ip: '',
+      eNodeId: ''
+    }
+    tx = tx.split('0x')
+    let obj = this.eNodeCut(tx[0])
+    return {
+      address: '0x' + tx[2],
+      signTx: '0x' + tx[1],
+      eNode: tx[0],
+      ip: obj && obj.ip ? obj.ip : '',
+      eNodeId: obj && obj.key ? obj.key : ''
+    }
+  },
 }

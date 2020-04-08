@@ -54,7 +54,7 @@
             <template slot="title">
               <div class="flex-sc">
                 <span>{{item.isSelf ? $t('label').initiator : ($t('label').admins + ' ' + index)}}</span>
-                <span class="flex-sc ml-10" v-if="!item.isSelf">(IP: {{item.value ? (splitTx(item.value) && splitTx(item.value).ip ?  splitTx(item.value).ip : '') : ''}})</span>
+                <span class="flex-sc ml-10" v-if="!item.isSelf">(IP: {{item.value ? ($$.splitTx(item.value) && $$.splitTx(item.value).ip ?  $$.splitTx(item.value).ip : '') : ''}})</span>
               </div>
             </template>
             <div>{{item.value}}</div>
@@ -136,8 +136,8 @@ export default {
     createGroup () {
       let arr = [], signStr = ''
       for (let obj of this.node.select) {
-        arr.push(this.splitTx(obj.value).eNode)
-        signStr += ':' + this.splitTx(obj.value).signTx
+        arr.push(this.$$.splitTx(obj.value).eNode)
+        signStr += ':' + this.$$.splitTx(obj.value).signTx
       }
       console.log(arr)
       this.createAndGetGid(this.mode.select, arr, signStr)
@@ -167,7 +167,7 @@ export default {
         }]
       }
       for (let obj of this.node.select) {
-        let obj2 = this.splitTx(obj.value)
+        let obj2 = this.$$.splitTx(obj.value)
         if (this.eNode.indexOf(obj2.eNodeId) !== -1) continue
         let obj1 = {
           eNode: obj2.eNode,
@@ -197,6 +197,7 @@ export default {
         this.msgError(this.$t('warn').w_18)
         return
       }
+      // console.log(enodeArr)
       let arr = new Set()
       for (let i = 0, len = enodeArr.length; i < len; i++) {
         if (i !== index && enodeArr[i].value) {
@@ -210,7 +211,9 @@ export default {
         this.msgError('Repeat')
         return
       }
-      this.$$.getEnodeState(item.value.replace(/\s/, '').split('0x')[0]).then(res => {
+      // console.log(item)
+      // console.log(this.$$.splitTx(item.value))
+      this.$$.getEnodeState(this.$$.splitTx(item.value).eNode).then(res => {
         console.log(res)
         this.node.select[index].state = res
         this.refreshNode()
@@ -242,19 +245,19 @@ export default {
         }
       }
     },
-    splitTx (tx) {
-      if (!tx || !this.eNode) return
-      tx = tx.split('0x')
-      // let eNodeKey = this.$$.eNodeCut(tx[0]).key
-      let obj = this.$$.eNodeCut(tx[0])
-      return {
-        address: '0x' + tx[2],
-        signTx: '0x' + tx[1],
-        eNode: tx[0],
-        ip: obj && obj.ip ? obj.ip : '',
-        eNodeId: obj && obj.key ? obj.key : ''
-      }
-    },
+    // $$.splitTx (tx) {
+    //   if (!tx || !this.eNode) return
+    //   tx = tx.split('0x')
+    //   // let eNodeKey = this.$$.eNodeCut(tx[0]).key
+    //   let obj = this.$$.eNodeCut(tx[0])
+    //   return {
+    //     address: '0x' + tx[2],
+    //     signTx: '0x' + tx[1],
+    //     eNode: tx[0],
+    //     ip: obj && obj.ip ? obj.ip : '',
+    //     eNodeId: obj && obj.key ? obj.key : ''
+    //   }
+    // },
   }
 }
 </script>
