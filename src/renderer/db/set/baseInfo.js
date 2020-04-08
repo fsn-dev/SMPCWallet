@@ -6,7 +6,7 @@ function updateBaseInfo (data) {
     value: data.value,
   }
   return new Promise((resolve, reject) => {
-    db.baseInfo.update({key: data.key}, params, {upsert: true}, (err, res) => {
+    db.baseInfo.update({key: data.key}, {$set: params}, {upsert: true}, (err, res) => {
       if (err) {
         reject(err)
       } else {

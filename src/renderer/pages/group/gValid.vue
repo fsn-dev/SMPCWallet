@@ -137,7 +137,7 @@ export default {
         }
         let arr = [], initiator = {}
         for (let obj of res.info) {
-          if (obj.Initiate && Number(obj.Initiate)) {
+          if (obj.Initiator && Number(obj.Initiator)) {
             initiator = {
               eNode: enodeObj[obj.Enode],
               status: 'Agree',

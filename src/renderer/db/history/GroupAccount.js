@@ -86,9 +86,12 @@ const EditGroupMemberAccounts = (params) => {
         data.error = err
         reject(data)
       } else {
+        // console.log('EditGroupMemberAccounts')
         // console.log(res)
+        // console.log(res < 0 || res.length <= 0)
         if (res < 0 || res.length <= 0) {
           db.historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
+          // db.historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
             if (err) {
               // console.log(err)
               data.error = err

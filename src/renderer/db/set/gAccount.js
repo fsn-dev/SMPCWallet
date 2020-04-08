@@ -10,7 +10,7 @@ function updateGaccount (data) {
     updatetime: Date.now()
   }
   return new Promise((resolve, reject) => {
-    db.gAccount.update({key: data.publicKey + data.address}, params, {upsert: true}, (err, res) => {
+    db.gAccount.update({key: data.publicKey + data.address}, {$set: params}, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)

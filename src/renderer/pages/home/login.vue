@@ -118,13 +118,6 @@ export default {
               this.signEnode(pwd, address)
               this.$store.commit('setAddress', {info: address})
               this.$store.commit('setToken', {info: this.loginObj.username})
-              // this.$store.commit('setWallet', {info: pwd})
-              // return
-              // if (Number(this.accountType)) {
-              //   this.$router.push('/person')
-              // } else {
-              //   this.$router.push('/group')
-              // }
               this.$router.push('/account')
             } else {
               this.msgError('Error')

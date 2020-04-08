@@ -45,7 +45,10 @@
 
     <!-- 查看组成员 start -->
     <el-drawer :visible.sync="drawer.member" :destroy-on-close="true" :show-close="false">
-      <div slot="title">
+      <!-- <div slot="title">
+        <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
+      </div> -->
+      <div class="plr15">
         <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
       </div>
       <div class="d-content-view g-member-list-box">
@@ -76,7 +79,7 @@
         <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
       </div> -->
       <div class="plr15">
-        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
+        <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
       </div>
       <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
@@ -128,7 +131,7 @@
         <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
       </div> -->
       <div class="plr15">
-        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
+        <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
       </div>
       <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
     </el-drawer>
@@ -248,7 +251,16 @@ export default {
         }
       }
       this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
+      let nodeKey = this.$$.eNodeCut(item.eNode).key
+      for (let i = 0, len = this.gMemberSelect.length; i < len; i++) {
+        let obj = this.gMemberSelect[i]
+        if (obj.indexOf(nodeKey) !== -1) {
+          this.gMemberSelect[i] = item.eNode
+          break
+        }
+      }
       console.log(item)
+      // console.log(this.gMemberSelect)
     },
     changeMember (val) {
       // console.log(val)
@@ -417,6 +429,7 @@ export default {
       // }
     },
     toSendTxnsUrl (obj) {
+      console.log(this.gMemberSelect)
       this.drawer.select = false
       this.drawer.send = true
     },

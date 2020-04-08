@@ -10,14 +10,14 @@ function updateStatus (data) {
     status: data.status,
     updatetime: dataNow
   }
-  console.log(params)
+  // console.log(params)
   return new Promise((resolve, reject) => {
-    db.status.update({key: data.key, address: data.address,}, params, {upsert: true}, (err, res) => {
+    db.status.update({key: data.key, address: data.address,}, {$set: params}, {upsert: true}, (err, res) => {
       if (err) {
         // console.log(err)
         reject(err)
       } else {
-        // console.log(res)
+        console.log(res)
         resolve(res)
       }
     })
@@ -25,6 +25,7 @@ function updateStatus (data) {
 }
 
 function findStatus (params) {
+  // console.log(params)
   params = params ? params : {}
   return new Promise((resolve, reject) => {
     // console.log(params)

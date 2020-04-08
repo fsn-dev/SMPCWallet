@@ -2,6 +2,10 @@
 export const approvalMethods = {
   getStatusInfo (key) {
     return new Promise((resolve) => {
+      // console.log({
+      //   key: key,
+      //   address: this.address
+      // })
       this.$db.findStatus({
         key: key,
         address: this.address

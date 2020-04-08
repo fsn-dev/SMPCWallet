@@ -9,7 +9,7 @@
               <p class="mt-5 flex-sc info"><span class="flex-ec label">GID:</span> {{$$.cutOut(item.gID, 8 ,8)}}</p>
               <p class="mt-5 flex-sc info"><span class="flex-ec label">Mode:</span> {{item.mode}}</p>
               <p class="mt-5 flex-sc info"><span class="flex-ec label">Date:</span> {{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</p>
-              <div class="flex-ec">
+              <div class="flex-ec mt-10">
                 <el-button type="primary" size="mini" @click="toUrl('/set/gAccount')">{{$t('btn').setName}}</el-button>
               </div>
             </div>
@@ -17,7 +17,7 @@
               <div class="label">{{item.name ? $$.titleCase(item.name) : 'A'}}</div>
               <div class="flex-sc flex-wrap">
                 <p class="WW100 pubkey">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 8 ,4) : item.name}}</p>
-                <div class="flex-bc font12 color_99 info">
+                <div class="flex-bc font12 color_99 info WW100">
                   <span>{{item.mode}}</span>
                   <span>{{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</span>
                 </div>
@@ -149,7 +149,7 @@ export default {
             }
           }
         }
-
+        arr2 = arr2.sort(this.$$.bigToSmallSort('timestamp'))
         for (let i = 0, len = arr2.length; i < len; i++) {
           this.gAccountList.push(arr2[i])
           this.getGName(arr2[i], i)
