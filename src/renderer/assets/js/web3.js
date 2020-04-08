@@ -21,8 +21,8 @@ web3.extend({
     {
       name: 'reqDcrmAddr',
       call: 'dcrm_reqDcrmAddr',
-      params: 2,
-      inputFormatter: [null, null],
+      params: 1,
+      inputFormatter: [null],
       outputFormatter: null
     },
     {

@@ -81,7 +81,7 @@ export const methods = {
       this.modalClick()
       return
     }
-    let data = 'REQDCRMADDR:' + this.gID + ':' + this.mode.select + ':' + Date.now()
+    let data = 'REQDCRMADDR:' + this.gID + ':' + this.mode.select + ':' + this.accountType + ':' + Date.now()
     if (signStr) {
       data += signStr
     }
@@ -110,7 +110,7 @@ export const methods = {
     }
   },
   reqAccount () {
-    this.$$.reqAccount(this.signTx, this.accountType).then(res => {
+    this.$$.reqAccount(this.signTx).then(res => {
       console.log(res)
       if (res.msg === 'Success') {
         if (Number(this.accountType) !== 1) {

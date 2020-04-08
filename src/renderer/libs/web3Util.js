@@ -374,12 +374,12 @@ let web3Utils = {
       }
     })
   },
-  async reqAccount (signTx, mode) {
+  async reqAccount (signTx) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {
       try {
         let cbData = ''
-        web3.dcrm.reqDcrmAddr(signTx, mode).then(res => {
+        web3.dcrm.reqDcrmAddr(signTx).then(res => {
           cbData = res
           if (cbData.Status !== 'Error') {
             // let obj = JSON.parse(cbData.Data.result)

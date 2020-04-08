@@ -63,7 +63,6 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
-        <!-- <el-button type="primary" @click="reqAccount" :disabled="!loading.confirm">{{$t('btn').confirm}}</el-button> -->
         <el-button type="primary" @click="createGroup">{{$t('btn').confirm}}</el-button>
       </div>
     </el-dialog>
