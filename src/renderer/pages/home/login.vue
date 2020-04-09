@@ -113,7 +113,7 @@ export default {
       this.loading.user = true
       if (query !== '') {
         this.userlist = this.userlistInit.filter(item => {
-          return item.username.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          return item.username && item.username.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
         })
       } else {
         this.userlist = this.userlistInit

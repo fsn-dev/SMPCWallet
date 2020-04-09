@@ -123,7 +123,7 @@ export default {
         this.node.add = ''
         return
       }
-      // console.log(this.node.add)
+      console.log(this.node.add)
       let reg = /[,;\-_=+]+/g
       // let str = reg.test(this.node.add)
       // console.log(addArr)
@@ -139,6 +139,7 @@ export default {
       } else {
         arr.push(this.node.add)
       }
+      
       // for (let url of arr) {
       for (let i = 0, len = arr.length; i < len; i ++) {
         this.setNode(arr[i], i)
