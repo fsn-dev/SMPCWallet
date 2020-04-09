@@ -24,7 +24,7 @@ function insertAccount (data) {
 function findAccount (params) {
   params = params ? params : {}
   return new Promise((resolve, reject) => {
-    console.log(params)
+    // console.log(params)
     db.ks.find(params).sort({ timestamp: -1 }).exec((err, res) => {
       if (err) {
         // console.log(err)

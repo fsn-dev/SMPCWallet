@@ -4,14 +4,6 @@
     <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
-          <!-- <el-form-item :label="$t('label').mode"
-            :rules="{
-              required: true, message: $t('warn').w_5, trigger: 'blur'
-            }">
-            <el-select v-model="mode.select" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode">
-              <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item>
             <div slot="label" class="flex-sc">
               <span class="color_red">*</span>
@@ -117,7 +109,6 @@ export default {
     ...methods,
     ...nodeMethods,
     addNode () {
-      console.log(this.node.add)
       if (!this.node.add) {
         this.msgError(this.$t('error').err_12)
         return
@@ -132,9 +123,32 @@ export default {
         this.node.add = ''
         return
       }
+      // console.log(this.node.add)
+      let reg = /[,;\-_=+]+/g
+      // let str = reg.test(this.node.add)
+      let addArr = this.node.add.replace(reg, ',').split(',')
+      // console.log(addArr)
+      let arr = []
+      if (reg.test(this.node.add)) {
+        for (let obj of addArr) {
+          if (!arr.includes(obj)) {
+            arr.push(obj)
+          }
+        }
+      } else {
+        arr.push(this.node.add)
+      }
+      // for (let url of arr) {
+      for (let i = 0, len = arr.length; i < len; i ++) {
+        this.setNode(arr[i], i)
+      }
+      this.node.add = ''
+    },
+    setNode (nodeUrl, index) {
+      // console.log(nodeUrl)
       let isExist = true, nowSelect = {}
       for (let obj of this.netUrlArr) {
-        if (obj.url === this.node.add) {
+        if (obj.url === nodeUrl) {
           isExist = false
           nowSelect = obj
           break
@@ -151,10 +165,12 @@ export default {
         if (!isRepeat) {
           this.node.select.push(nowSelect)
         } else {
-          this.msgError(this.$t('error').err_13)
+          setTimeout(() => {
+            this.msgError(this.$t('error').err_13 + '  ' + nodeUrl)
+          }, index * 150)
         }
       } else {
-        let url = this.node.add
+        let url = nodeUrl
         if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
           url = 'http://' + url
         }
@@ -165,8 +181,6 @@ export default {
         this.node.select.push(newNode)
         this.saveRpcDB(newNode.url)
       }
-      // console.log(123)
-      this.node.add = ''
     },
     removeNode (item, index) {
       // console.log(item)

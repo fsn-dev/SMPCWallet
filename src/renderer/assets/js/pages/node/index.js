@@ -62,14 +62,14 @@ export const nodeMethods = {
   saveRpcDB (url) {
     let params = {url: url}
     this.$db.findNode(params).then(res => {
-      console.log(res)
+      // console.log(res)
       if (res > 0 || res.length > 0) {
         // resolve(0)
-        console.log(res)
+        // console.log(res)
       } else {
         this.$db.insertNode(params).then(res1 => {
           // resolve(1)
-          console.log(res1)
+          // console.log(res1)
         })
       }
     })

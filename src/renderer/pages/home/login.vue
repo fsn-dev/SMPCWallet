@@ -10,9 +10,42 @@
       <div class="user-form-input">
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
-            <el-form-item :label="$t('label').username" prop="username">
+            <!-- <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input>
+            </el-form-item> -->
+
+
+            <el-form-item>
+              <div slot="label" class="flex-sc">
+                <span class="color_red">* </span>
+                {{$t('label').username}}
+              </div>
+              <!-- <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input> -->
+              <el-select
+                class="WW100"
+                v-model="loginObj.username"
+                filterable
+                remote
+                reserve-keyword
+                placeholder=""
+                :remote-method="remoteMethod"
+                :loading="loading.user"
+                no-data-text="Null"
+                :loading-text="$t('loading').l_1"
+                @change="validInfo('username')"
+              >
+                <el-option
+                  v-for="item in userlist"
+                  :key="item.ks"
+                  :label="item.name"
+                  :value="item.ks">
+                </el-option>
+              </el-select>
             </el-form-item>
+
+
+
+
             <el-form-item :label="$t('label').password" prop="password">
               <el-input type="password" v-model="loginObj.password" @input="validInfo('password')"></el-input>
             </el-form-item>
@@ -42,9 +75,12 @@ export default {
   data () {
     return {
       loginObj: {},
+      userlistInit:[],
+      userlist:[],
       loading: {
         file: true,
-        wait: false
+        wait: false,
+        user: false
       },
       rules: {
         username: [
@@ -62,12 +98,32 @@ export default {
     ...computedPub
   },
   mounted () {
+    this.getAllUser()
   },
   methods: {
     ...headerImg,
+    getAllUser () {
+      this.$db.findAccount({}).then(res => {
+        console.log(res)
+        this.userlistInit = res
+      })
+    },
+    remoteMethod (query)  {
+      // console.log(query)
+      this.loading.user = true
+      if (query !== '') {
+        this.userlist = this.userlistInit.filter(item => {
+          return item.name.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+        })
+      } else {
+        this.userlist = this.userlistInit
+      }
+      this.loading.user = false
+    },
     validInfo (key) {
+      // console.log(key)
       if (key) {
-        this.loginObj[key] = this.loginObj[key].toString().replace(/\s/g, '')
+        this.loginObj[key] = this.loginObj[key] ? this.loginObj[key].toString().replace(/\s/g, '') : ''
       }
       if (this.loginObj.username && this.loginObj.username.length >= 3 && this.loginObj.password && this.loginObj.password.length > 5) {
         this.loading.file = false
@@ -95,44 +151,48 @@ export default {
       });
     },
     inputFileBtn () {
-      this.$db.findAccount({name: this.loginObj.username}).then(res => {
-        console.log(res)
-        if (res.length > 0) {
-          let keystore = res[0].ks
-          try {
-            if (this.$$.walletRequirePass(keystore)) {
-              const walletInfo = this.$$.getWalletFromPrivKeyFile(
-                keystore,
-                this.loginObj.password
-              )
-              let address = walletInfo.getChecksumAddressString()
-              let pwd = walletInfo.getPrivateKeyString()
-              // this.createHeader(this.walletInfo.getPublicKeyString(), address)
-              // console.log(address)
-              // console.log(walletInfo.getPrivateKeyString())
-              if (!this.eNode) {
-                this.msgError(this.$t('error').err_10)
-                return
-              }
-              this.getHeaderImg(walletInfo.getPublicKeyString(), walletInfo.getChecksumAddressString(),this.loginObj.username)
-              this.signEnode(pwd, address)
-              this.$store.commit('setAddress', {info: address})
-              this.$store.commit('setToken', {info: this.loginObj.username})
-              this.$router.push('/account')
-            } else {
-              this.msgError('Error')
-              this.loading.wait = false
-            }
-          } catch (error) {
-            console.log(error)
-            this.msgError(error.toString())
-            this.loading.wait = false
+      this.unlock(this.loginObj.username)
+      // this.$db.findAccount({name: this.loginObj.username}).then(res => {
+      //   console.log(res)
+      //   if (res.length > 0) {
+      //     let keystore = res[0].ks
+      //     this.unlock(keystore)
+      //   } else {
+      //     this.msgError(this.$t('error').err_8)
+      //     this.loading.wait = false
+      //   }
+      // })
+    },
+    unlock (keystore) {
+      try {
+        if (this.$$.walletRequirePass(keystore)) {
+          const walletInfo = this.$$.getWalletFromPrivKeyFile(
+            keystore,
+            this.loginObj.password
+          )
+          let address = walletInfo.getChecksumAddressString()
+          let pwd = walletInfo.getPrivateKeyString()
+          // this.createHeader(this.walletInfo.getPublicKeyString(), address)
+          // console.log(address)
+          // console.log(walletInfo.getPrivateKeyString())
+          if (!this.eNode) {
+            this.msgError(this.$t('error').err_10)
+            return
           }
+          this.getHeaderImg(walletInfo.getPublicKeyString(), walletInfo.getChecksumAddressString(),this.loginObj.username)
+          this.signEnode(pwd, address)
+          this.$store.commit('setAddress', {info: address})
+          this.$store.commit('setToken', {info: this.loginObj.username})
+          this.$router.push('/account')
         } else {
-          this.msgError(this.$t('error').err_8)
+          this.msgError('Error')
           this.loading.wait = false
         }
-      })
+      } catch (error) {
+        console.log(error)
+        this.msgError(error.toString())
+        this.loading.wait = false
+      }
     },
     async getHeaderImg (hex, address, name) {
       this.$db.findHeaderImg({address: address}).then(res => {
