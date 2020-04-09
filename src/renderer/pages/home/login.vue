@@ -36,9 +36,9 @@
               >
                 <el-option
                   v-for="item in userlist"
-                  :key="item.ks"
-                  :label="item.name"
-                  :value="item.ks">
+                  :key="item.username"
+                  :label="item.username"
+                  :value="item.username">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -113,7 +113,7 @@ export default {
       this.loading.user = true
       if (query !== '') {
         this.userlist = this.userlistInit.filter(item => {
-          return item.name.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          return item.username.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
         })
       } else {
         this.userlist = this.userlistInit
@@ -151,17 +151,20 @@ export default {
       });
     },
     inputFileBtn () {
-      this.unlock(this.loginObj.username)
-      // this.$db.findAccount({name: this.loginObj.username}).then(res => {
-      //   console.log(res)
-      //   if (res.length > 0) {
-      //     let keystore = res[0].ks
-      //     this.unlock(keystore)
-      //   } else {
-      //     this.msgError(this.$t('error').err_8)
-      //     this.loading.wait = false
-      //   }
-      // })
+      // for (let) {
+
+      // }
+      // this.unlock(this.loginObj.username)
+      this.$db.findAccount({username: this.loginObj.username}).then(res => {
+        console.log(res)
+        if (res.length > 0) {
+          let keystore = res[0].ks
+          this.unlock(keystore)
+        } else {
+          this.msgError(this.$t('error').err_8)
+          this.loading.wait = false
+        }
+      })
     },
     unlock (keystore) {
       try {

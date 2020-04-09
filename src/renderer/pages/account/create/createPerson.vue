@@ -126,12 +126,13 @@ export default {
       // console.log(this.node.add)
       let reg = /[,;\-_=+]+/g
       // let str = reg.test(this.node.add)
-      let addArr = this.node.add.replace(reg, ',').split(',')
       // console.log(addArr)
       let arr = []
       if (reg.test(this.node.add)) {
+        let addArr = this.node.add.replace(reg, ',').split(',')
+        // console.log(addArr.includes(this.serverRPC))
         for (let obj of addArr) {
-          if (!arr.includes(obj)) {
+          if (!arr.includes(obj) && this.serverRPC !== obj) {
             arr.push(obj)
           }
         }

@@ -23,7 +23,7 @@
 
     <el-dialog :title="$t('btn').importAccount" :visible.sync="eDialog.import" width="300px" :before-close="modalClick"  :close-on-click-modal="false" :modal-append-to-body='false'>
       <div>
-        {{$t('warn').w_20}}：{{accountData && accountData.account && accountData.account.name ? accountData.account.name : ''}} ?
+        {{$t('warn').w_20}}：{{accountData && accountData.account && accountData.account.username ? accountData.account.username : ''}} ?
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
@@ -33,7 +33,7 @@
 
     <el-dialog :title="$t('btn').importAccount" :visible.sync="eDialog.changeName" width="300px" :before-close="modalClick"  :close-on-click-modal="false" :modal-append-to-body='false'>
       <div>
-        {{$t('error').err_7}}：{{accountData && accountData.account && accountData.account.name ? accountData.account.name : ''}} ！{{$t('warn').w_22}}：
+        {{$t('error').err_7}}：{{accountData && accountData.account && accountData.account.username ? accountData.account.username : ''}} ！{{$t('warn').w_22}}：
       </div>
       <div>
         <el-input v-model="newAccountName" :placeholder="$t('warn').w_22"></el-input>
@@ -93,7 +93,7 @@ export default {
         if (!regExp.username.test(this.newAccountName)) {
           this.msgError(this.$t('error').err_2)
         } else {
-          this.accountData.account.name = this.newAccountName
+          this.accountData.account.username = this.newAccountName
           this.importAccount()
         }
       } else {
@@ -103,11 +103,11 @@ export default {
     importAccount () {
       let account = this.accountData.account
       // console.log(account)
-      this.$db.findAccount({$or: [{address: account.address}, {name: account.name}]}).then(list => {
+      this.$db.findAccount({$or: [{address: account.address}, {username: account.username}]}).then(list => {
         // console.log(list)
         if (list.length <= 0) {
           this.$db.insertAccount({
-            name: account.name,
+            username: account.username,
             address: account.address,
             ks: account.ks,
             timestamp: account.timestamp,
@@ -136,9 +136,9 @@ export default {
     fileUpChange (event) {
       let reader = new FileReader()
       let fileNameID = document.getElementById("fileName")
-      let fileName = event.target.files[0].name
+      let fileName = event.target.files[0].username
       reader.onload = onLoadEvent => {
-        console.log(onLoadEvent.currentTarget.result)
+        // console.log(onLoadEvent.currentTarget.result)
         let data = onLoadEvent.currentTarget.result
         try {
           data = data ? JSON.parse(data) : ''

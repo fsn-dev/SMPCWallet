@@ -3,9 +3,10 @@ import db from '@/db/db.js'
 function insertAccount (data) {
   if (!data.address) return
   const params = {
-    name: data.name,
+    username: data.username,
     ks: data.ks,
     address: data.address,
+    // password: data.address,
     timestamp: data.timestamp ? data.timestamp : Date.now()
   }
   return new Promise((resolve, reject) => {

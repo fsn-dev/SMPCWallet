@@ -16,7 +16,7 @@
 
     <el-dialog :title="$t('btn').exportAccount" :visible.sync="eDialog.export" width="300px" :before-close="closeDrawer"  :close-on-click-modal="false" :modal-append-to-body='false'>
       <div>
-        {{$t('warn').w_21}}：{{accountData && accountData.account && accountData.account.name ? accountData.account.name : ''}} ?
+        {{$t('warn').w_21}}：{{accountData && accountData.account && accountData.account.username ? accountData.account.username : ''}} ?
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDrawer">{{$t('btn').cancel}}</el-button>
@@ -117,10 +117,10 @@ export default {
         this.accountData.account = {
           address: res[0].address,
           ks: res[0].ks,
-          name: res[0].name,
+          username: res[0].username,
           timestamp: res[0].timestamp,
         }
-        this.ksName = res[0].name
+        this.ksName = res[0].username
         this.eDialog.export = true
       })
     },
