@@ -5,7 +5,6 @@
 </template>
 
 <script>
-// import {StartPoint} from '@/assets/js/refresh'
 import {computedPub} from '@/assets/js/pages/public'
 import {mapActions} from 'vuex'
 export default {
@@ -35,7 +34,6 @@ export default {
     ...computedPub,
   },
   created () {
-    // console.log(StartPoint)
     this.initData()
     this.StartPoint()
     document.body.onmousemove = () => {
@@ -54,17 +52,10 @@ export default {
       this.getAddress()
       this.getAccountType()
       this.getDayAndNight()
-      // this.getWallet()
       this.getLanguage()
       this.getServerRPC()
-      // this.getNetworkMode()
-      // let url = this.serverRPC
-      // this.$$.web3.setProvider(url)
-      // console.log(url)
-      // console.log(this.$$.web3)
     },
     mousePos (e) {
-      let x, y
       e = e || window.event
       return {
         x: e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft,
