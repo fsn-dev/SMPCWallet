@@ -1,7 +1,7 @@
 const path = require('path').resolve('.')
 import { app, BrowserWindow, Menu } from 'electron'
 // const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
-import config from '../../static/js/config'
+
 const {spawn} = require('child_process')
 /**
  * Set `__static` path to static files in production

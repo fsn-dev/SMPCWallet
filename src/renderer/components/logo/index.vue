@@ -9,7 +9,7 @@
     </div>
     <!-- <div class="logoImg flex-sc cursorP" @click="goHome" :title="$$.config.AppName + (token ? '--' + token : '')"> -->
     <div class="logoImg flex-sc cursorP" @click="goHome">
-      <img src="@etc/img/logo/logo.svg" class="logoImgVisibleLg">
+      <img src="@/assets/img/logo/logo.svg" class="logoImgVisibleLg">
       <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
       <span class="color_red font12" v-if="$$.config.env === 'dev'" style="white-space:nowrap;">（{{$t('label').versionTest}}）</span>
     </div>

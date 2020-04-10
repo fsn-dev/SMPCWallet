@@ -1,4 +1,4 @@
-import config from '@etc/js/config'
+
 export default {
 	error: {
 		err_1: 'Please enter the user name!',

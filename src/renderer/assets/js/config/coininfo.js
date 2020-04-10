@@ -1,7 +1,7 @@
 export default {
   "FSN": {
     "coinName": "Fusion",
-    "logo": "./static/img/coin/fsn.svg",
+    "logo": require("@/assets/img/coin/fsn.svg"),
     "token": "",
     "hashFM": "",
     "limit": 0.001,
@@ -11,7 +11,7 @@ export default {
   },
   "ATOM": {
     "coinName": "Atomic Coin",
-    "logo": "./static/img/coin/atom.png",
+    "logo": require("@/assets/img/coin/atom.png"),
     "token": "",
     "hashFM": "",
     "limit": 0,
@@ -21,7 +21,7 @@ export default {
   },
   "BCH": {
     "coinName": "Bitcoin Cash",
-    "logo": "./static/img/coin/bch.png",
+    "logo": require("@/assets/img/coin/bch.png"),
     "token": "",
     "hashFM": "",
     "limit": 0,
@@ -31,7 +31,7 @@ export default {
   },
   "BTC": {
     "coinName": "Bitcoin",
-    "logo": "./static/img/coin/btc.svg",
+    "logo": require("@/assets/img/coin/btc.svg"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -41,7 +41,7 @@ export default {
   },
   "EOS": {
     "coinName": "EOS",
-    "logo": "./static/img/coin/eos.png",
+    "logo": require("@/assets/img/coin/eos.png"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -51,7 +51,7 @@ export default {
   },
   "ETH": {
     "coinName": "Ethereum",
-    "logo": "./static/img/coin/eth.svg",
+    "logo": require("@/assets/img/coin/eth.svg"),
     "token": "txlist",
     "hashFM": "",
     "limit": 0.001,
@@ -61,7 +61,7 @@ export default {
   },
   "TRX": {
     "coinName": "Tronprotocol",
-    "logo": "./static/img/coin/tron.svg",
+    "logo": require("@/assets/img/coin/tron.svg"),
     "token": "tokentx",
     "limit": 0,
     "rate": 6,
@@ -70,7 +70,7 @@ export default {
   },
   "BNB": {
     "coinName": "Binance",
-    "logo": "./static/img/coin/bnb.svg",
+    "logo": require("@/assets/img/coin/bnb.svg"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -80,7 +80,7 @@ export default {
   },
   "MKR": {
     "coinName": "Maker",
-    "logo": "./static/img/coin/mkr.svg",
+    "logo": require("@/assets/img/coin/mkr.svg"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -90,7 +90,7 @@ export default {
   },
   "GUSD": {
     "coinName": "Gemini Dollar",
-    "logo": "./static/img/coin/gusd.svg",
+    "logo": require("@/assets/img/coin/gusd.svg"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -100,7 +100,7 @@ export default {
   },
   "HT": {
     "coinName": "HuobiToken",
-    "logo": "./static/img/coin/ht.svg",
+    "logo": require("@/assets/img/coin/ht.svg"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -110,7 +110,7 @@ export default {
   },
   "BNT": {
     "coinName": "Bancor",
-    "logo": "./static/img/coin/bnt.svg",
+    "logo": require("@/assets/img/coin/bnt.svg"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -120,7 +120,7 @@ export default {
   },
   "USDT": {
     "coinName": "Tether",
-    "logo": "./static/img/coin/usdt.png",
+    "logo": require("@/assets/img/coin/usdt.png"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -130,7 +130,7 @@ export default {
   },
   "XRP": {
     "coinName": "XRP",
-    "logo": "./static/img/coin/evt1.png",
+    "logo": require("@/assets/img/coin/evt1.png"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
@@ -140,7 +140,7 @@ export default {
   },
   "EVT1": {
     "coinName": "EVT1",
-    "logo": "./static/img/coin/evt1.png",
+    "logo": require("@/assets/img/coin/evt1.png"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,

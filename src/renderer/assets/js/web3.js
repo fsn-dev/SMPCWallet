@@ -2,7 +2,7 @@ const path = require("path").resolve(".")
 const pathLink = path
 
 const Web3 = require('web3')
-import config from '@etc/js/config.js'
+import config from '@/assets/js/config/base.js'
 /**
  * @description 基本信息设置
  */

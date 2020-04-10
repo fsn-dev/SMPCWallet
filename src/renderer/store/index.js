@@ -7,7 +7,7 @@ import cookies from '@/libs/cookies'
 /**
  * @description 配置文件
  */
-import config from '@etc/js/config'
+import config from '@/assets/js/config/base.js'
 /**
  * @description web3文件
  */

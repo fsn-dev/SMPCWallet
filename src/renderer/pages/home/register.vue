@@ -38,7 +38,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import regExp from '@etc/js/config/RegExp'
+import regExp from '@/assets/js/config/RegExp.js'
 import headerImg from './js/headerImg'
 export default {
   name: '',

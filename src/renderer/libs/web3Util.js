@@ -1,6 +1,6 @@
 import web3 from '@/assets/js/web3'
 import Tx from 'ethereumjs-tx'
-import config from '@etc/js/config.js'
+import config from '@/assets/js/config/base.js'
 import db from '@/db/index.js'
 let eNodeInit
 

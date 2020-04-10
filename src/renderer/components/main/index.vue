@@ -109,7 +109,7 @@ export default {
         user: false,
         create: false
       },
-      headerImg: require('@etc/img/logo/logo.png')
+      headerImg: require('@/assets/img/logo/logo.png')
     }
   },
   watch: {

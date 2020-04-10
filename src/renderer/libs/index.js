@@ -1,11 +1,11 @@
 /**
  * @description 配置文件
  */
-import config from '@etc/js/config'
+import config from '@/assets/js/config/base.js'
 /**
  * @description 币种基本信息
  */
-import coininfo from '@etc/js/config/coininfo.js'
+import coininfo from '@/assets/js/config/coininfo.js'
 /**
  * @description web3方法及配置
  */
@@ -38,7 +38,7 @@ import web3Util from '@/libs/web3Util'
 /**
  * @description mode基本选项
  */
-import mode from '@etc/js/config/mode'
+import mode from '@/assets/js/config/mode.js'
 /**
  * @description 复制粘贴
  */

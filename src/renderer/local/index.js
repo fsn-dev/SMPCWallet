@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import customZhCn from './lang/zh-CN'
 import customEnUs from './lang/en-US'
-const config = require('@etc/js/config')
 Vue.use(VueI18n)
 
 // 自动根据浏览器系统语言设置语言

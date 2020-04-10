@@ -11,12 +11,12 @@
       <div class="receiveAddress_btn flex-c">
         <button class="btn blue flex-c" @click="qrcode(selectData.address)">
           <div class="icon">
-            <img src="@etc/img/QRcode.svg">
+            <img src="@/assets/img/QRcode.svg">
           </div>
           {{$t('btn').code}}
         </button>
         <button class="btn cyan flex-c" @click="copyTxt(selectData.address)">
-          <div class="icon"><img src="@etc/img/copy.svg"></div>
+          <div class="icon"><img src="@/assets/img/copy.svg"></div>
           <el-popover trigger="hover" :content="$t('btn').copy">
             <div class="addreess" slot="reference">{{$t('btn').copy}}</div>
           </el-popover>

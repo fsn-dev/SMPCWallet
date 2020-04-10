@@ -2,8 +2,8 @@
   <div class="bg flex-c">
     <div class="e-box">
       <div class="line-block logo">
-        <img src="@etc/img/logo/logo-white.svg" v-if="!dayAndNight">
-        <img src="@etc/img/logo/logo-black.svg" v-else>
+        <img src="@/assets/img/logo/logo-white.svg" v-if="!dayAndNight">
+        <img src="@/assets/img/logo/logo-black.svg" v-else>
       </div>
       <h3 class="title" v-html="$t('title').walletTitle"></h3>
       <p class="tip color_red" v-html="$t('tip').walletTip"></p>
@@ -59,7 +59,7 @@
 <script>
 import wButton from '@/components/btn/index.vue'
 import setEnode from '@/components/setEnode/index.vue'
-import regExp from '@etc/js/config/RegExp'
+import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public'
 
 export default {

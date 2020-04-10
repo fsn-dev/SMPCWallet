@@ -1,5 +1,5 @@
 // import Cookies from 'js-cookie'
-import config from '@etc/js/config'
+import config from '@/assets/js/config/base.js'
 const session = require('electron').remote.session;
 
 const url = config.url || 'http://127.0.0.1'
