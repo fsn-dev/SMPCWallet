@@ -48,6 +48,7 @@ export default {
 		s_5: 'Delete successfully!',
 		s_6: 'Export succeeded!',
 		s_7: 'Import succeeded!',
+		s_8: 'Setup successful!',
 	},
 	btn: {
 		confirm: 'Confirm',

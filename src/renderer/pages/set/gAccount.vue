@@ -121,7 +121,7 @@ export default {
       }).then(res => {
         console.log(res)
         this.eDialog.setName = false
-        this.msgSuccess(this.$t('success').s_5)
+        this.msgSuccess(this.$t('success').s_8)
         this.getAccountData()
       })
     }
