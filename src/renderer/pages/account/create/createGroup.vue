@@ -163,7 +163,8 @@ export default {
           status: 5,
           initiate: 1,
           timestamp: Date.now()
-        }]
+        }],
+        kId: this.address
       }
       for (let obj of this.node.select) {
         let obj2 = this.$$.splitTx(obj.value)

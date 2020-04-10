@@ -16,6 +16,7 @@ const AddPersonTxns = (params) => {
       timestamp: dateNow,
       kId: params.kId ? params.kId : 0,
       eNode: params.eNode ? params.eNode : '',
+      mode: params.mode ? params.mode : 0,
       pubKey: params.pubKey ? params.pubKey : '',
     }
     let data = {

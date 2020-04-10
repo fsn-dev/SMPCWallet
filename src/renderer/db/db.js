@@ -43,7 +43,7 @@ db.gAccount.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.status.ensureIndex({fieldName: 'keyId', unique: true}, cb)
 db.historyPersonAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyPersonTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
-db.historyGroupAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
+db.historyGroupAccpunts.ensureIndex({fieldName: 'keyId', unique: true}, cb)
 db.historyGroupTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 
 

@@ -44,7 +44,7 @@ function createWindow () {
   // BrowserWindow.addDevToolsExtension('~/Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/3.1.6_0');
   // console.log(process)
   mainWindow = new BrowserWindow({
-    height: 1341,
+    height: 1200,
     width: 1200,
     useContentSize: true,
     webPreferences: {
@@ -63,6 +63,18 @@ function createWindow () {
     }
   })
 }
+
+// 限制只打开一个窗口 start
+// const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+//   if (mainWindow) {
+//     if (mainWindow.isMinimized()) mainWindow.restore()
+//     mainWindow.focus()
+//   }
+// })
+// if (shouldQuit) {
+//   app.quit()
+// }
+// 限制只打开一个窗口 end
 
 app.on('ready', createWindow)
 

@@ -16,6 +16,7 @@ const AddGroupTxns = (params) => {
       hash: params.hash ? params.hash : '',
       status: params.status ? params.status : 0,
       timestamp: dateNow,
+      mode: params.mode ? params.mode : 0,
       pubKey: params.pubKey ? params.pubKey : '',
     }
     let data = {
@@ -90,6 +91,7 @@ const EditGroupMemberTxns = (params) => {
       status: params.local.status ? params.local.status : 0,
       timestamp: dateNow,
       pubKey: params.local.pubKey ? params.local.pubKey : '',
+      mode: params.local.mode ? params.local.mode : '',
     }
     let data = {
       msg: 'Error',

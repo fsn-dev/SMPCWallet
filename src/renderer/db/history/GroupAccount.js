@@ -7,7 +7,7 @@ const AddGroupAccounts = (params) => {
     }
     let dateNow = Date.now()
     let query = {
-      keyId: dateNow + params.key,
+      keyId: params.kId + params.key,
       key: params.key ? params.key : '',
       member: params.member ? params.member : [],
       gId: params.gId ? params.gId : '',
@@ -15,6 +15,7 @@ const AddGroupAccounts = (params) => {
       timestamp: dateNow,
       status: 0,
       mode: params.mode ? params.mode : 0,
+      kId: params.kId ? params.kId : 0,
     }
     db.historyGroupAccpunts.insert(query, (err, res) => {
       if (err) {
@@ -69,9 +70,9 @@ const EditGroupMemberAccounts = (params) => {
       info: ''
     }
     let dateNow = Date.now()
-    let query = {key: params.local.key}
+    let query = {key: params.local.key, kId: params.local.kId}
     let updateParams = {
-      keyId: dateNow + params.local.key,
+      keyId: params.local.kId + params.local.key,
       key: params.local.key ? params.local.key : '',
       member: params.local.member ? params.local.member : [],
       gId: params.local.gId ? params.local.gId : '',
@@ -79,6 +80,7 @@ const EditGroupMemberAccounts = (params) => {
       timestamp: params.local.timestamp ? params.local.timestamp : 0,
       status: 0,
       mode: params.local.mode ? params.local.mode : 0,
+      kId: params.local.kId ? params.local.kId : 0,
     }
     // db.historyGroupAccpunts.insert(query, (err, res) => {
     db.historyGroupAccpunts.find(query).exec((err, res) => {
@@ -89,15 +91,17 @@ const EditGroupMemberAccounts = (params) => {
         // console.log('EditGroupMemberAccounts')
         // console.log(res)
         // console.log(res < 0 || res.length <= 0)
+        // console.log(updateParams)
         if (res < 0 || res.length <= 0) {
-          db.historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
-          // db.historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res) => {
+          db.historyGroupAccpunts.update(query, {$set: updateParams}, {upsert: true}, (err, res, newDoc) => {
+          // db.historyGroupAccpunts.update(query, {$set: updateParams}, {}, (err, res, newDoc) => {
             if (err) {
               // console.log(err)
               data.error = err
               reject(data)
             } else {
               // console.log(res)
+              // console.log(newDoc)
               data.msg = 'Success'
               data.info = res
               resolve(data)
@@ -107,18 +111,6 @@ const EditGroupMemberAccounts = (params) => {
           data.msg = 'Success'
           data.info = res
           resolve(data)
-          // db.historyGroupAccpunts.update({key: params.local.key, 'member.nodeKey': params.local.nodeKey}, {$set: {'member.$.kId': params.local.kId}}, {}, (err, res) => {
-          //   if (err) {
-          //     // console.log(err)
-          //     data.error = err
-          //     reject(data)
-          //   } else {
-          //     console.log(res)
-          //     data.msg = 'Success'
-          //     data.info = res
-          //     resolve(data)
-          //   }
-          // })
         }
       }
     })
@@ -153,7 +145,8 @@ const FindGroupAccounts = (params) => {
         query.member = {$elemMatch: {eNode: params.eNode}}
       }
       if (params.kId || params.kId === 0) {
-        query.member = {$elemMatch: {kId: params.kId}}
+        // query.member = {$elemMatch: {kId: params.kId}}
+        query.kId = params.kId
       }
       if (params.status || params.status === 0) {
         query.status = params.status

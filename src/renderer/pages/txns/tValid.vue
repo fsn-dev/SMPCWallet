@@ -276,6 +276,7 @@ export default {
                 ],
                 kId: this.address,
                 nodeKey: this.$$.eNodeCut(this.eNode).key,
+                mode: this.urlParams.LimitNum
               }
               for (let obj of this.gForm.eNode) {
                 // console.log(obj)

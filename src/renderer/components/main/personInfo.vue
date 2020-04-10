@@ -80,11 +80,15 @@ export default {
   },
   methods: {
     getNowPageHeight () {
-      let h = document.getElementById('personInfoBox').clientHeight
-      if (h < 720) {
-        this.nodeClass = false
-      } else {
-        this.nodeClass = true
+      try {
+        let h = document.getElementById('personInfoBox').clientHeight
+        if (h < 720) {
+          this.nodeClass = false
+        } else {
+          this.nodeClass = true
+        }
+      } catch (error) {
+        
       }
       // console.log(h)
     },
