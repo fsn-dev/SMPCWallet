@@ -285,6 +285,14 @@ export default [
               notCache: true
             },
             component: resolve => require.ensure([], () => resolve(require('@/pages/set/gAccount.vue')) ),
+          },
+          {
+            path: '/set/release',
+            meta: {
+              title: '设置共管账户信息',
+              notCache: true
+            },
+            component: resolve => require.ensure([], () => resolve(require('@/pages/set/releaseNode.vue')) ),
           }
         ]
       }

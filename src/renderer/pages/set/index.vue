@@ -2,9 +2,16 @@
   <div class="boxConntent1 container relative set-box">
     <div class="s-list-box">
       <ul>
-        <li class="item" :class="navActive === 0 ? 'active' : ''" @click="toUrl('/set')">{{$t('title').netSet}}</li>
+        <!-- <li class="item" :class="navActive === 0 ? 'active' : ''" @click="toUrl('/set')">{{$t('title').netSet}}</li>
         <li class="item" :class="navActive === 1 ? 'active' : ''" @click="toUrl('/set/groupSet')">{{$t('title').groupSet}}</li>
         <li class="item" :class="navActive === 2 ? 'active' : ''" @click="toUrl('/set/gAccount')">{{$t('title').gAccountSet}}</li>
+        <li class="item" :class="navActive === 3 ? 'active' : ''" @click="toUrl('/set/release')">{{$t('title').releaseNode}}</li> -->
+        <li
+          class="item"
+          v-for="(item, index) in navArr" :key="index"
+          :class="navActive === index ? 'active' : ''"
+          @click="toUrl(item.url)"
+        >{{item.name}}</li>
       </ul>
     </div>
     <div class="s-content-box">
@@ -56,13 +63,22 @@ export default {
   name: '',
   data () {
     return {
-      navActive: 0
+      navActive: 0,
+      navArr: []
     }
   },
   watch: {
     '$route' (cur) {
       this.setNavBg()
     },
+  },
+  created () {
+    this.navArr = [
+      {url: '/set', name: this.$t('title').netSet},
+      {url: '/set/groupSet', name: this.$t('title').groupSet},
+      {url: '/set/gAccount', name: this.$t('title').gAccountSet},
+      {url: '/set/release', name: this.$t('title').releaseNode},
+    ]
   },
   mounted () {
     this.setNavBg()
@@ -71,12 +87,12 @@ export default {
     setNavBg () {
       let path = this.$route.path
       // console.log(path)
-      if (path === '/set') {
-        this.navActive = 0
-      } else if (path === '/set/groupSet') {
-        this.navActive = 1
-      } else if (path === '/set/gAccount') {
-        this.navActive = 2
+      for (let i = 0, len = this.navArr.length; i < len; i ++) {
+        let item = this.navArr[i]
+        if (item.url === path) {
+          this.navActive = i
+          break
+        }
       }
     }
   }

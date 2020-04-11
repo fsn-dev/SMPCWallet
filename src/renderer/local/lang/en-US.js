@@ -99,7 +99,9 @@ export default {
 		accountList: 'Account list',
 		netSet: 'Network settings',
 		groupSet: 'Group information settings',
-		gAccountSet: 'Manger account settings'
+		gAccountSet: 'Manger account settings',
+		releaseNode: 'Release Node',
+		myNode: 'My Node',
 	},
 	label: {
 		username: 'User name',
@@ -144,6 +146,8 @@ export default {
 		approvalTime: 'Approval Time Remaining',
 		localNode: 'Local node',
 		oneSelf: 'Custom',
+		nodeName: 'Node Name',
+		nodeAddr: 'Node Address',
 	},
 	state: {
 		name: 'Status',

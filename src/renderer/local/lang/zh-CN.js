@@ -102,7 +102,9 @@ export default {
 		accountList: '账户列表',
 		netSet: '网络设置',
 		groupSet: '组信息设置',
-		gAccountSet: '共管账户设置'
+		gAccountSet: '共管账户设置',
+		releaseNode: '发布节点',
+		myNode: '我的节点',
 	},
 	label: {
 		username: '用户名',
@@ -146,6 +148,8 @@ export default {
 		approvalTime: '审批剩余时间',
 		localNode: '本地节点',
 		oneSelf: '自定义',
+		nodeName: '节点名',
+		nodeAddr: '节点地址',
 	},
 	state: {
 		name: '状态',
