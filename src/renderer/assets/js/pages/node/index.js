@@ -34,9 +34,9 @@ export const nodeSockets = {
 
 export const nodeMethods = {
   getNetUrl () {
-    if (this.$$.config.env === 'dev') {
-      this.baseUrl = 'getNodeInfosDev'
-    }
+    // if (this.$$.config.env === 'dev') {
+    //   this.baseUrl = 'getNodeInfosDev'
+    // }
     this.$db.findNode().then(res => {
       // console.log(res)
       this.netUrlArr = []
