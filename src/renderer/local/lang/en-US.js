@@ -173,6 +173,7 @@ export default {
 		name: 'Tip',
 		walletTip: "Note: the current version is testnet. <br/> Please do not transfer mainnet coins, otherwise all assets will be lost! <br/> the wallet key is stored locally. We can't recover the key!",
 		deleteNode: 'This operation will permanently delete this node. Do you want to continue?',
-		devTip: 'Coming soon!'
+		devTip: 'Coming soon!',
+		online: 'Only online!'
 	}
 }

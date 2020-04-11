@@ -175,6 +175,7 @@ export default {
 		name: '提示',
 		walletTip: '注意：当前版本为测试网。<br />请勿转入主网币，否则将丢失所有资产！<br />钱包密钥是本地存储。我们无法恢复密钥！',
 		deleteNode: '此操作将永久删除该节点, 是否继续? ',
-		devTip: '开发中'
+		devTip: '开发中',
+		online: '仅支持在线状态！'
 	}
 }

@@ -3,9 +3,9 @@
     <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-25 relative">
       <el-breadcrumb-item :to="{ path: '/account' }">{{$t('title').accountList}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{$t('title').myNode}}</el-breadcrumb-item>
-      <el-button size="mini" type="primary" class="n-net-btn" @click="eDialog.addNode = true">{{$t('btn').newBuild}}</el-button>
+      <el-button size="mini"  v-if="networkMode" type="primary" class="n-net-btn" @click="eDialog.addNode = true">{{$t('btn').newBuild}}</el-button>
     </el-breadcrumb>
-    <div class="ga-list-box">
+    <div class="ga-list-box" v-if="networkMode">
       <ul class="ul" >
         <li v-for="(item, index) in nodeList" :key="index" class="item">
           <el-divider content-position="left">{{item.name}}</el-divider>
@@ -19,6 +19,9 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div class="flex-c color_99" v-if="!networkMode">
+      {{$t('tip').online}}
     </div>
 
     <el-dialog :title="$t('title').releaseNode" :visible.sync="eDialog.addNode">
