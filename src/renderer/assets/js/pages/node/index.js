@@ -6,8 +6,16 @@ export const nodeDatas = {
 }
 
 export const nodeSockets = {
+  getNodeInfos (res) {
+    this.formatData(res)
+  },
   getNodeInfosDev (res) {
-    // console.log(res)
+    this.formatData(res)
+  }
+}
+
+export const nodeMethods = {
+  formatData (res) {
     let noRepeat = new Set(), arr = []
     if (res.msg === 'Success') {
       for (let obj of res.info) {
@@ -29,10 +37,7 @@ export const nodeSockets = {
     }
     this.netUrlArr = arr
     this.loadingSelect = false
-  }
-}
-
-export const nodeMethods = {
+  },
   getNetUrl () {
     // if (this.$$.config.env === 'dev') {
     //   this.baseUrl = 'getNodeInfosDev'
