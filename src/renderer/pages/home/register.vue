@@ -169,7 +169,7 @@ export default {
         this.loading.wait = false
         this.toUrl('/')
       }).catch(err => {
-        reject(err)
+        console.log(err)
       })
       // Promise.all([
       //   this.insertServerAccount(walletInit, JSON.stringify(walletJSON)),

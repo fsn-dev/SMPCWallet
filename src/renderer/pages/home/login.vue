@@ -151,10 +151,6 @@ export default {
       });
     },
     inputFileBtn () {
-      // for (let) {
-
-      // }
-      // this.unlock(this.loginObj.username)
       this.$db.findAccount({username: this.loginObj.username}).then(res => {
         console.log(res)
         if (res.length > 0) {
@@ -215,6 +211,14 @@ export default {
       // console.log(rawTx)
       this.$$.toSign(rawTx, pwd).then(res => {
         // console.log(res)
+        this.$socket.emit('UserEnodeAdd', {
+          nodeKey: eNodeKey,
+          enode: this.eNode,
+          sign: res.signTx,
+          username: this.token,
+          ip: this.serverRPC,
+          address: this.address,
+        })
         this.$store.commit('setEnodeTx', {info: res.signTx})
       }).catch(err => {
         console.log(err)

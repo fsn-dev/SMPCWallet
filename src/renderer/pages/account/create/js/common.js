@@ -5,7 +5,8 @@ export const datas = {
   },
   loading: {
     creat: false,
-    confirm: false
+    confirm: false,
+    search: false
   },
   mode: {
     init: '',

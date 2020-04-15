@@ -148,6 +148,7 @@ export default {
 		oneSelf: 'Custom',
 		nodeName: 'Node Name',
 		nodeAddr: 'Node Address',
+		search: 'Search'
 	},
 	state: {
 		name: 'Status',

@@ -78,6 +78,7 @@ export default {
     },
     setNet () {
       this.loading.setNode = true
+      this.netUrl = this.netUrl.replace(/\s/g, '')
       let url = this.netUrl
       if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
         url = this.netUrl = 'http://' + url

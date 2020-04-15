@@ -31,6 +31,36 @@
               <el-input v-model="item.value" @blur="changeState(item, index)" :disabled="item.value === eNode || item.isSelf ? true : false" :title="item.value"></el-input>
             </div>
           </el-form-item>
+          <el-form-item>
+            <div slot="label" class="flex-sc">
+              <!-- <span class="color_red">* </span> -->
+              {{$t('label').search}}：
+            </div>
+            <!-- <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input> -->
+            <div class="flex-bc">
+              <el-select
+                class="WW100"
+                v-model="searchVal"
+                filterable
+                remote
+                clearable
+                reserve-keyword
+                placeholder="Search username / IP / enode"
+                :remote-method="searchEnode"
+                :loading="loading.search"
+                no-data-text="Null"
+                :loading-text="$t('loading').l_1"
+              >
+                <el-option
+                  v-for="item in userlist"
+                  :key="item.unIP"
+                  :label="item.unIP"
+                  :value="item.sign">
+                </el-option>
+              </el-select>
+              <el-button class="ml-10" @click="addNode">{{$t('btn').select}}</el-button>
+            </div>
+          </el-form-item>
           <el-form-item class="mt-30">
             <el-button type="primary" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
             <el-button @click="resetForm('node')">{{$t('btn').restart}}</el-button>
@@ -95,7 +125,9 @@ export default {
     return {
       ...datas,
       activeNames: '',
-      rules: {}
+      rules: {},
+      searchVal: '',
+      userlist: []
     }
   },
   components: {setMode},
@@ -105,6 +137,17 @@ export default {
   computed: {
     ...computedPub,
   },
+  sockets: {
+    UserEnodeSearch (res) {
+      console.log(res)
+      if (res.msg === 'Success') {
+        this.userlist = res.info
+      } else {
+        this.userlist = []
+      }
+      this.loading.search = false
+    }
+  },
   mounted () {
     setTimeout(() => {
       this.init()
@@ -113,6 +156,32 @@ export default {
   },
   methods: {
     ...methods,
+    searchEnode (query) {
+      this.loading.search = true
+      if (query !== '') {
+        this.$socket.emit('UserEnodeSearch', {searchVal: query})
+      } else {
+        this.userlist = []
+        this.loading.search = false
+      }
+    },
+    addNode () {
+      // console.log(this.searchVal)
+      // console.log(this.node.select)
+      let indexs = 0
+      for (let i = 0, len = this.node.select.length; i < len; i++) {
+        let obj = this.node.select[i]
+        if (!obj.isSelf && !obj.value) {
+          indexs = i
+          break
+        }
+      }
+      this.changeState({value: this.searchVal}, indexs)
+      setTimeout(() => {
+        this.searchVal = ''
+        this.userlist = []
+      }, 500)
+    },
     submitForm(formName) {
       // console.log(this.node.select)
       if (this.node.select <= 0) {
@@ -216,6 +285,7 @@ export default {
       this.$$.getEnodeState(this.$$.splitTx(item.value).eNode).then(res => {
         console.log(res)
         this.node.select[index].state = res
+        this.node.select[index].value = enode
         this.refreshNode()
       })
     },

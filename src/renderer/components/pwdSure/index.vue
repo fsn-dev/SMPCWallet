@@ -70,16 +70,16 @@ export default {
           this.loading.unlock = true
         })
       }, 3000)
-      let username = this.token
+      let address = this.address
       this.loading.wait = true
-      console.log(username)
-      if (!username) {
+      console.log(address)
+      if (!address) {
         this.msgError(this.$t('warn').w_13)
         this.quitApp()
         this.sureForm.password = ''
         this.loading.wait = false
       } else {
-        this.$db.findAccount({username: username}).then(res => {
+        this.$db.findAccount({address: address}).then(res => {
           // console.log(res)
           if (res.length > 0) {
             let keystore = res[0].ks

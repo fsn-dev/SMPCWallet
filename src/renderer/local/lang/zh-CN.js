@@ -150,6 +150,7 @@ export default {
 		oneSelf: '自定义',
 		nodeName: '节点名',
 		nodeAddr: '节点地址',
+		search: '搜索'
 	},
 	state: {
 		name: '状态',
