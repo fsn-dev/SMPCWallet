@@ -16,6 +16,7 @@ export default {
 		err_13: '已存在！',
 		err_14: '已达到限制！',
 		err_15: '注册失败！',
+		err_16: '发送失败！',
 	},
 	warn: {
 		w_1: '请选择账户',
@@ -39,8 +40,9 @@ export default {
 		w_19: '余额不足',
 		w_20: '是否导入此账户',
 		w_21: '是否导出此账户',
-		w_21: '是否导出此账户',
 		w_22: '请创建新用户名',
+		w_23: '邮箱不能为空',
+		w_24: '请输入验证码',
 	},
 	success: {
 		s_1: '创建成功！',
@@ -51,6 +53,7 @@ export default {
 		s_6: '导出成功！',
 		s_7: '导入成功！',
 		s_8: '设置成功！',
+		s_9: '发送成功，请到邮箱查取！',
 	},
 	btn: {
 		confirm: '确认',
@@ -81,6 +84,8 @@ export default {
 		exportAccount: '导出账户',
 		importAccount: '导入账户',
 		select: '选中',
+		sendEmail: '发送验证码',
+		resend: '重新发送'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -151,7 +156,9 @@ export default {
 		oneSelf: '自定义',
 		nodeName: '节点名',
 		nodeAddr: '节点地址',
-		search: '搜索'
+		search: '搜索',
+		email: '邮箱',
+		emailValid: '邮箱验证码'
 	},
 	state: {
 		name: '状态',

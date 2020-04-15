@@ -104,7 +104,7 @@ export default {
     ...headerImg,
     getAllUser () {
       this.$db.findAccount({}).then(res => {
-        console.log(res)
+        // console.log(res)
         this.userlistInit = res
       })
     },

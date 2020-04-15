@@ -8,11 +8,21 @@
         <h3 class="title">{{$t('title').register}}</h3>
       </div>
 
-      <div class="user-form-input">
+      <div class="user-form-input c-form-box-sm">
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :rules="rules" :model="registerObj" label-width="120px" label-position="top" @submit.native.prevent>
             <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="registerObj.username" @input="validInfo('username')"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('label').email" prop="email" v-if="networkMode">
+              <el-input v-model="registerObj.email" @input="validInfo('email')"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('label').emailValid" prop="emailCode" v-if="networkMode">
+              <div class="flex-bc">
+                <el-input v-model="registerObj.emailCode" @input="validInfo('emailCode')"></el-input>
+                <el-button type="primary" @click="reqEmailCode" class="ml-10" :loading="loading.code" v-if="!count.start">{{$t('btn').sendEmail}}</el-button>
+                <el-button disabled type="default" class="ml-10 W110" v-else>{{count.second}} s</el-button>
+              </div>
             </el-form-item>
             <el-form-item :label="$t('label').password" prop="newpwd">
               <el-input type="password" v-model="registerObj.password" @input="validInfo('password')"></el-input>
@@ -54,7 +64,23 @@ export default {
         callback(new Error(this.$t('error').err_1))
       }
       this.validInfo()
-    };
+    }
+    const validateEmail = (rule, value, callback) => {
+      if (this.networkMode) {
+        if (this.registerObj.email) {
+          if (!regExp.email.test(this.registerObj.email)) {
+            callback(new Error(this.$t('warn').w_18))
+          } else {
+            callback()
+          }
+        } else {
+          callback(new Error(this.$t('warn').w_23))
+        }
+      } else {
+        callback()
+      }
+      this.validInfo()
+    }
     const validatePass = (rule, value, callback) => {
       if (this.registerObj.password) {
         if (!regExp.pwd.test(this.registerObj.password)) {
@@ -66,7 +92,7 @@ export default {
         callback(new Error(this.$t('error').err_3))
       }
       this.validInfo()
-    };
+    }
     const validatePass2 = (rule, value, callback) => {
       if (!this.registerObj.password2) {
         callback(new Error(this.$t('error').err_5))
@@ -81,13 +107,26 @@ export default {
       registerObj: {},
       loading: {
         file: true,
-        wait: false
+        wait: false,
+        code: false
       },
+      count: {
+        start: 0,
+        second: 0,
+        interval: ''
+      },
+      insertDBdata: {},
+      walletInit: '',
       rules: {
         username: [
-          // { required: true, message: this.$t('error').err_1, trigger: 'blur' },
-          // { min: 3, max: 20, message: this.$t('error').err_2, trigger: 'blur' }
           { required: true, validator: validateUsername, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, validator: validateEmail, trigger: 'blur' }
+        ],
+        emailCode: [
+          { required: true, message: this.$t('warn').w_24, trigger: 'blur' },
+          // { min: 6, max: 6, message: this.$t('warn').w_24, trigger: 'blur' }
         ],
         newpwd: [
           { required: true, validator: validatePass, trigger: 'blur' }
@@ -112,6 +151,23 @@ export default {
     },
     UserInfoAdd (res) {
       console.log(res)
+      if (res.msg === 'Success') {
+        this.insertLocalAccount()
+      } else {
+        this.msgError(res.error)
+        this.loading.wait = false
+      }
+    },
+    EmailValidRegister (res) {
+      console.log(res)
+      if (res.msg === 'Success') {
+        this.count.second = 60
+        this.countFn()
+        this.msgSuccess(this.$t('success').s_9)
+      } else {
+        this.msgError(this.$t('error').err_16)
+      }
+      this.loading.code = false
     }
   },
   mounted () {
@@ -119,12 +175,61 @@ export default {
   },
   methods: {
     ...headerImg,
+    reqEmailCode () {
+      if (!this.registerObj.email) {
+        this.msgWarning(this.$t('warn').w_23)
+        return
+      }
+      if (!regExp.email.test(this.registerObj.email)) {
+        this.msgWarning(this.$t('warn').w_18)
+        return
+      }
+      this.loading.code = true
+      this.$socket.emit('EmailValidRegister', {
+        email: this.registerObj.email
+      })
+    },
+    countFn () {
+      clearInterval(this.count.interval)
+      this.count.start = Date.now()
+      this.count.interval = setInterval(() => {
+        let num = Date.now() - this.count.start
+        if (num > 1000 * 60) {
+          this.count.second = 0
+          this.count.start = 0
+          clearInterval(this.count.interval)
+        } else {
+          this.count.second = 60 - parseInt(num / 1000)
+        }
+      }, 300)
+    },
     validInfo (key) {
       if (key) {
         this.registerObj[key] = this.registerObj[key].toString().replace(/\s/g, '')
       }
-      if (this.registerObj.username && this.registerObj.password && this.registerObj.password2 && (this.registerObj.password === this.registerObj.password2)) {
-        this.loading.file = false
+      if (
+        this.registerObj.username && 
+        regExp.username.test(this.registerObj.username) &&
+        this.registerObj.password && 
+        regExp.pwd.test(this.registerObj.password) && 
+        this.registerObj.password2 && 
+        regExp.pwd.test(this.registerObj.password2) && 
+        (this.registerObj.password === this.registerObj.password2)
+      ) {
+        if (this.networkMode) {
+          if (
+            this.registerObj.email && 
+            regExp.email.test(this.registerObj.email) && 
+            this.registerObj.emailCode && 
+            this.registerObj.emailCode.length === 6
+          ) {
+            this.loading.file = false
+          } else  {
+            this.loading.file = true
+          }
+        } else {
+          this.loading.file = false
+        }
       } else {
         this.loading.file = true
       }
@@ -144,87 +249,45 @@ export default {
       });
     },
     createFile () {
-      const walletInit = this.$$.wallet.generate(this.registerObj.password)
-      let walletJSON = walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
+      this.walletInit = this.$$.wallet.generate(this.registerObj.password)
+      let walletJSON = this.walletInit.toV3(this.registerObj.password, { kdf: "scrypt", n: 8192 })
       walletJSON = JSON.stringify(walletJSON)
-      let data = {
+      this.insertDBdata = {
         username: this.registerObj.username,
-        address: walletInit.getChecksumAddressString(),
+        address: this.walletInit.getChecksumAddressString(),
         password: this.cutPwd(this.registerObj.username, this.registerObj.password),
         ks: walletJSON,
+        code: this.registerObj.emailCode,
+        email: this.registerObj.email
       }
-      this.$db.insertAccount(data).then(res => {
+      if (this.networkMode) {
+        this.$socket.emit('UserInfoAdd', this.insertDBdata)
+      } else {
+        this.insertLocalAccount()
+      }
+    },
+    insertLocalAccount () {
+      this.$db.insertAccount(this.insertDBdata).then(res => {
         console.log(res)
-        // resolve(res)
-        if (this.networkMode) {
-          this.$socket.emit('UserInfoAdd', data)
-        }
         this.msgSuccess(this.$t('success').s_1)
         this.createHeader(
-          walletInit.getPublicKeyString(),
-          walletInit.getChecksumAddressString(),
+          this.walletInit.getPublicKeyString(),
+          this.insertDBdata.address,
           this.registerObj.username
         )
         this.registerObj = {}
+        this.walletInit = null
+        this.insertDBdata = {}
         this.loading.wait = false
         this.toUrl('/')
       }).catch(err => {
         console.log(err)
       })
-      // Promise.all([
-      //   this.insertServerAccount(walletInit, JSON.stringify(walletJSON)),
-      //   this.insertLocalAccount(walletInit, JSON.stringify(walletJSON))
-      // ]).then(res => {
-      //   console.log(res)
-      //   this.msgSuccess(this.$t('success').s_1)
-      //   this.createHeader(
-      //     walletInit.getPublicKeyString(),
-      //     walletInit.getChecksumAddressString(),
-      //     this.registerObj.username
-      //   )
-      //   this.registerObj = {}
-      //   this.loading.wait = false
-      //   this.toUrl('/')
-      // }).catch(err => {
-      //   console.log(err)
-      //   this.msgError(err)
-      //   this.loading.wait = false
-      // })
     },
     cutPwd (name, pwd) {
       pwd = pwd.toString()
       return pwd.substr(0,1) + name + pwd.substr(pwd.length - 2, 1)
     },
-    // insertServerAccount (walletInit, walletJSON) {
-    //   return new Promise((resolve, reject) => {
-    //     if (!this.networkMode) {
-    //       resolve(1)
-    //       return
-    //     }
-    //     server(this, 'UserInfoAdd', {
-    //       username: this.registerObj.username,
-    //       address: walletInit.getChecksumAddressString(),
-    //       password: this.cutPwd(this.registerObj.username, this.registerObj.password),
-    //       ks: walletJSON,
-    //     }).then(res => {
-    //       resolve(res)
-    //     })
-    //   })
-    // },
-    // insertLocalAccount (walletInit, walletJSON) {
-    //   return new Promise((resolve, reject) => {
-    //     this.$db.insertAccount({
-    //       name: this.registerObj.username,
-    //       address:  walletInit.getChecksumAddressString(),
-    //       ks: walletJSON
-    //     }).then(res => {
-    //       console.log(res)
-    //       resolve(res)
-    //     }).catch(err => {
-    //       reject(err)
-    //     })
-    //   })
-    // },
     changePwd () {
       this.$db.findAccount({username: this.registerObj.username}).then(res => {
         if (res.length > 0) {

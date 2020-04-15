@@ -16,6 +16,7 @@ export default {
 		err_13: 'Repeat！',
 		err_14: 'The limit has been reached!',
 		err_15: 'Registration failed!',
+		err_16: 'Sending failed!',
 	},
 	warn: {
 		w_1: 'Please select an account',
@@ -40,6 +41,8 @@ export default {
 		w_20: 'Import this account or not',
 		w_21: 'Export this account or not',
 		w_22: 'Please create a new username',
+		w_23: 'The mailbox cannot be empty',
+		w_24: 'Please enter the verification code',
 	},
 	success: {
 		s_1: 'Created successfully!',
@@ -50,6 +53,7 @@ export default {
 		s_6: 'Export succeeded!',
 		s_7: 'Import succeeded!',
 		s_8: 'Setup successful!',
+		s_9: 'Send successfully, please check to the mailbox!',
 	},
 	btn: {
 		confirm: 'Confirm',
@@ -78,6 +82,8 @@ export default {
 		exportAccount: 'Export Account',
 		importAccount: 'Import Account',
 		select: 'Selected',
+		sendEmail: 'Send verification code',
+		resend: 'Resend'
 	},
 	loading: {
 		l_1: 'Loading……'
@@ -149,7 +155,9 @@ export default {
 		oneSelf: 'Custom',
 		nodeName: 'Node Name',
 		nodeAddr: 'Node Address',
-		search: 'Search'
+		search: 'Search',
+		email: 'Email',
+		emailValid: 'Mailbox verification code'
 	},
 	state: {
 		name: 'Status',
