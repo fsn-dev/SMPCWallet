@@ -166,8 +166,6 @@ export default {
       }
     },
     addNode () {
-      // console.log(this.searchVal)
-      // console.log(this.node.select)
       let indexs = 0
       for (let i = 0, len = this.node.select.length; i < len; i++) {
         let obj = this.node.select[i]

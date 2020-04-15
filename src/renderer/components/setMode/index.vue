@@ -32,6 +32,18 @@ export default {
       isReset: false
     }
   },
+  watch: {
+    'mode.min' () {
+      if (this.mode.min <= this.mode.max) {
+        this.changeMode()
+      }
+    },
+    'mode.max' () {
+      if (this.mode.min <= this.mode.max) {
+        this.changeMode()
+      }
+    }
+  },
   mounted () {
     this.mode = {
       init: this.$$.mode,

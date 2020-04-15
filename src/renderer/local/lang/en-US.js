@@ -15,6 +15,7 @@ export default {
 		err_12: 'Please select node!',
 		err_13: 'Repeat！',
 		err_14: 'The limit has been reached!',
+		err_15: 'Registration failed!',
 	},
 	warn: {
 		w_1: 'Please select an account',
