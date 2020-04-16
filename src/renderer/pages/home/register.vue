@@ -146,7 +146,7 @@ export default {
         this.msgError(this.$t('error').err_7)
         this.loading.wait = false
       } else {
-        this.createFile()
+        this.findLocalAccount()
       }
     },
     UserInfoAdd (res) {
@@ -284,20 +284,11 @@ export default {
         console.log(err)
       })
     },
-    cutPwd (name, pwd) {
-      pwd = pwd.toString()
-      return pwd.substr(0,1) + name + pwd.substr(pwd.length - 2, 1)
-    },
-    changePwd () {
+    findLocalAccount () {
       this.$db.findAccount({username: this.registerObj.username}).then(res => {
         if (res.length > 0) {
           this.msgError(this.$t('error').err_7)
           this.loading.wait = false
-        } else if (this.networkMode) {
-          let data = {
-            username: this.registerObj.username
-          }
-          this.$socket.emit('GetUserIsRepeat', data)
         } else {
           this.createFile()
         }
@@ -305,6 +296,19 @@ export default {
         this.msgError(err.error)
         this.loading.wait = false
       })
+    },
+    cutPwd (name, pwd) {
+      pwd = pwd.toString()
+      return pwd.substr(0,1) + name + pwd.substr(pwd.length - 2, 1)
+    },
+    changePwd () {
+      if (this.networkMode) {
+        this.$socket.emit('GetUserIsRepeat', {
+          username: this.registerObj.username
+        })
+      } else {
+        this.findLocalAccount()
+      }
     }
   }
 }
