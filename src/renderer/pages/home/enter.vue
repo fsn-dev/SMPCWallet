@@ -16,9 +16,9 @@
           <input type="file" class="file" id="fileUpload" @change="fileUpChange" :title="$t('btn').importAccount">
         </div>
       </div>
-      <div class="WW100 mt-5 flex-c flex-wrap">
+      <!-- <div class="WW100 mt-5 flex-c flex-wrap">
         <set-enode :isShowEnode="false"></set-enode>
-      </div>
+      </div> -->
     </div>
 
     <el-dialog :title="$t('btn').importAccount" :visible.sync="eDialog.import" width="300px" :before-close="modalClick"  :close-on-click-modal="false" :modal-append-to-body='false'>
@@ -80,6 +80,10 @@ export default {
   },
   mounted () {
     // console.log(this.$db)
+    // let url = 'https://stakingtest.fusionwallet.cn/'
+    // this.$axios.post(url).then(res => {
+    //   console.log(res)
+    // })
   },
   methods: {
     modalClick () {

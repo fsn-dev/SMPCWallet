@@ -22,6 +22,9 @@ export const datas = {
   dataPage: {},
   gID: '',
   signTx: '',
+  checkList: [],
+  searchVal: '',
+  userlist: [],
 }
 
 export const watchs = {
@@ -130,10 +133,11 @@ export const methods = {
       this.modalClick()
     })
   },
-  resetForm(formName) {
+  resetForm() {
     this.mode.select = this.$$.config.initGroupMode
     this.node.select = []
     this.gID = ''
+    this.checkList = []
     this.changeMode()
   },
   refreshNode () {

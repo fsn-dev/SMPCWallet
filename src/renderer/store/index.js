@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     token: '',
     // wallet: '',
     accountType: config.modeInit,
-    dayAndNight: '',
+    dayAndNight: config.dayAndNight,
     language: '',
     serverRPC: '',
     networkMode: config.networkMode,

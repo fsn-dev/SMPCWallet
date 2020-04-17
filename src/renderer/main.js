@@ -35,14 +35,23 @@ Vue.prototype.toUrl = function(url, params) {
   this.$router.push({path: url, query: params})
 }
 
-Vue.prototype.copyTxt = function(txt, isShowCont) {
-  let status = $$.setCopyTxt(txt)
-  let cont = isShowCont ? (' ' + txt + ' ') : ''
-  if (status === 'Success') {
-    this.msgSuccess('Copy ' + cont + ' succeeded!')
+Vue.prototype.copyTxt = function(cont) {
+  let id = 'copyInputSelectContent'
+  let _input = document.createElement('input')
+  _input.type = 'text'
+  _input.value = cont
+  _input.id = id
+  document.body.append(_input)
+  document.getElementById(id).select()
+  document.execCommand("Copy")
+  if (cont.length > 60) {
+    this.msgSuccess('Copy ' + $$.cutOut(cont, 12, 8) + ' succeeded!')
   } else {
-    this.msgError('Copy ' + cont + ' failed!')
+    this.msgSuccess('Copy ' + cont + ' succeeded!')
   }
+  document.getElementById(id).remove()
+  _input = null
+  id = null
 }
 
 Vue.prototype.msgError = function(txt) {

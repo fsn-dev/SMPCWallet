@@ -1,6 +1,3 @@
-const path = require("path").resolve(".")
-const pathLink = path
-
 const Web3 = require('web3')
 import config from '@/assets/js/config/base.js'
 /**
@@ -8,11 +5,12 @@ import config from '@/assets/js/config/base.js'
  */
 
 let web3
-try {
-  web3 = new Web3(new Web3.providers.HttpProvider(config.serverRPC))
-} catch (error) {
-  web3 = new Web3()
-}
+// try {
+//   web3 = new Web3(new Web3.providers.HttpProvider(config.serverRPC))
+// } catch (error) {
+//   web3 = new Web3()
+// }
+web3 = new Web3()
 
 
 web3.extend({

@@ -14,10 +14,10 @@
             <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="registerObj.username" @input="validInfo('username')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('label').email" prop="email" v-if="networkMode">
+            <el-form-item :label="$t('label').email" prop="email" v-if="networkMode && $$.config.isOpenEmail">
               <el-input v-model="registerObj.email" @input="validInfo('email')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('label').emailValid" prop="emailCode" v-if="networkMode">
+            <el-form-item :label="$t('label').emailValid" prop="emailCode" v-if="networkMode && $$.config.isOpenEmail">
               <div class="flex-bc">
                 <el-input v-model="registerObj.emailCode" @input="validInfo('emailCode')"></el-input>
                 <el-button type="primary" @click="reqEmailCode" class="ml-10" :loading="loading.code" v-if="!count.start">{{$t('btn').sendEmail}}</el-button>
@@ -32,6 +32,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" native-type="submit" @click="submitForm('userInfoForm')" :disabled="loading.file" class="btn mt-30 btn-primary">{{$t('btn').create}}</el-button>
+              <!-- <el-button type="primary" native-type="submit" @click="createFile"  class="btn mt-30 btn-primary">{{$t('btn').create}}</el-button> -->
               <!-- <el-button type="primary" @click="changePwd">test</el-button> -->
               <!-- <el-button @click="toUrl('/')">{{$t('BTN').CANCEL}}</el-button> -->
             </el-form-item>
@@ -66,7 +67,7 @@ export default {
       this.validInfo()
     }
     const validateEmail = (rule, value, callback) => {
-      if (this.networkMode) {
+      if (this.networkMode && this.$$.config.isOpenEmail) {
         if (this.registerObj.email) {
           if (!regExp.email.test(this.registerObj.email)) {
             callback(new Error(this.$t('warn').w_18))
@@ -171,7 +172,7 @@ export default {
     }
   },
   mounted () {
-    // console.log(headerImg)
+    // console.log(this.$$.config.isOpenEmail)
   },
   methods: {
     ...headerImg,
@@ -216,7 +217,7 @@ export default {
         regExp.pwd.test(this.registerObj.password2) && 
         (this.registerObj.password === this.registerObj.password2)
       ) {
-        if (this.networkMode) {
+        if (this.networkMode && this.$$.config.isOpenEmail) {
           if (
             this.registerObj.email && 
             regExp.email.test(this.registerObj.email) && 
@@ -258,7 +259,8 @@ export default {
         password: this.cutPwd(this.registerObj.username, this.registerObj.password),
         ks: walletJSON,
         code: this.registerObj.emailCode,
-        email: this.registerObj.email
+        email: this.registerObj.email,
+        isOpenEmail: this.$$.config.isOpenEmail
       }
       if (this.networkMode) {
         this.$socket.emit('UserInfoAdd', this.insertDBdata)

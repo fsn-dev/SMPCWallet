@@ -57,10 +57,7 @@
       </transition>
     </section>
 
-    <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" :append-to-body="true" :withHeader="false">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
-      </div> -->
+    <!-- <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" :append-to-body="true" :withHeader="false">
       <div class="plr15">
         <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
       </div>
@@ -68,7 +65,11 @@
         <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType)"></createPerson>
         <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
       </div>
-    </el-drawer>
+    </el-drawer> -->
+    <el-dialog :visible.sync="drawer.create" width="600px" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="true" :show-close="true" class="create-dialog">
+      <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType) && drawer.create"></createPerson>
+      <createGroup :formBoxClass="false" @closeModal="modalClick" v-if="!Number(accountType) && drawer.create"></createGroup>
+    </el-dialog>
 
     <el-drawer :visible.sync="drawer.user" :destroy-on-close="true" :show-close="false">
       <person-info @closeDrawer="drawer.user = false"></person-info>
@@ -78,9 +79,17 @@
 
 <style lang="scss">
 @import './scss/index';
-// .testDrawer {
-//   overflow: auto;
-// }
+.create-dialog {
+  .el-dialog__header {
+    // display: none;
+  }
+  .el-dialog__body {
+    padding:0;
+  }
+  .boxConntent1 {
+    padding: 0;
+  }
+}
 </style>
 
 <script>

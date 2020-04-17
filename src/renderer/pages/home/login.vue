@@ -7,20 +7,32 @@
         <h3 class="title">{{$t('title').login}}</h3>
       </div>
 
-      <div class="user-form-input">
+      <div class="user-form-input c-form-box-sm">
         <div class="WW100" style="margin:auto;">
           <el-form ref="userInfoForm" :model="loginObj" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
             <!-- <el-form-item :label="$t('label').username" prop="username">
               <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input>
             </el-form-item> -->
-
+            <el-form-item>
+              <div slot="label" class="flex-sc">
+                <span class="color_red">* </span>
+                {{$t('btn').setNode}}
+              </div>
+              <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" no-data-text="Null" :loading="loadingSelect" :loading-text="$t('loading').l_1">
+                <el-option
+                  v-for="(item, index) in netUrlArr"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.url">
+                </el-option>
+              </el-select>
+            </el-form-item>
 
             <el-form-item>
               <div slot="label" class="flex-sc">
                 <span class="color_red">* </span>
                 {{$t('label').username}}
               </div>
-              <!-- <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input> -->
               <el-select
                 class="WW100"
                 v-model="loginObj.username"
@@ -42,9 +54,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-
-
-
 
             <el-form-item :label="$t('label').password" prop="password">
               <el-input type="password" v-model="loginObj.password" @input="validInfo('password')"></el-input>
@@ -70,10 +79,13 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
+import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 export default {
   name: '',
   data () {
     return {
+      ...nodeDatas,
+      netUrl: '',
       loginObj: {},
       userlistInit:[],
       userlist:[],
@@ -97,11 +109,25 @@ export default {
   computed: {
     ...computedPub
   },
+  watch: {
+    serverRPC () {
+      this.setSelected()
+    },
+  },
+  sockets: {
+    ...nodeSockets
+  },
   mounted () {
     this.getAllUser()
+    this.getNetUrl()
+    this.setSelected()
   },
   methods: {
     ...headerImg,
+    ...nodeMethods,
+    setSelected () {
+      this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
+    },
     getAllUser () {
       this.$db.findAccount({}).then(res => {
         // console.log(res)
@@ -133,22 +159,47 @@ export default {
     },
     submitForm(formName) {
       if (this.loading.file) return
-      if (!this.eNode) {
-        this.msgError(this.$t('error').err_10)
-        return
-      }
+      // if (!this.eNode) {
+      //   this.msgError(this.$t('error').err_10)
+      //   return
+      // }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading.wait = true
-          setTimeout(() => {
-            // this.validForm()
-            this.inputFileBtn()
-          }, 300)
+          this.setNet()
         } else {
           console.log('error submit!!')
           return false;
         }
       });
+    },
+    setNet () {
+      this.netUrl = this.netUrl.replace(/\s/g, '')
+      let url = this.netUrl
+      if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+        url = this.netUrl = 'http://' + url
+      }
+      this.$$.web3.setProvider(url)
+      this.$$.web3.dcrm.getEnode().then(res => {
+        let cbData = res
+        cbData = JSON.parse(cbData)
+        // console.log(cbData)
+        if (cbData.Status === "Success") {
+          let eNodeInit = cbData.Data.Enode
+          this.saveRpcDB(url)
+          this.$store.commit('setServerRPC', {info: url})
+          this.$store.commit('setEnode', eNodeInit)
+          // this.msgSuccess(this.$t('success').s_4)
+          this.inputFileBtn()
+        } else {
+          this.loading.wait = false
+          this.msgError(this.$t('error').err_9)
+        }
+      }).catch(err => {
+        console.log(err)
+        this.loading.wait = false
+        this.msgError(this.$t('error').err_9)
+      })
     },
     inputFileBtn () {
       this.$db.findAccount({username: this.loginObj.username}).then(res => {

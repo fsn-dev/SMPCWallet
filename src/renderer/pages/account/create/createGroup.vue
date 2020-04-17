@@ -1,72 +1,46 @@
 <template>
-  <div class="boxConntent1 container" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
-
-    <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
-      <div class="WW100">
-        <el-form ref="node" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
-          <el-form-item>
-            <div slot="label" class="flex-sc">
-              <span class="color_red">*</span>
-              {{$t('label').mode}}
-            </div>
-            <setMode @setMode="getMode"></setMode>
-          </el-form-item>
-          <!-- <el-form-item :label="$t('label').mode" >
-            <el-select v-model="mode.select" :placeholder="$t('warn').w_4" class="WW100">
-              <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
-            </el-select>
-          </el-form-item> -->
-          <el-form-item
-            v-for="(item, index) in node.select" :key="index" :prop="'eNode.' + index + '.value'"
-          >
-            <div slot="label" class="flex-sc">
-              <span class="color_red">*</span>
-              {{$t('label').admins + (index + 1)}}
-              <div class="ml-20" v-if="node.refresh">
-                <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-                <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+  <div class="boxConntent1 container pt-50" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
+    <div class="create-box box_Wshadow1" :class="networkMode ? '' : 'off-create-box'">
+      <div class="create-search-box" v-if="networkMode">
+        <div class="create-search-bg">
+          <div class="search-input">
+            <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="searchVal" size="mini" @input="searchEnode"></el-input>
+          </div>
+          <div class="search-cont">
+            <el-checkbox-group v-model="checkList" @change="selectedEnode" class="list">
+              <el-checkbox class="item flex-sc" v-for="(item, index) in userlist" :key="index" :label="item.sign" :disabled="item.unIP === (token + '@' + serverRPC)">
+                <el-tooltip placement="top" :open-delay="1000">
+                  <div slot="content" class="W300">{{item.sign}}</div>
+                  <div class="W200 ellipsis">{{item.unIP}}</div>
+                </el-tooltip>
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+      </div>
+      <div class="create-selected-box">
+        <div class="selected-input">
+          <setMode @setMode="getMode" size="mini"></setMode>
+        </div>
+        <div class="selected-cont">
+          <ul class="list">
+            <li class="item" v-for="(item, index) in node.select" :key="index">
+              <div class="flex-sc font12">
+                <span class="color_red">*</span>
+                {{$t('label').admins + (index + 1)}}
+                <div class="ml-20" v-if="node.refresh">
+                  <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                  <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                </div>
               </div>
-            </div>
-            <div class="flex-bc">
-              <el-input v-model="item.value" @blur="changeState(item, index)" :disabled="item.value === eNode || item.isSelf ? true : false" :title="item.value"></el-input>
-            </div>
-          </el-form-item>
-          <el-form-item>
-            <div slot="label" class="flex-sc">
-              <!-- <span class="color_red">* </span> -->
-              {{$t('label').search}}：
-            </div>
-            <!-- <el-input v-model="loginObj.username" @input="validInfo('username')"></el-input> -->
-            <div class="flex-bc">
-              <el-select
-                class="WW100"
-                v-model="searchVal"
-                filterable
-                remote
-                clearable
-                reserve-keyword
-                placeholder="Search username / IP / enode"
-                :remote-method="searchEnode"
-                :loading="loading.search"
-                no-data-text="Null"
-                :loading-text="$t('loading').l_1"
-              >
-                <el-option
-                  v-for="item in userlist"
-                  :key="item.unIP"
-                  :label="item.unIP"
-                  :value="item.sign">
-                </el-option>
-              </el-select>
-              <el-button class="ml-10" @click="addNode">{{$t('btn').select}}</el-button>
-            </div>
-          </el-form-item>
-          <el-form-item class="mt-30">
-            <el-button type="primary" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
-            <el-button @click="resetForm('node')">{{$t('btn').restart}}</el-button>
-            <!-- <el-button @click="toUrl('/fsgsd')">返回</el-button> -->
-          </el-form-item>
-        </el-form>
+              <el-input v-model="item.value" @blur="changeState(item, index)" :title="item.value" size="mini" :disabled="item.value === eNode || item.isDisabled || networkMode ? true : false"></el-input>
+            </li>
+          </ul>
+        </div>
+        <div class="flex-ec">
+          <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
+          <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+        </div>
       </div>
     </div>
 
@@ -83,8 +57,8 @@
           <el-collapse-item :title="$t('label').admins + ' ' + (index + 1)" :name="index + 1" v-for="(item, index) in node.select" :key="index">
             <template slot="title">
               <div class="flex-sc">
-                <span>{{item.isSelf ? $t('label').initiator : ($t('label').admins + ' ' + index)}}</span>
-                <span class="flex-sc ml-10" v-if="!item.isSelf">(IP: {{item.value ? ($$.splitTx(item.value) && $$.splitTx(item.value).ip ?  $$.splitTx(item.value).ip : '') : ''}})</span>
+                <span>{{item.isDisabled ? $t('label').initiator : ($t('label').admins + ' ' + index)}}</span>
+                <span class="flex-sc ml-10" v-if="!item.isDisabled">(IP: {{item.value ? ($$.splitTx(item.value) && $$.splitTx(item.value).ip ?  $$.splitTx(item.value).ip : '') : ''}})</span>
               </div>
             </template>
             <div>{{item.value}}</div>
@@ -104,7 +78,7 @@
 </template>
 
 <style lang="scss">
-
+@import './scss/index.scss';
 </style>
 
 <script>
@@ -126,8 +100,6 @@ export default {
       ...datas,
       activeNames: '',
       rules: {},
-      searchVal: '',
-      userlist: []
     }
   },
   components: {setMode},
@@ -156,29 +128,36 @@ export default {
   },
   methods: {
     ...methods,
+    selectedEnode (item) {
+      console.log(item)
+      // console.log(this.node)
+      if (item.length > this.node.max) {
+        this.checkList.splice(item.length - 1, 1)
+        this.msgError(this.$t('error').err_14)
+        return
+      }
+      this.initSelectNode()
+      for (let i = 0; i < this.node.max; i++) {
+        if (item[i]) {
+          console.log(i)
+          this.changeState({value: item[i]}, i + 1)
+        } 
+        if (!item[i]) {
+          this.node.select[i + 1].state = ''
+          this.node.select[i + 1].value = ''
+        }
+      }
+    },
     searchEnode (query) {
       this.loading.search = true
+      query = this.searchVal
+      console.log(query)
       if (query !== '') {
         this.$socket.emit('UserEnodeSearch', {searchVal: query})
       } else {
         this.userlist = []
         this.loading.search = false
       }
-    },
-    addNode () {
-      let indexs = 0
-      for (let i = 0, len = this.node.select.length; i < len; i++) {
-        let obj = this.node.select[i]
-        if (!obj.isSelf && !obj.value) {
-          indexs = i
-          break
-        }
-      }
-      this.changeState({value: this.searchVal}, indexs)
-      setTimeout(() => {
-        this.searchVal = ''
-        this.userlist = []
-      }, 500)
     },
     submitForm(formName) {
       // console.log(this.node.select)
@@ -278,8 +257,6 @@ export default {
         this.msgError('Repeat')
         return
       }
-      // console.log(item)
-      // console.log(this.$$.splitTx(item.value))
       this.$$.getEnodeState(this.$$.splitTx(item.value).eNode).then(res => {
         console.log(res)
         this.node.select[index].state = res
@@ -290,42 +267,30 @@ export default {
     changeMode (cur, old) {
       cur = cur ? cur : this.mode.select
       old = old ? old : this.$$.config.initGroupMode
-      // let openMode = ['3/3', '5/5']
-      // if (!openMode.includes(cur)) {
-      //   this.mode.select = old
-      //   this.msgError(this.$t('tip').devTip)
-      // }
-      let num = Number(this.mode.select.split('/')[1])
+      let modeArr = this.mode.select.split('/')
+      this.node.min = Number(modeArr[0]) - 1
+      this.node.max = Number(modeArr[1]) - 1
+      this.initSelectNode()
+    },
+    initSelectNode () {
+      let num = this.node.max + 1
       this.node.select = []
       for (let i = 0; i < num; i++) {
         if (i === 0) {
           this.node.select.push({
             value: this.eNode + this.eNodeTx + this.address,
-            isSelf: true,
+            isDisabled: true,
             key: Date.now()
           })
         } else {
           this.node.select.push({
             value: '',
-            isSelf: false,
+            isDisabled: false,
             key: Date.now()
           })
         }
       }
-    },
-    // $$.splitTx (tx) {
-    //   if (!tx || !this.eNode) return
-    //   tx = tx.split('0x')
-    //   // let eNodeKey = this.$$.eNodeCut(tx[0]).key
-    //   let obj = this.$$.eNodeCut(tx[0])
-    //   return {
-    //     address: '0x' + tx[2],
-    //     signTx: '0x' + tx[1],
-    //     eNode: tx[0],
-    //     ip: obj && obj.ip ? obj.ip : '',
-    //     eNodeId: obj && obj.key ? obj.key : ''
-    //   }
-    // },
+    }
   }
 }
 </script>

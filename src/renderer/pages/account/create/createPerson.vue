@@ -1,7 +1,7 @@
 <template>
   <div class="boxConntent1 container" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
     <!-- <div class="c-form-box"> -->
-    <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
+    <!-- <div :class="formBoxClass ? 'c-form-box' : 'c-form-box-sm'">
       <div class="WW100">
         <el-form ref="groupForm" :rules="rules" label-width="100px" label-position="top" @submit.native.prevent>
           <el-form-item>
@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item>
             <div class="flex-bc">
-              <el-select class="WW100" v-model="node.add" filterable allow-create default-first-option  :title="node.add" no-data-text="Null" :placeholder="$t('error').err_12" :loading="loadingSelect" :loading-text="$t('loading').l_1">
+              <el-select class="WW100" v-model="searchVal" filterable allow-create default-first-option  :title="searchVal" no-data-text="Null" :placeholder="$t('error').err_12" :loading="loadingSelect" :loading-text="$t('loading').l_1">
                 <el-option
                   v-for="(item, index) in netUrlArr"
                   :key="index"
@@ -34,6 +34,50 @@
             <el-button @click="resetForm('groupForm')">{{$t('btn').restart}}</el-button>
           </el-form-item>
         </el-form>
+      </div>
+    </div> -->
+
+    <div class="create-box box_Wshadow1" :class="networkMode ? '' : 'off-create-box'">
+      <div class="create-search-box" v-if="networkMode">
+        <div class="create-search-bg">
+          <div class="search-input">
+            <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="searchVal" size="mini" @input="searchEnode"></el-input>
+          </div>
+          <div class="search-cont">
+            <el-checkbox-group v-model="checkList" @change="selectedEnode" class="list">
+              <el-checkbox class="item flex-sc" v-for="(item, index) in userlist" :key="index" :label="item.url" :disabled="item.url === serverRPC">
+                <el-tooltip placement="top" :open-delay="1000">
+                  <div slot="content" class="W300">{{item.url}}</div>
+                  <div class="W200 ellipsis">{{item.name}}</div>
+                </el-tooltip>
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+      </div>
+      <div class="create-selected-box">
+        <div class="selected-input">
+          <setMode @setMode="getMode" size="mini"></setMode>
+        </div>
+        <div class="selected-cont">
+          <ul class="list">
+            <li class="item" v-for="(item, index) in node.select" :key="index">
+              <div class="flex-sc font12">
+                <span class="color_red">*</span>
+                {{$t('label').admins + (index + 1)}}
+                <div class="ml-20" v-if="node.refresh">
+                  <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                  <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                </div>
+              </div>
+              <el-input v-model="item.value" @blur="changeState(item, index)" :title="item.value" size="mini" :disabled="item.value === eNode || item.isDisabled || networkMode ? true : false"></el-input>
+            </li>
+          </ul>
+        </div>
+        <div class="flex-ec">
+          <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
+          <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+        </div>
       </div>
     </div>
 
@@ -97,6 +141,9 @@ export default {
   },
   watch: {
     ...watchs,
+    netUrlArr () {
+      this.userlist = this.netUrlArr
+    }
   },
   sockets: {
     ...nodeSockets,
@@ -104,32 +151,54 @@ export default {
   mounted () {
     this.init()
     this.getNetUrl()
+    console.log(this.searchVal)
   },
   methods: {
     ...methods,
     ...nodeMethods,
+    selectedEnode (item) {
+      if (item.length > this.node.max) {
+        this.checkList.splice(item.length - 1, 1)
+        this.msgError(this.$t('error').err_14)
+        return
+      }
+      console.log(item)
+      console.log(this.node.select)
+      this.node.select = []
+      for (let i = 0, len = item.length; i < len; i ++) {
+        this.setNode(item[i], i)
+      }
+    },
+    searchEnode () {
+      let query = this.searchVal
+      if (query) {
+        this.userlist = this.netUrlArr.filter(item => {
+          return item.name.toLowerCase().indexOf(query.toString().toLowerCase()) > -1 || item.url.toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+        })
+      } else {
+        this.userlist = this.netUrlArr
+      }
+    },
     addNode () {
-      if (!this.node.add) {
+      if (!this.searchVal) {
         this.msgError(this.$t('error').err_12)
         return
       }
       if (this.node.select.length >= this.node.max) {
         this.msgError(this.$t('error').err_14)
-        this.node.add = ''
+        this.searchVal = ''
         return
       }
-      if (this.node.add === this.serverRPC) {
+      if (this.searchVal === this.serverRPC) {
         this.msgError(this.$t('error').err_13)
-        this.node.add = ''
+        this.searchVal = ''
         return
       }
-      console.log(this.node.add)
+      console.log(this.searchVal)
       let reg = /[,;\-_=+]+/g
-      // let str = reg.test(this.node.add)
-      // console.log(addArr)
       let arr = []
-      if (reg.test(this.node.add)) {
-        let addArr = this.node.add.replace(reg, ',').split(',')
+      if (reg.test(this.searchVal)) {
+        let addArr = this.searchVal.replace(reg, ',').split(',')
         // console.log(addArr.includes(this.serverRPC))
         for (let obj of addArr) {
           if (!arr.includes(obj) && this.serverRPC !== obj) {
@@ -137,14 +206,14 @@ export default {
           }
         }
       } else {
-        arr.push(this.node.add)
+        arr.push(this.searchVal)
       }
       
       // for (let url of arr) {
       for (let i = 0, len = arr.length; i < len; i ++) {
         this.setNode(arr[i], i)
       }
-      this.node.add = ''
+      this.searchVal = ''
     },
     setNode (nodeUrl, index) {
       // console.log(nodeUrl)
@@ -164,25 +233,38 @@ export default {
             break
           }
         }
-        if (!isRepeat) {
-          this.node.select.push(nowSelect)
-        } else {
+        if (isRepeat) {
           setTimeout(() => {
             this.msgError(this.$t('error').err_13 + '  ' + nodeUrl)
           }, index * 150)
+          return
         }
       } else {
         let url = nodeUrl
         if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
           url = 'http://' + url
         }
-        let newNode = {
+        nowSelect = {
           name: url,
           url: url
         }
-        this.node.select.push(newNode)
-        this.saveRpcDB(newNode.url)
+        this.saveRpcDB(nowSelect.url)
       }
+      this.getEnode(nowSelect.url).then(res => {
+        this.$$.web3.setProvider(this.serverRPC)
+        if (res.status === 'Success') {
+          nowSelect.value = res.enode
+          nowSelect.status = 1
+          this.node.select.push(nowSelect)
+          this.saveRpcDB(nowSelect.url)
+        } else {
+          nowSelect.value = ''
+          nowSelect.status = 0
+          this.node.select.push(nowSelect)
+        }
+        console.log(this.node.select)
+        // this.node.select.push(nowSelect)
+      })
     },
     removeNode (item, index) {
       // console.log(item)

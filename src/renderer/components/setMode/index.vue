@@ -1,15 +1,15 @@
 <template>
   <div class="WW100">
-    <el-select v-model="mode.select" :placeholder="$t('warn').w_4" class="WW100" @change="changeMode">
+    <el-select v-model="mode.select" :placeholder="$t('warn').w_4" class="WW100" :size="size" @change="changeMode">
       <el-option :value="0" :label="$t('label').oneSelf"></el-option>
       <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
     </el-select>
-    <div class="flex-bc mt-20" v-if="!mode.select">
-      <el-input type="number" step="1" min="1" v-model="mode.min" class="mr-10" :disabled="isReset"></el-input>
+    <div class="flex-bc" :class="size === 'mini' ? 'mt-5' : 'mt-20'" v-if="!mode.select">
+      <el-input type="number" :size="size" step="1" min="1" v-model="mode.min" class="mr-10" :disabled="isReset"></el-input>
       /
-      <el-input type="number" step="1" min="1" v-model="mode.max" class="ml-10" :disabled="isReset"></el-input>
-      <el-button type="success" class="ml-10" v-if="isReset" @click="resetMode">{{$t('btn').restart}}</el-button>
-      <el-button type="primary" class="ml-10" v-else @click="setMode">{{$t('btn').set}}</el-button>
+      <el-input type="number" :size="size" step="1" min="1" v-model="mode.max" class="ml-10" :disabled="isReset"></el-input>
+      <el-button type="success" :size="size" class="ml-10" v-if="isReset" @click="resetMode">{{$t('btn').restart}}</el-button>
+      <el-button type="primary" :size="size" class="ml-10" v-else @click="setMode">{{$t('btn').set}}</el-button>
     </div>
   </div>
 </template>
@@ -21,6 +21,7 @@
 <script>
 export default {
   name: 'setMode',
+  props: ['size'],
   data () {
     return {
       mode: {

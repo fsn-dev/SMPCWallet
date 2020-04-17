@@ -83,12 +83,17 @@ let publicSet = {
    */
   networkMode: 1, // '0': 离线； '1': 在线
   // networkMode: 0, // '0': 离线； '1': 在线
+  /**
+   * @description 是否打开邮箱验证
+   */
+  isOpenEmail: 1, // '0': 否； '1': 是
 }
 
 // publicSet.appURL = 'http://smpcwallet.com'
 publicSet.appURL = 'http://smpcwallet.com:8300'
 // publicSet.appURL = 'http://47.56.150.104:8300'
 // publicSet.appURL = 'http://139.196.26.212:8300'
-publicSet.appURL = 'http://localhost:8300'
+// publicSet.appURL = 'http://localhost:8300'
+publicSet.appURL = 'wss://api.smpcwallet.com/'
 // module.exports = publicSet
 export default publicSet
