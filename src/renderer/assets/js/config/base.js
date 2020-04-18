@@ -1,7 +1,7 @@
 const path = require('path').resolve('.')
 
 let publicSet = {
-  appURL: 'wss://smpcwallet.com',
+  appURL: 'wss://api.smpcwallet.com/',
   /**
    * @description 版本类型
    */
