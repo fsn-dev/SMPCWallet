@@ -326,6 +326,12 @@ export default {
         initiate: 1
       }]
       for (let i = 0, len = this.node.select.length; i < len; i++) {
+        if (!this.node.select[i].state) {
+          this.eDialog.confirm = false
+          this.msgError(this.node.select[i].name + this.$t('error').err_9)
+          this.loading.confirm = false
+          return
+        }
         let obj = {
           name: this.node.select[i].name,
           url: this.node.select[i].url,

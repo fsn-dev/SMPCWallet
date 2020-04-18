@@ -83,10 +83,10 @@
   // .el-dialog__header {
   //   // display: none;
   // }
-  .el-dialog__body {
+  &>.el-dialog__body {
     padding:0;
   }
-  .boxConntent1 {
+  &>.boxConntent1 {
     padding: 0;
   }
 }

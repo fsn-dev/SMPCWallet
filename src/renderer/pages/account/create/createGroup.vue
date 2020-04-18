@@ -288,6 +288,7 @@ export default {
       let modeArr = this.mode.select.split('/')
       this.node.min = Number(modeArr[0]) - 1
       this.node.max = Number(modeArr[1]) - 1
+      this.checkList = []
       this.initSelectNode()
     },
     initSelectNode () {
