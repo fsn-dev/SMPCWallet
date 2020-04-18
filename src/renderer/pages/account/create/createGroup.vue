@@ -1,10 +1,11 @@
 <template>
-  <div class="boxConntent1 container pt-50" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1 container flex-c" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
     <div class="create-box box_Wshadow1" :class="networkMode ? '' : 'off-create-box'">
       <div class="create-search-box" v-if="networkMode">
         <div class="create-search-bg">
-          <div class="search-input">
+          <div class="search-input flex-bc">
             <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="searchVal" size="mini" @input="searchEnode"></el-input>
+            <el-button type="primary" size="mini" class="ml-10" @click="addNode" v-if="userlist.length <= 0 && searchVal.length > 0">{{$t('btn').select}}</el-button>
           </div>
           <div class="search-cont">
             <el-checkbox-group v-model="checkList" @change="selectedEnode" class="list">
@@ -111,7 +112,7 @@ export default {
   },
   sockets: {
     UserEnodeSearch (res) {
-      console.log(res)
+      // console.log(res)
       if (res.msg === 'Success') {
         this.userlist = res.info
       } else {
@@ -128,6 +129,16 @@ export default {
   },
   methods: {
     ...methods,
+    addNode () {
+      let enodeObj = this.$$.splitTx(this.searchVal)
+      console.log(enodeObj)
+      // return
+      if (!enodeObj.signTx || !enodeObj.address || enodeObj.eNode.indexOf('enode://') === -1) {
+        this.msgError(this.$t('warn').w_18)
+        return
+      }
+      this.checkList.push(this.searchVal)
+    },
     selectedEnode (item) {
       console.log(item)
       // console.log(this.node)
@@ -151,7 +162,14 @@ export default {
     searchEnode (query) {
       this.loading.search = true
       query = this.searchVal
-      console.log(query)
+      if (this.inputTimeLimit) {
+        return
+      }
+      this.inputTimeLimit = true
+      setTimeout(() => {
+        this.inputTimeLimit = false
+      }, 1000)
+      // console.log(query)
       if (query !== '') {
         this.$socket.emit('UserEnodeSearch', {searchVal: query})
       } else {

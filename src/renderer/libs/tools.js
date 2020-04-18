@@ -340,8 +340,8 @@ export default {
     tx = tx.split('0x')
     let obj = this.eNodeCut(tx[0])
     return {
-      address: '0x' + tx[2],
-      signTx: '0x' + tx[1],
+      address: tx[2] ? '0x' + tx[2] : '',
+      signTx: tx[1] ? '0x' + tx[1] : '',
       eNode: tx[0],
       ip: obj && obj.ip ? obj.ip : '',
       eNodeId: obj && obj.key ? obj.key : ''

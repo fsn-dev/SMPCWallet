@@ -80,9 +80,9 @@
 <style lang="scss">
 @import './scss/index';
 .create-dialog {
-  .el-dialog__header {
-    // display: none;
-  }
+  // .el-dialog__header {
+  //   // display: none;
+  // }
   .el-dialog__body {
     padding:0;
   }
