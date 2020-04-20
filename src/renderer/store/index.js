@@ -30,7 +30,8 @@ const store = new Vuex.Store({
     language: '',
     serverRPC: '',
     networkMode: config.networkMode,
-    approvalObj: {}
+    approvalObj: {},
+    email: ''
   },
   mutations: {
     setEnode (state, data) {
@@ -107,6 +108,9 @@ const store = new Vuex.Store({
     setApprovalObj (state, data) {
       state.approvalObj = data
     },
+    setEmail (state, data) {
+      state.email = data
+    }
   },
   actions: {
     getEnode ({commit}) {

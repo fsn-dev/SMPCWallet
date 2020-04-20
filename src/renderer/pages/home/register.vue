@@ -152,10 +152,16 @@ export default {
     },
     UserInfoAdd (res) {
       console.log(res)
-      if (res.msg === 'Success') {
+      if (res.msg === 'Success' && Number(res.info) > 0) {
         this.insertLocalAccount()
       } else {
-        this.msgError(res.error)
+        if (res.code && res.code.indexOf('err') !== -1) {
+          this.msgError(this.$t('error')[res.code])
+        } else if (res.code && res.code.indexOf('w') !== -1) {
+          this.msgError(this.$t('warn')[res.code])
+        } else {
+          this.msgError(res.error)
+        }
         this.loading.wait = false
       }
     },
@@ -187,7 +193,8 @@ export default {
       }
       this.loading.code = true
       this.$socket.emit('EmailValidRegister', {
-        email: this.registerObj.email
+        email: this.registerObj.email,
+        lang: this.language
       })
     },
     countFn () {
@@ -258,8 +265,8 @@ export default {
         address: this.walletInit.getChecksumAddressString(),
         password: this.cutPwd(this.registerObj.username, this.registerObj.password),
         ks: walletJSON,
-        code: this.registerObj.emailCode,
-        email: this.registerObj.email,
+        code: this.registerObj.emailCode ? this.registerObj.emailCode : '',
+        email: this.registerObj.email ? this.registerObj.email : '',
         isOpenEmail: this.$$.config.isOpenEmail
       }
       if (this.networkMode) {
@@ -288,6 +295,7 @@ export default {
     },
     findLocalAccount () {
       this.$db.findAccount({username: this.registerObj.username}).then(res => {
+        console.log(res)
         if (res.length > 0) {
           this.msgError(this.$t('error').err_7)
           this.loading.wait = false

@@ -29,5 +29,8 @@ export const computedPub = {
   },
   approvalAll () {
     return this.$store.state.approvalObj
+  },
+  email () {
+    return this.$store.state.email
   }
 } 

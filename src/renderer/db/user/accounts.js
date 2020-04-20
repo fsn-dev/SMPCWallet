@@ -7,7 +7,8 @@ function insertAccount (data) {
     ks: data.ks,
     address: data.address,
     // password: data.address,
-    timestamp: data.timestamp ? data.timestamp : Date.now()
+    timestamp: data.timestamp ? data.timestamp : Date.now(),
+    email:  data.email ? data.email : '',
   }
   return new Promise((resolve, reject) => {
     db.ks.insert(params, (err, res) => {

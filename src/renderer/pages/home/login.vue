@@ -206,6 +206,7 @@ export default {
         console.log(res)
         if (res.length > 0) {
           let keystore = res[0].ks
+          this.$store.commit('setEmail', res[0].email ? res[0].email : '')
           this.unlock(keystore)
         } else {
           this.msgError(this.$t('error').err_8)

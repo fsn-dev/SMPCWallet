@@ -5,6 +5,7 @@
       <p class="mt-5 flex-sc" v-if="token"><span class="flex-ec mr-5 W40">User:</span> {{token}}</p>
       <p class="mt-5 flex-sc"><span class="flex-ec mr-5 W40">Mode:</span> {{networkMode ? $t('state').on : $t('state').off}}</p>
       <p class="mt-5 flex-sc"><span class="flex-ec mr-5 W40">Node:</span> {{serverRPC}}</p>
+      <p class="mt-5 flex-sc" v-if="email"><span class="flex-ec mr-5 W40">Email:</span> {{email}}</p>
       <p class="mt-5 flex-sc" v-if="$$.config.env === 'dev'"><span class="flex-ec mr-5 W40">ENV:</span>{{$t('label').versionTest}}</p>
     </div>
     <!-- <div class="logoImg flex-sc cursorP" @click="goHome" :title="$$.config.AppName + (token ? '--' + token : '')"> -->
