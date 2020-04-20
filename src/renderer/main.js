@@ -21,9 +21,24 @@ Vue.use(ElementUI)
 Vue.use(Vuex)
 
 import VueSocketIO from 'vue-socket.io'
-Vue.use(new VueSocketIO({
-	connection: $$.config.appURL,
-}))
+let vueSocketIo = new VueSocketIO({
+  debug: false,
+  connection: $$.config.appURL,
+})
+// 监听connect事件，设置SOCKET_CONNECT为true
+vueSocketIo.io.on('connect', () => {
+  console.log('socket connect from main.js')
+  store.commit('SOCKET_CONNECT', true)
+})
+Vue.use(vueSocketIo)
+// Vue.use(new VueSocketIO({
+//   connection: $$.config.appURL,
+//   vuex: {
+//     store,
+//     actionPrefix: 'SOCKET_',
+//     mutationPrefix: 'SOCKET_'
+//   },
+// }))
 
 Vue.config.productionTip = false
 

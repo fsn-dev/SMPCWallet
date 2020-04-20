@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="Number(dayAndNight) ? '' : 'night'">
+  <div id="app" :class="Number(dayAndNight) ? '' : 'night'" v-loading="!isConnect && networkMode" :element-loading-text="$t('loading').l_2">
     <router-view></router-view>
   </div>
 </template>
@@ -28,10 +28,23 @@ export default {
       let url = this.serverRPC
       this.$$.web3.setProvider(url)
       this.getEnode()
-    }
+    },
   },
   computed: {
     ...computedPub,
+    isConnect () {
+      return this.$store.state.connect
+    }
+  },
+  sockets: {
+    connect () {
+      console.log("connect")
+      this.$store.commit('SOCKET_CONNECT', true)
+    },
+    disconnect () {
+      console.log("disconnect")
+      this.$store.commit('SOCKET_CONNECT', false)
+    }
   },
   created () {
     this.initData()
@@ -42,6 +55,7 @@ export default {
   },
   mounted () {
     // console.log(this.$$.web3)
+    console.log(this.$store.state)
   },
   methods: {
     ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC']),

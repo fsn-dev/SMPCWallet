@@ -32,7 +32,7 @@ export default {
     //   this.refresh()
     // },
     accountType (type) {
-      console.log(type)
+      // console.log(type)
       this.$router.push({path: this.$route.path, query: {}})
       // this.refresh()
     }

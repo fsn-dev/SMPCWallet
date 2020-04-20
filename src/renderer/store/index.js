@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     serverRPC: '',
     networkMode: config.networkMode,
     approvalObj: {},
-    email: ''
+    email: '',
+    connect: ''
   },
   mutations: {
     setEnode (state, data) {
@@ -110,6 +111,10 @@ const store = new Vuex.Store({
     },
     setEmail (state, data) {
       state.email = data
+    },
+    SOCKET_CONNECT(state, data) {
+      console.log(data)
+      state.connect = data
     }
   },
   actions: {

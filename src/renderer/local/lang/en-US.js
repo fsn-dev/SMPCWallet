@@ -8,7 +8,7 @@ export default {
 		err_5: 'Please enter the password again!',
 		err_6: 'The two passwords are inconsistent!',
 		err_7: 'Account already exists',
-		err_8: 'Account does not exist',
+		err_8: 'Account does not exist or password is wrong',
 		err_9: 'Connection failed!',
 		err_10: 'Current node connection failed, please check the node!',
 		err_11: 'File format error!',
@@ -85,7 +85,8 @@ export default {
 		resend: 'Resend'
 	},
 	loading: {
-		l_1: 'Loading……'
+		l_1: 'Loading……',
+		l_2: 'The network has been disconnected. Please check the network...',
 	},
 	title: {
 		walletTitle: '<span>SMPC</span> Wallet',

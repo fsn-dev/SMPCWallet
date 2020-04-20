@@ -8,7 +8,7 @@ export default {
 		err_5: '请再次输入密码',
 		err_6: '两次输入密码不一致!',
 		err_7: '账户已存在',
-		err_8: '账户不存在',
+		err_8: '账户不存在或密码错误',
 		err_9: '连接失败！',
 		err_10: '当前节点连接失败，请检查节点！',
 		err_11: '文件格式错误！',
@@ -87,7 +87,8 @@ export default {
 		resend: '重新发送'
 	},
 	loading: {
-		l_1: 'Loading……'
+		l_1: 'Loading……',
+		l_2: '网络已断开，请检查网络...',
 	},
 	title: {
 		walletTitle: '<span>SMPC</span> Wallet',

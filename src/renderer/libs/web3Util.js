@@ -301,7 +301,7 @@ let web3Utils = {
         let cbData = ''
         web3.dcrm.getGroupByID(gID).then(res => {
           cbData = res && JSON.parse(res) ? JSON.parse(res) : ''
-          console.log(cbData)
+          // console.log(cbData)
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data.Enodes, mode: cbData.Data.Mode}
             resolve(data)
