@@ -8,5 +8,21 @@ export default {
   // 用户名正则，4到16位（字母，数字，下划线）
   username: /^[a-zA-Z0-9_]{6,16}$/,
   // 邮箱正则
-  email: /^[a-zA-Z0-9\._-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+  email: /^[a-zA-Z0-9\._-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+  coin: {
+    "BTC":     /^(1|3|m|n|2)[a-zA-Z\\d]{25,33}$/,
+    "USDT":    /^(1|3|m|n|2)[a-zA-Z\\d]{25,33}$/,
+    "BCH":     /^(bchtest:)?(p|q)[0-9a-z]{41}$/,
+    // "TRX":     //,
+    "ETH":     /^(0x)?[0-9a-fA-F]{40}$/,
+    "XRP":     /^r[1-9a-km-zA-HJ-NP-Z]{32,33}$/,
+    "EOSDCRM": /^d[1-5a-z]{32,33}$/,
+    //"EOS":"^(d[1-5a-z]{32,33})|([1-5a-z]{12})$/,
+    "FSN":        /^(0x)?[0-9a-fA-F]{40}$/,
+    "EOS":        /^([a-z\\d\\.]+)$/,
+    "EOS_NORMAL": /^([1-5a-z]{12})$/,
+    "ATOM":       /^cosmos1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{38}$/,
+    "EVT":        /^EVT[a-zA-Z\\d]{50}$/,
+    "BNB":        /^(t)?(bnb1)[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{38}$/,
+  }
 }

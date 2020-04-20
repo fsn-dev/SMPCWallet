@@ -36,6 +36,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import regExp from '@/assets/js/config/RegExp.js'
 export default {
   name: '',
   props: {
@@ -131,7 +132,12 @@ export default {
         this.msgError(this.$t('warn').w_1)
         return
       }
-      let balance = this.$$.fromWei(this.sendDataObj.balance, this.$$.cutERC20(this.sendDataObj.coinType).coinType)
+      let coin = this.$$.cutERC20(this.sendDataObj.coinType).coinType
+      let balance = this.$$.fromWei(this.sendDataObj.balance, coin)
+      if (!regExp.coin[coin].test(this.rawTx.to)) {
+        this.msgError('This to address is illegal!')
+        return
+      }
       if (Number(this.rawTx.value) > Number(balance)) {
         this.msgError(this.$t('warn').w_19)
         return
@@ -141,7 +147,7 @@ export default {
       }
       this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce
-        this.dataPage.value = this.$$.toWei(this.rawTx.value, this.$$.cutERC20(this.sendDataObj.coinType).coinType)
+        this.dataPage.value = this.$$.toWei(this.rawTx.value, coin)
         this.dataPage.data = 'LOCKOUT:'
                               + this.sendDataObj.dcrmAddr
                               + ':' 
