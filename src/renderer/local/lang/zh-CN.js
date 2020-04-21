@@ -17,6 +17,7 @@ export default {
 		err_14: '已达到限制！',
 		err_15: '注册失败！',
 		err_16: '发送失败！',
+		err_17: '不能添加当前账户',
 	},
 	warn: {
 		w_1: '请选择账户',
@@ -84,7 +85,9 @@ export default {
 		importAccount: '导入账户',
 		select: '选中',
 		sendEmail: '发送验证码',
-		resend: '重新发送'
+		resend: '重新发送',
+		addFriend: '添加好友',
+		add: '添加'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -108,7 +111,7 @@ export default {
 		accountList: '账户列表',
 		netSet: '网络设置',
 		groupSet: '组信息设置',
-		gAccountSet: '共管账户设置',
+		gAccountSet: '账户设置',
 		releaseNode: '发布节点',
 		myNode: '我的节点',
 	},
@@ -159,7 +162,8 @@ export default {
 		search: '搜索',
 		email: '邮箱',
 		emailValid: '邮箱验证码',
-		unknown: '未知'
+		unknown: '未知',
+		friendList: '好友列表'
 	},
 	state: {
 		name: '状态',
@@ -185,6 +189,8 @@ export default {
 		name: '提示',
 		walletTip: '注意：当前版本为测试网。<br />请勿转入主网币，否则将丢失所有资产！<br />钱包密钥是本地存储。我们无法恢复密钥！',
 		deleteNode: '此操作将永久删除该节点, 是否继续? ',
+		addFriend: '是否添加此好友？ ',
+		deleteFriend: '此操作将永久删除该好友, 是否继续? ',
 		devTip: '开发中',
 		online: '仅支持在线状态！'
 	}

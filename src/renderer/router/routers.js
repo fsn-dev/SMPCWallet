@@ -299,6 +299,23 @@ export default [
     ]
   },
   {
+    path: '/social',
+    component: Main,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '好友',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/social/index.vue')) ),
+      }
+    ]
+  },
+  {
     path: '*',
     component: resolve => require.ensure([], () => resolve(require('@/components/error/index.vue')) )
   }

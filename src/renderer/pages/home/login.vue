@@ -85,7 +85,7 @@ import headerImg from './js/headerImg'
 import getEnode from '@/assets/js/pages/node/getEnode.js'
 import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 export default {
-  name: '',
+  name: 'login',
   data () {
     return {
       ...nodeDatas,
@@ -164,10 +164,6 @@ export default {
     },
     submitForm(formName) {
       if (this.loading.file) return
-      // if (!this.eNode) {
-      //   this.msgError(this.$t('error').err_10)
-      //   return
-      // }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading.wait = true
@@ -259,12 +255,20 @@ export default {
       // console.log(rawTx)
       this.$$.toSign(rawTx, pwd).then(res => {
         // console.log(res)
+        let nodeObj = {}
+        for (let obj of this.netUrlArr) {
+          if (obj.url === this.serverRPC) {
+            nodeObj = obj
+            break
+          }
+        }
         this.$socket.emit('UserEnodeAdd', {
-          nodeKey: eNodeKey,
+          // nodeKey: eNodeKey,
           enode: this.eNode,
           sign: res.signTx,
           username: this.token,
           ip: this.serverRPC,
+          ipName: nodeObj.name ? nodeObj.name : this.serverRPC,
           address: this.address,
         })
         this.$store.commit('setEnodeTx', {info: res.signTx})

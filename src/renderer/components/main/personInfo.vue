@@ -9,6 +9,7 @@
       <!-- <li class="item flex-sc" v-if="$$.config.accountSwitch.person" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user icon"></i>{{$t('title').personAccount}}</li>
       <li class="item flex-sc" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money icon"></i>{{$t('title').groupAccount}}</li> -->
       <li class="item flex-sc" @click="getAccountData" :title="$t('title').exportAccount"><i class="el-icon-download icon"></i>{{$t('btn').exportAccount}}</li>
+      <li class="item flex-sc" @click="openUrl('/social')" :title="$t('title').exportAccount"><i class="el-icon-circle-plus-outline icon"></i>{{$t('btn').addFriend}}</li>
       <li class="item flex-sc" @click="openUrl('/set')" :title="$t('btn').set"><i class="el-icon-setting icon"></i>{{$t('btn').set}}</li>
     </ul>
     <set-enode class="mt-20" :class="nodeClass ? 'set-node-box' : ''" :isSetNode="false"></set-enode>

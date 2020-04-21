@@ -9,9 +9,9 @@
           </div>
           <div class="search-cont">
             <el-checkbox-group v-model="checkList" @change="selectedEnode" class="list">
-              <el-checkbox class="item flex-sc" v-for="(item, index) in userlist" :key="index" :label="item.sign" :disabled="item.unIP === (token + '@' + serverRPC)">
+              <el-checkbox class="item flex-sc" v-for="(item, index) in userlist" :key="index" :label="item.enode + item.sign + item.address" :disabled="item.unIP === (token + '@' + serverRPC)">
                 <el-tooltip placement="top" :open-delay="1000">
-                  <div slot="content" class="W300">{{item.sign}}</div>
+                  <div slot="content" class="W300">{{item.unIP}}</div>
                   <div class="W200 ellipsis">{{item.unIP}}</div>
                 </el-tooltip>
               </el-checkbox>
@@ -101,6 +101,7 @@ export default {
       ...datas,
       activeNames: '',
       rules: {},
+      userlistInit: []
     }
   },
   components: {setMode},
@@ -119,16 +120,28 @@ export default {
         this.userlist = []
       }
       this.loading.search = false
-    }
+    },
+    UserFriendFind (res) {
+      console.log(res)
+      if (res.msg ='Success') {
+        this.userlist = this.userlistInit = res.info
+      } else {
+        this.userlist = this.userlistInit = []
+      }
+    },
   },
   mounted () {
     setTimeout(() => {
       this.init()
+      this.getFriends()
     },  300)
     // console.log(this.$$.eNodeCut(this.eNode))
   },
   methods: {
     ...methods,
+    getFriends () {
+      this.$socket.emit('UserFriendFind', {address: this.address})
+    },
     addNode () {
       let enodeObj = this.$$.splitTx(this.searchVal)
       console.log(enodeObj)
@@ -162,19 +175,12 @@ export default {
     searchEnode (query) {
       this.loading.search = true
       query = this.searchVal
-      if (this.inputTimeLimit) {
-        return
-      }
-      this.inputTimeLimit = true
-      setTimeout(() => {
-        this.inputTimeLimit = false
-      }, 1000)
-      // console.log(query)
-      if (query !== '') {
-        this.$socket.emit('UserEnodeSearch', {searchVal: query})
+      if (query) {
+        this.userlist = this.userlistInit.filter(item => {
+          return item.unIP.toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+        })
       } else {
-        this.userlist = []
-        this.loading.search = false
+        this.userlist = this.userlistInit
       }
     },
     submitForm(formName) {

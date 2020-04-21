@@ -25,7 +25,6 @@ export const datas = {
   checkList: [],
   searchVal: '',
   userlist: [],
-  inputTimeLimit: false
 }
 
 export const watchs = {

@@ -17,6 +17,7 @@ export default {
 		err_14: 'The limit has been reached!',
 		err_15: 'Registration failed!',
 		err_16: 'Sending failed!',
+		err_17: 'Current account cannot be added',
 	},
 	warn: {
 		w_1: 'Please select an account',
@@ -82,7 +83,9 @@ export default {
 		importAccount: 'Import Account',
 		select: 'Selected',
 		sendEmail: 'Send verification code',
-		resend: 'Resend'
+		resend: 'Resend',
+		addFriend: 'Add Friends',
+		add: 'Add'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -109,6 +112,7 @@ export default {
 		gAccountSet: 'Manger account settings',
 		releaseNode: 'Release Node',
 		myNode: 'My Node',
+		add: 'Add'
 	},
 	label: {
 		username: 'User name',
@@ -158,7 +162,8 @@ export default {
 		search: 'Search',
 		email: 'Email',
 		emailValid: 'Mailbox verification code',
-		unknown: 'Unknown'
+		unknown: 'Unknown',
+		friendList: 'Friends List'
 	},
 	state: {
 		name: 'Status',
@@ -184,6 +189,8 @@ export default {
 		name: 'Tip',
 		walletTip: "Note: the current version is testnet. <br/> Please do not transfer mainnet coins, otherwise all assets will be lost! <br/> the wallet key is stored locally. We can't recover the key!",
 		deleteNode: 'This operation will permanently delete this node. Do you want to continue?',
+		addFriend: 'Do you want to add this friend? ',
+		deleteFriend: 'This operation will permanently delete this friend. Do you want to continue?',
 		devTip: 'Coming soon!',
 		online: 'Only online!'
 	}

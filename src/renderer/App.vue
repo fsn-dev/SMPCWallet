@@ -55,7 +55,7 @@ export default {
   },
   mounted () {
     // console.log(this.$$.web3)
-    console.log(this.$store.state)
+    // console.log(this.$store.state)
   },
   methods: {
     ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC']),
