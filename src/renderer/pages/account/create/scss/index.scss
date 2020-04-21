@@ -3,7 +3,7 @@
   $c-lr: 15;
   $search-w: 270;
   $minH:600;
-  width: 100%;max-width: 600px;height: size($minH);padding: size($c-tb) size($c-lr) size($c-tb) size($search-w + ($c-lr * 2));margin: auto;position: relative;
+  width: 100%;max-width: 800px;height: size($minH);padding: size($c-tb) size($c-lr) size($c-tb) size($search-w + ($c-lr * 2));margin: auto;position: relative;
   &.off-create-box {
     padding: size($c-tb) size($c-lr);
   }
@@ -33,17 +33,23 @@
     }
   }
   .create-selected-box {
-    width: 100%;height:100%;position: relative;
-    .selected-input {
-      margin-bottom: 10px
-    }
-    .selected-cont {
-      height: size($minH - 140);overflow:auto;
-      .list {
-        width: 100%;
-        .item {
-          margin-bottom: 10px;
+    position: absolute;top: size($c-tb);bottom: size($c-tb);left: size($search-w + $c-lr * 2);right: size($c-lr);
+    .create-selected-bg {
+      width: 100%;height:100%;position: relative;
+      .selected-input {
+        margin-bottom: 10px
+      }
+      .selected-cont {
+        height: size($minH - 140);overflow:auto;
+        .list {
+          width: 100%;
+          .item {
+            margin-bottom: 10px;
+          }
         }
+      }
+      .create-selected-btn {
+        position: absolute;left: 0;right: 0;bottom: 0;
       }
     }
   }

@@ -24,6 +24,12 @@
                   :key="index"
                   :label="item.name"
                   :value="item.url">
+                  <div class="WW100 flex-bc">
+                    <span class="WW80 ellipsis">{{ item.name }}</span>
+                    <span class="color_green" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                    <span class="color_red" v-else-if="item.status === 0"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                    <span class="color_99" v-else><i class="el-icon-question mr-5"></i>{{$t('label').unknown}}</span>
+                  </div>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -46,11 +52,8 @@
                 :loading-text="$t('loading').l_1"
                 @change="validInfo('username')"
               >
-                <el-option
-                  v-for="item in userlist"
-                  :key="item.username"
-                  :label="item.username"
-                  :value="item.username">
+                <el-option v-for="item in userlist" :key="item.username" :label="item.username" :value="item.username">
+                  
                 </el-option>
               </el-select>
             </el-form-item>
@@ -79,6 +82,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import headerImg from './js/headerImg'
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 export default {
   name: '',
@@ -125,6 +129,7 @@ export default {
   methods: {
     ...headerImg,
     ...nodeMethods,
+    ...getEnode,
     setSelected () {
       this.netUrl = this.serverRPC ? this.serverRPC : this.$$.config.serverRPC
     },
@@ -179,26 +184,17 @@ export default {
       if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
         url = this.netUrl = 'http://' + url
       }
-      this.$$.web3.setProvider(url)
-      this.$$.web3.dcrm.getEnode().then(res => {
-        let cbData = res
-        cbData = JSON.parse(cbData)
-        // console.log(cbData)
-        if (cbData.Status === "Success") {
-          let eNodeInit = cbData.Data.Enode
+      this.getEnode(url).then(res => {
+        if (res.status === 'Success') {
+          let eNodeInit = res.enode
           this.saveRpcDB(url)
           this.$store.commit('setServerRPC', {info: url})
           this.$store.commit('setEnode', eNodeInit)
-          // this.msgSuccess(this.$t('success').s_4)
           this.inputFileBtn()
         } else {
           this.loading.wait = false
           this.msgError(this.$t('error').err_9)
         }
-      }).catch(err => {
-        console.log(err)
-        this.loading.wait = false
-        this.msgError(this.$t('error').err_9)
       })
     },
     inputFileBtn () {

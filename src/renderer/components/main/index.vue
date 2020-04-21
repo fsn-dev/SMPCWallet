@@ -66,7 +66,7 @@
         <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
       </div>
     </el-drawer> -->
-    <el-dialog :visible.sync="drawer.create" width="600px" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="true" :show-close="true" class="create-dialog">
+    <el-dialog :title="$t('title').register" :visible.sync="drawer.create" width="800px" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="true" :show-close="true" class="create-dialog">
       <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType) && drawer.create"></createPerson>
       <createGroup :formBoxClass="false" @closeModal="modalClick" v-if="!Number(accountType) && drawer.create"></createGroup>
     </el-dialog>

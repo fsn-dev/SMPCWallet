@@ -34,7 +34,9 @@ let web3Utils = {
       try {
         web3.dcrm.getEnode().then(res => {
           let cbData = res
-          cbData = JSON.parse(cbData)
+          if (typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           // console.log(cbData)
           if (cbData.Status === "Success") {
             eNodeInit = cbData.Data.Enode
@@ -68,8 +70,9 @@ let web3Utils = {
       try {
         web3.dcrm.getEnodeStatus(eNode).then(res => {
           let cbData = res
-          cbData = JSON.parse(cbData)
-          console.log(cbData)
+          if (typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status === 'Success' && cbData.Data.Status === 'OnLine') {
             data = 'OnLine'
           } else {
@@ -225,9 +228,10 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getAccountsBalance(pubk, address).then(res => {
-          // cbData = JSON.parse(res)
           cbData = res
-          // console.log(cbData)
+          if (typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data.result.Balances}
           } else {
@@ -259,8 +263,10 @@ let web3Utils = {
         if (eNodeInit) {
           let cbData = ''
           web3.dcrm.getSDKGroup(eNodeInit).then(res => {
-            cbData = JSON.parse(res)
-            // console.log(cbData)
+            cbData = res
+            if (typeof res === 'string') {
+              cbData = JSON.parse(cbData)
+            }
             if (cbData.Status !== 'Error') {
               data = {msg: 'Success', info: cbData.Data.GroupList}
               // resolve(data)
@@ -300,8 +306,10 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getGroupByID(gID).then(res => {
-          cbData = res && JSON.parse(res) ? JSON.parse(res) : ''
-          // console.log(cbData)
+          cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data.Enodes, mode: cbData.Data.Mode}
             resolve(data)
@@ -326,8 +334,10 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.createSDKGroup(mode, nodeArr).then(res => {
-          cbData = res && JSON.parse(res) ? JSON.parse(res) : ''
-          // console.log(cbData)
+          cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data}
             resolve(data)
@@ -353,8 +363,10 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.setGroupNodeStatus(name, eNode, type).then(res => {
-          cbData = JSON.parse(res)
-          // console.log(cbData)
+          cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
             data = {msg: 'Success', info: cbData.Data}
             resolve(data)
@@ -381,9 +393,10 @@ let web3Utils = {
         let cbData = ''
         web3.dcrm.reqDcrmAddr(signTx).then(res => {
           cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
-            // let obj = JSON.parse(cbData.Data.result)
-            // console.log(obj)
             data = {msg: 'Success', info: cbData.Data.result}
             resolve(data)
           } else {
@@ -408,11 +421,11 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getReqAddrStatus(key).then(res => {
-          // console.log(res)
           cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
-            // console.log(cbData.Data.result)
-            // console.log(JSON.parse(cbData.Data.result))
             let result = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
             let status = result ? result.Status : 'Failure'
             let hash = result && result.PubKey ? result.PubKey : ''
@@ -467,8 +480,10 @@ let web3Utils = {
       try {
         let cbData = ''
         web3.dcrm.getLockOutStatus(key).then(res => {
-          // console.log(res)
           cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
             // console.log(JSON.parse(cbData.Data.result))
             let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : 'Failure'
@@ -498,6 +513,9 @@ let web3Utils = {
         let cbData = ''
         web3.dcrm.acceptLockOut(signTx).then(res => {
           cbData = res
+          if (res && typeof res === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           if (cbData.Status !== 'Error') {
             cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
             data = {msg: 'Success', info: cbData}

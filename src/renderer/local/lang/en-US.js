@@ -157,7 +157,8 @@ export default {
 		nodeAddr: 'Node Address',
 		search: 'Search',
 		email: 'Email',
-		emailValid: 'Mailbox verification code'
+		emailValid: 'Mailbox verification code',
+		unknown: 'Unknown'
 	},
 	state: {
 		name: 'Status',

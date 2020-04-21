@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container flex-c" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1 flex-c" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
     <div class="create-box box_Wshadow1">
       <div class="create-search-box">
         <div class="create-search-bg">
@@ -11,8 +11,22 @@
             <el-checkbox-group v-model="checkList" class="list">
               <el-checkbox class="item flex-sc" v-for="(item, index) in userlist" :key="index" :label="item.url" :disabled="item.url === serverRPC">
                 <el-tooltip placement="top" :open-delay="1000">
-                  <div slot="content" class="W300">{{item.url}}</div>
-                  <div class="W200 ellipsis">{{item.name}}</div>
+                  <div slot="content" class="W300">
+                    <p class="flex-sc"><span class="flex-ec mr-5 W40">Name:</span> {{item.name}}</p>
+                    <p class="mt-5 flex-sc"><span class="flex-ec mr-5 W40">URL:</span> {{item.url}}</p>
+                    <p class="mt-5 flex-sc">
+                      <span class="flex-ec mr-5 W40">Status:</span> 
+                      <span class="color_green" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                      <span class="color_red" v-else-if="item.status === 0"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                      <span class="color_99" v-else><i class="el-icon-question mr-5"></i>{{$t('label').unknown}}</span>
+                    </p>
+                  </div>
+                  <div class="W200 ellipsis flex-bc">
+                    <p class="WW60 ellipsis">{{item.name}}</p>
+                    <span class="color_green" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                    <span class="color_red" v-else-if="item.status === 0"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                    <span class="color_99" v-else><i class="el-icon-question mr-5"></i>{{$t('label').unknown}}</span>
+                  </div>
                 </el-tooltip>
               </el-checkbox>
             </el-checkbox-group>
@@ -20,46 +34,48 @@
         </div>
       </div>
       <div class="create-selected-box">
-        <div class="selected-input">
-          <setMode @setMode="getMode" size="mini"></setMode>
-        </div>
-        <div class="selected-cont">
-          <ul class="list">
-            <li class="item">
-              <div class="flex-sc font12">
-                <span class="color_red">*</span>
-                {{$t('label').admins + 1}}
-                <div class="ml-20">
-                  <span class="color_green"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+        <div class="create-selected-bg">
+          <div class="selected-input">
+            <setMode @setMode="getMode" size="mini"></setMode>
+          </div>
+          <div class="selected-cont">
+            <ul class="list">
+              <li class="item">
+                <div class="flex-sc font12">
+                  <span class="color_red">*</span>
+                  {{$t('label').admins + 1}}
+                  <div class="ml-20">
+                    <span class="color_green"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                  </div>
                 </div>
-              </div>
-              <el-tooltip placement="top" :open-delay="1000">
-                <div slot="content" class="W300">{{eNode}}</div>
-                <el-tag :type="serverRPC" size="medium" class="WW100 flex-bc">Current Node</el-tag>
-              </el-tooltip>
-            </li>
-            <li class="item" v-for="(item, index) in node.select" :key="index">
-              <div class="flex-sc font12">
-                <span class="color_red">*</span>
-                {{$t('label').admins + (index + 2)}}
-                <div class="ml-20" v-if="node.refresh">
-                  <span class="color_green" v-if="item.state === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-                  <span class="color_red" v-else-if="item.state === 0"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
-                  <span class="color_99" v-else><i class="el-icon-loading mr-5"></i>{{$t('loading').l_1}}</span>
+                <el-tooltip placement="top" :open-delay="1000">
+                  <div slot="content" class="W300">{{eNode}}</div>
+                  <el-tag :type="serverRPC" size="medium" class="WW100 flex-bc">Current Node</el-tag>
+                </el-tooltip>
+              </li>
+              <li class="item" v-for="(item, index) in node.select" :key="index">
+                <div class="flex-sc font12">
+                  <span class="color_red">*</span>
+                  {{$t('label').admins + (index + 2)}}
+                  <div class="ml-20" v-if="node.refresh">
+                    <span class="color_green" v-if="item.state === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                    <span class="color_red" v-else-if="item.state === 0"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                    <span class="color_99" v-else><i class="el-icon-loading mr-5"></i>{{$t('loading').l_1}}</span>
+                  </div>
                 </div>
-              </div>
-              <el-tooltip placement="top" :open-delay="1000">
-                <div slot="content" class="W300">{{item.state ? (item.value ? item.value : item.url) : $t('loading').l_1}}</div>
-                <el-tag @close="removeNode(item, index)" closable :type="item.url" size="medium" class="WW100 flex-bc">
-                  {{item.name}}
-                </el-tag>
-              </el-tooltip>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-ec">
-          <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
-          <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+                <el-tooltip placement="top" :open-delay="1000">
+                  <div slot="content" class="W300">{{item.state ? (item.value ? item.value : item.url) : $t('loading').l_1}}</div>
+                  <el-tag @close="removeNode(item, index)" closable :type="item.url" size="medium" class="WW100 flex-bc">
+                    {{item.name}}
+                  </el-tag>
+                </el-tooltip>
+              </li>
+            </ul>
+          </div>
+          <div class="flex-ec create-selected-btn">
+            <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
+            <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -98,9 +114,9 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-
 import {datas, watchs, methods} from './js/common.js'
 import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 import setMode from '@/components/setMode/index.vue'
 export default {
   name: 'createPerson',
@@ -128,8 +144,8 @@ export default {
       this.userlist = this.netUrlArr
     },
     checkList (cur, old) {
-      console.log(cur)
-      console.log(old)
+      // console.log(cur)
+      // console.log(old)
       if (cur.length > this.node.max) {
         this.checkList.splice(cur.length - 1, 1)
         this.msgError(this.$t('error').err_14)
@@ -160,6 +176,7 @@ export default {
   methods: {
     ...methods,
     ...nodeMethods,
+    ...getEnode,
     searchEnode () {
       let query = this.searchVal
       if (query) {
@@ -259,7 +276,6 @@ export default {
       this.getEnode(nowSelect.url).then(res => {
         let getUrl = nowSelect.url
         let isExistSelectd = false, nowIndex = index
-        this.$$.web3.setProvider(this.serverRPC)
         for (let i = 0, len = this.checkList.length; i < len; i++) {
           let obj = this.checkList[i]
           if (obj === getUrl) {
@@ -292,26 +308,6 @@ export default {
         }
       }
       this.node.select.splice(index, 1)
-    },
-    getEnode (url) {
-      return new Promise((resolve, reject) => {
-        let enodeObj = {status: 'Error', enode: ''}
-        this.$$.web3.setProvider(url)
-        this.$$.web3.dcrm.getEnode().then(res => {
-          let cbData = res
-          cbData = JSON.parse(cbData)
-          // console.log(cbData)
-          if (cbData.Status === "Success") {
-            enodeObj.status = 'Success'
-            enodeObj.enode = cbData.Data.Enode
-          }
-          resolve(enodeObj)
-        }).catch(err => {
-          console.log(err)
-          enodeObj.error = err
-          resolve(enodeObj)
-        })
-      })
     },
     getAllEnode () {
       let arr = []

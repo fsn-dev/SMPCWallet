@@ -113,7 +113,6 @@ const store = new Vuex.Store({
       state.email = data
     },
     SOCKET_CONNECT(state, data) {
-      console.log(data)
       state.connect = data
     }
   },
@@ -126,9 +125,6 @@ const store = new Vuex.Store({
               commit('setEnode', res)
             })
           }, 500)
-          // web3.getEnode().then(res => {
-          //   commit('setEnode', res)
-          // })
         }
       } catch (error) {
         commit('setEnode', '')

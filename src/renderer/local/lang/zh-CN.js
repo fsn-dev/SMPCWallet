@@ -158,7 +158,8 @@ export default {
 		nodeAddr: '节点地址',
 		search: '搜索',
 		email: '邮箱',
-		emailValid: '邮箱验证码'
+		emailValid: '邮箱验证码',
+		unknown: '未知'
 	},
 	state: {
 		name: '状态',

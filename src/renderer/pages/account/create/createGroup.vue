@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container flex-c" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1 flex-c" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
     <div class="create-box box_Wshadow1" :class="networkMode ? '' : 'off-create-box'">
       <div class="create-search-box" v-if="networkMode">
         <div class="create-search-bg">
@@ -20,27 +20,29 @@
         </div>
       </div>
       <div class="create-selected-box">
-        <div class="selected-input">
-          <setMode @setMode="getMode" size="mini"></setMode>
-        </div>
-        <div class="selected-cont">
-          <ul class="list">
-            <li class="item" v-for="(item, index) in node.select" :key="index">
-              <div class="flex-sc font12">
-                <span class="color_red">*</span>
-                {{$t('label').admins + (index + 1)}}
-                <div class="ml-20" v-if="node.refresh">
-                  <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-                  <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+        <div class="create-selected-bg">
+          <div class="selected-input">
+            <setMode @setMode="getMode" size="mini"></setMode>
+          </div>
+          <div class="selected-cont">
+            <ul class="list">
+              <li class="item" v-for="(item, index) in node.select" :key="index">
+                <div class="flex-sc font12">
+                  <span class="color_red">*</span>
+                  {{$t('label').admins + (index + 1)}}
+                  <div class="ml-20" v-if="node.refresh">
+                    <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                    <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                  </div>
                 </div>
-              </div>
-              <el-input v-model="item.value" @blur="changeState(item, index)" :title="item.value" size="mini" :disabled="item.value === eNode || item.isDisabled || networkMode ? true : false"></el-input>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-ec">
-          <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
-          <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+                <el-input v-model="item.value" @blur="changeState(item, index)" :title="item.value" size="mini" :disabled="item.value === eNode || item.isDisabled || networkMode ? true : false"></el-input>
+              </li>
+            </ul>
+          </div>
+          <div class="flex-ec create-selected-btn">
+            <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
+            <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -50,9 +52,7 @@
         <ul class="list-box">
           <li class="item flex-ai-fs">
             <p class="label flex-sc WW100">{{$t('label').mode}}:{{mode.select}} {{$t('label').mode}}</p>
-            <!-- <p class="info">{{mode.select}} {{$t('label').mode}}</p> -->
           </li>
-          <!-- <li class="item flex-ai-fs" v-for="(item, index) in node.select" :key="index"> <p class="label">{{$t('label').admins}} {{index + 1}}:</p> <p class="info">{{item.value}}</p> </li> -->
         </ul>
         <el-collapse v-model="activeNames">
           <el-collapse-item :title="$t('label').admins + ' ' + (index + 1)" :name="index + 1" v-for="(item, index) in node.select" :key="index">

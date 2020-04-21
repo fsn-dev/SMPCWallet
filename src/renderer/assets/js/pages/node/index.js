@@ -21,7 +21,8 @@ export const nodeMethods = {
       for (let obj of res.info) {
         arr.push({
           url: obj.url,
-          name: obj.name ? obj.name : obj.url
+          name: obj.name ? obj.name : obj.url,
+          status: obj.status
         })
         noRepeat.add(obj.url)
       }
@@ -30,7 +31,8 @@ export const nodeMethods = {
       if (!noRepeat.has(obj.url)) {
         arr.push({
           url: obj.url,
-          name: obj.name ? obj.name : obj.url
+          name: obj.name ? obj.name : obj.url,
+          status: ''
         })
         noRepeat.add(obj.url)
       }
@@ -54,7 +56,8 @@ export const nodeMethods = {
           if (!arr.includes(obj.url)) {
             this.netUrlArr.push({
               url: obj.url,
-              name: obj.name ? obj.name : obj.url
+              name: obj.name ? obj.name : obj.url,
+              status: ''
             })
             arr.push(obj.url)
           }

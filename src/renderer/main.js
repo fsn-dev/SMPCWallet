@@ -27,7 +27,6 @@ let vueSocketIo = new VueSocketIO({
 })
 // 监听connect事件，设置SOCKET_CONNECT为true
 vueSocketIo.io.on('connect', () => {
-  console.log('socket connect from main.js')
   store.commit('SOCKET_CONNECT', true)
 })
 Vue.use(vueSocketIo)
