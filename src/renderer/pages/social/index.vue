@@ -72,10 +72,12 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 export default {
   name: 'social',
   data () {
     return {
+      ...nodeDatas,
       activeName: 'add',
       searchVal: '',
       searchList: [],
@@ -92,6 +94,7 @@ export default {
     ...computedPub,
   },
   sockets: {
+    ...nodeSockets,
     UserFriendFind (res) {
       console.log(res)
       if (res.msg ='Success') {
@@ -106,6 +109,7 @@ export default {
         this.searchList = res.info
       } else {
         this.searchList = []
+        this.msgWarning(this.$t('warn').w_25)
       }
     },
     UserFriendAdd (res) {
@@ -133,8 +137,10 @@ export default {
     this.init()
   },
   methods: {
+    ...nodeMethods,
     init () {
       this.getFriends()
+      this.getNetUrl()
     },
     modalClick () {
       this.eDialog.add = false
@@ -153,8 +159,16 @@ export default {
       this.eDialog.add = true
     },
     addFriend () {
-      if (this.addObj .unIP === (this.token + '@' + this.serverRPC)) {
+      let ipName = this.serverRPC
+      for (let obj of this.netUrlArr) {
+        if (this.serverRPC === obj.url) {
+          ipName = obj.name
+          break
+        }
+      }
+      if (this.addObj .unIP === (this.token + '@' + ipName)) {
         this.msgError(this.$t('error').err_17)
+        this.modalClick()
         return
       }
       this.$socket.emit('UserFriendAdd', {

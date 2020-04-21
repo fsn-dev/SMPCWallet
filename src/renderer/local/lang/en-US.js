@@ -43,6 +43,7 @@ export default {
 		w_22: 'Please create a new username',
 		w_23: 'The mailbox cannot be empty',
 		w_24: 'Please enter the verification code',
+		w_25: 'The query is empty',
 	},
 	success: {
 		s_1: 'Created successfully!',
