@@ -161,10 +161,18 @@ export default {
         this.msgError(this.$t('warn').w_18)
         return
       }
+      if (this.checkList.includes(this.searchVal)) {
+        this.msgError(this.$t('error').err_7)
+        return
+      }
       this.checkList.push(this.searchVal)
+      this.selectedEnode()
+      // console.log(this.checkList)
     },
     selectedEnode (item) {
-      console.log(item)
+      // console.log(item)
+      // console.log(this.checkList)
+      item = this.checkList
       // console.log(this.node)
       if (item.length > this.node.max) {
         this.checkList.splice(item.length - 1, 1)
