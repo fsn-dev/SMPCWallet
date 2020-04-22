@@ -89,7 +89,7 @@ export default {
         this.activeName = 'account'
       }
     },
-  async removeStatus () {
+    async removeStatus () {
     let nowDate = Date.now()
     this.$db.findStatus({}).then(res => {
       // console.log(res)

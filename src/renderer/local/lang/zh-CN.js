@@ -192,6 +192,7 @@ export default {
 		deleteNode: '此操作将永久删除该节点, 是否继续? ',
 		addFriend: '是否添加此好友？ ',
 		deleteFriend: '此操作将永久删除该好友, 是否继续? ',
+		addFriendTip: '当前列表为空，请添加后操作！',
 		devTip: '开发中',
 		online: '仅支持在线状态！'
 	}

@@ -7,7 +7,7 @@
             <el-input placeholder="Search" prefix-icon="el-icon-search" v-model="searchVal" size="mini" @input="searchEnode"></el-input>
             <el-button type="primary" size="mini" class="ml-10" @click="addNode" v-if="userlist.length <= 0 && searchVal.length > 0">{{$t('btn').select}}</el-button>
           </div>
-          <div class="search-cont">
+          <div class="search-cont" style="bottom: 30px;" v-if="userlist.length > 0">
             <el-checkbox-group v-model="checkList" @change="selectedEnode" class="list">
               <el-checkbox class="item flex-sc" v-for="(item, index) in userlist" :key="index" :label="item.enode + item.sign + item.address" :disabled="item.unIP === (token + '@' + serverRPC)">
                 <el-tooltip placement="top" :open-delay="1000">
@@ -16,6 +16,12 @@
                 </el-tooltip>
               </el-checkbox>
             </el-checkbox-group>
+          </div>
+          <div class="search-cont flex-c color_99 font14" style="bottom: 30px;" v-if="userlist.length <= 0">
+            {{$t('tip').addFriendTip}}
+          </div>
+          <div class="add-friend flex-c" @click="openUrl('/social')">
+            {{$t('btn').addFriend}}
           </div>
         </div>
       </div>
@@ -80,6 +86,7 @@
 
 <style lang="scss">
 @import './scss/index.scss';
+
 </style>
 
 <script>
@@ -139,6 +146,10 @@ export default {
   },
   methods: {
     ...methods,
+    openUrl (url) {
+      this.toUrl(url)
+      this.modalClick()
+    },
     getFriends () {
       this.$socket.emit('UserFriendFind', {address: this.address})
     },

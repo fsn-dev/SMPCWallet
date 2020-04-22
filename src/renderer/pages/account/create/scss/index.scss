@@ -30,6 +30,9 @@
           }
         }
       }
+      .add-friend {
+        position: absolute;left:0;right: size($c-lr);bottom:0;font-size: 12px;cursor: pointer;color:#409EFF;
+      }
     }
   }
   .create-selected-box {

@@ -1,24 +1,6 @@
 <template>
   <div class="boxConntent1 container pt-30 relative">
-    <el-tabs v-model="activeName" :tab-position="'left'" style="height: 600px;" >
-      <el-tab-pane :label="$t('label').friendList" name="list">
-        <div class="container">
-          <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-5 relative">
-            <el-breadcrumb-item :to="{ path: '/account' }">{{$t('title').accountList}}</el-breadcrumb-item>
-            <el-breadcrumb-item>{{$t('label').friendList}}</el-breadcrumb-item>
-          </el-breadcrumb>
-          <div class="friend-list">
-            <ul>
-              <li class="item" v-for="(item, index) in friendList" :key="index">
-                <div class="flex-bc">
-                  <span class="font12">{{item.unIP}}</span>
-                  <el-button type="danger" size="mini" @click="openDelFriend(item)">{{$t('action').delete}}</el-button>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </el-tab-pane>
+    <el-tabs v-model="activeName" :tab-position="'left'" style="height: 600px;" @tab-click="handleClick">
       <el-tab-pane :label="$t('btn').addFriend" name="add">
         <div class="container">
           <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-25 relative">
@@ -36,6 +18,24 @@
                 <div class="flex-bc">
                   <span class="font12">{{item.unIP}}</span>
                   <el-button type="primary" size="mini" @click="openAddFriend(item)">{{$t('btn').add}}</el-button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('label').friendList" name="list">
+        <div class="container">
+          <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-5 relative">
+            <el-breadcrumb-item :to="{ path: '/account' }">{{$t('title').accountList}}</el-breadcrumb-item>
+            <el-breadcrumb-item>{{$t('label').friendList}}</el-breadcrumb-item>
+          </el-breadcrumb>
+          <div class="friend-list">
+            <ul>
+              <li class="item" v-for="(item, index) in friendList" :key="index">
+                <div class="flex-bc">
+                  <span class="font12">{{item.unIP}}</span>
+                  <el-button type="danger" size="mini" @click="openDelFriend(item)">{{$t('action').delete}}</el-button>
                 </div>
               </li>
             </ul>
@@ -141,12 +141,20 @@ export default {
     init () {
       this.getFriends()
       this.getNetUrl()
+      this.initTabView()
     },
     modalClick () {
       this.eDialog.add = false
       this.eDialog.del = false
       this.delObj = {}
       this.addObj = {}
+    },
+    handleClick () {
+      this.$router.push({path: this.$route.path, query: {activeTab: this.activeName}})
+    },
+    initTabView () {
+      let at = this.$route.query.activeTab ? this.$route.query.activeTab : 'add'
+      this.activeName = at
     },
     getFriends () {
       this.$socket.emit('UserFriendFind', {address: this.address})
