@@ -8,7 +8,7 @@
             <el-breadcrumb-item>{{$t('btn').addFriend}}</el-breadcrumb-item>
           </el-breadcrumb>
           <div class="W300">
-            <el-input placeholder="Username + @ + Node name" size="mini" v-model="searchVal">
+            <el-input placeholder="Username + @ + Node Name" size="mini" v-model="searchVal">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="searchFrinds"></i>
             </el-input>
           </div>
