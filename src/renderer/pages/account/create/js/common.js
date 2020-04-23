@@ -65,18 +65,13 @@ export const methods = {
     this.eDialog.confirm = false
     this.loading.creat = true
     this.$$.createGroup(mode, arr).then(res => {
-      let gInfo = res
-      console.log(gInfo)
-      if (gInfo.msg === 'Success') {
+      if (res.msg === 'Success') {
         this.gID = res.info.Gid
         this.openPwdDialog(signStr)
       } else {
-        this.msgError(gInfo.info.toString())
+        this.msgError(res.error.toString())
         this.modalClick()
       }
-    }).catch(err => {
-      this.msgError(err)
-      this.modalClick()
     })
   },
   openPwdDialog (signStr) {
@@ -93,7 +88,7 @@ export const methods = {
     this.dataPage = {
       from: this.address,
     }
-    this.$$.getReqNonce(this.address).then(nonce => {
+    this.$$.getReqAddrNonce(this.address).then(nonce => {
       this.dataPage.nonce = nonce
       this.dataPage.value = 0
       this.dataPage.data = data
@@ -107,14 +102,14 @@ export const methods = {
     this.loading.creat = true
     if (data.signTx) {
       this.signTx = data.signTx
-      this.reqAccount()
+      this.reqDcrmAddr()
     } else {
       this.loading.creat = false
       this.msgError('Error')
     }
   },
-  reqAccount () {
-    this.$$.reqAccount(this.signTx).then(res => {
+  reqDcrmAddr () {
+    this.$$.reqDcrmAddr(this.signTx).then(res => {
       console.log(res)
       if (res.msg === 'Success') {
         if (Number(this.accountType) !== 1) {
@@ -122,15 +117,13 @@ export const methods = {
         }
         this.saveDB(res.info)
         this.msgSuccess(this.$t('success').s_3)
+      } else {
+        this.msgError(res.error)
       }
       this.modalClick()
       if (Number(this.accountType) !== 1) {
         // this.toUrl('/waitNews')
       }
-    }).catch(err => {
-      console.log(err)
-      this.msgError(err.error)
-      this.modalClick()
     })
   },
   resetForm() {

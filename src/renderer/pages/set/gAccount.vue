@@ -75,30 +75,34 @@ export default {
       this.$$.getAccounts(this.address, this.accountType).then(res => {
         console.log(res)
         this.gAccountList = []
-        let arr = res.info ? res.info : [], arr1 = [], arr2 = []
-        for (let obj1 of arr) {
-          for (let obj2 of obj1.Accounts) {
-            if (!arr1.includes(obj2)) {
-              let obj3 = {
-                publicKey: obj2.PubKey,
-                gID: obj1.GroupID,
-                name: obj2.PubKey
-              }
-              arr2.push(obj3)
-              arr1.push(obj2)
-            }
-          }
-        }
-        // console.log(arr2)
-        for (let i = 0, len = arr2.length; i < len; i++) {
-          this.gAccountList.push(arr2[i])
-          this.getAccountName(arr2[i], i)
-        }
-      }).catch(err => {
-        if (err.error) {
-          this.msgError(err.error)
+        if (res.msg === 'Success') {
+          let arr = res.info ? res.info : []
+          this.accountFormat(arr)
+        } else {
+          this.msgError(res.error)
         }
       })
+    },
+    accountFormat (arr) {
+      let arr1 = [], arr2 = []
+      for (let obj1 of arr) {
+        for (let obj2 of obj1.Accounts) {
+          if (!arr1.includes(obj2)) {
+            let obj3 = {
+              publicKey: obj2.PubKey,
+              gID: obj1.GroupID,
+              name: obj2.PubKey
+            }
+            arr2.push(obj3)
+            arr1.push(obj2)
+          }
+        }
+      }
+      // console.log(arr2)
+      for (let i = 0, len = arr2.length; i < len; i++) {
+        this.gAccountList.push(arr2[i])
+        this.getAccountName(arr2[i], i)
+      }
     },
     getAccountName (item, i) {
       this.$db.findGaccount({publicKey: item.publicKey, address: this.address}).then(res => {

@@ -37,8 +37,8 @@
                   <span class="color_red">*</span>
                   {{$t('label').admins + (index + 1)}}
                   <div class="ml-20" v-if="node.refresh">
-                    <span class="color_green" v-if="item.state === 'OnLine'"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
-                    <span class="color_red" v-if="item.state === 'OffLine'"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
+                    <span class="color_green" v-if="item.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
+                    <span class="color_red" v-if="item.status === 0"><i class="el-icon-circle-close mr-5"></i>{{$t('state').off}}</span>
                   </div>
                 </div>
                 <el-input v-model="item.value" @blur="changeState(item, index)" :title="item.value" size="mini" :disabled="item.value === eNode || item.isDisabled || networkMode ? true : false"></el-input>
@@ -167,6 +167,7 @@ export default {
       }
       this.checkList.push(this.searchVal)
       this.selectedEnode()
+      this.searchVal = ''
       // console.log(this.checkList)
     },
     selectedEnode (item) {
@@ -186,8 +187,8 @@ export default {
           this.changeState({value: item[i]}, i + 1)
         } 
         if (!item[i]) {
-          this.node.select[i + 1].state = ''
-          this.node.select[i + 1].value = ''
+          this.node.select[i + 1].status = ''
+          this.node.select[i + 1].status = ''
         }
       }
     },
@@ -302,7 +303,7 @@ export default {
       }
       this.$$.getEnodeState(this.$$.splitTx(item.value).eNode).then(res => {
         console.log(res)
-        this.node.select[index].state = res
+        this.node.select[index].status = res
         this.node.select[index].value = enode
         this.refreshNode()
       })
@@ -323,12 +324,14 @@ export default {
         if (i === 0) {
           this.node.select.push({
             value: this.eNode + this.eNodeTx + this.address,
+            status: 1,
             isDisabled: true,
             key: Date.now()
           })
         } else {
           this.node.select.push({
             value: '',
+            status: '',
             isDisabled: false,
             key: Date.now()
           })

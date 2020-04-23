@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     getGroupData () {
-      this.$$.getGroup().then(res => {
+      this.$$.getSDKGroup(this.eNode).then(res => {
         console.log(res)
         this.getGroup = []
         let arr = res.info ? res.info : []
@@ -81,9 +81,6 @@ export default {
           this.getGroup.push(arr[i])
           this.getGName(arr[i], i)
         }
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err.error)
       })
     },
     getGName (item, i) {

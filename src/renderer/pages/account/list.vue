@@ -127,51 +127,54 @@ export default {
       this.$$.getAccounts(this.address, this.accountType).then(res => {
         console.log(res)
         this.gAccountList = []
-        let arr = res.info ? res.info : [], arr1 = [], arr2 = []
-        if (arr.length <= 0) {
-          this.changeGroup()
-          this.loading.list = false
-          return
-        }
-        for (let obj1 of arr) {
-          for (let obj2 of obj1.Accounts) {
-            if (!arr1.includes(obj2.PubKey)) {
-              // console.log(obj2)
-              let obj3 = {
-                publicKey: obj2.PubKey,
-                gID: obj1.GroupID,
-                mode: obj2.ThresHold,
-                name: obj2.PubKey.substr(2),
-                timestamp: obj2.TimeStamp
-              }
-              arr2.push(obj3)
-              arr1.push(obj2.PubKey)
-            }
-          }
-        }
-        arr2 = arr2.sort(this.$$.bigToSmallSort('timestamp'))
-        for (let i = 0, len = arr2.length; i < len; i++) {
-          this.gAccountList.push(arr2[i])
-          this.getGName(arr2[i], i)
-        }
-        if (this.$route.query.gID) {
-          this.changeGroup({
-            gID: this.$route.query.gID,
-            publicKey: this.$route.query.publicKey,
-            mode: this.$route.query.mode,
-          })
-        } else if (this.gAccountList.length > 0) {
-          this.changeGroup(this.gAccountList[0])
+        if (res.msg === 'Success') {
+          let arr = res.info ? res.info : []
+          this.accountFormat(arr)
         } else {
-          this.changeGroup()
-        }
-        this.loading.list = false
-      }).catch(err => {
-        if (err.error) {
-          this.msgError(err.error)
+          this.msgError(res.error)
         }
         this.loading.list = false
       })
+    },
+    accountFormat (arr) {
+      let arr1 = [], arr2 = []
+      if (arr.length <= 0) {
+        this.changeGroup()
+        this.loading.list = false
+        return
+      }
+      for (let obj1 of arr) {
+        for (let obj2 of obj1.Accounts) {
+          if (!arr1.includes(obj2.PubKey)) {
+            // console.log(obj2)
+            let obj3 = {
+              publicKey: obj2.PubKey,
+              gID: obj1.GroupID,
+              mode: obj2.ThresHold,
+              name: obj2.PubKey.substr(2),
+              timestamp: obj2.TimeStamp
+            }
+            arr2.push(obj3)
+            arr1.push(obj2.PubKey)
+          }
+        }
+      }
+      arr2 = arr2.sort(this.$$.bigToSmallSort('timestamp'))
+      for (let i = 0, len = arr2.length; i < len; i++) {
+        this.gAccountList.push(arr2[i])
+        this.getGName(arr2[i], i)
+      }
+      if (this.$route.query.gID) {
+        this.changeGroup({
+          gID: this.$route.query.gID,
+          publicKey: this.$route.query.publicKey,
+          mode: this.$route.query.mode,
+        })
+      } else if (this.gAccountList.length > 0) {
+        this.changeGroup(this.gAccountList[0])
+      } else {
+        this.changeGroup()
+      }
     },
     getGName (item, i) {
       this.$db.findGaccount({publicKey: item.publicKey, address: this.address}).then(res => {

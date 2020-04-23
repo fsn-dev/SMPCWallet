@@ -6,6 +6,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 import {mapActions} from 'vuex'
 export default {
   name: 'SMPC',
@@ -27,7 +28,7 @@ export default {
     serverRPC () {
       let url = this.serverRPC
       this.$$.web3.setProvider(url)
-      this.getEnode()
+      this.setEnode()
     },
   },
   computed: {
@@ -58,9 +59,10 @@ export default {
     // console.log(this.$store.state)
   },
   methods: {
-    ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC']),
+    ...getEnode,
+    ...mapActions(['getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC']),
     initData () {
-      this.getEnode()
+      this.setEnode()
       this.getEnodeTx()
       this.getToken()
       this.getAddress()
@@ -68,6 +70,20 @@ export default {
       this.getDayAndNight()
       this.getLanguage()
       this.getServerRPC()
+    },
+    setEnode () {
+      if (!this.serverRPC) {
+        setTimeout(() => {
+          this.setEnode()
+        }, 500)
+        return
+      }
+      this.getEnode(this.serverRPC).then(res => {
+        // console.log(res)
+        if (res.status === 'Success') {
+          this.$store.commit('setEnode', res.enode)
+        }
+      })
     },
     mousePos (e) {
       e = e || window.event

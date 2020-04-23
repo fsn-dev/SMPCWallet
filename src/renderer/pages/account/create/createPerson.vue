@@ -310,10 +310,6 @@ export default {
       this.node.select.splice(index, 1)
     },
     getAllEnode () {
-      let arr = []
-      for (let obj of this.node.select) {
-        arr.push(this.getEnode(obj.url))
-      }
       this.createEnodeArr = [{
         name: 'Current Node',
         url: this.serverRPC,

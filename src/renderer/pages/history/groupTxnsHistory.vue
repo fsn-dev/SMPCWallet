@@ -184,9 +184,6 @@ export default {
     getHistoryState (id, key, index) {
       this.$$.getLockOutStatus(key).then(res => {
         this.getStateFormat(id, index, res)
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err)
       })
     },
     setDBState (id, index, hash, status) {

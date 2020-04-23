@@ -30,6 +30,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public.js'
 import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 export default {
   name: 'setEnode',
   props: {
@@ -55,7 +56,14 @@ export default {
   watch: {
     serverRPC () {
       this.netUrl = this.serverRPC
+      console.log(this.eNode)
     },
+    eNode (cur) {
+      console.log(cur)
+      if (this.eNode) {
+        this.viewEnode = this.eNode + this.eNodeTx + this.address
+      }
+    }
   },
   computed: {
     ...computedPub
@@ -68,8 +76,12 @@ export default {
   },
   methods: {
     ...nodeMethods,
+    ...getEnode,
     init () {
-      this.viewEnode = this.eNode + this.eNodeTx + this.address
+      console.log(this.eNode)
+      if (this.eNode) {
+        this.viewEnode = this.eNode + this.eNodeTx + this.address
+      }
       this.getNetUrl()
       this.setSelected()
     },
@@ -83,27 +95,16 @@ export default {
       if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
         url = this.netUrl = 'http://' + url
       }
-      this.$$.web3.setProvider(url)
-      this.$$.web3.dcrm.getEnode().then(res => {
-        let cbData = res
-        cbData = JSON.parse(cbData)
-        // console.log(cbData)
-        if (cbData.Status === "Success") {
-          let eNodeInit = cbData.Data.Enode
-          this.viewEnode = eNodeInit
+      this.getEnode(url).then(res => {
+        if (res.status === 'Success') {
+          let eNodeInit = res.enode
           this.saveRpcDB(url)
           this.$store.commit('setServerRPC', {info: url})
           this.$store.commit('setEnode', eNodeInit)
           this.msgSuccess(this.$t('success').s_4)
         } else {
-          this.viewEnode = ''
           this.msgError(this.$t('error').err_9)
         }
-        this.loading.setNode = false
-      }).catch(err => {
-        console.log(err)
-        this.viewEnode = ''
-        this.msgError(this.$t('error').err_9)
         this.loading.setNode = false
       })
     }

@@ -132,8 +132,6 @@ export default {
           this.gForm.enodeObj = enodeObj
         }
         this.showGroupData()
-      }).catch(err => {
-        console.log(err)
       })
     },
     async showGroupData () {
@@ -143,52 +141,54 @@ export default {
       }
       this.$$.getLockOutStatus(this.urlParams.Key).then(res => {
         console.log(res)
-        if (res.msg === 'Success' && res.status === 'Pending') {
-          this.isApplySataus = true
+        if (res.msg === 'Success') {
+          if (res.status === 'Pending') {
+            this.isApplySataus = true
+          } else {
+            this.isApplySataus = false
+          }
+          let arr = [], initiator = {}
+          for (let obj of res.info) {
+            let obj1 = this.gForm.enodeObj[obj.Enode]
+            if (obj.Initiator && Number(obj.Initiator)) {
+              initiator = {
+                key: obj1.key,
+                eNode: obj1.enode,
+                ip: obj1.ip,
+                status: 'Agree',
+                initiate: 1,
+                timestamp: obj.TimeStamp
+              }
+            } else {
+              arr.push({
+                key: obj1.key,
+                eNode: obj1.enode,
+                ip: obj1.ip,
+                status: obj.Status,
+                initiate: 0,
+                timestamp: obj.TimeStamp
+              })
+            }
+          }
+          if (this.urlParams.status) {
+            this.isReplySet = false
+          }
+          if  (initiator.eNode) {
+            arr.unshift(initiator)
+          }
+          this.gForm = {
+            name: this.urlParams.Key,
+            mode: this.urlParams.LimitNum,
+            eNode: arr,
+            gID: this.urlParams.GroupId,
+            timestamp: Number(this.urlParams.TimeStamp)
+          }
+          this.countDownFn()
         } else {
           this.isApplySataus = false
+          this.msgError(res.error)
         }
-        let arr = [], initiator = {}
-        for (let obj of res.info) {
-          let obj1 = this.gForm.enodeObj[obj.Enode]
-          if (obj.Initiator && Number(obj.Initiator)) {
-            initiator = {
-              key: obj1.key,
-              eNode: obj1.enode,
-              ip: obj1.ip,
-              status: 'Agree',
-              initiate: 1,
-              timestamp: obj.TimeStamp
-            }
-          } else {
-            arr.push({
-              key: obj1.key,
-              eNode: obj1.enode,
-              ip: obj1.ip,
-              status: obj.Status,
-              initiate: 0,
-              timestamp: obj.TimeStamp
-            })
-          }
-        }
-        if (this.urlParams.status) {
-          this.isReplySet = false
-        }
-        if  (initiator.eNode) {
-          arr.unshift(initiator)
-        }
-        this.gForm = {
-          name: this.urlParams.Key,
-          mode: this.urlParams.LimitNum,
-          eNode: arr,
-          gID: this.urlParams.GroupId,
-          timestamp: Number(this.urlParams.TimeStamp)
-        }
-        this.countDownFn()
         this.refreshActionFn()
-      }).catch(err => {
-        this.refreshActionFn()
-        this.msgError(err.error.toString())
       })
     },
     submitForm(formName, type) {
@@ -243,14 +243,9 @@ export default {
       }
     },
     getSignData (data) {
-      console.log(data)
-      console.log(data.signTx)
       if (data && data.signTx) {
-        // let cbData = this.$$.sendTxnsValid(data.signTx)
-        this.$$.sendTxnsValid(data.signTx).then(res => {
-          let cbData = res
-          console.log(res)
-          if (cbData.msg === 'Success') {
+        this.$$.acceptLockOut(data.signTx).then(res => {
+          if (res.msg === 'Success') {
             let localData = {}
             let params = {
               key: this.key,
@@ -295,18 +290,11 @@ export default {
             } else {
               this.$socket.emit('changeGroupMemberTxnsStatus', params)
             }
-            // EditGroupMemberTxnsFn(this, 'changeGroupMemberTxnsStatus', {
-            //   key: this.key,
-            //   kId: this.address,
-            //   eNode: this.eNode,
-            //   status: this.applyStatus === 'AGREE' ? 5 : 4,
-            //   local: localData
-            // })
             this.updateStatus(this.urlParams.Key)
             this.msgSuccess('Success!')
             this.toUrl('/waitNews')
           } else {
-            this.msgError('Error')
+            this.msgError(res.error)
           }
           this.applyStatus = ''
         })

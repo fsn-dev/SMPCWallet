@@ -146,6 +146,7 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 import sendTxns from '@/pages/txns/index.vue'
 export default {
   name: '',
@@ -188,6 +189,7 @@ export default {
     // console.log(this.$route.query)
   },
   methods: {
+    ...getEnode,
     changeEnode (item, index) {
       if (Number(this.accountType)) {
         if (item.isEdit) {
@@ -199,13 +201,9 @@ export default {
           }
           if (item.url !== this.$$.eNodeCut(item.oldEnode).ip) {
             let url = item.url.indexOf('http://') === 0 || item.url.indexOf('https://') === 0 ? item.url : ('http://' + item.url)
-            this.$$.web3.setProvider(url)
-            this.$$.web3.dcrm.getEnode().then(res => {
-              let cbData = res
-              cbData = JSON.parse(cbData)
-              // console.log(cbData)
-              if (cbData.Status === "Success") {
-                let _enode = cbData.Data.Enode
+            this.getEnode(url).then(res => {
+              if (res.status === 'Success') {
+                let _enode = res.enode
                 if (!this.$$.eNodeCut(_enode).key || item.oldEnode.indexOf(this.$$.eNodeCut(_enode).key) === -1) {
                   this.gMemberInit[index].eNode = item.oldEnode
                   this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
@@ -218,12 +216,6 @@ export default {
               } else {
                 this.gMemberInit[index].eNode = item.oldEnode
               }
-              this.$$.web3.setProvider(this.serverRPC)
-            }).catch(err => {
-              console.log(err)
-              this.gMemberInit[index].eNode = item.oldEnode
-              this.gMemberInit[index].url = this.$$.eNodeCut(item.oldEnode).ip
-              this.$$.web3.setProvider(this.serverRPC)
             })
           }
         }
@@ -246,7 +238,7 @@ export default {
           }
           this.$$.getEnodeState(item.eNode).then(res  => {
             // console.log(res)
-            this.gMemberInit[index].status = res === 'OnLine' ? 1 : 0
+            this.gMemberInit[index].status = res ? 1 : 0
           })
         }
       }
@@ -318,9 +310,6 @@ export default {
         } else {
           this.msgError(res.error)
         }
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err)
       })
     },
     setMemberList () {
@@ -377,11 +366,9 @@ export default {
           // console.log(res)
           if (res.msg === 'Success') {
             this.tableData = res.info
+          } else {
+            this.msgError(this.$t('warn').w_2)
           }
-          this.loading.account = false
-        }).catch(err => {
-          console.log(err)
-          this.msgError(this.$t('warn').w_2)
           this.loading.account = false
         })
       } else {

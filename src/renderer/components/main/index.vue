@@ -57,22 +57,13 @@
       </transition>
     </section>
 
-    <!-- <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" :append-to-body="true" :withHeader="false">
-      <div class="plr15">
-        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
-      </div>
-      <div>
-        <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType)"></createPerson>
-        <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
-      </div>
-    </el-drawer> -->
     <el-dialog :title="$t('title').register" :visible.sync="drawer.create" width="800px" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="true" :show-close="true" class="create-dialog">
       <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType) && drawer.create"></createPerson>
       <createGroup :formBoxClass="false" @closeModal="modalClick" v-if="!Number(accountType) && drawer.create"></createGroup>
     </el-dialog>
 
     <el-drawer :visible.sync="drawer.user" :destroy-on-close="true" :show-close="false">
-      <person-info @closeDrawer="drawer.user = false"></person-info>
+      <personInfo @closeDrawer="drawer.user = false" v-if="drawer.user"></personInfo>
     </el-drawer>
   </div>
 </template>

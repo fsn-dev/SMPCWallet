@@ -1,3 +1,12 @@
+import db from '@/db/index.js'
+import $$ from '@/libs/index'
+db.findBaseInfo({key: 'serverRPC'}).then(res => {
+  // console.log(res)
+  if (res.length > 0) {
+    $$.web3.setProvider(res[0].value)
+  }
+})
+
 import Vue from 'vue'
 import axios from 'axios'
 import Vuex from 'vuex'
@@ -6,13 +15,11 @@ import router from './router'
 import store from './store'
 
 import i18n from '@/local'
-import $$ from '@/libs/index'
 
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/css.css'
 import './assets/css/style.css'
 
-import db from '@/db/index.js'
 
 
 import ElementUI from 'element-ui'

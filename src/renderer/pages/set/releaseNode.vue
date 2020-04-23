@@ -88,6 +88,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 export default {
   name: 'releaseNode',
   data () {
@@ -154,6 +155,7 @@ export default {
     this.init()
   },
   methods: {
+    ...getEnode,
     init () {
       this.$socket.emit('getUserNodeInfos', {
         publisher: this.token,
@@ -215,22 +217,16 @@ export default {
     validNode (param) {
       return new Promise(resolve => {
         let url = this[param].url
+        console.log(this[param].url)
         if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
-          this['param'].url = url = 'http://' + url
+          this[param].url = url = 'http://' + url
         }
-        this.$$.web3.setProvider(url)
-        this.$$.web3.dcrm.getEnode().then(res => {
-          let cbData = res
-          cbData = JSON.parse(cbData)
-          // console.log(cbData)
-          if (cbData.Status === "Success" && cbData.Data.Enode) {
+        this.getEnode(url).then(res => {
+          if (res.status === 'Success') {
             resolve(1)
           } else {
             resolve(0)
           }
-        }).catch(err => {
-          console.log(err)
-          resolve(0)
         })
       })
     },

@@ -128,60 +128,59 @@ export default {
         let obj1 = this.$$.eNodeCut(obj).key
         enodeObj[obj1] = obj
       }
-      this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
+      this.$$.getReqAddrStatus(this.urlParams.Key).then(res => {
         console.log(res)
-        if (res.msg === 'Success' && res.status === 'Pending') {
-          this.isApplySataus = true
+        if (res.msg === 'Success') {
+          if (res.status === 'Pending') {
+            this.isApplySataus = true
+          } else {
+            this.isApplySataus = false
+          }
+          let arr = [], initiator = {}
+          for (let obj of res.info) {
+            if (obj.Initiator && Number(obj.Initiator)) {
+              initiator = {
+                eNode: enodeObj[obj.Enode],
+                status: 'Agree',
+                initiate: 1,
+                timestamp: obj.TimeStamp
+              }
+            } else {
+              arr.push({
+                eNode: enodeObj[obj.Enode],
+                status: obj.Status,
+                initiate: 0,
+                timestamp: obj.TimeStamp
+              })
+            }
+            if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
+              this.isReplySet = true
+            }
+          }
+          if  (initiator.eNode) {
+            arr.unshift(initiator)
+          }
+          this.gForm = {
+            name: this.urlParams.Key,
+            mode: this.urlParams.LimitNum,
+            eNode: arr,
+            gID: this.urlParams.GroupId,
+            timestamp: Number(this.urlParams.TimeStamp)
+          }
+          console.log(this.gForm)
+          this.countDownFn()
         } else {
           this.isApplySataus = false
+          this.msgError(res.error)
         }
-        let arr = [], initiator = {}
-        for (let obj of res.info) {
-          if (obj.Initiator && Number(obj.Initiator)) {
-            initiator = {
-              eNode: enodeObj[obj.Enode],
-              status: 'Agree',
-              initiate: 1,
-              timestamp: obj.TimeStamp
-            }
-          } else {
-            arr.push({
-              eNode: enodeObj[obj.Enode],
-              status: obj.Status,
-              initiate: 0,
-              timestamp: obj.TimeStamp
-            })
-          }
-          if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
-            this.isReplySet = true
-          }
-        }
-        if  (initiator.eNode) {
-          arr.unshift(initiator)
-        }
-        this.gForm = {
-          name: this.urlParams.Key,
-          mode: this.urlParams.LimitNum,
-          eNode: arr,
-          gID: this.urlParams.GroupId,
-          timestamp: Number(this.urlParams.TimeStamp)
-        }
-        console.log(this.gForm)
-        this.loading.data = false
-        this.countDownFn()
-        this.refreshActionFn()
-      }).catch(err => {
-        console.log(err)
         this.loading.data = false
         this.refreshActionFn()
-        this.msgError(err)
       })
     },
     getSignData (data) {
       if (data && data.signTx) {
-        this.$$.web3.dcrm.acceptReqAddr(data.signTx).then(res => {
-          let cbData = res
-          if (cbData.Status === 'Success') {
+        this.$$.acceptReqAddr(data.signTx).then(res => {
+          if (res.msg === 'Success') {
             this.msgSuccess('Success!')
             if (this.key) {
               let localData = {}
@@ -229,7 +228,7 @@ export default {
             this.updateStatus(this.urlParams.Key)
             this.toUrl('/waitNews')
           } else {
-            this.msgError('Error')
+            this.msgError(res.error)
           }
           this.applyStatus = ''
         })
@@ -251,7 +250,7 @@ export default {
       // console.log(type)
       this.applyStatus = type
       try {
-        this.$$.getReqNonce(this.urlParams.Account).then(nonce => {
+        this.$$.getReqAddrNonce(this.urlParams.Account).then(nonce => {
           // console.log(nonce)
           if (!isNaN(nonce)) {
             this.dataPage = {

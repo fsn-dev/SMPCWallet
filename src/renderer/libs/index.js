@@ -34,7 +34,7 @@ import files from '@/libs/files'
 /**
  * @description web3新增通用方法
  */
-import web3Util from '@/libs/web3Util'
+import web3Util from '@/libs/web3Util/index.js'
 /**
  * @description mode基本选项
  */

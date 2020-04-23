@@ -68,11 +68,11 @@ export default {
   },
   methods: {
     init () {
-      this.$$.getGroup().then(gList => {
+      this.$$.getSDKGroup(this.eNode).then(res => {
         // console.log(gList)
         this.gInfo = {}
-        if (gList.msg === 'Success') {
-          for (let obj of gList.info) {
+        if (res.msg === 'Success') {
+          for (let obj of res.info) {
             this.gInfo[obj.Gid] = obj
           }
         }

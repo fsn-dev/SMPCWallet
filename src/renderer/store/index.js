@@ -9,10 +9,6 @@ import cookies from '@/libs/cookies'
  */
 import config from '@/assets/js/config/base.js'
 /**
- * @description web3文件
- */
-import web3 from '@/libs/web3Util'
-/**
  * @description 基本信息设置
  */
 import db from '@/db/index.js'
@@ -117,19 +113,6 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    getEnode ({commit}) {
-      try {
-        if (this.state.serverRPC) {
-          setTimeout(() => {
-            web3.getEnode().then(res => {
-              commit('setEnode', res)
-            })
-          }, 500)
-        }
-      } catch (error) {
-        commit('setEnode', '')
-      }
-    },
     getEnodeTx ({commit}) {
       cookies.getCookies(config.cookies.eNodeTx).then(res => {
         let data = { type: 1, info: res}

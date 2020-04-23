@@ -113,18 +113,13 @@ export default {
         }
       }
       this.$$.createGroup(this.gMode, arr).then(res => {
-        let gInfo = res
-        console.log(gInfo)
-        if (gInfo.msg === 'Success') {
+        if (res.msg === 'Success') {
           this.childGroupID = res.info.Gid
           this.openPwdDialog()
         } else {
-          this.msgError(gInfo.info.toString())
+          this.msgError(res.error.toString())
           this.modalClick()
         }
-      }).catch(err => {
-        this.msgError(err)
-        this.modalClick()
       })
     },
     openPwdDialog () {
@@ -172,7 +167,7 @@ export default {
       this.modalClick()
       // this.loading.account = true
       if (data.signTx) {
-        this.$$.lockout(data.signTx).then(res => {
+        this.$$.lockOut(data.signTx).then(res => {
           console.log(res)
           if (res.msg === 'Success') {
             this.msgSuccess('Success!')
@@ -180,9 +175,6 @@ export default {
           } else {
             this.msgError(res.error)
           }
-        }).catch(err => {
-          console.log(err)
-          this.msgError(err.error)
         })
       } else {
         this.msgError('Error')

@@ -153,11 +153,8 @@ export default {
       // })
     },
     getHistoryState (id, key, index) {
-      this.$$.reqAccountStatus(key).then(res => {
+      this.$$.getReqAddrStatus(key).then(res => {
         this.getStateFormat(id, index, res)
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err)
       })
     },
     setDBState (id, index, pubKey, status) {
