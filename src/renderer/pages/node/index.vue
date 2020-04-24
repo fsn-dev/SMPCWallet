@@ -36,19 +36,22 @@
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('label').publisher" width="200">
+      <el-table-column label="Key">
         <template slot-scope="scope">
-          <span>{{scope.row.publisher}}</span>
+          <span>{{$$.eNodeCut(scope.row.enode).key}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('label').nodeAddr">
+      <el-table-column :label="$t('label').nodeAddr" width="220">
         <template slot-scope="scope">
           <span>{{scope.row.url}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('label').date">
+      <el-table-column :label="$t('label').runDays" width="80">
         <template slot-scope="scope">
-          <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
+          <span>
+            {{timeToDays(scope.row.timestamp)}}
+            <!-- -{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}} -->
+          </span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('state').name" width="80">
@@ -96,7 +99,13 @@ export default {
     this.$socket.emit('NodeAndOtherData')
   },
   methods: {
-
+    timeToDays (timestamp) {
+      if (!timestamp) return
+      let time = Date.now() - timestamp
+      let days = time / (1000 * 60 * 60 * 24)
+      days = Math.ceil(days)
+      return days
+    }
   }
 }
 </script>

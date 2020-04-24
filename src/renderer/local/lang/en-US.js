@@ -169,9 +169,10 @@ export default {
 		friend: 'Friends',
 		friendList: 'Friends List',
 		userNum: 'Users',
-		accountNum: 'Accounts',
+		accountNum: 'Address Num',
 		txnsNum: 'Txns',
-		publisher: 'Publisher'
+		publisher: 'Publisher',
+		runDays: 'Run Days'
 	},
 	state: {
 		name: 'Status',

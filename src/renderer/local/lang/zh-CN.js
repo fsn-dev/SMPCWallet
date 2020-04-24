@@ -169,9 +169,10 @@ export default {
 		friend: '好友',
 		friendList: '好友列表',
 		userNum: '用户数',
-		accountNum: '账户数',
+		accountNum: '地址数',
 		txnsNum: '交易数',
-		publisher: '发布者'
+		publisher: '发布者',
+		runDays: '运行天数'
 	},
 	state: {
 		name: '状态',
