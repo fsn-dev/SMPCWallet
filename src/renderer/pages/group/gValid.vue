@@ -87,10 +87,24 @@ export default {
     // this.key = aObj.key
     if (this.urlParams.Key) {
       this.key = this.urlParams.Key
-      this.showGroupData()
+      this.init()
+      // this.showGroupData()
     }
   },
   methods: {
+    init () {
+      this.$$.getGroupObj(this.urlParams.GroupId).then(res => {
+        console.log(res)
+        let enodeObj = {}
+        if (res.msg === 'Success') {
+          for (let obj of res.info) {
+            let key = this.$$.eNodeCut(obj).key
+            enodeObj[key] = obj
+          }
+        }
+        this.showGroupData(enodeObj)
+      })
+    },
     refreshActionFn () {
       setTimeout(() => {
         this.refreshAction = false
@@ -122,12 +136,7 @@ export default {
         // console.log(this.countDown)
       }, 500)
     },
-    async showGroupData () {
-      let enodeObj = {}
-      for (let obj of this.urlParams.Enodes) {
-        let obj1 = this.$$.eNodeCut(obj).key
-        enodeObj[obj1] = obj
-      }
+    async showGroupData (enodeObj) {
       this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Pending') {
@@ -139,14 +148,14 @@ export default {
         for (let obj of res.info) {
           if (obj.Initiator && Number(obj.Initiator)) {
             initiator = {
-              eNode: enodeObj[obj.Enode],
+              eNode: enodeObj[obj.Enode] ? enodeObj[obj.Enode] : obj.Enode,
               status: 'Agree',
               initiate: 1,
               timestamp: obj.TimeStamp
             }
           } else {
             arr.push({
-              eNode: enodeObj[obj.Enode],
+              eNode: enodeObj[obj.Enode] ? enodeObj[obj.Enode] : obj.Enode,
               status: obj.Status,
               initiate: 0,
               timestamp: obj.TimeStamp

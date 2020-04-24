@@ -125,6 +125,7 @@ export default {
   methods: {
     init () {
       this.$$.getAccounts(this.address, this.accountType).then(res => {
+      // this.$$.getAccounts(this.address, '').then(res => {
         console.log(res)
         this.gAccountList = []
         let arr = res.info ? res.info : [], arr1 = [], arr2 = []
