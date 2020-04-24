@@ -29,10 +29,12 @@ export default {
       }, 1000 * 30)
     })
   },
-  getEnode (url) {
+  getEnode (url, isReset) {
     return new Promise(resolve => {
       Promise.race([this.getEnode1(url), this.getEnode2()]).then(res => {
-        this.$$.web3.setProvider(this.serverRPC)
+        if (!isReset) {
+          this.$$.web3.setProvider(this.serverRPC)
+        }
         // console.log(res)
         resolve(res)
       })

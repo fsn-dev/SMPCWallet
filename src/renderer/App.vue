@@ -59,8 +59,7 @@ export default {
     // console.log(this.$store.state)
   },
   methods: {
-    ...getEnode,
-    ...mapActions(['getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC']),
+    ...mapActions(['getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC', 'getServerRPCname']),
     initData () {
       this.setEnode()
       this.getEnodeTx()
@@ -70,6 +69,7 @@ export default {
       this.getDayAndNight()
       this.getLanguage()
       this.getServerRPC()
+      this.getServerRPCname()
     },
     setEnode () {
       if (!this.serverRPC) {
