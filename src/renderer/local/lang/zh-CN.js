@@ -162,6 +162,8 @@ export default {
 		nodeNum: '节点数',
 		nodeName: '节点名',
 		nodeAddr: '节点地址',
+		nodeType: '节点类型',
+		pubKeyAddr: '公钥地址',
 		search: '搜索',
 		email: '邮箱',
 		emailValid: '邮箱验证码',
@@ -172,7 +174,9 @@ export default {
 		accountNum: '地址数',
 		txnsNum: '交易数',
 		publisher: '发布者',
-		runDays: '运行天数'
+		runDays: '运行天数',
+		unionNode: '联盟节点',
+		CBONode: '社区节点'
 	},
 	state: {
 		name: '状态',

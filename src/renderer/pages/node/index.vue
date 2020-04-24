@@ -31,22 +31,24 @@
       </el-col>
     </el-row>
     <el-table :data="tableData.nodeList" style="width: 100%" empty-text="Null" size="mini" class="mt-30">
-      <el-table-column :label="$t('label').nodeName" width="200">
+      <el-table-column :label="$t('label').nodeName" width="300">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Key">
+      <el-table-column :label="$t('label').pubKeyAddr">
         <template slot-scope="scope">
-          <span>{{$$.eNodeCut(scope.row.enode).key}}</span>
+          <span class="cursorP" @click="copyTxt($$.eNodeCut(scope.row.enode).key)" :title="$$.eNodeCut(scope.row.enode).key">
+            {{scope.row.enode.length > 22 ? $$.cutOut($$.eNodeCut(scope.row.enode).key, 18, 12) : $$.eNodeCut(scope.row.enode).key}}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('label').nodeAddr" width="220">
+      <el-table-column :label="$t('label').nodeType">
         <template slot-scope="scope">
-          <span>{{scope.row.url}}</span>
+          <span>{{setNodeType(scope.row.nodeType)}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('label').runDays" width="80">
+      <el-table-column :label="$t('label').runDays" width="100">
         <template slot-scope="scope">
           <span>
             {{timeToDays(scope.row.timestamp)}}
@@ -54,7 +56,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('state').name" width="80">
+      <el-table-column :label="$t('state').name" width="100">
         <template slot-scope="scope">
           <!-- <span v-html="scope.row.status" class="color_green"></span> -->
           <span class="color_green" v-if="scope.row.status === 1"><i class="el-icon-circle-check mr-5"></i>{{$t('state').on}}</span>
@@ -105,6 +107,15 @@ export default {
       let days = time / (1000 * 60 * 60 * 24)
       days = Math.ceil(days)
       return days
+    },
+    setNodeType (type) {
+      let str = ''
+      if (type === 0) {
+        str = this.$t('label').unionNode
+      } else if (type === 1) {
+        str = this.$t('label').CBONode
+      }
+      return str
     }
   }
 }

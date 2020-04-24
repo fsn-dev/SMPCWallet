@@ -162,6 +162,8 @@ export default {
 		nodeNum: 'Nodes',
 		nodeName: 'Node Name',
 		nodeAddr: 'Node Address',
+		nodeType: 'Node Type',
+		pubKeyAddr: 'Public Key Address',
 		search: 'Search',
 		email: 'Email',
 		emailValid: 'Mailbox verification code',
@@ -172,7 +174,9 @@ export default {
 		accountNum: 'Address Num',
 		txnsNum: 'Txns',
 		publisher: 'Publisher',
-		runDays: 'Run Days'
+		runDays: 'Run Days',
+		unionNode: 'Union Node',
+		CBONode: 'Community Node'
 	},
 	state: {
 		name: 'Status',
