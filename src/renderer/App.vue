@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="Number(dayAndNight) ? '' : 'night'" v-loading="!isConnect && networkMode" :element-loading-text="$t('loading').l_2">
+  <div id="app" :class="Number(dayAndNight) ? '' : 'night'" v-loading="!isConnect && networkMode" :element-loading-text="$t('loading').l_1">
     <router-view></router-view>
   </div>
 </template>

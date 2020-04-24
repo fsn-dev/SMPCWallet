@@ -226,7 +226,7 @@ export default {
               }
             }
             this.updateStatus(this.urlParams.Key)
-            this.toUrl('/waitNews')
+            this.toUrl('/approvalList')
           } else {
             this.msgError(res.error)
           }

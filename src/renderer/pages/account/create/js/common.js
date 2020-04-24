@@ -122,7 +122,7 @@ export const methods = {
       }
       this.modalClick()
       if (Number(this.accountType) !== 1) {
-        // this.toUrl('/waitNews')
+        // this.toUrl('/approvalList')
       }
     })
   },

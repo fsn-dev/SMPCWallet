@@ -5,23 +5,35 @@
         <logo></logo>
       </div>
 
-      <div class="flex-c header-top-account">
+      <!-- <div class="flex-c header-top-account">
         <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(accountType) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
         <p class="item" :class="Number(accountType) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
-      </div>
+      </div> -->
       <div class="header-top-set-box flex-ec">
         <div class="header-top-nav">
           <ul class="flex-c HH100">
             <li
               class="item flex-c"
-              :class="newsActive === 2 ? 'active' : ''"
+              :class="newsActive === 'createAccount' ? 'active' : ''"
               @click="openDrawerCreate"
               :title="$t('btn').create"
             >{{$t('btn').create}}</li>
             <li
               class="item flex-c"
-              :class="newsActive === 1 ? 'active' : ''"
-              @click="toUrl('/waitNews')"
+              :class="newsActive === 'social' ? 'active' : ''"
+              @click="toUrl('/social')"
+              :title="$t('label').friend"
+            >{{$t('label').friend}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'nodeTable' ? 'active' : ''"
+              @click="toUrl('/nodeTable')"
+              :title="$t('label').node"
+            >{{$t('label').node}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'approvalList' ? 'active' : ''"
+              @click="toUrl('/approvalList')"
               :title="$t('title').wait"
             >
               <el-badge :value="newsLen ? newsLen : ''" :max="99" class="flex-c">
@@ -30,7 +42,7 @@
             </li>
             <li
               class="item flex-c"
-              :class="newsActive === 3 ? 'active' : ''"
+              :class="newsActive === 'history' ? 'active' : ''"
               @click="toUrl('/history')"
               :title="$t('btn').history"
             >{{$t('title').history}}</li>
@@ -63,13 +75,39 @@
     </el-dialog>
 
     <el-drawer :visible.sync="drawer.user" :destroy-on-close="true" :show-close="false">
-      <personInfo @closeDrawer="drawer.user = false" v-if="drawer.user"></personInfo>
+      <div class="person-info-box">
+        <div class="flex-bc t-logo-box">
+          <div class="flex-sc">
+            <div class="header-img">
+              <img :src="headerImg">
+            </div>
+            <span class="font12 ml-5">{{token + '@' + serverRPCname}}</span>
+          </div>
+          <div class="quit-box cursorP" @click="quitApp()"> {{$t('title').quit}} </div>
+        </div>
+        <person-info @closeDrawer="drawer.user = false"></person-info>
+      </div>
     </el-drawer>
   </div>
 </template>
 
 <style lang="scss">
 @import './scss/index';
+.person-info-box {
+  width: 100%;height: 100%;position: relative;padding-top: 72px;
+}
+.t-logo-box {
+  border-bottom: 1px solid #ddd;padding: size(15) size(15);position:absolute;left:0;right:0;top:0;
+  .header-img {
+    width: 35px;
+    img {
+      width: 100%;
+    }
+  }
+  .quit-box {
+    padding: size(0) size(8);border: 1px solid $color-primary;color: $color-primary;font-size: $text-sm;display: inline-block;
+  }
+}
 .create-dialog {
   // .el-dialog__header {
   //   // display: none;
@@ -172,12 +210,16 @@ export default {
       this.drawer.create = true
     },
     newsView (cur) {
-      if (cur.path.indexOf('waitNews') !== -1) {
-        this.newsActive = 1
+      if (cur.path.indexOf('approvalList') !== -1) {
+        this.newsActive = 'approvalList'
       } else if (cur.path.indexOf('createGroup') !== -1 || cur.path.indexOf('createPerson') !== -1) {
-        this.newsActive = 2
+        this.newsActive = 'createAccount'
       } else if (cur.path.indexOf('history') !== -1) {
-        this.newsActive = 3
+        this.newsActive = 'history'
+      } else if (cur.path.indexOf('social') !== -1) {
+        this.newsActive = 'social'
+      } else if (cur.path.indexOf('nodeTable') !== -1) {
+        this.newsActive = 'nodeTable'
       } else {
         this.newsActive = 0
       }

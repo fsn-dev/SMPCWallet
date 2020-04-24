@@ -292,7 +292,7 @@ export default {
             }
             this.updateStatus(this.urlParams.Key)
             this.msgSuccess('Success!')
-            this.toUrl('/waitNews')
+            this.toUrl('/approvalList')
           } else {
             this.msgError(res.error)
           }
