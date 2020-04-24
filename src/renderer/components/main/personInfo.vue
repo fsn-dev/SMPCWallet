@@ -1,13 +1,13 @@
 <template>
-  <div class="boxConntent1 plr15" id="personInfoBox">
-    <div class="flex-bc t-logo-box">
+  <div class="boxConntent1 container" id="personInfoBox">
+    <!-- <div class="flex-bc t-logo-box">
       <logo @click-logo="closeDrawer"></logo>
       <div class="quit-box cursorP" @click="quitApp()"> {{$t('title').quit}} </div>
-    </div>
+    </div> -->
     <ul class="user-list">
       <li class="item flex-sc" @click="createAccount" :title="$t('btn').createAccount"><i class="el-icon-plus icon"></i>{{$t('btn').createAccount}}</li>
-      <!-- <li class="item flex-sc" v-if="$$.config.accountSwitch.person" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user icon"></i>{{$t('title').personAccount}}</li>
-      <li class="item flex-sc" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money icon"></i>{{$t('title').groupAccount}}</li> -->
+      <li class="item flex-sc" v-if="$$.config.accountSwitch.person" @click="changeMode('1')" :title="$t('title').personAccount"><i class="el-icon-user icon"></i>{{$t('title').personAccount}}</li>
+      <li class="item flex-sc" @click="changeMode('0')" :title="$t('title').groupAccount"><i class="el-icon-money icon"></i>{{$t('title').groupAccount}}</li>
       <li class="item flex-sc" @click="getAccountData" :title="$t('title').exportAccount"><i class="el-icon-download icon"></i>{{$t('btn').exportAccount}}</li>
       <li class="item flex-sc" @click="openUrl('/social')" :title="$t('title').exportAccount"><i class="el-icon-circle-plus-outline icon"></i>{{$t('btn').addFriend}}</li>
       <li class="item flex-sc" @click="openUrl('/set')" :title="$t('btn').set"><i class="el-icon-setting icon"></i>{{$t('btn').set}}</li>
@@ -28,12 +28,12 @@
 </template>
 
 <style lang="scss" scoped>
-.t-logo-box {
-  border-bottom: 1px solid #ddd;padding-bottom: size(20);
-  .quit-box {
-    padding: size(0) size(8);border: 1px solid $color-primary;color: $color-primary;font-size: $text-sm;display: inline-block;
-  }
-}
+// .t-logo-box {
+//   border-bottom: 1px solid #ddd;padding-bottom: size(20);
+//   .quit-box {
+//     padding: size(0) size(8);border: 1px solid $color-primary;color: $color-primary;font-size: $text-sm;display: inline-block;
+//   }
+// }
 .user-list {
   width: 100%;max-height: size(400);background: #fff;padding: size(5) size(0);border-radius: size(3);margin-bottom: size(50);
   .item {

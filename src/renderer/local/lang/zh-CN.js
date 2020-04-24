@@ -158,13 +158,20 @@ export default {
 		approvalTime: '审批剩余时间',
 		localNode: '本地节点',
 		oneSelf: '自定义',
+		node: '节点',
+		nodeNum: '节点数',
 		nodeName: '节点名',
 		nodeAddr: '节点地址',
 		search: '搜索',
 		email: '邮箱',
 		emailValid: '邮箱验证码',
 		unknown: '未知',
-		friendList: '好友列表'
+		friend: '好友',
+		friendList: '好友列表',
+		userNum: '用户数',
+		accountNum: '账户数',
+		txnsNum: '交易数',
+		publisher: '发布者'
 	},
 	state: {
 		name: '状态',

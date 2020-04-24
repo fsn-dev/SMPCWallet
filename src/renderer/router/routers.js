@@ -197,7 +197,7 @@ export default [
     ]
   },
   {
-    path: '/waitNews',
+    path: '/approvalList',
     component: Main,
     meta: {
       notCache: true
@@ -312,6 +312,23 @@ export default [
           notCache: true
         },
         component: resolve => require.ensure([], () => resolve(require('@/pages/social/index.vue')) ),
+      }
+    ]
+  },
+  {
+    path: '/nodeTable',
+    component: Main,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '节点',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/node/index.vue')) ),
       }
     ]
   },

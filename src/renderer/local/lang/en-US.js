@@ -158,13 +158,20 @@ export default {
 		approvalTime: 'Approval Time Remaining',
 		localNode: 'Local node',
 		oneSelf: 'Custom',
+		node: 'Node',
+		nodeNum: 'Nodes',
 		nodeName: 'Node Name',
 		nodeAddr: 'Node Address',
 		search: 'Search',
 		email: 'Email',
 		emailValid: 'Mailbox verification code',
 		unknown: 'Unknown',
-		friendList: 'Friends List'
+		friend: 'Friends',
+		friendList: 'Friends List',
+		userNum: 'Users',
+		accountNum: 'Accounts',
+		txnsNum: 'Txns',
+		publisher: 'Publisher'
 	},
 	state: {
 		name: 'Status',
