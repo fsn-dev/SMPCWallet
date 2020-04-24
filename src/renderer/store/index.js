@@ -29,6 +29,7 @@ const store = new Vuex.Store({
     dayAndNight: config.dayAndNight,
     language: '',
     serverRPC: '',
+    serverRPCname: '',
     networkMode: config.networkMode,
     approvalObj: {},
     email: '',
@@ -97,6 +98,16 @@ const store = new Vuex.Store({
       if (!data.type) {
         db.updateBaseInfo({
           key: 'serverRPC',
+          value: info
+        })
+      }
+    },
+    setServerRPCname (state, data) {
+      let info = data.info ? data.info : ''
+      state.serverRPCname = info
+      if (!data.type) {
+        db.updateBaseInfo({
+          key: 'serverRPCname',
           value: info
         })
       }
@@ -197,7 +208,7 @@ const store = new Vuex.Store({
     getServerRPC ({commit}) {
       let data = { type: 1, info: ''}
       db.findBaseInfo({key: 'serverRPC'}).then(res => {
-        // console.log(res)
+        console.log(res)
         if (res.length > 0) {
           data.info = res[0].value
         } else {
@@ -207,6 +218,22 @@ const store = new Vuex.Store({
       }).catch(err => {
         data.info = config.serverRPC
         commit('setServerRPC', data)
+        console.log(err)
+      })
+    },
+    getServerRPCname ({commit}) {
+      let data = { type: 1, info: ''}
+      db.findBaseInfo({key: 'serverRPCname'}).then(res => {
+        console.log(res)
+        if (res.length > 0) {
+          data.info = res[0].value
+        } else {
+          data.info = ''
+        }
+        commit('setServerRPCname', data)
+      }).catch(err => {
+        data.info = ''
+        commit('setServerRPCname', data)
         console.log(err)
       })
     },

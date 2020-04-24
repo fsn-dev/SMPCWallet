@@ -180,11 +180,20 @@ export default {
       if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
         url = this.netUrl = 'http://' + url
       }
-      this.getEnode(url).then(res => {
+      // console.log(url)
+      this.getEnode(url, true).then(res => {
         if (res.status === 'Success') {
           let eNodeInit = res.enode
+          let nodeObj = {}
+          for (let obj of this.netUrlArr) {
+            if (obj.url === url) {
+              nodeObj = obj
+              break
+            }
+          }
           this.saveRpcDB(url)
           this.$store.commit('setServerRPC', {info: url})
+          this.$store.commit('setServerRPCname', {info: nodeObj.name ? nodeObj.name : url})
           this.$store.commit('setEnode', eNodeInit)
           this.inputFileBtn()
         } else {
@@ -255,20 +264,13 @@ export default {
       // console.log(rawTx)
       this.$$.toSign(rawTx, pwd).then(res => {
         // console.log(res)
-        let nodeObj = {}
-        for (let obj of this.netUrlArr) {
-          if (obj.url === this.serverRPC) {
-            nodeObj = obj
-            break
-          }
-        }
         this.$socket.emit('UserEnodeAdd', {
           // nodeKey: eNodeKey,
           enode: this.eNode,
           sign: res.signTx,
           username: this.token,
           ip: this.serverRPC,
-          ipName: nodeObj.name ? nodeObj.name : this.serverRPC,
+          ipName: this.serverRPCname,
           address: this.address,
         })
         this.$store.commit('setEnodeTx', {info: res.signTx})

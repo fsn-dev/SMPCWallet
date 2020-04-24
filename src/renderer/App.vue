@@ -58,7 +58,7 @@ export default {
     // console.log(this.$store.state)
   },
   methods: {
-    ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC']),
+    ...mapActions(['getEnode', 'getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC', 'getServerRPCname']),
     initData () {
       this.getEnode()
       this.getEnodeTx()
@@ -68,6 +68,7 @@ export default {
       this.getDayAndNight()
       this.getLanguage()
       this.getServerRPC()
+      this.getServerRPCname()
     },
     mousePos (e) {
       e = e || window.event
