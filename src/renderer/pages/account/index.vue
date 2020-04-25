@@ -39,11 +39,11 @@ export default {
     //   console.log(cur)
     //   this.refresh()
     // },
-    accountType (type) {
-      // console.log(type)
-      this.$router.push({path: this.$route.path, query: {}})
-      // this.refresh()
-    }
+    // accountType (type) {
+    //   // console.log(type)
+    //   this.$router.push({path: this.$route.path, query: {}})
+    //   // this.refresh()
+    // }
   },
   components: {accountList},
   computed: {

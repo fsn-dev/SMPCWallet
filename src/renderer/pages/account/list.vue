@@ -211,10 +211,11 @@ export default {
       })
     },
     changeGroup (item) {
+      console.log(item)
       if (item) {
         this.publicKey = item.publicKey
-        this.$store.commit('setAccountType', {info: item.accountType})
         this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode, accountType: item.accountType})
+        this.$store.commit('setAccountType', {info: item.accountType})
       } else {
         this.toUrl('/account', {gID: '', publicKey: '', mode: '', accountType: this.accountType})
       }

@@ -373,7 +373,7 @@ export default {
       // console.log(this.pubKey)
       if (this.pubKey) {
         this.$$.getAccountsBalance(this.pubKey, this.address).then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.msg === 'Success') {
             for (let obj of res.info) {
               this.tableObj[obj.Cointype] = {
