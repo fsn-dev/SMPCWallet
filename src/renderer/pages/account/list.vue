@@ -27,7 +27,7 @@
                 </div>
                 <div class="flex-bc font12 color_99 info WW100 mt-10">
                   <span class="WW40 ellipsis">{{$$.cutOut(item.publicKey, 8 , 0)}}</span>
-                  <span class="WW50 ellipsis">{{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</span>
+                  <span class="WW50 ellipsis">{{item.timestamp ? $$.timeChange(item.timestamp, 'yy-mm-dd hh:mm') : ''}}</span>
                 </div>
               </div>
             </div>

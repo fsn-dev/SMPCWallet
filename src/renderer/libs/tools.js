@@ -85,6 +85,9 @@ export default {
       time = Y + formatType + M
     } else if (type === 'yyyy') {
       time = Y
+    } else if (type === 'yy-mm-dd hh:mm') {
+      Y = Y.toString().substr(2)
+      time = Y + formatType + M + formatType + D + ' ' + h + ':' + m
     }
     return time
   },
