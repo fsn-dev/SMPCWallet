@@ -1,8 +1,8 @@
 
 // import Identicon from 'identicon.js'
 export default {
-  createHeader (hex, address, name) {
-    let imgInfo = this.$$.createImg(hex)
+  createHeader (address, name) {
+    let imgInfo = this.$$.createImg(address)
     let data = {
       name: name,
       address: address,

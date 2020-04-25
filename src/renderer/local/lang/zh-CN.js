@@ -89,7 +89,7 @@ export default {
 		sendEmail: '发送验证码',
 		resend: '重新发送',
 		addFriend: '添加好友',
-		add: '添加'
+		add: '添加',
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -211,6 +211,7 @@ export default {
 		addFriend: '是否添加此好友？ ',
 		deleteFriend: '此操作将永久删除该好友, 是否继续? ',
 		addFriendTip: '当前列表为空，请添加后操作！',
+		searchTip: '搜索添加好友',
 		devTip: '开发中',
 		online: '仅支持在线状态！'
 	}

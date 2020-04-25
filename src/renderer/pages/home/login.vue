@@ -224,14 +224,11 @@ export default {
           )
           let address = walletInfo.getChecksumAddressString()
           let pwd = walletInfo.getPrivateKeyString()
-          // this.createHeader(this.walletInfo.getPublicKeyString(), address)
-          // console.log(address)
-          // console.log(walletInfo.getPrivateKeyString())
           if (!this.eNode) {
             this.msgError(this.$t('error').err_10)
             return
           }
-          this.getHeaderImg(walletInfo.getPublicKeyString(), walletInfo.getChecksumAddressString(),this.loginObj.username)
+          this.getHeaderImg(address, this.loginObj.username)
           this.signEnode(pwd, address)
           this.$store.commit('setAddress', {info: address})
           this.$store.commit('setToken', {info: this.loginObj.username})
@@ -246,11 +243,11 @@ export default {
         this.loading.wait = false
       }
     },
-    async getHeaderImg (hex, address, name) {
+    async getHeaderImg (address, name) {
       this.$db.findHeaderImg({address: address}).then(res => {
         // console.log(res)
         if (res.length <= 0) {
-          this.createHeader(hex, address, name)
+          this.createHeader(address, name)
         }
       })
     },

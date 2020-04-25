@@ -1,48 +1,29 @@
 <template>
   <div class="boxConntent1 container pt-30 relative">
-    <el-tabs v-model="activeName" :tab-position="'left'" style="height: 600px;" @tab-click="handleClick">
-      <el-tab-pane :label="$t('btn').addFriend" name="add">
-        <div class="container">
-          <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-25 relative">
-            <el-breadcrumb-item :to="{ path: '/account' }">{{$t('title').accountList}}</el-breadcrumb-item>
-            <el-breadcrumb-item>{{$t('btn').addFriend}}</el-breadcrumb-item>
-          </el-breadcrumb>
-          <div class="W300">
-            <el-input placeholder="Username + @ + Node Name" size="mini" v-model="searchVal">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="searchFrinds"></i>
-            </el-input>
+    <div class="friend-serch flex-sc">
+      <el-input :placeholder="$t('tip').searchTip" size="mini" v-model="searchVal" @keyup.enter.native="enterSearch">
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="searchFrinds"></i>
+      </el-input>
+      <span class="blue-txt ml-10" v-if="!isListOrSerch" @click="backFriendList">{{$t('label').friendList}}</span>
+    </div>
+    <div class="friend-list">
+      <ul>
+        <li class="item" v-for="(item, index) in viewList" :key="index">
+          <div class="flex-bc">
+            <div class="flex-sc">
+              <div class="header">
+                <img :src="item.img">
+              </div>
+              <span class="font12">{{item.unIP}}</span>
+            </div>
+            <div>
+              <span class="blue-txt" @click="openDelFriend(item)" v-if="isListOrSerch">{{$t('action').delete}}</span>
+              <span class="blue-txt" @click="openAddFriend(item)" v-else>{{$t('btn').add}}</span>
+            </div>
           </div>
-          <div class="friend-list">
-            <ul>
-              <li class="item" v-for="(item, index) in searchList" :key="index">
-                <div class="flex-bc">
-                  <span class="font12">{{item.unIP}}</span>
-                  <el-button type="primary" size="mini" @click="openAddFriend(item)">{{$t('btn').add}}</el-button>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('label').friendList" name="list">
-        <div class="container">
-          <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-5 relative">
-            <el-breadcrumb-item :to="{ path: '/account' }">{{$t('title').accountList}}</el-breadcrumb-item>
-            <el-breadcrumb-item>{{$t('label').friendList}}</el-breadcrumb-item>
-          </el-breadcrumb>
-          <div class="friend-list">
-            <ul>
-              <li class="item" v-for="(item, index) in friendList" :key="index">
-                <div class="flex-bc">
-                  <span class="font12">{{item.unIP}}</span>
-                  <el-button type="danger" size="mini" @click="openDelFriend(item)">{{$t('action').delete}}</el-button>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+        </li>
+      </ul>
+    </div>
 
     <el-dialog :title="$t('tip').name" :visible.sync="eDialog.del" width="30%" center>
       <p class="center">{{$t('tip').deleteFriend}}</p>
@@ -63,9 +44,27 @@
 </template>
 
 <style lang="scss">
+.blue-txt {
+  font-size: 12px;color: #2762E0;cursor: pointer;
+}
+.friend-serch {
+  width: 100%;padding: 5px 10px;background: rgba(0,0,0,.06);
+  .el-input {
+    width: 240px;
+    .el-input__inner {
+      border-radius: 15px;
+    }
+  }
+}
 .friend-list {
   .item {
-    width: 100%;padding: 10px 0;color: #999;border-bottom: 1px solid #ddd;
+    width: 100%;padding: 12px 0;color: #999;border-bottom: 1px solid rgba(221, 221, 221, 0.801);
+    .header {
+      width: 30px;height: 30px;margin-right:10px;
+      img {
+        width: 100%;height: 100%;display: block;
+      }
+    }
   }
 }
 </style>
@@ -78,8 +77,9 @@ export default {
   data () {
     return {
       ...nodeDatas,
-      activeName: 'add',
       searchVal: '',
+      isListOrSerch: true,
+      viewList: [],
       searchList: [],
       friendList: [],
       eDialog: {
@@ -97,18 +97,27 @@ export default {
     ...nodeSockets,
     UserFriendFind (res) {
       console.log(res)
+      this.viewList = []
       if (res.msg ='Success') {
-        this.friendList = res.info
-      } else {
-        this.friendList = []
+        for (let obj of res.info) {
+          obj.img = this.$$.createImg(obj.address)
+          this.viewList.push(obj)
+        }
+        console.log(this.viewList)
+        // this.viewList = res.info
       }
     },
     UserEnodeSearch (res) {
       console.log(res)
+      this.viewList = []
       if (res.msg === 'Success') {
-        this.searchList = res.info
+        for (let obj of res.info) {
+          obj.img = this.$$.createImg(obj.address)
+          this.viewList.push(obj)
+        }
+        console.log(this.viewList)
+        // this.viewList = res.info
       } else {
-        this.searchList = []
         this.msgWarning(this.$t('warn').w_25)
       }
     },
@@ -141,7 +150,6 @@ export default {
     init () {
       this.getFriends()
       this.getNetUrl()
-      this.initTabView()
     },
     modalClick () {
       this.eDialog.add = false
@@ -149,17 +157,21 @@ export default {
       this.delObj = {}
       this.addObj = {}
     },
-    handleClick () {
-      this.$router.push({path: this.$route.path, query: {activeTab: this.activeName}})
-    },
-    initTabView () {
-      let at = this.$route.query.activeTab ? this.$route.query.activeTab : 'add'
-      this.activeName = at
+    backFriendList () {
+      this.searchVal = ''
+      this.getFriends()
     },
     getFriends () {
+      this.isListOrSerch = true
       this.$socket.emit('UserFriendFind', {address: this.address})
     },
+    enterSearch (e) {
+      if (e.which === 13) {
+        this.searchFrinds()
+      }
+    },
     searchFrinds () {
+      this.isListOrSerch = false
       this.$socket.emit('UserEnodeSearch', {searchVal: this.searchVal})
     },
     openAddFriend (item) {

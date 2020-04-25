@@ -280,7 +280,6 @@ export default {
         console.log(res)
         this.msgSuccess(this.$t('success').s_1)
         this.createHeader(
-          this.walletInit.getPublicKeyString(),
           this.insertDBdata.address,
           this.registerObj.username
         )

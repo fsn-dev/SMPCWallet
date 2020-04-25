@@ -211,6 +211,7 @@ export default {
 		addFriend: 'Do you want to add this friend? ',
 		deleteFriend: 'This operation will permanently delete this friend. Do you want to continue?',
 		addFriendTip: 'The current list is empty, please add the operation after!',
+		searchTip: 'Search add friends',
 		devTip: 'Coming soon!',
 		online: 'Only online!'
 	}

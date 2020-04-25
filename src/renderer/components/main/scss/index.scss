@@ -21,14 +21,14 @@
   .header-top-nav {
     height: 100%;font-size: $text-normal;color: $color-black;font-weight:bold;margin-right:size(100);
     .item {
-      height: 100%;padding: size(8) size(25);cursor: pointer;
+      height: 100%;padding: size(8) size(25);cursor: pointer;border-bottom: 1px solid transparent;
       &.active {
         // background: $color-primary;color: #fff;
-        color: $color-primary;
+        color: $color-primary;border-bottom: 1px solid $color-primary;background: rgba(39,98,224,.1);
       }
       &:hover {
         // background: $color-primary;color: #fff;
-        color: $color-primary;
+        color: $color-primary;border-bottom: 1px solid $color-primary;background: rgba(39,98,224,.1);
       }
     }
   }
