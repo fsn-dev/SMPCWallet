@@ -1,5 +1,6 @@
 <template>
   <div class="boxConntent1 flex-c" v-loading="loading.creat" :element-loading-text="$t('loading').l_1">
+
     <div class="create-box box_Wshadow1">
       <div class="create-search-box">
         <div class="create-search-bg">
@@ -73,7 +74,7 @@
             </ul>
           </div>
           <div class="flex-ec create-selected-btn">
-            <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
+            <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createPersson}}</el-button>
             <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
           </div>
         </div>

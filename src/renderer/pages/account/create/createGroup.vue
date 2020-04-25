@@ -46,7 +46,7 @@
             </ul>
           </div>
           <div class="flex-ec create-selected-btn">
-            <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createAccount}}</el-button>
+            <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createGroup}}</el-button>
             <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
           </div>
         </div>

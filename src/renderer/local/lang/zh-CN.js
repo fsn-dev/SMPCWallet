@@ -70,6 +70,7 @@ export default {
 		code: '二维码',
 		copy: '复制',
 		createAccount: '创建账户',
+		createGroup: '创建共管账户',
 		createPersson: '创建个人账户',
 		restart: '重置',
 		agree: '同意',

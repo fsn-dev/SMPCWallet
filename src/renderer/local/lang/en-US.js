@@ -68,6 +68,7 @@ export default {
 		code: 'QR Code',
 		copy: 'Copy',
 		createAccount: 'Create Account',
+		createGroup: 'Create Managed Account',
 		createPersson: 'Create Private Account',
 		restart: 'Reset',
 		agree: 'Agree',
