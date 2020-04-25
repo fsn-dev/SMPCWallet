@@ -119,7 +119,7 @@ export default {
 		add: 'Add',
 		assets: 'Assets',
 		network: 'Network',
-		applyMarket: 'Application Market'
+		applyMarket: 'DAPP'
 	},
 	label: {
 		username: 'User name',

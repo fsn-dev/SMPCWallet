@@ -120,7 +120,7 @@ export default {
 		myNode: '我的节点',
 		assets: '资产',
 		network: '网络',
-		applyMarket: '应用市场'
+		applyMarket: '应用'
 	},
 	label: {
 		username: '用户名',

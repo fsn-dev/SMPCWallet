@@ -1,6 +1,6 @@
 <template>
-  <div>
-
+  <div class="boxConntent1 flex-c">
+    <div class="color_99">Coming soon!</div>
   </div>
 </template>
 
