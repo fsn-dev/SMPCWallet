@@ -87,7 +87,8 @@ export default {
 		sendEmail: 'Send verification code',
 		resend: 'Resend',
 		addFriend: 'Add Friends',
-		add: 'Add'
+		add: 'Add',
+		backFriend: 'Return friends list'
 	},
 	loading: {
 		l_1: 'Loading……',

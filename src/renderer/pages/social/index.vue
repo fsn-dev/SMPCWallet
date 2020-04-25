@@ -4,9 +4,9 @@
       <el-input :placeholder="$t('tip').searchTip" size="mini" v-model="searchVal" @keyup.enter.native="enterSearch">
         <i slot="prefix" class="el-input__icon el-icon-search" @click="searchFrinds"></i>
       </el-input>
-      <span class="blue-txt ml-10" v-if="!isListOrSerch" @click="backFriendList">{{$t('label').friendList}}</span>
+      <span class="blue-txt ml-10" v-if="!isListOrSerch" @click="backFriendList">{{$t('btn').backFriend}}</span>
     </div>
-    <div class="friend-list">
+    <div class="friend-list" v-if="viewList.length > 0">
       <ul>
         <li class="item" v-for="(item, index) in viewList" :key="index">
           <div class="flex-bc">
@@ -23,6 +23,9 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div class="WW100 flex-c H90 color_99" v-else>
+      Null
     </div>
 
     <el-dialog :title="$t('tip').name" :visible.sync="eDialog.del" width="30%" center>

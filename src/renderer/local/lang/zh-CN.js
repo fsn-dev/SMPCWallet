@@ -90,6 +90,7 @@ export default {
 		resend: '重新发送',
 		addFriend: '添加好友',
 		add: '添加',
+		backFriend: '返回好友列表'
 	},
 	loading: {
 		l_1: 'Loading……',
