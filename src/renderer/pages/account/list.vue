@@ -19,15 +19,17 @@
                 <img :src="item.img">
               </div>
               <div class="flex-sc flex-wrap" style="width:236px;">
-                <div class="WW100 pubkey flex-sc">
+                <div class="WW100 pubkey flex-bc">
                   <span class="name">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 6 ,0) : item.name}}</span>
-                  <i class="account person" v-if="item.accountType">{{$t('title').person}}</i>
-                  <i class="account group" v-if="!item.accountType">{{$t('title').group}}</i>
-                  <i class="account mode">{{item.mode}}</i>
+                  <div class="flex-ec WW40">
+                    <i class="account person" v-if="item.accountType">{{$t('title').person}}</i>
+                    <i class="account group" v-if="!item.accountType">{{$t('title').group}}</i>
+                    <i class="account mode">{{item.mode}}</i>
+                  </div>
                 </div>
                 <div class="flex-bc font12 color_99 info WW100 mt-10">
                   <span class="WW40 ellipsis">{{$$.cutOut(item.publicKey, 8 , 0)}}</span>
-                  <span class="WW50 ellipsis">{{item.timestamp ? $$.timeChange(item.timestamp, 'yy-mm-dd hh:mm') : ''}}</span>
+                  <span class="WW50 ellipsis text-r">{{item.timestamp ? $$.timeChange(item.timestamp, 'yy-mm-dd hh:mm') : ''}}</span>
                 </div>
               </div>
             </div>
