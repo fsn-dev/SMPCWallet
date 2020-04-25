@@ -30,7 +30,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-table :data="tableData.nodeList" style="width: 100%" empty-text="Null" size="mini" class="mt-30">
+    <el-table :data="tableData.nodeList" style="width: 100%" empty-text="Null" size="mini" class="mt-30 node-table-box">
       <el-table-column :label="$t('label').nodeName" width="300">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
@@ -88,6 +88,14 @@
   }
   .count {
     font-size: 14px;margin-top: 15px;text-align: center;font-size: 50px;margin-top: 20px;
+  }
+}
+.node-table-box  {
+  thead tr {
+    font-weight: bold;
+    .cell {
+      color: #333;
+    }
   }
 }
 </style>

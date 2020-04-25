@@ -21,22 +21,6 @@
             >{{$t('title').assets}}</li>
             <li
               class="item flex-c"
-              :class="newsActive === 'approvalList' ? 'active' : ''"
-              @click="toUrl('/approvalList')"
-              :title="$t('title').wait"
-            >
-              <el-badge :value="newsLen ? newsLen : ''" :max="99" class="flex-c">
-                {{$t('btn').approval}}
-              </el-badge>
-            </li>
-            <li
-              class="item flex-c"
-              :class="newsActive === 'history' ? 'active' : ''"
-              @click="toUrl('/history')"
-              :title="$t('btn').history"
-            >{{$t('title').history}}</li>
-            <li
-              class="item flex-c"
               :class="newsActive === 'social' ? 'active' : ''"
               @click="toUrl('/social')"
               :title="$t('label').friend"
@@ -53,6 +37,22 @@
               @click="toUrl('/applyMarket')"
               :title="$t('title').applyMarket"
             >{{$t('title').applyMarket}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'approvalList' ? 'active' : ''"
+              @click="toUrl('/approvalList')"
+              :title="$t('title').wait"
+            >
+              <el-badge :value="newsLen ? newsLen : ''" :max="99" class="flex-c">
+                {{$t('btn').approval}}
+              </el-badge>
+            </li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'history' ? 'active' : ''"
+              @click="toUrl('/history')"
+              :title="$t('btn').history"
+            >{{$t('title').history}}</li>
           </ul>
         </div>
       </div>

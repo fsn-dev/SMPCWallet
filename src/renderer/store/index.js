@@ -40,28 +40,28 @@ const store = new Vuex.Store({
       state.eNode = data
     },
     setEnodeTx (state, data) {
-      let info = data.info ? data.info.toString() : ''
+      let info = data.info !== '' ? data.info.toString() : ''
       state.eNodeTx = info
       if (!data.type) {
         cookies.setCookies(config.cookies.eNodeTx, info)
       }
     },
     setAddress (state, data) {
-      let info = data.info ? data.info.toString() : ''
+      let info = data.info !== '' ? data.info.toString() : ''
       state.address = info
       if (!data.type) {
         cookies.setCookies(config.cookies.address, info)
       }
     },
     setToken (state, data) {
-      let info = data.info ? data.info.toString() : ''
+      let info = data.info !== '' ? data.info.toString() : ''
       state.token = info
       if (!data.type) {
         cookies.setCookies(config.cookies.token, info)
       }
     },
     setAccountType (state, data) {
-      let info = data.info ? data.info.toString() : config.modeInit
+      let info = data.info !== '' ? data.info.toString() : config.modeInit
       state.accountType = info
       if (!data.type) {
         db.updateBaseInfo({
@@ -71,7 +71,7 @@ const store = new Vuex.Store({
       }
     },
     setDayAndNight (state, data) {
-      let info = data.info ? data.info.toString() : config.dayAndNight
+      let info = data.info !== '' ? data.info.toString() : config.dayAndNight
       // console.log(data)
       // console.log(info)
       state.dayAndNight = info
@@ -83,7 +83,7 @@ const store = new Vuex.Store({
       }
     },
     setLanguage (state, data) {
-      let info = data.info ? data.info : ''
+      let info = data.info !== '' ? data.info : ''
       state.language = info
       if (!data.type) {
         db.updateBaseInfo({
@@ -93,7 +93,7 @@ const store = new Vuex.Store({
       }
     },
     setServerRPC (state, data) {
-      let info = data.info ? data.info : ''
+      let info = data.info !== '' ? data.info : ''
       state.serverRPC = info
       if (!data.type) {
         db.updateBaseInfo({
@@ -103,7 +103,7 @@ const store = new Vuex.Store({
       }
     },
     setServerRPCname (state, data) {
-      let info = data.info ? data.info : ''
+      let info = data.info !== '' ? data.info : ''
       state.serverRPCname = info
       if (!data.type) {
         db.updateBaseInfo({
@@ -114,7 +114,7 @@ const store = new Vuex.Store({
     },
     setNetworkMode (state, data) {
       // console.log(data)
-      let info = data.info ? data.info : ''
+      let info = data.info !== '' ? data.info : ''
       state.networkMode = info
     },
     setApprovalObj (state, data) {

@@ -416,11 +416,18 @@ export default {
       })
     },
     setTxnsData (item) {
+      let address =  '', balance = 0
+      if (!this.tableObj[item.coinType] && this.tableObj['ETH']) {
+        address = this.tableObj['ETH'].address
+      } else {
+        address = this.tableObj[item.coinType].address
+      }
+      balance = this.tableObj[item.coinType].balance
       // console.log(item)
       this.sendDataObj = {
-        balance: item.Balance,
-        dcrmAddr: item.DcrmAddr,
-        coinType: item.Cointype,
+        balance: balance,
+        dcrmAddr: address,
+        coinType: item.coinType,
         gID: this.gID,
         mode: this.gMode
       }

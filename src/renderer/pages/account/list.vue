@@ -21,8 +21,8 @@
               <div class="flex-sc flex-wrap" style="width:236px;">
                 <div class="WW100 pubkey flex-sc">
                   <span class="name">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 6 ,4) : item.name}}</span>
-                  <i class="account person" v-if="item.type">{{$t('title').person}}</i>
-                  <i class="account group" v-if="!item.type">{{$t('title').group}}</i>
+                  <i class="account person" v-if="item.accountType">{{$t('title').person}}</i>
+                  <i class="account group" v-if="!item.accountType">{{$t('title').group}}</i>
                   <i class="account mode">{{item.mode}}</i>
                 </div>
                 <div class="flex-bc font12 color_99 info WW100 mt-10">
@@ -192,7 +192,7 @@ export default {
               mode: obj2.ThresHold,
               name: obj2.PubKey.substr(2),
               timestamp: obj2.TimeStamp,
-              type: type,
+              accountType: type,
               img: this.$$.createImg(obj2.PubKey)
             }
             arr2.push(obj3)
@@ -211,11 +211,10 @@ export default {
       })
     },
     changeGroup (item) {
-      // console.log(item)
       if (item) {
         this.publicKey = item.publicKey
-        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode, accountType: item.accountType})
         this.$store.commit('setAccountType', {info: item.accountType})
+        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode, accountType: item.accountType})
       } else {
         this.toUrl('/account', {gID: '', publicKey: '', mode: '', accountType: this.accountType})
       }

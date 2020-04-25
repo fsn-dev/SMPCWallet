@@ -24,7 +24,7 @@ $offset: 15;
     border: size(1) solid $color-primary;color: $color-primary;padding-left: size($offset);
   }
   .obliqueLine {
-    width: size($btn-h / 2);height: size($btn-h);position: absolute;background: #fff;transform: skew(-10deg);
+    width: size($btn-h / 2);height: size($btn-h);position: absolute;background: #fff;transform: skew(-10deg);border-right: size(1) solid $color-primary;border-left: size(1) solid $color-primary;
   }
 }
 $btn-w1: 130;
@@ -45,7 +45,7 @@ $offset1: 8;
     border: size(1) solid $color-primary;padding-left: size($offset1);background: #1b55d1;
   }
   .obliqueLine {
-    width: size($btn-h1 / 2);height: size($btn-h1);
+    width: size($btn-h1 / 2);height: size($btn-h1);border-right: size(1) solid transparent;border-left: size(1) solid transparent;
   }
 }
 .night {
