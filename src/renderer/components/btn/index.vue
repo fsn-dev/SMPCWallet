@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="flex-c btn-box" :class="type ? 'btn-box1' : ''">
-      <span class="btn flex-c left btn-primary" @click="onOk">{{ok}}</span>
-      <span class="btn flex-c right" @click="onCancel">{{cancel}}</span>
+      <span class="btn flex-c left btn-primary" @click="onOk" :class="left ? '' : 'opacity4'">{{ok}}</span>
+      <span class="btn flex-c right" @click="onCancel" :class="right ? '' : 'opacity4'">{{cancel}}</span>
       <div class="obliqueLine"></div>
     </div>
   </div>
@@ -24,7 +24,7 @@ $offset: 15;
     border: size(1) solid $color-primary;color: $color-primary;padding-left: size($offset);
   }
   .obliqueLine {
-    width: size($btn-h / 2);height: size($btn-h);position: absolute;background: #fff;transform: skew(-10deg);border-right: size(1) solid $color-primary;border-left: size(1) solid $color-primary;
+    width: size($btn-h / 2);height: size($btn-h);position: absolute;background: #fff;transform: skew(-10deg);
   }
 }
 $btn-w1: 130;
@@ -45,7 +45,7 @@ $offset1: 8;
     border: size(1) solid $color-primary;padding-left: size($offset1);background: #1b55d1;
   }
   .obliqueLine {
-    width: size($btn-h1 / 2);height: size($btn-h1);border-right: size(1) solid $color-primary;border-left: size(1) solid #67C23A;
+    width: size($btn-h1 / 2);height: size($btn-h1);
   }
 }
 .night {
@@ -69,6 +69,12 @@ export default {
     },
     type:  {
       default: 0
+    },
+    left: {
+      default: true
+    },
+    right: {
+      default: true
     }
   },
   data () {

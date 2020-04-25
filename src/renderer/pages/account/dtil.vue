@@ -48,8 +48,8 @@
             <div class="flex-ec" v-if="scope.row.isOpen">
               <w-button :ok="$t('btn').enter" :cancel="$t('btn').out" :type="1" @onOk="openReceive(scope.$index, scope.row)" @onCancel="openSendDialog(scope.$index, scope.row)"></w-button>
             </div>
-            <div class="flex-ec opacity4" v-else>
-              <w-button :ok="$t('btn').enter" :cancel="$t('btn').out" :type="1"></w-button>
+            <div class="flex-ec" v-else>
+              <w-button :ok="$t('btn').enter" :cancel="$t('btn').out" @onOk="openReceive(scope.$index, scope.row)" :type="1" :right="false"></w-button>
             </div>
           </template>
         </el-table-column>
@@ -399,10 +399,16 @@ export default {
     },
     openReceive (index, item) {
       let url = '/account/receive'
+      let address =  ''
+      if (!this.tableObj[item.coinType] && this.tableObj['ETH']) {
+        address = this.tableObj['ETH'].address
+      } else {
+        address = this.tableObj[item.coinType].address
+      }
       this.toUrl(url, {
-        address: item.DcrmAddr,
-        coinType: item.Cointype,
-        ERC20Coin: item.Cointype,
+        address: address,
+        coinType: item.coinType,
+        ERC20Coin: item.coinType,
         gID: this.gID,
         publicKey: this.pubKey,
         mode: this.gMode,
