@@ -1,7 +1,7 @@
 .header-top-box {
-  width:100%;height:size(70);position:absolute;top:0;left:0;padding:0 2%;background: #f1f1f1;z-index: 2000;
+  width:100%;height:size(70);position:absolute;top:0;left:0;background: #f1f1f1;z-index: 2000;
   .header-logo {
-    min-width:40px;max-width:350px;height: size(35);
+    min-width:40px;width:300px;height: size(35);padding-left: 15px;
     .logoImg{
       width:100%;height: 100%;
       img {
@@ -17,21 +17,21 @@
         background: $color-primary;color:#fff;border-radius: 5px;
       }
     }
-  }
-  .header-top-set-box {
-    height: 100%;
-    .header-top-nav {
-      height: 100%;font-size: $text-normal;color: $color-black;font-weight:bold;margin-right:size(100);
-      .item {
-        height: 100%;padding: size(8) size(20);cursor: pointer;
-        &.active {
-          background: $color-primary;color: #fff;
-        }
-        &:hover {
-          background: $color-primary;color: #fff;
-        }
+  } 
+  .header-top-nav {
+    height: 100%;font-size: $text-normal;color: $color-black;font-weight:bold;margin-right:size(100);
+    .item {
+      height: 100%;padding: size(8) size(25);cursor: pointer;
+      &.active {
+        background: $color-primary;color: #fff;
+      }
+      &:hover {
+        background: $color-primary;color: #fff;
       }
     }
+  }
+  .header-top-set-box {
+    height: 100%;padding-right:15px;
     .header-top-dn {
       $dn-h: 28;
       width: size(50);height: size($dn-h);border: size(1) solid #ddd;border-radius: size(15);position: relative;margin: 0 size(15);

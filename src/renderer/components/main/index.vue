@@ -1,35 +1,24 @@
 <template>
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="header-top-box flex-bc">
-      <div class="header-logo flex-c">
-        <logo></logo>
-      </div>
-
-      <!-- <div class="flex-c header-top-account">
-        <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(accountType) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
-        <p class="item" :class="Number(accountType) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
-      </div> -->
-      <div class="header-top-set-box flex-ec">
+      <div class="flex-sc HH100">
+        <div class="header-logo flex-c">
+          <logo></logo>
+        </div>
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li
+            <!-- <li
               class="item flex-c"
               :class="newsActive === 'createAccount' ? 'active' : ''"
               @click="openDrawerCreate"
               :title="$t('btn').create"
-            >{{$t('btn').create}}</li>
+            >{{$t('btn').create}}</li> -->
             <li
               class="item flex-c"
-              :class="newsActive === 'social' ? 'active' : ''"
-              @click="toUrl('/social')"
-              :title="$t('label').friend"
-            >{{$t('label').friend}}</li>
-            <li
-              class="item flex-c"
-              :class="newsActive === 'nodeTable' ? 'active' : ''"
-              @click="toUrl('/nodeTable')"
-              :title="$t('label').node"
-            >{{$t('label').node}}</li>
+              :class="newsActive === 'account' ? 'active' : ''"
+              @click="toUrl('/account')"
+              :title="$t('title').assets"
+            >{{$t('title').assets}}</li>
             <li
               class="item flex-c"
               :class="newsActive === 'approvalList' ? 'active' : ''"
@@ -46,8 +35,33 @@
               @click="toUrl('/history')"
               :title="$t('btn').history"
             >{{$t('title').history}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'social' ? 'active' : ''"
+              @click="toUrl('/social')"
+              :title="$t('label').friend"
+            >{{$t('label').friend}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'nodeTable' ? 'active' : ''"
+              @click="toUrl('/nodeTable')"
+              :title="$t('title').network"
+            >{{$t('title').network}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'applyMarket' ? 'active' : ''"
+              @click="toUrl('/applyMarket')"
+              :title="$t('title').applyMarket"
+            >{{$t('title').applyMarket}}</li>
           </ul>
         </div>
+      </div>
+
+      <!-- <div class="flex-c header-top-account">
+        <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(accountType) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
+        <p class="item" :class="Number(accountType) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
+      </div> -->
+      <div class="header-top-set-box flex-bc">
         <language @changeLang="reload"></language>
         <div class="header-top-refresh cursorP" @click="reload" :title="$t('title').refrsh">
           <i class="el-icon-refresh-right"></i>
@@ -69,15 +83,6 @@
       </transition>
     </section>
 
-    <!-- <el-drawer :visible.sync="drawer.create" :destroy-on-close="true" :show-close="false" :append-to-body="true" :withHeader="false">
-      <div class="plr15">
-        <drawer-logo @close-drawer="drawer.create = false"></drawer-logo>
-      </div>
-      <div>
-        <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType)"></createPerson>
-        <createGroup :formBoxClass="false" @closeModal="modalClick" v-else></createGroup>
-      </div>
-    </el-drawer> -->
     <el-dialog :title="$t('title').register" :visible.sync="drawer.create" width="800px" :before-close="modalClick" :modal-append-to-body='false' :close-on-click-modal="true" :show-close="true" class="create-dialog">
       <createPerson :formBoxClass="false" @closeModal="modalClick" v-if="Number(accountType) && drawer.create"></createPerson>
       <createGroup :formBoxClass="false" @closeModal="modalClick" v-if="!Number(accountType) && drawer.create"></createGroup>
@@ -229,6 +234,10 @@ export default {
         this.newsActive = 'social'
       } else if (cur.path.indexOf('nodeTable') !== -1) {
         this.newsActive = 'nodeTable'
+      } else if (cur.path.indexOf('account') !== -1) {
+        this.newsActive = 'account'
+      } else if (cur.path.indexOf('applyMarket') !== -1) {
+        this.newsActive = 'applyMarket'
       } else {
         this.newsActive = 0
       }

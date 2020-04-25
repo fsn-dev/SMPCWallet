@@ -52,10 +52,10 @@
     width: 100%; cursor: pointer;padding: size(15) size(12) size(15) size(9);border-bottom: 3px solid #f4f5f7;border-left: 3px solid transparent;
     $label-h: 36px;
     &:hover{
-      background: #c7c6c6;border-left: 3px solid #2762e0;
+      background: rgba(39,98,224,.2);border-left: 3px solid #2762e0;
     }
     &.active {
-      background: #e6e5e5;border-left: 3px solid #2762e0;
+      background: rgba(39,98,224,.2);border-left: 3px solid #2762e0;
     }
     .label {
       width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;border-radius: 100%;overflow: hidden;
@@ -138,20 +138,14 @@ export default {
     ...computedPub,
   },
   watch: {
-    accountType (type) {
-      this.loading.list = true
-      this.init()
-    }
+    // accountType (type) {
+    //   this.loading.list = true
+    //   this.init()
+    // }
   },
   mounted () {
     this.loading.list = true
-    // console.log(this.$$.web3)
-    // let st = Date.now()
-    // for (let i = 0; i < 10000; i++) {
-    //   this.$$.createImg('d04d8da3bfeddb999346b34f486c117ff12fd7b2bdceb9fda4c7c368d6daf4579b93ade0b2d1444652e998a2d823a889aa3ca39e012eb3434d1bca8d8c7394ae')
-    // }
-    // let et = Date.now()
-    // console.log(et - st)
+    // console.log(this.$route.query)
     setTimeout(() => {
       this.init()
     }, 300)
@@ -174,11 +168,7 @@ export default {
           this.getGName(allArr[i], i)
         }
         if (this.$route.query.gID) {
-          this.changeGroup({
-            gID: this.$route.query.gID,
-            publicKey: this.$route.query.publicKey,
-            mode: this.$route.query.mode,
-          })
+          this.changeGroup(this.$route.query)
         } else if (this.gAccountList.length > 0) {
           this.changeGroup(this.gAccountList[0])
         } else {
@@ -224,10 +214,12 @@ export default {
       // console.log(item)
       if (item) {
         this.publicKey = item.publicKey
-        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode})
+        this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode, accountType: item.accountType})
+        this.$store.commit('setAccountType', {info: item.accountType})
       } else {
-        this.toUrl('/account', {gID: '', publicKey: '', mode: ''})
+        this.toUrl('/account', {gID: '', publicKey: '', mode: '', accountType: this.accountType})
       }
+      // this.$store.commit('setAccountType', {info: type})
       this.$emit('changeAccount')
     }
   }

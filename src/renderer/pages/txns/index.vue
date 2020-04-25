@@ -134,7 +134,7 @@ export default {
       }
       let coin = this.$$.cutERC20(this.sendDataObj.coinType).coinType
       let balance = this.$$.fromWei(this.sendDataObj.balance, coin)
-      if (!regExp.coin[coin].test(this.rawTx.to)) {
+      if (!regExp.coin[coin].test(this.rawTx.to) && coin !== 'BTC') {
         this.msgError('This to address is illegal!')
         return
       }

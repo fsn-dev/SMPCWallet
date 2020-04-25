@@ -117,6 +117,9 @@ export default {
 		gAccountSet: '账户设置',
 		releaseNode: '发布节点',
 		myNode: '我的节点',
+		assets: '资产',
+		network: '网络',
+		applyMarket: '应用市场'
 	},
 	label: {
 		username: '用户名',

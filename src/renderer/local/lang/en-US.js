@@ -115,7 +115,10 @@ export default {
 		gAccountSet: 'Manger account settings',
 		releaseNode: 'Release Node',
 		myNode: 'My Node',
-		add: 'Add'
+		add: 'Add',
+		assets: 'Assets',
+		network: 'Network',
+		applyMarket: 'Application Market'
 	},
 	label: {
 		username: 'User name',

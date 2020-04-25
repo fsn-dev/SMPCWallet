@@ -1,6 +1,6 @@
 <template>
   <div class="boxConntent1" v-loading="loading.account" :element-loading-text="$t('loading').l_1">
-    <div class="flex-bc a-header-box" v-if="!Number(accountType)">
+    <div class="flex-bc a-header-box">
       <div></div>
       <div @click="gID ? drawer.member = true : ''"><i class="el-icon-menu cursorP"></i></div>
     </div>
@@ -34,21 +34,21 @@
         </el-table-column>
         <el-table-column :label="$t('label').action" width="200" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">{{$t('btn').enter}}</el-button>
-            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">{{$t('btn').out}}</el-button>
+            <!-- <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">{{$t('btn').enter}}</el-button>
+            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">{{$t('btn').out}}</el-button> -->
+            <div class="flex-ec">
+              <w-button :ok="$t('btn').enter" :cancel="$t('btn').out" :type="1" @onOk="openReceive(scope.$index, scope.row)" @onCancel="openSendDialog(scope.$index, scope.row)"></w-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(accountType)">{{$t('warn').w_1}}</div>
+    <div class="flex-c boxConntent1 color_99" v-if="!gID">{{$t('warn').w_1}}</div>
 
     <!-- 查看组成员 start -->
     <el-drawer :visible.sync="drawer.member" :destroy-on-close="true" :show-close="false">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
-      </div> -->
-      <div class="plr15">
+      <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
       </div>
       <div class="d-content-view g-member-list-box">
@@ -75,23 +75,13 @@
 
     <!-- 节点选择 start -->
     <el-drawer :visible.sync="drawer.select" :destroy-on-close="true" :show-close="false">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
-      </div> -->
-      <div class="plr15">
+      <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
       </div>
       <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
-          <!-- <el-checkbox class="mb-20" disabled="disabled" v-model="oneself">
-            <div class="flex-bc">
-              {{$$.cutOut(eNode, 12, 16)}}
-              <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
-            </div>
-          </el-checkbox> -->
           <el-checkbox-group v-model="gMemberSelect"  @change="changeMember">
-          <!-- <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? (Number(gMode.split('/')[0]) - 1) : 1" class=""> -->
             <el-checkbox :label="eNode" disabled="disabled">
               <div class="flex-bc">
                 {{$$.cutOut(eNode, 12, 10)}}
@@ -127,10 +117,7 @@
 
     <!-- 发送交易 start -->
     <el-drawer :visible.sync="drawer.send" :destroy-on-close="true" :show-close="false" v-if="drawer.send">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
-      </div> -->
-      <div class="plr15">
+      <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
       </div>
       <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
@@ -145,7 +132,8 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-
+import wButton from '@/components/btn/index.vue'
+import getEnode from '@/assets/js/pages/node/getEnode.js'
 import sendTxns from '@/pages/txns/index.vue'
 export default {
   name: '',
@@ -180,7 +168,7 @@ export default {
   computed: {
     ...computedPub,
   },
-  components: {sendTxns},
+  components: {sendTxns, wButton},
   mounted () {
     setTimeout(() => {
       this.init()
@@ -188,6 +176,7 @@ export default {
     // console.log(this.$route.query)
   },
   methods: {
+    ...getEnode,
     changeEnode (item, index) {
       if (Number(this.accountType)) {
         if (item.isEdit) {
@@ -199,13 +188,9 @@ export default {
           }
           if (item.url !== this.$$.eNodeCut(item.oldEnode).ip) {
             let url = item.url.indexOf('http://') === 0 || item.url.indexOf('https://') === 0 ? item.url : ('http://' + item.url)
-            this.$$.web3.setProvider(url)
-            this.$$.web3.dcrm.getEnode().then(res => {
-              let cbData = res
-              cbData = JSON.parse(cbData)
-              // console.log(cbData)
-              if (cbData.Status === "Success") {
-                let _enode = cbData.Data.Enode
+            this.getEnode(url).then(res => {
+              if (res.status === 'Success') {
+                let _enode = res.enode
                 if (!this.$$.eNodeCut(_enode).key || item.oldEnode.indexOf(this.$$.eNodeCut(_enode).key) === -1) {
                   this.gMemberInit[index].eNode = item.oldEnode
                   this.gMemberInit[index].isEdit = !this.gMemberInit[index].isEdit
@@ -218,12 +203,6 @@ export default {
               } else {
                 this.gMemberInit[index].eNode = item.oldEnode
               }
-              this.$$.web3.setProvider(this.serverRPC)
-            }).catch(err => {
-              console.log(err)
-              this.gMemberInit[index].eNode = item.oldEnode
-              this.gMemberInit[index].url = this.$$.eNodeCut(item.oldEnode).ip
-              this.$$.web3.setProvider(this.serverRPC)
             })
           }
         }
@@ -396,7 +375,8 @@ export default {
         ERC20Coin: item.Cointype,
         gID: this.gID,
         publicKey: this.pubKey,
-        mode: this.gMode
+        mode: this.gMode,
+        accountType: this.accountType
       })
     },
     setTxnsData (item) {
