@@ -161,7 +161,7 @@ export default {
         user: false,
         create: false
       },
-      headerImg: require('@/assets/img/logo/logo.png')
+      headerImg: ''
     }
   },
   watch: {
@@ -209,12 +209,7 @@ export default {
       }, 1000 * 35)
     },
     async getHeaderImg () {
-      this.$db.findHeaderImg({address: this.address}).then(res => {
-        // console.log(res)
-        if (res.length > 0) {
-          this.headerImg = res[0].imgData
-        }
-      })
+      this.headerImg = this.$$.createImg(this.address)
     },
     modalClick () {
       this.drawer.create = false
