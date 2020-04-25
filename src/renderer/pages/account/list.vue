@@ -66,10 +66,10 @@
     .pubkey {
       line-height: 18px;margin-bottom: 3px;font-size: 14px;color: #333;color: #666;
       .name {
-        width: 55%;color: #333;
+        width: 55%;color: #333;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
       }
       .account {
-        font-size: 10px;line-height:18px;color: #fff;padding: 0 8px;border-radius: 9px;margin-left: 8px;
+        font-size: 10px;line-height:18px;color: #fff;padding: 0 8px;border-radius: 9px;margin-left: 8px;white-space: nowrap;
       }
       .person {
         background: #2762e0;
