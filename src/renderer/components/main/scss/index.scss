@@ -23,10 +23,12 @@
     .item {
       height: 100%;padding: size(8) size(25);cursor: pointer;
       &.active {
-        background: $color-primary;color: #fff;
+        // background: $color-primary;color: #fff;
+        color: $color-primary;
       }
       &:hover {
-        background: $color-primary;color: #fff;
+        // background: $color-primary;color: #fff;
+        color: $color-primary;
       }
     }
   }

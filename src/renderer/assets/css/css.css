@@ -278,8 +278,8 @@ body,th,td,button,input,select,textarea{font-family:"Microsoft Yahei","Hiragino 
   }
   /* 滚动条的宽度 */
   ::-webkit-scrollbar {
-  width:9px;
-  height:9px;
+  width:3px;
+  height:3px;
   }
   /* 滚动条的设置 */
   ::-webkit-scrollbar-thumb {
