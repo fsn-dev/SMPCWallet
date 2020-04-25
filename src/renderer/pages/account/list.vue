@@ -14,7 +14,7 @@
               </div>
             </div>
             <div class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" slot="reference">
-              <div class="label">
+              <div class="label flex-c">
                 <!-- {{item.name ? $$.titleCase(item.name) : 'A'}} -->
                 <img :src="item.img">
               </div>
@@ -58,7 +58,7 @@
       background: rgba(39,98,224,.2);border-left: 3px solid #2762e0;
     }
     .label {
-      width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;border-radius: 100%;overflow: hidden;
+      width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;overflow: hidden;
       img {
         width: 100%;height: 100%;display: block;
       }
