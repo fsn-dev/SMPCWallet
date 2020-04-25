@@ -101,6 +101,8 @@ export default {
 		history: 'History',
 		wait: 'Waiting',
 		refrsh: 'Refresh',
+		person: 'Private',
+		group: 'Managed',
 		personAccount: 'Private Account',
 		groupAccount: 'Managed Account',
 		quit: 'Exit',

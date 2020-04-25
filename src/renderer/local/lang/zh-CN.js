@@ -103,6 +103,8 @@ export default {
 		history: '历史',
 		wait: '待办',
 		refrsh: '刷新',
+		person: '个人',
+		group: '共管',
 		personAccount: '个人账户',
 		groupAccount: '共管账户',
 		quit: '安全退出',

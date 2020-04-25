@@ -14,11 +14,19 @@
               </div>
             </div>
             <div class="item flex-sc" :class="publicKey === item.publicKey ? 'active' : ''" slot="reference">
-              <div class="label">{{item.name ? $$.titleCase(item.name) : 'A'}}</div>
-              <div class="flex-sc flex-wrap">
-                <p class="WW100 pubkey">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 8 ,4) : item.name}}</p>
-                <div class="flex-bc font12 color_99 info WW100">
-                  <span>{{item.mode}}</span>
+              <div class="label">
+                <!-- {{item.name ? $$.titleCase(item.name) : 'A'}} -->
+                <img :src="item.img">
+              </div>
+              <div class="flex-sc flex-wrap" style="width:236px;">
+                <div class="WW100 pubkey flex-sc">
+                  <span class="name">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 6 ,4) : item.name}}</span>
+                  <i class="account person" v-if="item.type">{{$t('title').person}}</i>
+                  <i class="account group" v-if="!item.type">{{$t('title').group}}</i>
+                  <i class="account mode">{{item.mode}}</i>
+                </div>
+                <div class="flex-bc font12 color_99 info WW100 mt-10">
+                  <span>{{$$.cutOut(item.publicKey, 8 , 6)}}</span>
                   <span>{{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</span>
                 </div>
               </div>
@@ -41,19 +49,37 @@
 .g-list-box {
   width: 100%;height: 100%;padding: size(0) 0;overflow: auto;border-right:size(1) solid #f2f2f2;
   .item {
-    width: 100%; cursor: pointer;padding: size(8) size(12);
+    width: 100%; cursor: pointer;padding: size(15) size(12) size(15) size(9);border-bottom: 3px solid #f4f5f7;border-left: 3px solid transparent;
     $label-h: 36px;
     &:hover{
-      background: #c7c6c6;
+      background: #c7c6c6;border-left: 3px solid #2762e0;
     }
     &.active {
-      background: #e6e5e5;
+      background: #e6e5e5;border-left: 3px solid #2762e0;
     }
     .label {
-      width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;
+      width: $label-h;height:$label-h;text-align: center;line-height: $label-h;background: #0099ff;border-radius: 4px;color:#fff;margin-right: 10px;font-size: 14px;border-radius: 100%;overflow: hidden;
+      img {
+        width: 100%;height: 100%;display: block;
+      }
     }
     .pubkey {
       line-height: 18px;margin-bottom: 3px;font-size: 14px;color: #333;color: #666;
+      .name {
+        width: 55%;color: #333;
+      }
+      .account {
+        font-size: 10px;line-height:18px;color: #fff;padding: 0 8px;border-radius: 9px;margin-left: 8px;
+      }
+      .person {
+        background: #2762e0;
+      }
+      .group {
+        background: #ffaa00;
+      }
+      .mode {
+        background: #16a05d;
+      }
     }
     .info {
       line-height: 12px;
@@ -120,40 +146,32 @@ export default {
   mounted () {
     this.loading.list = true
     // console.log(this.$$.web3)
-    this.init()
+    // let st = Date.now()
+    // for (let i = 0; i < 10000; i++) {
+    //   this.$$.createImg('d04d8da3bfeddb999346b34f486c117ff12fd7b2bdceb9fda4c7c368d6daf4579b93ade0b2d1444652e998a2d823a889aa3ca39e012eb3434d1bca8d8c7394ae')
+    // }
+    // let et = Date.now()
+    // console.log(et - st)
+    setTimeout(() => {
+      this.init()
+    }, 300)
   },
   methods: {
     init () {
-      this.$$.getAccounts(this.address, this.accountType).then(res => {
-      // this.$$.getAccounts(this.address, '').then(res => {
-        console.log(res)
-        this.gAccountList = []
-        let arr = res.info ? res.info : [], arr1 = [], arr2 = []
-        if (arr.length <= 0) {
-          this.changeGroup()
-          this.loading.list = false
-          return
-        }
-        for (let obj1 of arr) {
-          for (let obj2 of obj1.Accounts) {
-            if (!arr1.includes(obj2.PubKey)) {
-              // console.log(obj2)
-              let obj3 = {
-                publicKey: obj2.PubKey,
-                gID: obj1.GroupID,
-                mode: obj2.ThresHold,
-                name: obj2.PubKey.substr(2),
-                timestamp: obj2.TimeStamp
-              }
-              arr2.push(obj3)
-              arr1.push(obj2.PubKey)
-            }
-          }
-        }
-        arr2 = arr2.sort(this.$$.bigToSmallSort('timestamp'))
-        for (let i = 0, len = arr2.length; i < len; i++) {
-          this.gAccountList.push(arr2[i])
-          this.getGName(arr2[i], i)
+      let arr = [
+        { p1: 'dcrm', p2: 'getAccounts', p3: [this.address, '0'] },
+        { p1: 'dcrm', p2: 'getAccounts', p3: [this.address, '1'] },
+      ]
+      this.$$.batchRequest(arr).then(res => {
+        // console.log(res)
+        let groupArr = this.formatAccont(res[0], 0)
+        let personArr = this.formatAccont(res[1], 1)
+        let allArr = [...groupArr, ...personArr]
+        // console.log(allArr)
+        allArr = allArr.sort(this.$$.bigToSmallSort('timestamp'))
+        for (let i = 0, len = allArr.length; i < len; i++) {
+          this.gAccountList.push(allArr[i])
+          this.getGName(allArr[i], i)
         }
         if (this.$route.query.gID) {
           this.changeGroup({
@@ -167,12 +185,32 @@ export default {
           this.changeGroup()
         }
         this.loading.list = false
-      }).catch(err => {
-        if (err.error) {
-          this.msgError(err.error)
-        }
-        this.loading.list = false
       })
+    },
+    formatAccont (res, type) {
+      let arr = [], arr1 = [], arr2 = []
+      if (res.Status !== 'Error') {
+        arr = res.Data.result && res.Data.result.Group ? res.Data.result.Group : []
+      }
+      for (let obj1 of arr) {
+        for (let obj2 of obj1.Accounts) {
+          if (!arr1.includes(obj2.PubKey)) {
+            // console.log(obj2)
+            let obj3 = {
+              publicKey: obj2.PubKey,
+              gID: obj1.GroupID,
+              mode: obj2.ThresHold,
+              name: obj2.PubKey.substr(2),
+              timestamp: obj2.TimeStamp,
+              type: type,
+              img: this.$$.createImg(obj2.PubKey)
+            }
+            arr2.push(obj3)
+            arr1.push(obj2.PubKey)
+          }
+        }
+      }
+      return arr2
     },
     getGName (item, i) {
       this.$db.findGaccount({publicKey: item.publicKey, address: this.address}).then(res => {
