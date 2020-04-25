@@ -81,7 +81,6 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import headerImg from './js/headerImg'
 import getEnode from '@/assets/js/pages/node/getEnode.js'
 import {nodeDatas, nodeSockets, nodeMethods} from '@/assets/js/pages/node/index.js'
 export default {
@@ -127,7 +126,6 @@ export default {
     this.setSelected()
   },
   methods: {
-    ...headerImg,
     ...nodeMethods,
     ...getEnode,
     setSelected () {
@@ -228,7 +226,6 @@ export default {
             this.msgError(this.$t('error').err_10)
             return
           }
-          this.getHeaderImg(address, this.loginObj.username)
           this.signEnode(pwd, address)
           this.$store.commit('setAddress', {info: address})
           this.$store.commit('setToken', {info: this.loginObj.username})
@@ -242,14 +239,6 @@ export default {
         this.msgError(error.toString())
         this.loading.wait = false
       }
-    },
-    async getHeaderImg (address, name) {
-      this.$db.findHeaderImg({address: address}).then(res => {
-        // console.log(res)
-        if (res.length <= 0) {
-          this.createHeader(address, name)
-        }
-      })
     },
     async signEnode (pwd, address) {
       let eNodeKey = this.$$.eNodeCut(this.eNode).key
