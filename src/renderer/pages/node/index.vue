@@ -6,27 +6,27 @@
     </el-breadcrumb>
     <el-row :gutter="12">
       <el-col :span="6">
-        <el-card shadow="always" class="card-style">
+        <el-card shadow="always" class="card-style blue">
           <h3 class="title">{{$t('label').nodeNum}}</h3>
           <p class="count">{{tableData.nodeList ? tableData.nodeList.length : 0}}</p>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="always" class="card-style">
+        <el-card shadow="always" class="card-style orange">
           <h3 class="title">{{$t('label').userNum}}</h3>
-          <p class="count">{{tableData.UC}}</p>
+          <p class="count">{{$$.thousandBit(tableData.UC, 'no')}}</p>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="always" class="card-style">
+        <el-card shadow="always" class="card-style cyan">
           <h3 class="title">{{$t('label').accountNum}}</h3>
-          <p class="count">{{tableData.GAC + tableData.PAC}}</p>
+          <p class="count">{{$$.thousandBit(tableData.GAC + tableData.PAC, 'no')}}</p>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="always" class="card-style">
+        <el-card shadow="always" class="card-style red">
           <h3 class="title">{{$t('label').txnsNum}}</h3>
-          <p class="count">{{tableData.GTC + tableData.PTC}}</p>
+          <p class="count">{{$$.thousandBit(tableData.GTC + tableData.PTC, 'no')}}</p>
         </el-card>
       </el-col>
     </el-row>
@@ -70,11 +70,24 @@
 
 <style lang="scss">
 .card-style {
+  height: 197px;padding: 30px 30px;color:#fff;
+  &.blue {
+    background: url('~@/assets/img/tableDateBg/blue.png') no-repeat center;
+  }
+  &.orange {
+    background: url('~@/assets/img/tableDateBg/orange.png') no-repeat center;
+  }
+  &.cyan {
+    background: url('~@/assets/img/tableDateBg/cyan.png') no-repeat center;
+  }
+  &.red {
+    background: url('~@/assets/img/tableDateBg/red.png') no-repeat center;
+  }
   .title {
     font-weight: bold;
   }
   .count {
-    font-size: 14px;margin-top: 15px;
+    font-size: 14px;margin-top: 15px;text-align: center;font-size: 50px;margin-top: 20px;
   }
 }
 </style>
