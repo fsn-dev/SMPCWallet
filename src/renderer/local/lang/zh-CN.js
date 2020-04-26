@@ -90,7 +90,9 @@ export default {
 		resend: '重新发送',
 		addFriend: '添加好友',
 		add: '添加',
-		backFriend: '返回好友列表'
+		backFriend: '返回好友列表',
+		nowInstall: '马上安装',
+		lookDtil: '查看详情'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -121,7 +123,8 @@ export default {
 		myNode: '我的节点',
 		assets: '资产',
 		network: '网络',
-		applyMarket: '应用'
+		applyMarket: '应用',
+		bestApply: '精选应用'
 	},
 	label: {
 		username: '用户名',
@@ -214,6 +217,26 @@ export default {
 		addFriendTip: '当前列表为空，请添加后操作！',
 		searchTip: '搜索添加好友',
 		devTip: '开发中',
-		online: '仅支持在线状态！'
+		online: '仅支持在线状态！',
+		CrossChainTip: '安全多方计算，分布式密钥生成，异构跨链',
+		sBTC: {
+			d1: '基于去中心化跨链桥',
+			d2: '安全合约1:1映射',
+			d3: '100%去中心化'
+		},
+		timelock: {
+			d1: 'Timelcok时间代币',
+			d2: '时间价值交换与锁定'
+		},
+		DAO: {
+			d1: '去中心化组织账户',
+			d2: '多方安全管理',
+			d3: '门限签名'
+		},
+		DEX: {
+			d1: '去中心化',
+			d2: '跨链交易',
+			d3: '无托管'
+		}
 	}
 }

@@ -88,7 +88,9 @@ export default {
 		resend: 'Resend',
 		addFriend: 'Add Friends',
 		add: 'Add',
-		backFriend: 'Return friends list'
+		backFriend: 'Return friends list',
+		nowInstall: 'Install immediately',
+		lookDtil: 'Details'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -120,7 +122,8 @@ export default {
 		add: 'Add',
 		assets: 'Assets',
 		network: 'Network',
-		applyMarket: 'DAPP'
+		applyMarket: 'DAPP',
+		bestApply: 'Select application'
 	},
 	label: {
 		username: 'User name',
@@ -214,6 +217,26 @@ export default {
 		addFriendTip: 'The current list is empty, please add the operation after!',
 		searchTip: 'Search add friends',
 		devTip: 'Coming soon!',
-		online: 'Only online!'
+		online: 'Only online!',
+		CrossChainTip: 'Secure multi-party computing, distributed key generation, heterogeneous cross-chain',
+		sBTC: {
+			d1: 'Based on decentralized cross - chain bridge',
+			d2: 'Security contract 1:1 mapping',
+			d3: '100% decentralization'
+		},
+		timelock: {
+			d1: 'Timelcok time token',
+			d2: 'Time value exchange and locking'
+		},
+		DAO: {
+			d1: 'Decentralized organization accounts',
+			d2: 'Multi-party security management',
+			d3: 'Threshold signature'
+		},
+		DEX: {
+			d1: 'Decentralized',
+			d2: 'Trading across the chain',
+			d3: 'No hosting'
+		}
 	}
 }
