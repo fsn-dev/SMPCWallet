@@ -8,9 +8,9 @@
             <div class="img flex-ec"><img src="~@/assets/img/apply/bannerBg.png"></div>
             <div class="content">
               <p class="p p1">{{$t('title').bestApply}}</p>
-              <h1 class="h1">CrossChain-Bridge(去中心化跨链桥）</h1>
+              <h1 class="h1">{{$t('title').CrossChainTitle}}</h1>
               <p class="p p2">{{$t('tip').CrossChainTip}}</p>
-              <el-button type="primary" class="btn-primary btn-install" @click="comingSoon">{{$t('btn').nowInstall}}</el-button>
+              <el-button type="primary" class="btn-primary btn-install" @click="comingSoon">{{$t('btn').lookDtil}}</el-button>
             </div>
           </div>
         </el-carousel-item>
@@ -118,26 +118,27 @@ export default {
     init () {
       this.applyList = [
         {
-          title: 'sBTC(跨链BTC)',
+          title: this.$t('tip').mBTC.title,
           list: [
-            {cont: this.$t('tip').sBTC.d1},
-            {cont: this.$t('tip').sBTC.d2},
-            {cont: this.$t('tip').sBTC.d3},
+            {cont: this.$t('tip').mBTC.d1},
+            {cont: this.$t('tip').mBTC.d2},
+            {cont: this.$t('tip').mBTC.d3},
           ],
           url: '',
-          bg: require('@/assets/img/apply/sBTC.png')
+          bg: require('@/assets/img/apply/mBTC.png')
         },
         {
-          title: 'Timelock(时间代币）',
+          title: this.$t('tip').timelock.title,
           list: [
             {cont: this.$t('tip').timelock.d1},
             {cont: this.$t('tip').timelock.d2},
+            {cont: this.$t('tip').timelock.d3},
           ],
           url: '',
           bg: require('@/assets/img/apply/timelock.png')
         },
         {
-          title: 'DAO (去中心化组织账户)',
+          title: this.$t('tip').DAO.title,
           list: [
             {cont: this.$t('tip').DAO.d1},
             {cont: this.$t('tip').DAO.d2},
@@ -147,7 +148,7 @@ export default {
           bg: require('@/assets/img/apply/DAO.png')
         },
         {
-          title: 'DEX (去中心化交易所）',
+          title: this.$t('tip').DEX.title,
           list: [
             {cont: this.$t('tip').DEX.d1},
             {cont: this.$t('tip').DEX.d2},

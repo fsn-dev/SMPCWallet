@@ -124,7 +124,8 @@ export default {
 		assets: '资产',
 		network: '网络',
 		applyMarket: '应用',
-		bestApply: '精选应用'
+		bestApply: '精选应用',
+		CrossChainTitle: 'CrossChain-Bridge(去中心化跨链桥）'
 	},
 	label: {
 		username: '用户名',
@@ -219,21 +220,26 @@ export default {
 		devTip: '开发中',
 		online: '仅支持在线状态！',
 		CrossChainTip: '安全多方计算，分布式密钥生成，异构跨链',
-		sBTC: {
+		mBTC: {
+			title: 'mBTC(跨链BTC)',
 			d1: '基于去中心化跨链桥',
 			d2: '安全合约1:1映射',
 			d3: '100%去中心化'
 		},
 		timelock: {
+			title: 'Timelock(时间代币）',
 			d1: 'Timelcok时间代币',
-			d2: '时间价值交换与锁定'
+			d2: '时间价值交换与锁定',
+			d3: '时间价值金融化'
 		},
 		DAO: {
+			title: 'DAO (去中心化组织账户)',
 			d1: '去中心化组织账户',
 			d2: '多方安全管理',
 			d3: '门限签名'
 		},
 		DEX: {
+			title: 'DEX (去中心化交易所）',
 			d1: '去中心化',
 			d2: '跨链交易',
 			d3: '无托管'
