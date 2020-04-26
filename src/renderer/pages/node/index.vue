@@ -5,35 +5,19 @@
       <el-breadcrumb-item>{{$t('label').node}}</el-breadcrumb-item>
     </el-breadcrumb>
     <el-row :gutter="12">
-      <el-col :span="6">
-        <el-card shadow="always" class="card-style blue">
-          <h3 class="title">{{$t('label').nodeNum}}</h3>
-          <p class="count">{{tableData.nodeList ? tableData.nodeList.length : 0}}</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card shadow="always" class="card-style orange">
-          <h3 class="title">{{$t('label').userNum}}</h3>
-          <p class="count">{{$$.thousandBit(tableData.UC, 'no')}}</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card shadow="always" class="card-style cyan">
-          <h3 class="title">{{$t('label').accountNum}}</h3>
-          <p class="count">{{$$.thousandBit(tableData.GAC + tableData.PAC, 'no')}}</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card shadow="always" class="card-style red">
-          <h3 class="title">{{$t('label').txnsNum}}</h3>
-          <p class="count">{{$$.thousandBit(tableData.GTC + tableData.PTC, 'no')}}</p>
+      <el-col :span="6" v-for="(item, index) in viewData" :key="index">
+        <el-card shadow="always" class="card-style" :class="item.bg">
+          <div class="round round1"></div>
+          <div class="round round2"></div>
+          <h3 class="title">{{item.name}}</h3>
+          <p class="count">{{$$.thousandBit(item.count, 'no')}}</p>
         </el-card>
       </el-col>
     </el-row>
     <el-table :data="tableData.nodeList" style="width: 100%" empty-text="Null" size="mini" class="mt-30 node-table-box">
       <el-table-column :label="$t('label').nodeName" width="300">
         <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+          <span class="color_33 bold">{{scope.row.name}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('label').pubKeyAddr">
@@ -69,19 +53,33 @@
 </template>
 
 <style lang="scss">
+$cardH: 197;
 .card-style {
-  height: 197px;padding: 30px 30px;color:#fff;
+  height: size($cardH);padding: 30px 30px;color:#fff;position:relative;overflow: hidden;
   &.blue {
-    background: url('~@/assets/img/tableDateBg/blue.png') no-repeat center;
+    // background: url('~@/assets/img/tableDateBg/blue.png') no-repeat center;
+    background: linear-gradient(#3ebaf8, #1e87ef);
   }
   &.orange {
-    background: url('~@/assets/img/tableDateBg/orange.png') no-repeat center;
+    // background: url('~@/assets/img/tableDateBg/orange.png') no-repeat center;
+    background: linear-gradient(#f7a437, #f7501e);
   }
   &.cyan {
-    background: url('~@/assets/img/tableDateBg/cyan.png') no-repeat center;
+    // background: url('~@/assets/img/tableDateBg/cyan.png') no-repeat center;
+    background: linear-gradient(#27f19b, #0db9dd);
   }
   &.red {
-    background: url('~@/assets/img/tableDateBg/red.png') no-repeat center;
+    // background: url('~@/assets/img/tableDateBg/red.png') no-repeat center;
+    background: linear-gradient(#fe453f, #c91561);
+  }
+  .round {
+    width: size($cardH);height: size($cardH);background: rgba(255,255,255,.1);border-radius: 100%;position: absolute;
+  }
+  .round1 {
+    top: -40px;right: -15px;
+  }
+  .round2 {
+    bottom: -66px;right: -60px;
   }
   .title {
     font-weight: bold;
@@ -106,6 +104,7 @@ export default {
   name: 'nodeInfo',
   data () {
     return {
+      viewData: [],
       tableData: {}
     }
   },
@@ -116,6 +115,12 @@ export default {
     NodeAndOtherData (res) {
       console.log(res)
       this.tableData = res.info
+      this.viewData = [
+        {name: this.$t('label').nodeNum, count: this.tableData.nodeList ? this.tableData.nodeList.length : 0, bg: 'blue'},
+        {name: this.$t('label').userNum, count: this.tableData.UC, bg: 'orange'},
+        {name: this.$t('label').accountNum, count: this.tableData.GAC + this.tableData.PAC, bg: 'cyan'},
+        {name: this.$t('label').txnsNum, count: this.tableData.GTC + this.tableData.PTC, bg: 'red'},
+      ]
     }
   },
   mounted () {

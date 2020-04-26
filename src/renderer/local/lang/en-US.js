@@ -122,8 +122,9 @@ export default {
 		add: 'Add',
 		assets: 'Assets',
 		network: 'Network',
-		applyMarket: 'DAPP',
-		bestApply: 'Select application'
+		dapp: 'DAPP',
+		bestApply: 'Select application',
+		CrossChainTitle: 'CrossChain-Bridge'
 	},
 	label: {
 		username: 'User name',
@@ -218,25 +219,30 @@ export default {
 		searchTip: 'Search add friends',
 		devTip: 'Coming soon!',
 		online: 'Only online!',
-		CrossChainTip: 'Secure multi-party computing, distributed key generation, heterogeneous cross-chain',
-		sBTC: {
-			d1: 'Based on decentralized cross - chain bridge',
+		CrossChainTip: 'Secure multi-party computing Distributed key generation Heterogeneous cross-chain',
+		mBTC: {
+			title: 'mBTC',
+			d1: 'Decentralized CrossChain-Bridge',
 			d2: 'Security contract 1:1 mapping',
 			d3: '100% decentralization'
 		},
 		timelock: {
-			d1: 'Timelcok time token',
-			d2: 'Time value exchange and locking'
+			title: 'Timelock',
+			d1: 'Timelock token',
+			d2: 'Time value lock',
+			d3: 'Time value financialization'
 		},
 		DAO: {
+			title: 'DAO',
 			d1: 'Decentralized organization accounts',
 			d2: 'Multi-party security management',
 			d3: 'Threshold signature'
 		},
 		DEX: {
+			title: 'DEX',
 			d1: 'Decentralized',
-			d2: 'Trading across the chain',
-			d3: 'No hosting'
+			d2: 'CrossChain exchange',
+			d3: 'Non-custody'
 		}
 	}
 }

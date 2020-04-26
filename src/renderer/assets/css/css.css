@@ -59,11 +59,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {color:#a9a9a9;}
 .color_red{color:red!important;}
 .color_blue{color:blue!important;}
 .color_99{color:#999!important;}
+.color_33{color:#333!important;}
 .color_cc{color:#ccc!important;}
 .color_ff{color:#fff!important;}
 .color_cyan{color:#48C9FC!important;}
 .color_gray{color:#666!important;}
 .color_green{color:rgb(0, 192, 135)!important;}
+/*字体加粗*/
+.bold {font-weight: bold}
 
 /*边框*/
 .noborder{border:none!important;}
