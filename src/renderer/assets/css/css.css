@@ -34,7 +34,7 @@ button[disabled], html input[disabled]{background-color:#DDD;}
 .disabled{opacity: .3;}
 .nowrap{white-space:nowrap;}
 .ellipsis{display:block;overflow:hidden;text-overflow: ellipsis;white-space:nowrap;}
-.container{width: 100%;max-width: 1200px;margin: auto;padding: 0 15px;}
+.container{width: 100%;max-width: 1440px;margin: auto;padding: 0 15px;}
 
 /*select美化*/
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {color:#a9a9a9;}
