@@ -147,5 +147,15 @@ export default {
     "rate": 5,
     "isCase": 0,
     "dollarURL": "https://api.cryptorank.io/v0/coins/everitoken/tickers"
+  },
+  "RMBT": {
+    "coinName": "RMBT",
+    "logo": require("@/assets/img/coin/rmbt.svg"),
+    "token": "tokentx",
+    "hashFM": "",
+    "limit": 0,
+    "rate": 18,
+    "isCase": 0,
+    "dollarURL": "https://api.cryptorank.io/v0/coins/everitoken/tickers"
   }
 }

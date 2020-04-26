@@ -1,54 +1,66 @@
 <template>
   <div class="boxConntent1" v-loading="loading.account" :element-loading-text="$t('loading').l_1">
-    <div class="flex-bc a-header-box" v-if="!Number(accountType)">
+    <div class="flex-bc a-header-box">
       <div></div>
       <div @click="gID ? drawer.member = true : ''"><i class="el-icon-menu cursorP"></i></div>
     </div>
 
     <div class="a-table-box" v-if="tableData.length > 0">
-      <el-table :data="tableData" style="width: 100%" empty-text="Null">
+      <el-table :data="tableData" style="width: 100%" empty-text="Null" v-if="tableRefresh">
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column :label="$t('label').coinType" width="180">
           <template slot-scope="scope">
             <div class="flex-sc">
-              <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(scope.row.Cointype).coinType)">
-                <img :src="$$.setDollar($$.cutERC20(scope.row.Cointype).coinType).logo">
+              <div class="coinImg flex-c" v-if="$$.setDollar($$.cutERC20(scope.row.coinType).coinType)">
+                <img :src="$$.setDollar($$.cutERC20(scope.row.coinType).coinType).logo">
               </div>
               <div class="coinTxt flex-c" v-else>
-                {{$$.titleCase($$.cutERC20(scope.row.Cointype).coinType)}}
+                {{$$.titleCase($$.cutERC20(scope.row.coinType).coinType)}}
               </div>
-              <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.Cointype).coinType }}</span>
-              <i v-if="$$.cutERC20(scope.row.Cointype).type" class="isErc20">ERC20</i>
+              <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.coinType).coinType }}</span>
+              <i v-if="$$.cutERC20(scope.row.coinType).type" class="isErc20">ERC20</i>
             </div>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').address">
           <template slot-scope="scope">
-            <div class="WW100 ellipsis cursorP" :title="scope.row.DcrmAddr" @click="copyTxt(scope.row.DcrmAddr)">{{ scope.row.DcrmAddr }}</div>
+            <div class="WW100 ellipsis cursorP flex-c" v-if="!tableObj[scope.row.coinType] && !tableObj['ETH']"><i class="el-icon-loading mr-5"></i></div>
+            <div class="WW100 ellipsis cursorP" v-else-if="!tableObj[scope.row.coinType] && tableObj['ETH']" @click="copyTxt(tableObj['ETH'].address)">{{tableObj['ETH'].address}}</div>
+            <div class="WW100 ellipsis cursorP" v-else @click="copyTxt(tableObj[scope.row.coinType].address)">{{tableObj[scope.row.coinType].address}}</div>
+            <!-- <div class="WW100 ellipsis cursorP" :title="scope.row.DcrmAddr" @click="copyTxt(scope.row.DcrmAddr)">
+              {{
+                tableObj[scope.row.coinType] && tableObj[scope.row.coinType].address ? tableObj[scope.row.coinType].address : '' 
+              }}
+            </div> -->
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').balance" width="120" align="right">
           <template slot-scope="scope">
-            {{ isNaN(scope.row.Balance) ? 0 : $$.fromWei(scope.row.Balance, $$.cutERC20(scope.row.Cointype).coinType)}}
+            <div class="WW100 ellipsis cursorP" v-if="!tableObj[scope.row.coinType]">0</div>
+            <div class="WW100 ellipsis cursorP" v-else>{{ isNaN(tableObj[scope.row.coinType].balance) ? 0 : $$.fromWei(tableObj[scope.row.coinType].balance, $$.cutERC20(scope.row.Cointype).coinType)}}</div>
+            <!-- {{ isNaN(scope.row.Balance) ? 0 : $$.fromWei(scope.row.Balance, $$.cutERC20(scope.row.Cointype).coinType)}} -->
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').action" width="200" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">{{$t('btn').enter}}</el-button>
-            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">{{$t('btn').out}}</el-button>
+            <!-- <el-button size="mini" type="success" @click="openReceive(scope.$index, scope.row)">{{$t('btn').enter}}</el-button>
+            <el-button size="mini" type="primary" @click="openSendDialog(scope.$index, scope.row)" class="btn-primary">{{$t('btn').out}}</el-button> -->
+            <div class="flex-ec" v-if="scope.row.isOpen">
+              <w-button :ok="$t('btn').enter" :cancel="$t('btn').out" :type="1" @onOk="openReceive(scope.$index, scope.row)" @onCancel="openSendDialog(scope.$index, scope.row)"></w-button>
+            </div>
+            <div class="flex-ec" v-else>
+              <w-button :ok="$t('btn').enter" :cancel="$t('btn').out" @onOk="openReceive(scope.$index, scope.row)" :type="1" :right="false"></w-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <div class="flex-c boxConntent1 color_99" v-if="!gID && !Number(accountType)">{{$t('warn').w_1}}</div>
+    <div class="flex-c boxConntent1 color_99" v-if="!gID">{{$t('warn').w_1}}</div>
 
     <!-- 查看组成员 start -->
     <el-drawer :visible.sync="drawer.member" :destroy-on-close="true" :show-close="false">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
-      </div> -->
-      <div class="plr15">
+      <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.member = false"></drawer-logo>
       </div>
       <div class="d-content-view g-member-list-box">
@@ -75,23 +87,13 @@
 
     <!-- 节点选择 start -->
     <el-drawer :visible.sync="drawer.select" :destroy-on-close="true" :show-close="false">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
-      </div> -->
-      <div class="plr15">
+      <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.select = false"></drawer-logo>
       </div>
       <div class="d-content-view node-select-box" v-loading="loading.nodeSelect" :element-loading-text="$t('loading').l_1">
         <h3 class="h3">{{$t('title').selectNode}}</h3>
         <div v-if="drawer.select">
-          <!-- <el-checkbox class="mb-20" disabled="disabled" v-model="oneself">
-            <div class="flex-bc">
-              {{$$.cutOut(eNode, 12, 16)}}
-              <span class="color_green flex-bc ml-10"><i class="el-icon-user mr-5"></i>{{$t('label').self}}</span>
-            </div>
-          </el-checkbox> -->
           <el-checkbox-group v-model="gMemberSelect"  @change="changeMember">
-          <!-- <el-checkbox-group v-model="gMemberSelect" :min="gMode.indexOf('/') > 0 && gMode.split('/')[0] ? (Number(gMode.split('/')[0]) - 1) : 1" class=""> -->
             <el-checkbox :label="eNode" disabled="disabled">
               <div class="flex-bc">
                 {{$$.cutOut(eNode, 12, 10)}}
@@ -127,10 +129,7 @@
 
     <!-- 发送交易 start -->
     <el-drawer :visible.sync="drawer.send" :destroy-on-close="true" :show-close="false" v-if="drawer.send">
-      <!-- <div slot="title">
-        <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
-      </div> -->
-      <div class="plr15">
+      <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
       </div>
       <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
@@ -145,7 +144,7 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-
+import wButton from '@/components/btn/index.vue'
 import getEnode from '@/assets/js/pages/node/getEnode.js'
 import sendTxns from '@/pages/txns/index.vue'
 export default {
@@ -168,7 +167,15 @@ export default {
       pubKey: '',
       gMode: '',
       eNodeArr: [],
-      tableData: [],
+      tableData: [
+        { coinType: 'BTC', address: '', balance: '', isOpen: 1},
+        { coinType: 'ETH', address: '', balance: '', isOpen: 1},
+        { coinType: 'USDT', address: '', balance: '', isOpen: 0},
+        { coinType: 'FSN', address: '', balance: '', isOpen: 1},
+        { coinType: 'RMBT', address: '', balance: '', isOpen: 0},
+      ],
+      tableObj: {},
+      tableRefresh: true,
       drawer: {
         member: false,
         select: false,
@@ -181,7 +188,7 @@ export default {
   computed: {
     ...computedPub,
   },
-  components: {sendTxns},
+  components: {sendTxns, wButton},
   mounted () {
     setTimeout(() => {
       this.init()
@@ -365,9 +372,17 @@ export default {
         this.$$.getAccountsBalance(this.pubKey, this.address).then(res => {
           // console.log(res)
           if (res.msg === 'Success') {
-            this.tableData = res.info
-          } else {
-            this.msgError(this.$t('warn').w_2)
+            for (let obj of res.info) {
+              this.tableObj[obj.Cointype] = {
+                address: obj.DcrmAddr,
+                balance: obj.Balance
+              }
+            }
+            this.tableRefresh = false
+            this.$nextTick(() => {
+              this.tableRefresh = true
+            })
+            // this.tableData = res.info
           }
           this.loading.account = false
         })
@@ -377,21 +392,35 @@ export default {
     },
     openReceive (index, item) {
       let url = '/account/receive'
+      let address =  ''
+      if (!this.tableObj[item.coinType] && this.tableObj['ETH']) {
+        address = this.tableObj['ETH'].address
+      } else {
+        address = this.tableObj[item.coinType].address
+      }
       this.toUrl(url, {
-        address: item.DcrmAddr,
-        coinType: item.Cointype,
-        ERC20Coin: item.Cointype,
+        address: address,
+        coinType: item.coinType,
+        ERC20Coin: item.coinType,
         gID: this.gID,
         publicKey: this.pubKey,
-        mode: this.gMode
+        mode: this.gMode,
+        accountType: this.accountType
       })
     },
     setTxnsData (item) {
+      let address =  '', balance = 0
+      if (!this.tableObj[item.coinType] && this.tableObj['ETH']) {
+        address = this.tableObj['ETH'].address
+      } else {
+        address = this.tableObj[item.coinType].address
+      }
+      balance = this.tableObj[item.coinType].balance
       // console.log(item)
       this.sendDataObj = {
-        balance: item.Balance,
-        dcrmAddr: item.DcrmAddr,
-        coinType: item.Cointype,
+        balance: balance,
+        dcrmAddr: address,
+        coinType: item.coinType,
         gID: this.gID,
         mode: this.gMode
       }

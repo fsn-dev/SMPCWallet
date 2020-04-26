@@ -333,6 +333,23 @@ export default [
     ]
   },
   {
+    path: '/applyMarket',
+    component: Main,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '应用市场',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/apply/index.vue')) ),
+      }
+    ]
+  },
+  {
     path: '*',
     component: resolve => require.ensure([], () => resolve(require('@/components/error/index.vue')) )
   }

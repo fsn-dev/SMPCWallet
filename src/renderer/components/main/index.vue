@@ -1,23 +1,24 @@
 <template>
   <div class="boxContent page-component__scroll el-scrollbar">
     <header class="header-top-box flex-bc">
-      <div class="header-logo flex-c">
-        <logo></logo>
-      </div>
-
-      <!-- <div class="flex-c header-top-account">
-        <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(accountType) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
-        <p class="item" :class="Number(accountType) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
-      </div> -->
-      <div class="header-top-set-box flex-ec">
+      <div class="flex-sc HH100">
+        <div class="header-logo flex-c">
+          <logo></logo>
+        </div>
         <div class="header-top-nav">
           <ul class="flex-c HH100">
-            <li
+            <!-- <li
               class="item flex-c"
               :class="newsActive === 'createAccount' ? 'active' : ''"
               @click="openDrawerCreate"
               :title="$t('btn').create"
-            >{{$t('btn').create}}</li>
+            >{{$t('btn').create}}</li> -->
+            <li
+              class="item flex-c"
+              :class="newsActive === 'account' ? 'active' : ''"
+              @click="toUrl('/account')"
+              :title="$t('title').assets"
+            >{{$t('title').assets}}</li>
             <li
               class="item flex-c"
               :class="newsActive === 'social' ? 'active' : ''"
@@ -28,8 +29,14 @@
               class="item flex-c"
               :class="newsActive === 'nodeTable' ? 'active' : ''"
               @click="toUrl('/nodeTable')"
-              :title="$t('label').node"
-            >{{$t('label').node}}</li>
+              :title="$t('title').network"
+            >{{$t('title').network}}</li>
+            <li
+              class="item flex-c"
+              :class="newsActive === 'applyMarket' ? 'active' : ''"
+              @click="toUrl('/applyMarket')"
+              :title="$t('title').applyMarket"
+            >{{$t('title').applyMarket}}</li>
             <li
               class="item flex-c"
               :class="newsActive === 'approvalList' ? 'active' : ''"
@@ -48,6 +55,13 @@
             >{{$t('title').history}}</li>
           </ul>
         </div>
+      </div>
+
+      <!-- <div class="flex-c header-top-account">
+        <p class="item" v-if="$$.config.accountSwitch.person" :class="Number(accountType) === 1 ? 'active' : ''" @click="changeMode('1')">{{$t('title').personAccount}}</p>
+        <p class="item" :class="Number(accountType) === 0 ? 'active' : ''" @click="changeMode('0')">{{$t('title').groupAccount}}</p>
+      </div> -->
+      <div class="header-top-set-box flex-bc">
         <language @changeLang="reload"></language>
         <div class="header-top-refresh cursorP" @click="reload" :title="$t('title').refrsh">
           <i class="el-icon-refresh-right"></i>
@@ -147,7 +161,7 @@ export default {
         user: false,
         create: false
       },
-      headerImg: require('@/assets/img/logo/logo.png')
+      headerImg: ''
     }
   },
   watch: {
@@ -195,12 +209,7 @@ export default {
       }, 1000 * 35)
     },
     async getHeaderImg () {
-      this.$db.findHeaderImg({address: this.address}).then(res => {
-        // console.log(res)
-        if (res.length > 0) {
-          this.headerImg = res[0].imgData
-        }
-      })
+      this.headerImg = this.$$.createImg(this.address)
     },
     modalClick () {
       this.drawer.create = false
@@ -220,6 +229,10 @@ export default {
         this.newsActive = 'social'
       } else if (cur.path.indexOf('nodeTable') !== -1) {
         this.newsActive = 'nodeTable'
+      } else if (cur.path.indexOf('account') !== -1) {
+        this.newsActive = 'account'
+      } else if (cur.path.indexOf('applyMarket') !== -1) {
+        this.newsActive = 'applyMarket'
       } else {
         this.newsActive = 0
       }

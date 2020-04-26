@@ -13,7 +13,15 @@
 </template>
 
 <style lang="scss">
-
+.account-box {
+  width: 100%;height: 100%;position: relative;padding-left: 300px;
+  .account-nav {
+    width: 300px;min-height: 200px;height: 100%;position: absolute;top:0;left: 0;bottom: 0;
+  }
+  .account-dtil {
+    width: 100%;height: 100%;
+  }
+}
 </style>
 
 <script>
@@ -31,11 +39,11 @@ export default {
     //   console.log(cur)
     //   this.refresh()
     // },
-    accountType (type) {
-      // console.log(type)
-      this.$router.push({path: this.$route.path, query: {}})
-      // this.refresh()
-    }
+    // accountType (type) {
+    //   // console.log(type)
+    //   this.$router.push({path: this.$route.path, query: {}})
+    //   // this.refresh()
+    // }
   },
   components: {accountList},
   computed: {

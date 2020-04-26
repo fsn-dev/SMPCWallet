@@ -70,6 +70,7 @@ export default {
 		code: '二维码',
 		copy: '复制',
 		createAccount: '创建账户',
+		createGroup: '创建共管账户',
 		createPersson: '创建个人账户',
 		restart: '重置',
 		agree: '同意',
@@ -88,7 +89,8 @@ export default {
 		sendEmail: '发送验证码',
 		resend: '重新发送',
 		addFriend: '添加好友',
-		add: '添加'
+		add: '添加',
+		backFriend: '返回好友列表'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -103,6 +105,8 @@ export default {
 		history: '历史',
 		wait: '待办',
 		refrsh: '刷新',
+		person: '个人',
+		group: '共管',
 		personAccount: '个人账户',
 		groupAccount: '共管账户',
 		quit: '安全退出',
@@ -115,6 +119,9 @@ export default {
 		gAccountSet: '账户设置',
 		releaseNode: '发布节点',
 		myNode: '我的节点',
+		assets: '资产',
+		network: '网络',
+		applyMarket: '应用'
 	},
 	label: {
 		username: '用户名',
@@ -205,6 +212,7 @@ export default {
 		addFriend: '是否添加此好友？ ',
 		deleteFriend: '此操作将永久删除该好友, 是否继续? ',
 		addFriendTip: '当前列表为空，请添加后操作！',
+		searchTip: '搜索添加好友',
 		devTip: '开发中',
 		online: '仅支持在线状态！'
 	}

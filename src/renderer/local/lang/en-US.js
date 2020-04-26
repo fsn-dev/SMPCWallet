@@ -68,6 +68,7 @@ export default {
 		code: 'QR Code',
 		copy: 'Copy',
 		createAccount: 'Create Account',
+		createGroup: 'Create Managed Account',
 		createPersson: 'Create Private Account',
 		restart: 'Reset',
 		agree: 'Agree',
@@ -86,7 +87,8 @@ export default {
 		sendEmail: 'Send verification code',
 		resend: 'Resend',
 		addFriend: 'Add Friends',
-		add: 'Add'
+		add: 'Add',
+		backFriend: 'Return friends list'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -101,6 +103,8 @@ export default {
 		history: 'History',
 		wait: 'Waiting',
 		refrsh: 'Refresh',
+		person: 'Private',
+		group: 'Managed',
 		personAccount: 'Private Account',
 		groupAccount: 'Managed Account',
 		quit: 'Exit',
@@ -113,7 +117,10 @@ export default {
 		gAccountSet: 'Manger account settings',
 		releaseNode: 'Release Node',
 		myNode: 'My Node',
-		add: 'Add'
+		add: 'Add',
+		assets: 'Assets',
+		network: 'Network',
+		applyMarket: 'DAPP'
 	},
 	label: {
 		username: 'User name',
@@ -171,17 +178,17 @@ export default {
 		friend: 'Friends',
 		friendList: 'Friends List',
 		userNum: 'Users',
-		accountNum: 'Address Num',
+		accountNum: 'Addresses',
 		txnsNum: 'Txns',
 		publisher: 'Publisher',
 		runDays: 'Run Days',
-		unionNode: 'Union Node',
+		unionNode: 'Alliance Node',
 		CBONode: 'Community Node'
 	},
 	state: {
 		name: 'Status',
-		on: 'On-line',
-		off: 'Off-line',
+		on: 'Online',
+		off: 'Offline',
 		success: 'Success',
 		fail: 'Fail',
 		pending: 'Pending',
@@ -205,6 +212,7 @@ export default {
 		addFriend: 'Do you want to add this friend? ',
 		deleteFriend: 'This operation will permanently delete this friend. Do you want to continue?',
 		addFriendTip: 'The current list is empty, please add the operation after!',
+		searchTip: 'Search add friends',
 		devTip: 'Coming soon!',
 		online: 'Only online!'
 	}

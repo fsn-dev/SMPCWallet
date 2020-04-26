@@ -6,6 +6,10 @@ import web3 from '@/assets/js/web3'
 
 import {BigNumber} from 'bignumber.js'
 // let BN = web3.utils.BN
+/**
+ * @description 生成随机图片
+ */
+import Identicon from 'identicon.js'
 
 export default {
   fromTime (timestamp) {
@@ -81,6 +85,9 @@ export default {
       time = Y + formatType + M
     } else if (type === 'yyyy') {
       time = Y
+    } else if (type === 'yy-mm-dd hh:mm') {
+      Y = Y.toString().substr(2)
+      time = Y + formatType + M + formatType + D + ' ' + h + ':' + m
     }
     return time
   },
@@ -347,4 +354,9 @@ export default {
       eNodeId: obj && obj.key ? obj.key : ''
     }
   },
+  createImg (hex) {
+    let imgData = new Identicon(hex).toString()
+    let imgInfo = 'data:image/png;base64,' + imgData // 这就是头像的base64码
+    return imgInfo
+  }
 }

@@ -87,10 +87,24 @@ export default {
     // this.key = aObj.key
     if (this.urlParams.Key) {
       this.key = this.urlParams.Key
-      this.showGroupData()
+      this.init()
+      // this.showGroupData()
     }
   },
   methods: {
+    init () {
+      this.$$.getGroupObj(this.urlParams.GroupId).then(res => {
+        console.log(res)
+        let enodeObj = {}
+        if (res.msg === 'Success') {
+          for (let obj of res.info) {
+            let key = this.$$.eNodeCut(obj).key
+            enodeObj[key] = obj
+          }
+        }
+        this.showGroupData(enodeObj)
+      })
+    },
     refreshActionFn () {
       setTimeout(() => {
         this.refreshAction = false
@@ -122,65 +136,61 @@ export default {
         // console.log(this.countDown)
       }, 500)
     },
-    async showGroupData () {
-      let enodeObj = {}
-      for (let obj of this.urlParams.Enodes) {
-        let obj1 = this.$$.eNodeCut(obj).key
-        enodeObj[obj1] = obj
-      }
-      this.$$.getReqAddrStatus(this.urlParams.Key).then(res => {
+    async showGroupData (enodeObj) { 
+      this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
         console.log(res)
-        if (res.msg === 'Success') {
-          if (res.status === 'Pending') {
-            this.isApplySataus = true
-          } else {
-            this.isApplySataus = false
-          }
-          let arr = [], initiator = {}
-          for (let obj of res.info) {
-            if (obj.Initiator && Number(obj.Initiator)) {
-              initiator = {
-                eNode: enodeObj[obj.Enode],
-                status: 'Agree',
-                initiate: 1,
-                timestamp: obj.TimeStamp
-              }
-            } else {
-              arr.push({
-                eNode: enodeObj[obj.Enode],
-                status: obj.Status,
-                initiate: 0,
-                timestamp: obj.TimeStamp
-              })
-            }
-            if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
-              this.isReplySet = true
-            }
-          }
-          if  (initiator.eNode) {
-            arr.unshift(initiator)
-          }
-          this.gForm = {
-            name: this.urlParams.Key,
-            mode: this.urlParams.LimitNum,
-            eNode: arr,
-            gID: this.urlParams.GroupId,
-            timestamp: Number(this.urlParams.TimeStamp)
-          }
-          console.log(this.gForm)
-          this.countDownFn()
+        if (res.msg === 'Success' && res.status === 'Pending') {
+          this.isApplySataus = true
         } else {
           this.isApplySataus = false
-          this.msgError(res.error)
         }
+        let arr = [], initiator = {}
+        for (let obj of res.info) {
+          if (obj.Initiator && Number(obj.Initiator)) {
+            initiator = {
+              eNode: enodeObj[obj.Enode] ? enodeObj[obj.Enode] : obj.Enode,
+              status: 'Agree',
+              initiate: 1,
+              timestamp: obj.TimeStamp
+            }
+          } else {
+            arr.push({
+              eNode: enodeObj[obj.Enode] ? enodeObj[obj.Enode] : obj.Enode,
+              status: obj.Status,
+              initiate: 0,
+              timestamp: obj.TimeStamp
+            })
+          }
+          if (this.eNode.indexOf(obj.Enode) !== -1 && obj.Status === 'Pending') {
+            this.isReplySet = true
+          }
+        }
+        if  (initiator.eNode) {
+          arr.unshift(initiator)
+        }
+        this.gForm = {
+          name: this.urlParams.Key,
+          mode: this.urlParams.LimitNum,
+          eNode: arr,
+          gID: this.urlParams.GroupId,
+          timestamp: Number(this.urlParams.TimeStamp)
+        }
+        console.log(this.gForm)
+        this.loading.data = false
+        this.countDownFn()
+        this.refreshActionFn()
+      }).catch(err => {
+        console.log(err)
         this.loading.data = false
         this.refreshActionFn()
+        this.msgError(err)
       })
     },
     getSignData (data) {
       if (data && data.signTx) {
-        this.$$.acceptReqAddr(data.signTx).then(res => {
-          if (res.msg === 'Success') {
+        this.$$.web3.dcrm.acceptReqAddr(data.signTx).then(res => {
+          let cbData = res
+          if (cbData.Status === 'Success') {
             this.msgSuccess('Success!')
             if (this.key) {
               let localData = {}
@@ -228,7 +238,7 @@ export default {
             this.updateStatus(this.urlParams.Key)
             this.toUrl('/approvalList')
           } else {
-            this.msgError(res.error)
+            this.msgError('Error')
           }
           this.applyStatus = ''
         })
@@ -250,7 +260,7 @@ export default {
       // console.log(type)
       this.applyStatus = type
       try {
-        this.$$.getReqAddrNonce(this.urlParams.Account).then(nonce => {
+        this.$$.getReqNonce(this.urlParams.Account).then(nonce => {
           // console.log(nonce)
           if (!isNaN(nonce)) {
             this.dataPage = {

@@ -50,7 +50,6 @@
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import regExp from '@/assets/js/config/RegExp.js'
-import headerImg from './js/headerImg'
 export default {
   name: '',
   data () {
@@ -181,7 +180,6 @@ export default {
     // console.log(this.$$.config.isOpenEmail)
   },
   methods: {
-    ...headerImg,
     reqEmailCode () {
       if (!this.registerObj.email) {
         this.msgWarning(this.$t('warn').w_23)
@@ -279,11 +277,6 @@ export default {
       this.$db.insertAccount(this.insertDBdata).then(res => {
         console.log(res)
         this.msgSuccess(this.$t('success').s_1)
-        this.createHeader(
-          this.walletInit.getPublicKeyString(),
-          this.insertDBdata.address,
-          this.registerObj.username
-        )
         this.registerObj = {}
         this.walletInit = null
         this.insertDBdata = {}
