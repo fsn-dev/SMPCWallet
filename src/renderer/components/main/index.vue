@@ -27,16 +27,16 @@
             >{{$t('label').friend}}</li>
             <li
               class="item flex-c"
-              :class="newsActive === 'nodeTable' ? 'active' : ''"
-              @click="toUrl('/nodeTable')"
+              :class="newsActive === 'network' ? 'active' : ''"
+              @click="toUrl('/network')"
               :title="$t('title').network"
             >{{$t('title').network}}</li>
             <li
               class="item flex-c"
-              :class="newsActive === 'applyMarket' ? 'active' : ''"
-              @click="toUrl('/applyMarket')"
-              :title="$t('title').applyMarket"
-            >{{$t('title').applyMarket}}</li>
+              :class="newsActive === 'dapp' ? 'active' : ''"
+              @click="toUrl('/dapp')"
+              :title="$t('title').dapp"
+            >{{$t('title').dapp}}</li>
             <li
               class="item flex-c"
               :class="newsActive === 'approvalList' ? 'active' : ''"
@@ -227,12 +227,12 @@ export default {
         this.newsActive = 'history'
       } else if (cur.path.indexOf('social') !== -1) {
         this.newsActive = 'social'
-      } else if (cur.path.indexOf('nodeTable') !== -1) {
-        this.newsActive = 'nodeTable'
+      } else if (cur.path.indexOf('network') !== -1) {
+        this.newsActive = 'network'
       } else if (cur.path.indexOf('account') !== -1) {
         this.newsActive = 'account'
-      } else if (cur.path.indexOf('applyMarket') !== -1) {
-        this.newsActive = 'applyMarket'
+      } else if (cur.path.indexOf('dapp') !== -1) {
+        this.newsActive = 'dapp'
       } else {
         this.newsActive = 0
       }

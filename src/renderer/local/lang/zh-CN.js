@@ -123,7 +123,7 @@ export default {
 		myNode: '我的节点',
 		assets: '资产',
 		network: '网络',
-		applyMarket: '应用',
+		dapp: '应用',
 		bestApply: '精选应用',
 		CrossChainTitle: 'CrossChain-Bridge(去中心化跨链桥）'
 	},

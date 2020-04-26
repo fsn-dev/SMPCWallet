@@ -122,7 +122,7 @@ export default {
 		add: 'Add',
 		assets: 'Assets',
 		network: 'Network',
-		applyMarket: 'DAPP',
+		dapp: 'DAPP',
 		bestApply: 'Select application',
 		CrossChainTitle: 'CrossChain-Bridge'
 	},

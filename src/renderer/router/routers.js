@@ -316,7 +316,7 @@ export default [
     ]
   },
   {
-    path: '/nodeTable',
+    path: '/network',
     component: Main,
     meta: {
       notCache: true
@@ -333,7 +333,7 @@ export default [
     ]
   },
   {
-    path: '/applyMarket',
+    path: '/dapp',
     component: Main,
     meta: {
       notCache: true
