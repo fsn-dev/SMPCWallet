@@ -7,10 +7,10 @@
           <div class="banner-item">
             <div class="img flex-ec"><img src="~@/assets/img/apply/bannerBg.png"></div>
             <div class="content">
-              <p class="p p1">精选应用</p>
+              <p class="p p1">{{$t('title').bestApply}}</p>
               <h1 class="h1">CrossChain-Bridge(去中心化跨链桥）</h1>
-              <p class="p p2">安全多方计算，分布式密钥生成，异构跨链</p>
-              <el-button type="primary" class="btn-primary btn-install" @click="comingSoon">马上安装</el-button>
+              <p class="p p2">{{$t('tip').CrossChainTip}}</p>
+              <el-button type="primary" class="btn-primary btn-install" @click="comingSoon">{{$t('btn').nowInstall}}</el-button>
             </div>
           </div>
         </el-carousel-item>
@@ -24,12 +24,12 @@
             <div class="apply-list-cont">
               <h3 class="h3">{{item.title}}</h3>
               <ul class="list">
-                <li v-for="(items, indexs) in item.list" :key="indexs" class="item flex-sc">
+                <li v-for="(items, indexs) in item.list" :key="indexs" class="item flex-sc" :title="items.cont">
                   <i class="round"></i>
-                  <span class="span">{{items.cont}}</span>
+                  <span class="span ellipsis">{{items.cont}}</span>
                 </li>
               </ul>
-              <el-button type="primary" class="btn-primary" @click="comingSoon">查看详情</el-button>
+              <el-button type="primary" class="btn-primary" @click="comingSoon">{{$t('btn').lookDtil}}</el-button>
             </div>
           </div>
         </el-col>
@@ -85,11 +85,14 @@
         font-size: 20px;line-height: 30px;color: #252525;
       }
       .list {
-        height: 80px;margin:10px 5px;
+        height: 90px;margin:10px 5px;
         .item {
-          font-size: 14px;color: #00143F;
+          font-size: 14px;color: #00143F;padding:3px 0;
           .round {
             width: 10px;height: 10px;border-radius: 100%;background: rgba(127,137,159,1);margin-right: 10px;
+          }
+          .span {
+            width: 80%;
           }
         }
       }
@@ -117,9 +120,9 @@ export default {
         {
           title: 'sBTC(跨链BTC)',
           list: [
-            {cont: '基于去中心化跨链桥'},
-            {cont: '安全合约1:1映射'},
-            {cont: '100%去中心化'},
+            {cont: this.$t('tip').sBTC.d1},
+            {cont: this.$t('tip').sBTC.d2},
+            {cont: this.$t('tip').sBTC.d3},
           ],
           url: '',
           bg: require('@/assets/img/apply/sBTC.png')
@@ -127,8 +130,8 @@ export default {
         {
           title: 'Timelock(时间代币）',
           list: [
-            {cont: 'Timelcok时间代币'},
-            {cont: '时间价值交换与锁定'},
+            {cont: this.$t('tip').timelock.d1},
+            {cont: this.$t('tip').timelock.d2},
           ],
           url: '',
           bg: require('@/assets/img/apply/timelock.png')
@@ -136,9 +139,9 @@ export default {
         {
           title: 'DAO (去中心化组织账户)',
           list: [
-            {cont: '去中心化组织账户'},
-            {cont: '多方安全管理'},
-            {cont: '门限签名'},
+            {cont: this.$t('tip').DAO.d1},
+            {cont: this.$t('tip').DAO.d2},
+            {cont: this.$t('tip').DAO.d3},
           ],
           url: '',
           bg: require('@/assets/img/apply/DAO.png')
@@ -146,9 +149,9 @@ export default {
         {
           title: 'DEX (去中心化交易所）',
           list: [
-            {cont: '去中心化'},
-            {cont: '跨链交易'},
-            {cont: '无托管'},
+            {cont: this.$t('tip').DEX.d1},
+            {cont: this.$t('tip').DEX.d2},
+            {cont: this.$t('tip').DEX.d3},
           ],
           url: '',
           bg: require('@/assets/img/apply/DEX.png')
