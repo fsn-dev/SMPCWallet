@@ -93,7 +93,7 @@ let publicSet = {
 // publicSet.appURL = 'http://smpcwallet.com:8300'
 // publicSet.appURL = 'http://47.56.150.104:8300'
 // publicSet.appURL = 'http://139.196.26.212:8300'
-publicSet.appURL = 'http://localhost:8300'
-// publicSet.appURL = 'wss://api.smpcwallet.com/'
+// publicSet.appURL = 'http://localhost:8300'
+publicSet.appURL = 'wss://api.smpcwallet.com/'
 // module.exports = publicSet
 export default publicSet
