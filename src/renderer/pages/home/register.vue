@@ -83,7 +83,7 @@ export default {
     }
     const validatePass = (rule, value, callback) => {
       if (this.registerObj.password) {
-        if (!regExp.pwd.test(this.registerObj.password)) {
+        if (this.registerObj.password.length < 6) {
           callback(new Error(this.$t('error').err_4))
         } else {
           callback()
@@ -217,9 +217,9 @@ export default {
         this.registerObj.username && 
         regExp.username.test(this.registerObj.username) &&
         this.registerObj.password && 
-        regExp.pwd.test(this.registerObj.password) && 
+        this.registerObj.password.length >= 6 && 
         this.registerObj.password2 && 
-        regExp.pwd.test(this.registerObj.password2) && 
+        this.registerObj.password2.length >= 6 && 
         (this.registerObj.password === this.registerObj.password2)
       ) {
         if (this.networkMode && this.$$.config.isOpenEmail) {
