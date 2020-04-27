@@ -4,7 +4,7 @@ export default {
 		err_1: 'Please enter the user name!',
 		err_2: 'User name can only enter 6-20 letters, numbers and underscores.',
 		err_3: 'Please input a password!',
-		err_4: 'Password can only enter 6-20 letters, numbers and underscores.',
+		err_4: 'Please Enter At Least 6 Characters',
 		err_5: 'Please enter the password again!',
 		err_6: 'The two passwords are inconsistent!',
 		err_7: 'Account already exists',
