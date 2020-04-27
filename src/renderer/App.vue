@@ -59,6 +59,7 @@ export default {
     // console.log(this.$store.state)
   },
   methods: {
+    ...getEnode,
     ...mapActions(['getEnodeTx', 'getToken', 'getAddress', 'getAccountType', 'getDayAndNight',  'getLanguage', 'getServerRPC', 'getServerRPCname']),
     initData () {
       this.setEnode()
