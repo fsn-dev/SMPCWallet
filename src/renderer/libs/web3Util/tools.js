@@ -24,6 +24,11 @@ export default {
       resolve(rawTx)
     })
   },
+  hexToSign (str, pwd) {
+    let hex = web3.utils.keccak256(str)
+    let sign = web3.eth.accounts.sign(hex, pwd)
+    return sign.signature
+  },
   batchRequest (reqArr) {
     let data = {msg: '', info: ''}
     return new Promise((resolve, reject) => {

@@ -140,25 +140,39 @@ export default {
       this.dataPage = {
         from: this.address,
       }
-      this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
+      this.$$.getLockOutNonce(this.address).then(nonce => {
+      // this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = this.$$.toWei(this.rawTx.value, coin)
-        this.dataPage.data = 'LOCKOUT:'
-                              + this.sendDataObj.dcrmAddr
-                              + ':' 
-                              + this.rawTx.to
-                              + ':'
-                              + this.dataPage.value
-                              + ':'
-                              + this.sendDataObj.coinType
-                              + ':'
-                              + this.childGroupID
-                              + ':'
-                              + this.gMode
-                              + ':'
-                              + this.accountType
-                              + ':'
-                              + Date.now()
+        let dataObj = {
+          TxType: "LOCKOUT",
+          DcrmAddr: this.sendDataObj.dcrmAddr,
+          DcrmTo: this.rawTx.to,
+          Value: this.dataPage.value,
+          Cointype: this.sendDataObj.coinType,
+          GroupId: this.childGroupID,
+          ThresHold: this.gMode,
+          Mode: this.accountType,
+          TimeStamp: Date.now().toString(),
+          Memo: "XXX"
+        }
+        this.dataPage.data = JSON.stringify(dataObj)
+        // this.dataPage.data = 'LOCKOUT:'
+        //                       + this.sendDataObj.dcrmAddr
+        //                       + ':' 
+        //                       + this.rawTx.to
+        //                       + ':'
+        //                       + this.dataPage.value
+        //                       + ':'
+        //                       + this.sendDataObj.coinType
+        //                       + ':'
+        //                       + this.childGroupID
+        //                       + ':'
+        //                       + this.gMode
+        //                       + ':'
+        //                       + this.accountType
+        //                       + ':'
+        //                       + Date.now()
         console.log(this.dataPage)
         this.eDialog.pwd = true
       })

@@ -222,13 +222,14 @@ export default {
           )
           let address = walletInfo.getChecksumAddressString()
           let pwd = walletInfo.getPrivateKeyString()
+          // console.log(pwd)
           if (!this.eNode) {
             this.msgError(this.$t('error').err_10)
             return
           }
-          this.signEnode(pwd, address)
           this.$store.commit('setAddress', {info: address})
           this.$store.commit('setToken', {info: this.loginObj.username})
+          this.signEnode(pwd, address)
           this.$router.push('/account')
         } else {
           this.msgError('Error')
@@ -240,30 +241,41 @@ export default {
         this.loading.wait = false
       }
     },
-    async signEnode (pwd, address) {
+    signEnode (pwd, address) {
       let eNodeKey = this.$$.eNodeCut(this.eNode).key
-      // console.log(eNodeKey)
-      let rawTx = {
-        from: address,
-        data: eNodeKey
-      }
-      // console.log(rawTx)
-      this.$$.toSign(rawTx, pwd).then(res => {
-        // console.log(res)
-        this.$socket.emit('UserEnodeAdd', {
-          // nodeKey: eNodeKey,
-          enode: this.eNode,
-          sign: res.signTx,
-          username: this.token,
-          ip: this.serverRPC,
-          ipName: this.serverRPCname,
-          address: this.address,
-        })
-        this.$store.commit('setEnodeTx', {info: res.signTx})
-      }).catch(err => {
-        console.log(err)
-        this.msgError(err.toString())
+      let sign = this.$$.hexToSign(eNodeKey, pwd)
+      this.$socket.emit('UserEnodeAdd', {
+        // nodeKey: eNodeKey,
+        enode: this.eNode,
+        sign: sign,
+        username: this.token,
+        ip: this.serverRPC,
+        ipName: this.serverRPCname,
+        address: this.address,
       })
+      this.$store.commit('setEnodeTx', {info: sign})
+      // console.log(eNodeKey)
+      // let rawTx = {
+      //   from: address,
+      //   data: eNodeKey
+      // }
+      // // console.log(rawTx)
+      // this.$$.toSign(rawTx, pwd).then(res => {
+      //   // console.log(res)
+      //   this.$socket.emit('UserEnodeAdd', {
+      //     // nodeKey: eNodeKey,
+      //     enode: this.eNode,
+      //     sign: res.signTx,
+      //     username: this.token,
+      //     ip: this.serverRPC,
+      //     ipName: this.serverRPCname,
+      //     address: this.address,
+      //   })
+      //   this.$store.commit('setEnodeTx', {info: res.signTx})
+      // }).catch(err => {
+      //   console.log(err)
+      //   this.msgError(err.toString())
+      // })
     }
   }
 }

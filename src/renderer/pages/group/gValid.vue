@@ -259,38 +259,41 @@ export default {
     openPwdDialog (type) {
       // console.log(type)
       this.applyStatus = type
-      try {
-        this.$$.getReqNonce(this.urlParams.Account).then(nonce => {
-          // console.log(nonce)
-          if (!isNaN(nonce)) {
-            this.dataPage = {
-              from: this.address,
-              nonce: nonce,
-              data: 'ACCEPTREQADDR:' 
-                    + this.urlParams.Account
-                    + ':'
-                    + this.urlParams.Cointype 
-                    + ':' 
-                    + this.urlParams.GroupId 
-                    + ':' 
-                    + this.urlParams.Nonce 
-                    + ':' 
-                    + this.urlParams.LimitNum 
-                    + ':' 
-                    + '0'
-                    + ':' 
-                    + type
-                    + ':'
-                    + Date.now()
-            }
-            this.eDialog.pwd = true
-          } else {
-            this.msgError(nonce)
+      this.$$.getReqNonce(this.urlParams.Account).then(nonce => {
+        // console.log(nonce)
+        if (!isNaN(nonce)) {
+          let dataObj = {
+            TxType: 'ACCEPTREQADDR',
+            Key: this.urlParams.Key,
+            Accept: type,
+            TimeStamp: Date.now()
           }
-        })
-      } catch (error) {
-        this.msgError(error.toString())
-      }
+          this.dataPage = {
+            from: this.address,
+            nonce: nonce,
+            data: JSON.stringify(dataObj)
+            // data: 'ACCEPTREQADDR:' 
+            //       + this.urlParams.Account
+            //       + ':'
+            //       + this.urlParams.Cointype 
+            //       + ':' 
+            //       + this.urlParams.GroupId 
+            //       + ':' 
+            //       + this.urlParams.Nonce 
+            //       + ':' 
+            //       + this.urlParams.LimitNum 
+            //       + ':' 
+            //       + '0'
+            //       + ':' 
+            //       + type
+            //       + ':'
+            //       + Date.now()
+          }
+          this.eDialog.pwd = true
+        } else {
+          this.msgError(nonce)
+        }
+      })
     },
     applyGroup (type) {
       this.applyType = type

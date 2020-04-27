@@ -335,7 +335,10 @@ export default {
         this.gMemberInit = []
         // console.log(res)
         for (let obj of res) {
-          let cbData = JSON.parse(obj), status
+          let cbData = obj, status
+          if (typeof obj === 'string') {
+            cbData = JSON.parse(cbData)
+          }
           // console.log(cbData)
           if (cbData.Data && cbData.Data.Status && cbData.Data.Status === 'OnLine') {
             status = 'OnLine'

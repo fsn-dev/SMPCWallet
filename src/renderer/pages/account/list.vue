@@ -160,7 +160,7 @@ export default {
         { p1: 'dcrm', p2: 'getAccounts', p3: [this.address, '1'] },
       ]
       this.$$.batchRequest(arr).then(res => {
-        // console.log(res)
+        console.log(res)
         let groupArr = this.formatAccont(res[0], 0)
         let personArr = this.formatAccont(res[1], 1)
         let allArr = [...groupArr, ...personArr]

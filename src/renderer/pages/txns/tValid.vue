@@ -205,33 +205,41 @@ export default {
     openPwdDialog (type) {
       this.applyStatus = type
       try {
-        this.$$.getLockOutNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom).then(nonce => {
+        // this.$$.getLockOutNonce(this.address, this.urlParams.Cointype, this.urlParams.DcrmFrom).then(nonce => {
+        this.$$.getLockOutNonce(this.urlParams.Account).then(nonce => {
           if (!isNaN(nonce)) {
+            let dataObj = {
+              TxType: 'ACCEPTLOCKOUT',
+              Key: this.urlParams.Key,
+              Accept: type,
+              TimeStamp: Date.now()
+            }
             this.dataPage = {
               from: this.address,
               nonce: nonce,
-              data: 'ACCEPTLOCKOUT:' 
-                    + this.urlParams.Account
-                    + ':'
-                    + this.urlParams.GroupId 
-                    + ':' 
-                    + this.urlParams.Nonce 
-                    + ':' 
-                    + this.urlParams.DcrmFrom 
-                    + ':' 
-                    + this.urlParams.DcrmTo 
-                    + ':' 
-                    + this.urlParams.Value 
-                    + ':' 
-                    + this.urlParams.Cointype 
-                    + ':' 
-                    + this.urlParams.LimitNum
-                    + ':' 
-                    + '0'
-                    + ':'
-                    + type
-                    + ':'
-                    + Date.now()
+              data: JSON.stringify(dataObj)
+              // data: 'ACCEPTLOCKOUT:' 
+              //       + this.urlParams.Account
+              //       + ':'
+              //       + this.urlParams.GroupId 
+              //       + ':' 
+              //       + this.urlParams.Nonce 
+              //       + ':' 
+              //       + this.urlParams.DcrmFrom 
+              //       + ':' 
+              //       + this.urlParams.DcrmTo 
+              //       + ':' 
+              //       + this.urlParams.Value 
+              //       + ':' 
+              //       + this.urlParams.Cointype 
+              //       + ':' 
+              //       + this.urlParams.LimitNum
+              //       + ':' 
+              //       + '0'
+              //       + ':'
+              //       + type
+              //       + ':'
+              //       + Date.now()
             }
             this.eDialog.pwd = true
           } else {

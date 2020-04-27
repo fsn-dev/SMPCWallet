@@ -183,7 +183,7 @@ export default {
       this.initSelectNode()
       for (let i = 0; i < this.node.max; i++) {
         if (item[i]) {
-          console.log(i)
+          // console.log(i)
           this.changeState({value: item[i]}, i + 1)
         } 
         if (!item[i]) {
@@ -223,12 +223,14 @@ export default {
       this.eDialog.confirm = true
     },
     createGroup () {
-      let arr = [], signStr = ''
+      let arr = [], signArr = [], signStr = ''
       for (let obj of this.node.select) {
         arr.push(this.$$.splitTx(obj.value).eNode)
-        signStr += ':' + this.$$.splitTx(obj.value).signTx
+        signArr.push(this.$$.splitTx(obj.value).eNode + this.$$.splitTx(obj.value).signTx)
       }
+      signStr = signArr.join('|')
       console.log(arr)
+      console.log(signStr)
       this.createAndGetGid(this.mode.select, arr, signStr)
     },
     updateStatus (key) {
@@ -302,7 +304,7 @@ export default {
         return
       }
       this.$$.getEnodeState(this.$$.splitTx(item.value).eNode).then(res => {
-        console.log(res)
+        // console.log(res)
         this.node.select[index].status = res
         this.node.select[index].value = enode
         this.refreshNode()

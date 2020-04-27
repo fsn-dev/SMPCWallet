@@ -80,18 +80,27 @@ export const methods = {
       this.modalClick()
       return
     }
-    let data = 'REQDCRMADDR:' + this.gID + ':' + this.mode.select + ':' + this.accountType + ':' + Date.now()
-    if (signStr) {
-      data += signStr
+    let dataObj = {
+      TxType: "REQDCRMADDR",
+      GroupId: this.gID,
+      ThresHold: this.mode.select,
+      Mode: this.accountType,
+      TimeStamp: Date.now().toString(),
+      Sigs: ''
     }
-    console.log(data)
+    // let data = 'REQDCRMADDR:' + this.gID + ':' + this.mode.select + ':' + this.accountType + ':' + Date.now()
+    if (signStr) {
+      dataObj.Sigs = signStr
+    }
+    console.log(dataObj)
     this.dataPage = {
       from: this.address,
     }
     this.$$.getReqAddrNonce(this.address).then(nonce => {
       this.dataPage.nonce = nonce
       this.dataPage.value = 0
-      this.dataPage.data = data
+      this.dataPage.data = JSON.stringify(dataObj)
+      // this.dataPage.data = dataObj
       console.log(this.dataPage)
       this.eDialog.pwd = true
       this.loading.creat = false
