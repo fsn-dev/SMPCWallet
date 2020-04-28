@@ -79,20 +79,6 @@ export default {
     ...computedPub
   },
   mounted () {
-    // console.log(this.$db)
-    // let url = 'https://stakingtest.fusionwallet.cn/'
-    // this.$axios.post(url).then(res => {
-      //   console.log(res)
-    // })
-    let pwd = '0x1da03e8cbf28a9d4ceca118516a1e3b985f8baa004d1fabfa7b1d7a0a6568fc4'
-    let hex = this.$$.web3.utils.keccak256('0294fd278d8db6fe2c0a917dfb6f5777993ff4d31c5d7b44dc3228197dee180cbea39509c167914eabe2979d9167927843ebfd52dfebfbb0c50103ab1ee2a1b3')
-    // console.log(hex)
-    // console.log(Account.sign(hex, pwd))
-    // let sign = this.$$.web3.eth.accounts.sign(hex, pwd)
-    // console.log(sign)
-    let enode = 'enode://0294fd278d8db6fe2c0a917dfb6f5777993ff4d31c5d7b44dc3228197dee180cbea39509c167914eabe2979d9167927843ebfd52dfebfbb0c50103ab1ee2a1b3@47.92.168.85:13335'
-    console.log(this.$$.hexToSign(this.$$.eNodeCut(enode).key, pwd))
-    // console.log(this.$$.testSign(hex, pwd))
   },
   methods: {
     modalClick () {

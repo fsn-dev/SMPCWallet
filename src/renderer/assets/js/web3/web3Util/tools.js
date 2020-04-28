@@ -1,9 +1,10 @@
 import web3 from '@/assets/js/web3/index.js'
 import Tx from 'ethereumjs-tx'
-const Account = require('eth-lib/lib/account')
-const ethUtil = require('ethereumjs-util')
+// const Account = require('eth-lib/lib/account')
+// const ethUtil = require('ethereumjs-util')
 const ethers = require('ethers')
-const secp256k1 = require('secp256k1')
+// const secp256k1 = require('secp256k1')
+// const EdDSA = require('elliptic')
 export default {
   toSign (data, pwd) {
     pwd = pwd.indexOf("0x") === 0 ? pwd.substr(2) : pwd
@@ -27,65 +28,21 @@ export default {
       resolve(rawTx)
     })
   },
-  testSign (str, pwd) {
-    // console.log(ethers)
-    // let signingKey = new ethers.utils.SigningKey(pwd)
-    // let message = str;
-    // let messageBytes = ethers.utils.toUtf8Bytes(message);
-    // let messageDigest = ethers.utils.keccak256(messageBytes);
-    // let signature = signingKey.signDigest(messageDigest)
-    str = ethUtil.rlphash(str)
-    pwd = ethUtil.rlphash(pwd)
-    let wallet = new ethers.Wallet(pwd)
-    wallet.signMessage(str).then(res => {
-      console.log(res)
-    })
-    // let flatSig = wallet.signMessage(str)
-    // console.log(wallet.signMessage(str))
-    // str = ethUtil.rlphash(str)
-    // pwd = ethUtil.rlphash(pwd)
-    // let sig = secp256k1.sign(str, pwd)
-    // var recovery = sig.recovery;
-    // let chainId =''
-    // var ret = {
-    //     r: sig.signature.slice(0, 32),
-    //     s: sig.signature.slice(32, 64),
-    //     v: chainId ? recovery + (chainId * 2 + 35) : recovery + 27,
-    // }
-    // console.log(sig)
-    // console.log(ret)
-  },
   hexToSign (str, pwd) {
-    let hex = web3.utils.keccak256(str)
-    pwd = new Buffer(pwd.replace('0x', ''), 'hex')
-    hex = new Buffer(hex.replace('0x', ''), 'hex')
-    // console.log(str)
-    // console.log(pwd)
     // let hex = web3.utils.keccak256(str)
-    // // let sign = web3.eth.accounts.sign(str, pwd)
-    // // let sign = Account.sign(hex, pwd)
-    // hex = ethUtil.rlphash(hex)
-    // pwd = ethUtil.rlphash(pwd)
-    // console.log(hex)
-    let sign = ethUtil.ecsign(hex, pwd)
-    let sig = ethUtil.toRpcSig(sign.v, sign.r, sign.s).toString('hex')
-    console.log(sig)
-    // console.log({
-    //   r: ethUtil.bufferToInt(sign.r),
-    //   s: ethUtil.bufferToInt(sign.s),
-    //   v: ethUtil.bufferToInt(sign.v),
-    // })
-    return sig
-    // return new Promise(resolve => {
-    //   hex = ethUtil.rlphash(hex)
-    //   pwd = ethUtil.rlphash(pwd)
-    //   let wallet = new ethers.Wallet(pwd)
-    //   wallet.signMessage(hex).then(res => {
-    //     console.log(res)
-    //     resolve(res)
-    //   })
-    // })
-
+    let signingKey = new ethers.SigningKey(pwd)
+    let message = str
+    let messageBytes = ethers.utils.toUtf8Bytes(message)
+    let messageDigest = ethers.utils.keccak256(messageBytes)
+    let signature = signingKey.signDigest(messageDigest)
+    let v = signature.s
+    if (signature.recoveryParam === 0) {
+      v = '00'
+    } else if (signature.recoveryParam === 1) {
+      v = '01'
+    }
+    let sign = signature.r + signature.s.replace('0x', '') + v
+    return sign
   },
   batchRequest (reqArr) {
     let data = {msg: '', info: ''}

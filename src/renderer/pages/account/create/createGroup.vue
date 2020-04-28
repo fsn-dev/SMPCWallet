@@ -322,43 +322,23 @@ export default {
     initSelectNode () {
       let num = this.node.max + 1
       this.node.select = []
-      // for (let i = 0; i < num; i++) {
-      //   if (i === 0) {
-      //     this.node.select.push({
-      //       value: this.eNode + this.eNodeTx + this.address,
-      //       status: 1,
-      //       isDisabled: true,
-      //       key: Date.now()
-      //     })
-      //   } else {
-      //     this.node.select.push({
-      //       value: '',
-      //       status: '',
-      //       isDisabled: false,
-      //       key: Date.now()
-      //     })
-      //   }
-      // }
-      this.node.select = [
-        {
-          value: 'enode://e6e6240b78b4d1f293693e14042099ad86b7277824d23534ffef720c31470342b7daf0a34289913b837e2ec45aee68eaab62c7170c22eb5328324037f34ad7a6@47.92.168.85:133330x1ef33f72c7894bc0ff130b3de4db8575adad59d506c762902a2381f1a13ca89a6dfb32b2d2273a3ac69a5b43964b38efab7135a502d41104bc5fc8cc97db970200',
-          status: 1,
-          isDisabled: true,
-          key: Date.now()
-        },
-        {
-          value: 'enode://15dfed9e836d2259066921412413b295e6c97f3dddb9a1078a9f7778099a56bd00d31a248fd1d2853e7c09e2adefb8870f98b232220293c815d0b2610e8bcc6e@47.92.168.85:133320x88bda080e0a9ed3d851b9728bcd189ee1cb0eaa737b6d3eafd7fd566aa7f975c02fb58a188bef0239102fa69c8adf12499c75be097f9e5499e03133851543d6e00',
-          status: 1,
-          isDisabled: true,
-          key: Date.now()
-        },
-        {
-          value: 'enode://fa93e6d82b859ddf5344ae39a6e1de3c38e0172f0678e0fda5b83cd245cbbabea5e89ff80c65dfac4aee25b93051b0e460388fb6c7f3ed5a368d501a48b96099@47.92.168.85:133310xd608be1aba865b699e0fc19c12172d8bd2c2f022a5f7b3a47fdfd613d2c330530283af5509355a2a19bd331a8018bf4cb2b6d9b645b4a911aa1e1f9fd0ab76b201',
-          status: 1,
-          isDisabled: true,
-          key: Date.now()
-        },
-      ]
+      for (let i = 0; i < num; i++) {
+        if (i === 0) {
+          this.node.select.push({
+            value: this.eNode + this.eNodeTx + this.address,
+            status: 1,
+            isDisabled: true,
+            key: Date.now()
+          })
+        } else {
+          this.node.select.push({
+            value: '',
+            status: '',
+            isDisabled: false,
+            key: Date.now()
+          })
+        }
+      }
     }
   }
 }
