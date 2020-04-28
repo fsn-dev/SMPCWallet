@@ -87,7 +87,9 @@ export default {
     // this.key = aObj.key
     if (this.urlParams.Key) {
       this.key = this.urlParams.Key
-      this.init()
+      setTimeout(() => {
+        this.init()
+      }, 300)
       // this.showGroupData()
     }
   },
@@ -137,7 +139,7 @@ export default {
       }, 500)
     },
     async showGroupData (enodeObj) { 
-      this.$$.reqAccountStatus(this.urlParams.Key).then(res => {
+      this.$$.getReqAddrStatus(this.urlParams.Key).then(res => {
         console.log(res)
         if (res.msg === 'Success' && res.status === 'Pending') {
           this.isApplySataus = true
@@ -188,9 +190,9 @@ export default {
     },
     getSignData (data) {
       if (data && data.signTx) {
-        this.$$.web3.dcrm.acceptReqAddr(data.signTx).then(res => {
+        this.$$.acceptReqAddr(data.signTx).then(res => {
           let cbData = res
-          if (cbData.Status === 'Success') {
+          if (cbData.msg === 'Success') {
             this.msgSuccess('Success!')
             if (this.key) {
               let localData = {}
@@ -259,15 +261,16 @@ export default {
     openPwdDialog (type) {
       // console.log(type)
       this.applyStatus = type
-      this.$$.getReqNonce(this.urlParams.Account).then(nonce => {
+      this.$$.getReqAddrNonce(this.urlParams.Account).then(nonce => {
         // console.log(nonce)
         if (!isNaN(nonce)) {
           let dataObj = {
             TxType: 'ACCEPTREQADDR',
             Key: this.urlParams.Key,
             Accept: type,
-            TimeStamp: Date.now()
+            TimeStamp: Date.now().toString()
           }
+          console.log(dataObj)
           this.dataPage = {
             from: this.address,
             nonce: nonce,

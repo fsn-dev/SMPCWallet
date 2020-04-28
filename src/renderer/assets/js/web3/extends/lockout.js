@@ -9,8 +9,8 @@ const lockout = [
   {
     name: 'getLockOutNonce',
     call: 'dcrm_getLockOutNonce',
-    params: 3,
-    inputFormatter: [null, null, null],
+    params: 1,
+    inputFormatter: [null],
     outputFormatter: null
   },
   {

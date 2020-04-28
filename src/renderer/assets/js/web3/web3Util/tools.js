@@ -57,6 +57,8 @@ export default {
   },
   hexToSign (str, pwd) {
     let hex = web3.utils.keccak256(str)
+    pwd = new Buffer(pwd.replace('0x', ''), 'hex')
+    hex = new Buffer(hex.replace('0x', ''), 'hex')
     // console.log(str)
     // console.log(pwd)
     // let hex = web3.utils.keccak256(str)
@@ -65,22 +67,25 @@ export default {
     // hex = ethUtil.rlphash(hex)
     // pwd = ethUtil.rlphash(pwd)
     // console.log(hex)
-    // let sign = ethUtil.ecsign(hex, pwd)
+    let sign = ethUtil.ecsign(hex, pwd)
+    let sig = ethUtil.toRpcSig(sign.v, sign.r, sign.s).toString('hex')
+    console.log(sig)
     // console.log({
     //   r: ethUtil.bufferToInt(sign.r),
     //   s: ethUtil.bufferToInt(sign.s),
     //   v: ethUtil.bufferToInt(sign.v),
     // })
-    // return sign
-    return new Promise(resolve => {
-      hex = ethUtil.rlphash(hex)
-      pwd = ethUtil.rlphash(pwd)
-      let wallet = new ethers.Wallet(pwd)
-      wallet.signMessage(hex).then(res => {
-        console.log(res)
-        resolve(res)
-      })
-    })
+    return sig
+    // return new Promise(resolve => {
+    //   hex = ethUtil.rlphash(hex)
+    //   pwd = ethUtil.rlphash(pwd)
+    //   let wallet = new ethers.Wallet(pwd)
+    //   wallet.signMessage(hex).then(res => {
+    //     console.log(res)
+    //     resolve(res)
+    //   })
+    // })
+
   },
   batchRequest (reqArr) {
     let data = {msg: '', info: ''}

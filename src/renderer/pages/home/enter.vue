@@ -91,8 +91,8 @@ export default {
     // let sign = this.$$.web3.eth.accounts.sign(hex, pwd)
     // console.log(sign)
     let enode = 'enode://0294fd278d8db6fe2c0a917dfb6f5777993ff4d31c5d7b44dc3228197dee180cbea39509c167914eabe2979d9167927843ebfd52dfebfbb0c50103ab1ee2a1b3@47.92.168.85:13335'
-    // console.log(this.$$.hexToSign(this.$$.eNodeCut(enode).key, pwd))
-    console.log(this.$$.testSign(hex, pwd))
+    console.log(this.$$.hexToSign(this.$$.eNodeCut(enode).key, pwd))
+    // console.log(this.$$.testSign(hex, pwd))
   },
   methods: {
     modalClick () {

@@ -243,30 +243,30 @@ export default {
     },
     signEnode (pwd, address) {
       let eNodeKey = this.$$.eNodeCut(this.eNode).key
-      this.$$.hexToSign(eNodeKey, pwd).then(res => {
-        this.$socket.emit('UserEnodeAdd', {
-          // nodeKey: eNodeKey,
-          enode: this.eNode,
-          sign: res,
-          username: this.token,
-          ip: this.serverRPC,
-          ipName: this.serverRPCname,
-          address: this.address,
-        })
-        this.$store.commit('setEnodeTx', {info: res})
-      })
-      // let eNodeKey = this.eNode
-      // let sign = this.$$.hexToSign(eNodeKey, pwd)
-      // this.$socket.emit('UserEnodeAdd', {
-      //   // nodeKey: eNodeKey,
-      //   enode: this.eNode,
-      //   sign: sign,
-      //   username: this.token,
-      //   ip: this.serverRPC,
-      //   ipName: this.serverRPCname,
-      //   address: this.address,
+      // this.$$.hexToSign(eNodeKey, pwd).then(res => {
+      //   this.$socket.emit('UserEnodeAdd', {
+      //     // nodeKey: eNodeKey,
+      //     enode: this.eNode,
+      //     sign: res,
+      //     username: this.token,
+      //     ip: this.serverRPC,
+      //     ipName: this.serverRPCname,
+      //     address: this.address,
+      //   })
+      //   this.$store.commit('setEnodeTx', {info: res})
       // })
-      // this.$store.commit('setEnodeTx', {info: sign})
+      // let eNodeKey = this.eNode
+      let sign = this.$$.hexToSign(eNodeKey, pwd)
+      this.$socket.emit('UserEnodeAdd', {
+        // nodeKey: eNodeKey,
+        enode: this.eNode,
+        sign: sign,
+        username: this.token,
+        ip: this.serverRPC,
+        ipName: this.serverRPCname,
+        address: this.address,
+      })
+      this.$store.commit('setEnodeTx', {info: sign})
       // console.log(eNodeKey)
       // let rawTx = {
       //   from: address,

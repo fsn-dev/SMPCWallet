@@ -27,7 +27,7 @@ export default {
     return new Promise(resolve => {
       web3.dcrm.acceptReqAddr(signTx).then(res => {
         let cbData = res
-        if (cbData.Status === 'Success') {
+        if (cbData.Status !== 'Error') {
           data = {msg: 'Success', info: cbData}
         } else {
           data = {msg: 'Error', info: cbData, error: cbData.Error}
@@ -70,7 +70,7 @@ export default {
           cbData = JSON.parse(cbData)
         }
         if (cbData.Status !== 'Error') {
-          cbData = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+          cbData = cbData.Data && cbData.Data.result ? cbData.Data.result : ''
           data = {msg: 'Success', info: cbData}
         } else {
           data = {msg: 'Error', error: cbData.Tip}

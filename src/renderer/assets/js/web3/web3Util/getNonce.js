@@ -1,9 +1,9 @@
 import web3 from '@/assets/js/web3/index.js'
 export default {
-  async getLockOutNonce (addr, coinType, dcrmAddr) {
+  async getLockOutNonce (addr) {
     let data = 0
     return new Promise(resolve => {
-      web3.dcrm.getLockOutNonce(addr, coinType, dcrmAddr).then(res => {
+      web3.dcrm.getLockOutNonce(addr).then(res => {
         let cbData = res
         if (cbData.Status !== 'Error') {
           data = cbData.Data.result

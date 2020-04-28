@@ -37,7 +37,7 @@ export default {
           let list = result && result.AllReply ? result.AllReply : []
           data = {msg: 'Success', status: status, hash: hash, info: list,timestamp: result.TimeStamp}
         } else {
-          data = {msg: 'Error', status: '', hash: '', error: cbData.Error, info: []}
+          data = {msg: 'Error', status: 'Failure', hash: '', error: cbData.Error, info: []}
         }
         resolve(data)
       }).catch(err => {
@@ -60,7 +60,7 @@ export default {
           let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
           data = {msg: 'Success', status: status.Status, info: status.AllReply, hash: status.OutTxHash, timestamp: status.TimeStamp}
         } else {
-          data = {msg: 'Error', status: '', hash: '', error: cbData.Error, info: []}
+          data = {msg: 'Error', status: 'Failure', hash: '', error: cbData.Error, info: []}
         }
         resolve(data)
       }).catch(err => {

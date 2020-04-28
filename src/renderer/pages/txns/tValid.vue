@@ -91,7 +91,9 @@ export default {
     this.urlParams = this.$route.query
     this.key = this.urlParams.Key
     // this.showGroupData()
-    this.init()
+    setTimeout(() => {
+      this.init()
+    }, 300)
     console.log(this.urlParams)
   },
   methods: {
@@ -212,7 +214,7 @@ export default {
               TxType: 'ACCEPTLOCKOUT',
               Key: this.urlParams.Key,
               Accept: type,
-              TimeStamp: Date.now()
+              TimeStamp: Date.now().toString()
             }
             this.dataPage = {
               from: this.address,
