@@ -1,4 +1,4 @@
-import web3 from '@/assets/js/web3'
+import web3 from '@/assets/js/web3/index.js'
 export default {
   async reqDcrmAddr (signTx) {
     let data = {msg: '', info: ''}

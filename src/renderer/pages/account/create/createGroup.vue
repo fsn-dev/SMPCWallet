@@ -322,23 +322,43 @@ export default {
     initSelectNode () {
       let num = this.node.max + 1
       this.node.select = []
-      for (let i = 0; i < num; i++) {
-        if (i === 0) {
-          this.node.select.push({
-            value: this.eNode + this.eNodeTx + this.address,
-            status: 1,
-            isDisabled: true,
-            key: Date.now()
-          })
-        } else {
-          this.node.select.push({
-            value: '',
-            status: '',
-            isDisabled: false,
-            key: Date.now()
-          })
-        }
-      }
+      // for (let i = 0; i < num; i++) {
+      //   if (i === 0) {
+      //     this.node.select.push({
+      //       value: this.eNode + this.eNodeTx + this.address,
+      //       status: 1,
+      //       isDisabled: true,
+      //       key: Date.now()
+      //     })
+      //   } else {
+      //     this.node.select.push({
+      //       value: '',
+      //       status: '',
+      //       isDisabled: false,
+      //       key: Date.now()
+      //     })
+      //   }
+      // }
+      this.node.select = [
+        {
+          value: this.eNode + this.eNodeTx + this.address,
+          status: 1,
+          isDisabled: true,
+          key: Date.now()
+        },
+        {
+          value: this.eNode + this.eNodeTx + this.address,
+          status: 1,
+          isDisabled: true,
+          key: Date.now()
+        },
+        {
+          value: this.eNode + this.eNodeTx + this.address,
+          status: 1,
+          isDisabled: true,
+          key: Date.now()
+        },
+      ]
     }
   }
 }

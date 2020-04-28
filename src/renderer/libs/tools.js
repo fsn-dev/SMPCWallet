@@ -2,7 +2,7 @@ import coininfo from '@/assets/js/config/coininfo.js'
 /**
  * @description web3方法及配置
  */
-import web3 from '@/assets/js/web3'
+import web3 from '@/assets/js/web3/index.js'
 
 import {BigNumber} from 'bignumber.js'
 // let BN = web3.utils.BN

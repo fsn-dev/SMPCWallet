@@ -1,4 +1,4 @@
-import web3 from '@/assets/js/web3'
+import web3 from '@/assets/js/web3/index.js'
 export default {
   async createGroup(mode, nodeArr) {
     let data = {msg: '', info: ''}
