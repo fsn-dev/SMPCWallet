@@ -53,7 +53,7 @@ function createWindow () {
     }
   })
   mainWindow.loadURL(winURL)
-  mainWindow.openDevTools()
+  // mainWindow.openDevTools()
   mainWindow.on('closed', () => {
     try {
       mainWindow.close()
