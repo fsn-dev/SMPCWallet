@@ -23,13 +23,16 @@ export const approvalMethods = {
     return new Promise((resolve) => {
       let arr = [], cbData = res, data = {msg: 'Error', info: [], total: 0, approved: 0}
       if (cbData.Status !== 'Error') {
-        cbData = cbData.Data ? cbData.Data : {}
+        cbData = cbData.Data ? cbData.Data : []
         // console.log(cbData)
-        data.total = Object.getOwnPropertyNames(cbData).length
+        // data.total = Object.getOwnPropertyNames(cbData).length
+        data.total = cbData.length
         if (data.total > 0) {
           for (let obj in cbData) {
             let obj1 = cbData[obj]
-            obj1 = JSON.parse(obj1)
+            // console.log(obj)
+            // let obj1 = obj
+            // obj1 = JSON.parse(obj1)
             this.getStatusInfo(obj1.Key).then(status => {
               let _s = 1
               if (!status && obj1.Account !== this.address) {

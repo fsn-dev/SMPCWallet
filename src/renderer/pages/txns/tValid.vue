@@ -12,7 +12,7 @@
           <el-input v-model="rawTxData.to" disabled="disabled"></el-input>
         </el-form-item>
         <el-form-item :label="$t('label').mode">
-          <el-select v-model="urlParams.LimitNum" :placeholder="$t('warn').w_4" class="WW100" disabled="disabled">
+          <el-select v-model="urlParams.ThresHold" :placeholder="$t('warn').w_4" class="WW100" disabled="disabled">
             <el-option v-for="(item, index) in modeArr" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
           </el-select>
         </el-form-item>
@@ -180,7 +180,7 @@ export default {
           }
           this.gForm = {
             name: this.urlParams.Key,
-            mode: this.urlParams.LimitNum,
+            mode: this.urlParams.ThresHold,
             eNode: arr,
             gID: this.urlParams.GroupId,
             timestamp: Number(this.urlParams.TimeStamp)
@@ -235,7 +235,7 @@ export default {
               //       + ':' 
               //       + this.urlParams.Cointype 
               //       + ':' 
-              //       + this.urlParams.LimitNum
+              //       + this.urlParams.ThresHold
               //       + ':' 
               //       + '0'
               //       + ':'
@@ -281,7 +281,7 @@ export default {
                 ],
                 kId: this.address,
                 nodeKey: this.$$.eNodeCut(this.eNode).key,
-                mode: this.urlParams.LimitNum
+                mode: this.urlParams.ThresHold
               }
               for (let obj of this.gForm.eNode) {
                 // console.log(obj)

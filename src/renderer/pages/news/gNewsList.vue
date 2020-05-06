@@ -70,24 +70,9 @@ export default {
     init () {
       console.log(this.gNewsData.info)
       this.setList(this.gNewsData.info)
-      // this.$$.getGroup().then(gList => {
-      //   // console.log(gList)
-      //   this.gInfo = {}
-      //   if (gList.msg === 'Success') {
-      //     for (let obj of gList.info) {
-      //       this.gInfo[obj.Gid] = obj
-      //     }
-      //   }
-      //   this.setList(this.gNewsData.info)
-      // })
     },
     setList (data) {
       this.newsList = data ? data : []
-      // for (let i = 0, len = data.length; i < len; i++) {
-      //   let obj = data[i]
-      //   obj.Enodes = this.gInfo[obj.GroupId] && this.gInfo[obj.GroupId].Enodes ? this.gInfo[obj.GroupId].Enodes : []
-      //   this.newsList.push(obj)
-      // }
     },
   }
 }

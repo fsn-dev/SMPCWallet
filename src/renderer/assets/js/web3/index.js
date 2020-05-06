@@ -8,6 +8,7 @@ import p2p from '@/assets/js/web3/extends/p2p.js'
 import reqAddr from '@/assets/js/web3/extends/reqAddr.js'
 import sign from '@/assets/js/web3/extends/sign.js'
 import coins from '@/assets/js/web3/extends/coins.js'
+import swap from '@/assets/js/web3/extends/swap.js'
 
 let web3 = new Web3()
 // try {
@@ -29,6 +30,12 @@ web3.extend({
   property: 'coins',
   methods: [
     ...coins
+  ]
+})
+web3.extend({
+  property: 'swap',
+  methods: [
+    ...swap
   ]
 })
 export default web3

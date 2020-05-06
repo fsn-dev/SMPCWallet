@@ -124,7 +124,8 @@
 </style>
 
 <script>
-import {computedPub} from '@/assets/js/pages/public'
+import {computedPub} from '@/assets/js/pages/public.js'
+import getAllAccountList from '@/assets/js/pages/accounts/getAllAccountList.js'
 export default {
   name: 'accountList',
   data () {
@@ -140,12 +141,6 @@ export default {
   computed: {
     ...computedPub,
   },
-  watch: {
-    // accountType (type) {
-    //   this.loading.list = true
-    //   this.init()
-    // }
-  },
   mounted () {
     this.loading.list = true
     // console.log(this.$route.query)
@@ -154,21 +149,13 @@ export default {
     }, 300)
   },
   methods: {
+    ...getAllAccountList,
     init () {
-      let arr = [
-        { p1: 'dcrm', p2: 'getAccounts', p3: [this.address, '0'] },
-        { p1: 'dcrm', p2: 'getAccounts', p3: [this.address, '1'] },
-      ]
-      this.$$.batchRequest(arr).then(res => {
-        console.log(res)
-        let groupArr = this.formatAccont(res[0], 0)
-        let personArr = this.formatAccont(res[1], 1)
-        let allArr = [...groupArr, ...personArr]
-        // console.log(allArr)
-        allArr = allArr.sort(this.$$.bigToSmallSort('timestamp'))
-        for (let i = 0, len = allArr.length; i < len; i++) {
-          this.gAccountList.push(allArr[i])
-          this.getGName(allArr[i], i)
+      this.getAllAccountList().then(res => {
+        // console.log(res)
+        for (let i = 0, len = res.length; i < len; i++) {
+          this.gAccountList.push(res[i])
+          this.getGName(res[i], i)
         }
         if (this.$route.query.gID) {
           this.changeGroup(this.$route.query)
@@ -180,31 +167,6 @@ export default {
         this.loading.list = false
       })
     },
-    formatAccont (res, type) {
-      let arr = [], arr1 = [], arr2 = []
-      if (res.Status !== 'Error') {
-        arr = res.Data.result && res.Data.result.Group ? res.Data.result.Group : []
-      }
-      for (let obj1 of arr) {
-        for (let obj2 of obj1.Accounts) {
-          if (!arr1.includes(obj2.PubKey)) {
-            // console.log(obj2)
-            let obj3 = {
-              publicKey: obj2.PubKey,
-              gID: obj1.GroupID,
-              mode: obj2.ThresHold,
-              name: obj2.PubKey.substr(2),
-              timestamp: obj2.TimeStamp,
-              accountType: type,
-              img: this.$$.createImg(obj2.PubKey)
-            }
-            arr2.push(obj3)
-            arr1.push(obj2.PubKey)
-          }
-        }
-      }
-      return arr2
-    },
     getGName (item, i) {
       this.$db.findGaccount({publicKey: item.publicKey, address: this.address}).then(res => {
         // console.log(res)
@@ -214,7 +176,7 @@ export default {
       })
     },
     changeGroup (item) {
-      console.log(item)
+      // console.log(item)
       if (item) {
         this.publicKey = item.publicKey
         this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode, accountType: item.accountType})

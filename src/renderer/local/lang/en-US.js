@@ -124,7 +124,8 @@ export default {
 		network: 'Network',
 		dapp: 'DAPP',
 		bestApply: 'Select application',
-		CrossChainTitle: 'CrossChain-Bridge'
+		CrossChainTitle: 'CrossChain-Bridge',
+		CrossChainBTC: 'CrossChain Bitcoin'
 	},
 	label: {
 		username: 'User name',

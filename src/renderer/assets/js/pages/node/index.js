@@ -19,6 +19,7 @@ export const nodeMethods = {
     let noRepeat = new Set(), arr = []
     if (res.msg === 'Success') {
       for (let obj of res.info) {
+        obj.url = obj.url.replace(/\s/g, '')
         arr.push({
           url: obj.url,
           name: obj.name ? obj.name : obj.url,
@@ -29,6 +30,7 @@ export const nodeMethods = {
     }
     for (let obj of this.localUrlArr) {
       if (!noRepeat.has(obj.url)) {
+        obj.url = obj.url.replace(/\s/g, '')
         arr.push({
           url: obj.url,
           name: obj.name ? obj.name : obj.url,
@@ -54,6 +56,7 @@ export const nodeMethods = {
         let arr = []
         for (let obj of this.localUrlArr) {
           if (!arr.includes(obj.url)) {
+            obj.url = obj.url.replace(/\s/g, '')
             this.netUrlArr.push({
               url: obj.url,
               name: obj.name ? obj.name : obj.url,

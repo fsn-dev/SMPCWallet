@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import routes from './routers'
+
+import routes from './routers/index'
+
 import $$ from '@/libs/index'
 import store from '@/store/index'
 const originalPush = Router.prototype.push

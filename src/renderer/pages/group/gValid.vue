@@ -172,7 +172,7 @@ export default {
         }
         this.gForm = {
           name: this.urlParams.Key,
-          mode: this.urlParams.LimitNum,
+          mode: this.urlParams.ThresHold,
           eNode: arr,
           gID: this.urlParams.GroupId,
           timestamp: Number(this.urlParams.TimeStamp)
@@ -205,7 +205,7 @@ export default {
                 localData = {
                   key: this.urlParams.Key,
                   gId: this.urlParams.GroupId,
-                  mode: this.urlParams.LimitNum,
+                  mode: this.urlParams.ThresHold,
                   nonce: Number(this.urlParams.Nonce),
                   member: [{
                     eNode: this.eNode,
@@ -284,7 +284,7 @@ export default {
             //       + ':' 
             //       + this.urlParams.Nonce 
             //       + ':' 
-            //       + this.urlParams.LimitNum 
+            //       + this.urlParams.ThresHold 
             //       + ':' 
             //       + '0'
             //       + ':' 

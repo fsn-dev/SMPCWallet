@@ -29,7 +29,7 @@
                   <span class="span ellipsis">{{items.cont}}</span>
                 </li>
               </ul>
-              <el-button type="primary" class="btn-primary" @click="comingSoon">{{$t('btn').lookDtil}}</el-button>
+              <el-button type="primary" class="btn-primary" @click="openUrl(item.url, item.type)">{{$t('btn').lookDtil}}</el-button>
             </div>
           </div>
         </el-col>
@@ -124,7 +124,8 @@ export default {
             {cont: this.$t('tip').mBTC.d2},
             {cont: this.$t('tip').mBTC.d3},
           ],
-          url: '',
+          url: '/dapp/mBTC',
+          type: 1,
           bg: require('@/assets/img/apply/mBTC.png')
         },
         {
@@ -135,6 +136,7 @@ export default {
             {cont: this.$t('tip').timelock.d3},
           ],
           url: '',
+          type: 0,
           bg: require('@/assets/img/apply/timelock.png')
         },
         {
@@ -145,6 +147,7 @@ export default {
             {cont: this.$t('tip').DAO.d3},
           ],
           url: '',
+          type: 0,
           bg: require('@/assets/img/apply/DAO.png')
         },
         {
@@ -155,9 +158,17 @@ export default {
             {cont: this.$t('tip').DEX.d3},
           ],
           url: '',
+          type: 0,
           bg: require('@/assets/img/apply/DEX.png')
         },
       ]
+    },
+    openUrl (url, type) {
+      if (type) {
+        this.toUrl(url)
+      } else {
+        this.comingSoon()
+      }
     },
     comingSoon () {
       this.msgWarning('Coming soon!')
