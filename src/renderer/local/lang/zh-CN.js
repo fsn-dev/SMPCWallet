@@ -92,7 +92,8 @@ export default {
 		add: '添加',
 		backFriend: '返回好友列表',
 		nowInstall: '马上安装',
-		lookDtil: '查看详情'
+		lookDtil: '查看详情',
+		swap: '交换'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -188,7 +189,9 @@ export default {
 		publisher: '发布者',
 		runDays: '运行天数',
 		unionNode: '联盟节点',
-		CBONode: '社区节点'
+		CBONode: '社区节点',
+		pairHash: '配对Hash',
+		fee: '手续费'
 	},
 	state: {
 		name: '状态',

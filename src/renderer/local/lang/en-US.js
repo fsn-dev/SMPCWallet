@@ -90,7 +90,8 @@ export default {
 		add: 'Add',
 		backFriend: 'Return friends list',
 		nowInstall: 'Install immediately',
-		lookDtil: 'Details'
+		lookDtil: 'Details',
+		swap: 'Swap'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -188,7 +189,9 @@ export default {
 		publisher: 'Publisher',
 		runDays: 'Run Days',
 		unionNode: 'Alliance Node',
-		CBONode: 'Community Node'
+		CBONode: 'Community Node',
+		pairHash: 'Pair Hash',
+		fee: 'Fee'
 	},
 	state: {
 		name: 'Status',
