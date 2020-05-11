@@ -89,7 +89,7 @@
     </div>
     <div class="table-box">
       <el-table :data="historyData" style="width: 100%" :empty-text="$t('warn').w_12">
-        <el-table-column type="expand">
+        <!-- <el-table-column type="expand">
           <template slot-scope="scope">
             <el-form label-position="left" inline class="tables-expand">
               <el-form-item label="Key ID:">
@@ -109,42 +109,43 @@
               </el-form-item>
             </el-form>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           type="index"
           width="50">
         </el-table-column>
         <el-table-column :label="$t('label').hash" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.txid}}</span>
+            <span class="cursorP" :title="scope.row.txid" @click="copyTxt(scope.row.txid)">{{ $$.cutOut(scope.row.txid, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').from" align="center">
           <template slot-scope="scope">
-            <span class="cursorP" :title="scope.row.key">{{ $$.cutOut(scope.row.key, 10, 12) }}</span>
+            <span class="cursorP" :title="scope.row.from" @click="copyTxt(scope.row.from)">{{ $$.cutOut(scope.row.from, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').value" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.gId">{{
-              $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 'no')
+            <span>{{
+              $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(selectCoin).coinType), 'no')
             }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').to" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.pubKey">{{ $$.cutOut(scope.row.key, 10, 12) }}</span>
+            <span :title="scope.row.bind" @click="copyTxt(scope.row.bind)">{{ $$.cutOut(scope.row.bind, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').pairHash" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.pubKey">{{ $$.cutOut(scope.row.key, 10, 12) }}</span>
+            <span :title="scope.row.swaptx" @click="copyTxt(scope.row.swaptx)">{{ $$.cutOut(scope.row.swaptx, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').fee" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.pubKey">{{
-              $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 'no')
+            <span>
+              {{
+              Number($$.thousandBit($$.fromWei(Number(scope.row.value) - Number(scope.row.swapvalue), $$.cutERC20(selectCoin).coinType), 20))
             }}</span>
           </template>
         </el-table-column>
@@ -323,9 +324,10 @@ export default {
         console.log(res)
         if (res.status === 'Success' || res.hash) {
           web3Fn.swap.Swapin(res.hash).then(res1 => {
-            this.msgSuccess('Success!')
-            this.loading.init = false
-            console.log(res1)
+            if (res1 === 'Success') {
+              this.msgSuccess('Success!')
+              this.loading.init = false
+            }
           }).catch(err => {
             this.msgError(err.toString())
             this.loading.init = false
