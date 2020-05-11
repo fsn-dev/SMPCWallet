@@ -10,6 +10,9 @@
           <el-input type="number" v-model="rawTx.value"></el-input>
           <span class="font12 color_99">{{$t('label').balance + ': ' + $$.fromWei(sendDataObj.balance, $$.cutERC20(sendDataObj.coinType).coinType)}}</span>
         </el-form-item>
+        <el-form-item label="Data">
+          <el-input v-model="rawTx.data"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
@@ -32,6 +35,12 @@
 
 <style lang="scss">
 // @import '@/assets/scss/index';
+.d-content-view {
+  .el-form-item {
+    margin-bottom: 0;
+  }
+
+}
 </style>
 
 <script>
@@ -62,6 +71,7 @@ export default {
       childGroupID: '',
       dataPage: {},
       rawTx: {
+        data: '',
         to: '',
         value: ''
       },
@@ -137,9 +147,7 @@ export default {
         this.msgError(this.$t('warn').w_19)
         return
       }
-      this.dataPage = {
-        from: this.address,
-      }
+      this.dataPage = {}
       this.$$.getLockOutNonce(this.address).then(nonce => {
       // this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce
@@ -154,25 +162,9 @@ export default {
           ThresHold: this.gMode,
           Mode: this.accountType,
           TimeStamp: Date.now().toString(),
-          Memo: "XXX"
+          Memo: this.rawTx.data,
         }
         this.dataPage.data = JSON.stringify(dataObj)
-        // this.dataPage.data = 'LOCKOUT:'
-        //                       + this.sendDataObj.dcrmAddr
-        //                       + ':' 
-        //                       + this.rawTx.to
-        //                       + ':'
-        //                       + this.dataPage.value
-        //                       + ':'
-        //                       + this.sendDataObj.coinType
-        //                       + ':'
-        //                       + this.childGroupID
-        //                       + ':'
-        //                       + this.gMode
-        //                       + ':'
-        //                       + this.accountType
-        //                       + ':'
-        //                       + Date.now()
         console.log(this.dataPage)
         this.eDialog.pwd = true
       })
@@ -236,7 +228,6 @@ export default {
           this.$db.AddGroupTxns(data)
         }
       }
-      
       this.resetForm()
     },
     resetForm() {

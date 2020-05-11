@@ -10,34 +10,32 @@ import sign from '@/assets/js/web3/extends/sign.js'
 import coins from '@/assets/js/web3/extends/coins.js'
 import swap from '@/assets/js/web3/extends/swap.js'
 
-function web3Fn() {
-
-  let web3 = new Web3()
-  
-  web3.extend({
-    property: 'dcrm',
-    methods: [
-      ...accounts,
-      ...lockout,
-      ...p2p,
-      ...reqAddr,
-      ...sign
-    ]
-  })
-  web3.extend({
-    property: 'coins',
-    methods: [
-      ...coins
-    ]
-  })
-  web3.extend({
-    property: 'swap',
-    methods: [
-      ...swap
-    ]
-  })
-
-  return web3
-}
-let web3 = web3Fn()
+let web3 = new Web3()
+// try {
+//   web3 = new Web3(new Web3.providers.HttpProvider(config.serverRPC))
+// } catch (error) {
+//   web3 = new Web3()
+// }
+web3.extend({
+  property: 'dcrm',
+  methods: [
+    ...accounts,
+    ...lockout,
+    ...p2p,
+    ...reqAddr,
+    ...sign
+  ]
+})
+web3.extend({
+  property: 'coins',
+  methods: [
+    ...coins
+  ]
+})
+web3.extend({
+  property: 'swap',
+  methods: [
+    ...swap
+  ]
+})
 export default web3

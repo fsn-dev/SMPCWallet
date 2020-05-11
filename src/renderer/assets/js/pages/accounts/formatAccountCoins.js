@@ -7,7 +7,8 @@ let allCoins = [
 ]
 
 export default {
-  formatAccountCoins (res, accountType) {
+  formatAccountCoins (res, accountType, otherObj) {
+    otherObj = otherObj ? otherObj : {}
     let arr = res, coinList = []
     let coinObj = {}
     for (let obj of arr) {
@@ -26,6 +27,7 @@ export default {
         balance = coinObj[obj.coinType].balance
       }
       let obj1 = {
+        ...otherObj,
         coinType: coinTypeObj.coinType,
         balance: balance,
         address: address,

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="Number(dayAndNight) ? '' : 'night'" v-loading="!isConnect && networkMode" :element-loading-text="$t('loading').l_1">
+  <div id="app" :class="Number(dayAndNight) ? '' : 'night'" v-loading="!isLoadingFlag && !isConnect && networkMode" :element-loading-text="$t('loading').l_1">
     <router-view></router-view>
   </div>
 </template>
@@ -17,7 +17,8 @@ export default {
       eventID: '',
       timeout: 60 * 1000 * 60,
       // timeout: this.$$.config.timeout,
-      currentSecond: 0
+      currentSecond: 0,
+      isLoadingFlag: false
     }
   },
   watch: {
@@ -34,6 +35,8 @@ export default {
   computed: {
     ...computedPub,
     isConnect () {
+      
+      // console.log(isLoadingFlag)
       return this.$store.state.connect
     }
   },
@@ -55,6 +58,10 @@ export default {
     }
   },
   mounted () {
+    let url = this.$route.path
+    if (url === '/' || url === '/login' || url === '/register') {
+      this.isLoadingFlag = true
+    }
     // console.log(this.$$.web3)
     // console.log(this.$store.state)
   },

@@ -19,6 +19,10 @@
       <!-- <div class="WW100 mt-5 flex-c flex-wrap">
         <set-enode :isShowEnode="false"></set-enode>
       </div> -->
+      <!-- <div>
+        <el-button @click="startLocalNode">启动本地节点</el-button>
+        <el-button @click="testLocalNode">测试本地节点</el-button>
+      </div> -->
     </div>
 
     <el-dialog :title="$t('btn').importAccount" :visible.sync="eDialog.import" width="300px" :before-close="modalClick"  :close-on-click-modal="false" :modal-append-to-body='false'>
@@ -61,7 +65,8 @@ import wButton from '@/components/btn/index.vue'
 import setEnode from '@/components/setEnode/index.vue'
 import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public'
-const Account = require('eth-lib/lib/account')
+import getEnode from '@/assets/js/pages/node/getEnode.js'
+const {spawn} = require('child_process')
 export default {
   name: '',
   data () {
@@ -79,8 +84,27 @@ export default {
     ...computedPub
   },
   mounted () {
+    console.log(this.$$)
   },
   methods: {
+    ...getEnode,
+    startLocalNode () {
+      try {
+        // console.log(config)
+        spawn(this.$$.config.gDcrm)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    testLocalNode () {
+      let url = this.$$.config.serverRPC
+      this.getEnode(url, true).then(res => {
+        console.log(res)
+        if (res.status === 'Success') {
+
+        }
+      })
+    },
     modalClick () {
       this.eDialog.import = false
       this.eDialog.changeName = false

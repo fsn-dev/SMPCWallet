@@ -1,0 +1,82 @@
+$white-bgH: 48;
+.mBTC-title {
+  .h1 {
+    text-align: center;font-size: size(45);color: #252525;line-height: size(68);font-weight: bold;
+  }
+  .p{
+    text-align: center;font-size: size(20);color: #2762E0;margin-top: size(20);font-weight: bold;
+  }
+}
+.swap-box {
+  width: 100%;padding: size(30);border: size(1) solid #E9E9E9;margin-top: size(45);
+  .swap-cont {
+    width: 100%;background: #E9E9E9;padding: size(50) size(40);
+    .swap-up {
+      position: relative;
+      .swap-style {
+        width: 40%;
+        .label {
+          font-size: size(20);color: #2762E0;font-weight: bold;margin-bottom: size(15);
+        }
+        .swap-select {
+          $cLogo: 38;
+          $cPtbl: ($white-bgH - $cLogo) / 2;
+          width: 100%;height: 100%;padding:size($cPtbl) size(20) size($cPtbl) size($cPtbl);
+          .coin-logo-view {
+            width: size($cLogo);height: size($cLogo);
+            img {
+              width: 100%;
+            }
+          }
+          .coin {
+            font-weight: bold;color: #2762E0;padding-left: size(15);
+          }
+          .el-select {
+            .el-input__inner {
+              color: #2762E0;font-weight: bold;
+            }
+          }
+          .input-value {
+            .el-input__inner {
+              text-align: right;font-weight: bold;padding: 0 size(10);
+            }
+          }
+          .el-input__inner {
+            background: none;border:none;
+          }
+        }
+        &.swap-down {
+          .label {
+            font-size: size(16);color: #666666;font-weight: normal;
+          }
+          .el-select {
+            .el-input__inner {
+              color: #666666;font-weight: normal;
+            }
+          }
+          .input-value {
+            .el-input__inner {
+              text-align: left;font-weight: normal;
+            }
+          }
+        }
+      }
+      .swap-arrow {
+        position: absolute;top: size(50);left: 50%;font-size: size(30);color: #2762E0;margin-left:size(-15);
+      }
+    }
+  }
+}
+
+.coin-logo {
+  width: size(20);height: size(20);margin-right: size(10);font-size:size(12);
+  &.txt {
+    border:size(1) solid $color-primary;border-radius: 100%;color: $color-primary;
+  }
+  img {
+    width:100%;display: block;
+  }
+}
+.swap-input-box {
+  background: #fff;height: size($white-bgH);border-radius: size(24);position: relative;
+}

@@ -19,5 +19,12 @@ export default [
     params: 1,
     inputFormatter: [null],
     outputFormatter: null
+  },
+  {
+    name: 'GetServerInfo',
+    call: 'swap.GetServerInfo',
+    params: 0,
+    inputFormatter: [],
+    outputFormatter: null
   }
 ]

@@ -13,7 +13,7 @@ let publicSet = {
   /**
    * @description 区块节点请求地址
    */
-  serverRPC: 'http://127.0.0.1:6691',
+  serverRPC: 'http://127.0.0.1:4449',
   /**
    * @description 通过地址查询外部交易历史
    */
@@ -50,7 +50,7 @@ let publicSet = {
   /**
    * @description 启动gdcrm路径
    */
-  gDcrm: path + '/gdcrm.exe',
+  gDcrm: path + '/static/gdcrm.exe',
   /**
    * @description 启动gdcrm路径
    */

@@ -58,12 +58,12 @@
         <div class="swap-up flex-bc swap-receive mt-30">
           <div class="swap-style swap-down">
             <h3 class="label flex-bc">
-              {{selectCoin}}:
+              {{selectCoin}} Address:
             </h3>
             <div class="swap-input-box">
               <div class="swap-select flex-bc">
-                <el-select v-model="swap.fromAddr" class="WW100">
-                  <el-option v-for="(item, index) in selectCoinArr" :key="index" :label="item.address" :value="item.address">
+                <el-select v-model="swap.fromIndex" class="WW100" @change="changeFromAddr">
+                  <el-option v-for="(item, index) in selectCoinArr" :key="index" :label="item.address" :value="index">
                   </el-option>
                 </el-select>
               </div>
@@ -71,7 +71,7 @@
           </div>
           <div class="swap-style swap-down">
             <h3 class="label flex-bc">
-              ETH:
+              ETH Address:
             </h3>
             <div class="swap-input-box">
               <div class="swap-select flex-bc">
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div class="WW100 flex-c mt-50">
-        <el-button type="primary" class="btn-primary W300 IH50 font16">{{$t('btn').swap}}</el-button>
+        <el-button type="primary" class="btn-primary W300 IH50 font16" @click="lockoutBtn">{{$t('btn').swap}}</el-button>
       </div>
     </div>
     <div class="table-box">
@@ -153,95 +153,35 @@
         </el-table-column>
       </el-table>
     </div>
+
+    <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
+      <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
+    </el-dialog>
   </div>
 </template>
 
 <style lang="scss">
-$white-bgH: 48;
-.mBTC-title {
-  .h1 {
-    text-align: center;font-size: size(45);color: #252525;line-height: size(68);font-weight: bold;
-  }
-  .p{
-    text-align: center;font-size: size(20);color: #2762E0;margin-top: size(20);font-weight: bold;
-  }
-}
-.swap-box {
-  width: 100%;padding: size(30);border: size(1) solid #E9E9E9;margin-top: size(45);
-  .swap-cont {
-    width: 100%;background: #E9E9E9;padding: size(50) size(40);
-    .swap-up {
-      position: relative;
-      .swap-style {
-        width: 40%;
-        .label {
-          font-size: size(20);color: #2762E0;font-weight: bold;margin-bottom: size(15);
-        }
-        .swap-select {
-          $cLogo: 38;
-          $cPtbl: ($white-bgH - $cLogo) / 2;
-          width: 100%;height: 100%;padding:size($cPtbl) size(20) size($cPtbl) size($cPtbl);
-          .coin-logo-view {
-            width: size($cLogo);height: size($cLogo);
-            img {
-              width: 100%;
-            }
-          }
-          .coin {
-            font-weight: bold;color: #2762E0;padding-left: size(15);
-          }
-          .el-select {
-            .el-input__inner {
-              color: #2762E0;font-weight: bold;
-            }
-          }
-          .input-value {
-            .el-input__inner {
-              text-align: right;font-weight: bold;
-            }
-          }
-          .el-input__inner {
-            background: none;border:none;
-          }
-        }
-        &.swap-down {
-          .label {
-            font-size: size(16);color: #666666;font-weight: normal;
-          }
-          .el-select {
-            .el-input__inner {
-              color: #666666;font-weight: normal;
-            }
-          }
-          .input-value {
-            .el-input__inner {
-              text-align: left;font-weight: normal;
-            }
-          }
-        }
-      }
-      .swap-arrow {
-        position: absolute;top: size(50);left: 50%;font-size: size(30);color: #2762E0;margin-left:size(-15);
-      }
-    }
-  }
-}
-
-.coin-logo {
-  width: size(20);height: size(20);margin-right: size(10);font-size:size(12);
-  &.txt {
-    border:size(1) solid $color-primary;border-radius: 100%;color: $color-primary;
-  }
-  img {
-    width:100%;display: block;
-  }
-}
-.swap-input-box {
-  background: #fff;height: size($white-bgH);border-radius: size(24);position: relative;
-}
+@import './scss/index.scss';
 </style>
 
 <script>
+import swap from '@/assets/js/web3/extends/swap.js'
+function newWeb3 () {
+  const Web3 = require('web3')
+  let url = 'http://47.92.168.85:11556/rpc'
+  let web3 = new Web3(new Web3.providers.HttpProvider(url))
+  web3.extend({
+    property: 'swap',
+    methods: [
+      ...swap
+    ]
+  })
+  return web3
+}
+
+let web3Fn = newWeb3()
+
+import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public.js'
 import getAllAccountList from '@/assets/js/pages/accounts/getAllAccountList.js'
 import formatAccountCoins from '@/assets/js/pages/accounts/formatAccountCoins.js'
@@ -254,16 +194,20 @@ export default {
       selectCoinArr: [],
       swap: {
         fee: 0.001,
-        fromAddr: '',
         fromValue: 0,
         toAddr: '',
         toValue: 0,
       },
+      swapToAddr: 'mfwPnCuht2b4Lvb5XTds4Rvzy3jZ2',
       historyData: [],
       loading: {
         init: true
       },
-      unionNode: []
+      eDialog: {
+        pwd: false
+      },
+      unionNode: [],
+      dataPage: {},
     }
   },
   computed: {
@@ -281,6 +225,11 @@ export default {
   },
   mounted () {
     this.loading.init = true
+    // let hash = "0xb4553ee4d4a38a3ada51e73c61d618c550d59ae05c77eaf0dc19b115cb4f434b"
+    // web3Fn.swap.Swapin(hash).then(res1 => {
+    //   this.msgSuccess('Success!')
+    //   console.log(res1)
+    // })
     setTimeout(() => {
       this.init()
     }, 300)
@@ -288,12 +237,137 @@ export default {
   methods: {
     ...getAllAccountList,
     ...formatAccountCoins,
+    modalClick () {
+      this.eDialog.pwd = false
+    },
     init () {
       this.$socket.emit('NodeAndOtherData')
       this.getAllAccountList().then(res => {
         // console.log(res)
         this.getAllCoins(res)
       })
+    },
+    lockoutBtn () {
+      if (!this.swap.toAddr) {
+        this.msgError(this.$t('warn').w_14)
+        return
+      }
+      this.openPwdDialog()
+    },
+    openPwdDialog () {
+      let coin = this.$$.cutERC20(this.selectCoin).coinType
+      let balance = this.$$.fromWei(this.swap.fromObj.balance, coin)
+      if (!regExp.coin[coin].test(this.swap.toAddr) && coin !== 'BTC') {
+        this.msgError('This to address is illegal!')
+        return
+      }
+      console.log(Number(this.swap.fromValue))
+      console.log(balance)
+      if (Number(this.swap.fromValue) > Number(balance)) {
+        this.msgError(this.$t('warn').w_19)
+        return
+      }
+      this.dataPage = {}
+      this.$$.getLockOutNonce(this.address).then(nonce => {
+        this.dataPage.nonce = nonce
+        this.dataPage.value = this.$$.toWei(this.swap.fromValue, coin).toString()
+        let dataObj = {
+          TxType: "LOCKOUT",
+          DcrmAddr: this.swap.fromObj.address,
+          DcrmTo: this.swapToAddr,
+          Value: this.dataPage.value,
+          Cointype: coin,
+          GroupId: this.swap.fromObj.gID,
+          ThresHold: this.swap.fromObj.mode,
+          Mode: this.swap.fromObj.accountType.toString(),
+          TimeStamp: Date.now().toString(),
+          Memo: 'SWAPTO:' + this.swap.toAddr,
+        }
+        this.dataPage.data = JSON.stringify(dataObj)
+        console.log(this.dataPage)
+        this.eDialog.pwd = true
+      })
+    },
+    getSignData (data) {
+      this.eDialog.pwd = false
+      if (data.signTx) {
+        this.loading.init = true
+        this.$$.lockOut(data.signTx).then(res => {
+          console.log(res)
+          if (res.msg === 'Success') {
+            this.getOutHash(res.info)
+          } else {
+            this.msgError(res.error)
+            this.loading.init = false
+          }
+        })
+      } else {
+        this.msgError('Error')
+      }
+    },
+    getOutHash (key) {
+      this.$$.getLockOutStatus(key).then(res => {
+        console.log(res)
+        if (res.status === 'Success' || res.hash) {
+          web3Fn.swap.Swapin(res.hash).then(res1 => {
+            this.msgSuccess('Success!')
+            this.loading.init = false
+            console.log(res1)
+          })
+        } else if (res.status === 'Pending') {
+          setTimeout(() => {
+            this.getOutHash(key)
+          },  1500)
+        } else {
+          this.msgError("Failure")
+          this.loading.init = false
+        }
+      })
+    },
+    saveTxnsDB (key) {
+      let data = {
+        from: this.swap.fromObj.address,
+        to: this.swap.toAddr,
+        swapTo: this.swapToAddr,
+        value: this.swap.fromValue,
+        nonce: this.dataPage.nonce,
+        coinType: this.selectCoin,
+        hash: '',
+        status: 0,
+        pubKey: this.swap.fromObj.publicKey,
+        key: key,
+        mode: this.swap.fromObj.mode,
+        gId: this.swap.fromObj.gID,
+      }
+      if (Number(this.accountType) === 1) {
+        data.kId = this.address
+        data.eNode = this.eNode
+      } else {
+        data.gArr = [
+          {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
+        ]
+        // for (let obj of this.gMemberSelect) {
+        //   if (obj === this.eNode) continue
+        //   data.gArr.push({eNode: obj, nodeKey: this.$$.eNodeCut(obj).key, kId: '', status: 0, timestamp: '', initiate: 0})
+        // }
+      }
+      // console.log(data)
+      // if (Number(this.accountType) === 1) {
+      //   // AddPersonTxns(this, dataUrl, data)
+      //   if (this.networkMode) {
+      //     this.$socket.emit('PersonAddTxns', data)
+      //   } else {
+      //     this.$db.AddPersonTxns(data)
+      //   }
+      // } else {
+      //   // AddGroupTxns(this, dataUrl, data)
+      //   if (this.networkMode) {
+      //     this.$socket.emit('GroupAddTxns', data)
+      //   } else {
+      //     this.$db.AddGroupTxns(data)
+      //   }
+      // }
+      // this.resetForm()
     },
     getAllCoins (res) {
       let arr = [], allCoins = []
@@ -310,7 +384,8 @@ export default {
           if (cbData.Status !== 'Error') {
             arr1 = cbData.Data.result.Balances
           }
-          let coinArr = this.formatAccountCoins(arr1, res[i].accountType)
+          let coinArr = this.formatAccountCoins(arr1, res[i].accountType, res[i])
+          // console.log(coinArr)
           allCoins.push(...coinArr)
         }
         for (let obj of allCoins) {
@@ -326,14 +401,29 @@ export default {
     },
     changeCoin () {
       this.selectCoinArr = this.coinInfoObj[this.selectCoin]
-      this.swap.fromAddr = ''
+      this.swap.fromIndex = ''
       // console.log(123)
     },
+    changeFromAddr () {
+      // console.log(this.swap.fromIndex)
+      this.swap.fromObj = this.selectCoinArr[this.swap.fromIndex]
+      console.log(this.swap.fromObj)
+      this.getHistory()
+    },
     getHistory () {
-
+      let data = {
+        Address: this.swap.fromObj.address,
+        Offset: 0,
+        Limit: 20
+      }
+      // console.log(data)
+      web3Fn.swap.GetSwapinHistory(data).then(res => {
+        console.log(res)
+        this.historyData = res
+      })
     },
     changeValue () {
-      this.swap.toValue = (1 - this.swap.fee) * this.swap.fromValue
+      this.swap.toValue = ((1 - this.swap.fee) * this.swap.fromValue).toFixed(10)
     }
   }
 }
