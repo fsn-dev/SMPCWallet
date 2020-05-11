@@ -39,7 +39,7 @@
           <div class="swap-style swap-up-right">
             <h3 class="label flex-bc">
               {{$t('label').to}}
-              <span class="font12">fee = {{swap.fee * 100}}%</span>
+              <span class="font12">fee = {{swapInfo.SwapFeeRate * 100}}%</span>
             </h3>
             <div class="swap-input-box">
               <div class="swap-select flex-bc">
@@ -68,6 +68,7 @@
                 </el-select>
               </div>
             </div>
+            <div class="font12 color_99 H30">{{ this.swap.fromObj ? $$.fromWei(this.swap.fromObj.balance, this.swap.fromObj.coinType) + ' ' + selectCoin : ''}}</div>
           </div>
           <div class="swap-style swap-down">
             <h3 class="label flex-bc">
@@ -78,6 +79,7 @@
                 <el-input type="text" class="WW100 input-value" v-model="swap.toAddr"></el-input>
               </div>
             </div>
+            <div class="font12 color_99 H30"></div>
           </div>
         </div>
       </div>
@@ -193,12 +195,11 @@ export default {
       selectCoin: 'BTC',
       selectCoinArr: [],
       swap: {
-        fee: 0.001,
         fromValue: 0,
         toAddr: '',
         toValue: 0,
       },
-      swapToAddr: 'mfwPnCuht2b4Lvb5XTds4Rvzy3jZ2',
+      swapInfo: {},
       historyData: [],
       loading: {
         init: true
@@ -225,10 +226,12 @@ export default {
   },
   mounted () {
     this.loading.init = true
-    // let hash = "0xb4553ee4d4a38a3ada51e73c61d618c550d59ae05c77eaf0dc19b115cb4f434b"
+    // let hash = "2d5cdef72cee735cac911f9309e8d0fe5faa953ac85e12c04fb962d1513cefb8"
     // web3Fn.swap.Swapin(hash).then(res1 => {
     //   this.msgSuccess('Success!')
     //   console.log(res1)
+    // }).catch(err => {
+    //   this.msgError(err.toString())
     // })
     setTimeout(() => {
       this.init()
@@ -246,6 +249,10 @@ export default {
         // console.log(res)
         this.getAllCoins(res)
       })
+      web3Fn.swap.GetServerInfo().then(res => {
+        console.log(res)
+        this.swapInfo = res.SrcToken
+      })
     },
     lockoutBtn () {
       if (!this.swap.toAddr) {
@@ -261,8 +268,14 @@ export default {
         this.msgError('This to address is illegal!')
         return
       }
-      console.log(Number(this.swap.fromValue))
-      console.log(balance)
+      if (Number(this.swapInfo.MinimumSwap) > Number(this.swap.fromValue)) {
+        this.msgError('Min value is:' + this.swapInfo.MinimumSwap)
+        return
+      }
+      if (Number(this.swapInfo.MaximumSwap) < Number(this.swap.fromValue)) {
+        this.msgError('Max value is:' + this.swapInfo.MaximumSwap)
+        return
+      }
       if (Number(this.swap.fromValue) > Number(balance)) {
         this.msgError(this.$t('warn').w_19)
         return
@@ -274,7 +287,7 @@ export default {
         let dataObj = {
           TxType: "LOCKOUT",
           DcrmAddr: this.swap.fromObj.address,
-          DcrmTo: this.swapToAddr,
+          DcrmTo: this.swapInfo.DcrmAddress,
           Value: this.dataPage.value,
           Cointype: coin,
           GroupId: this.swap.fromObj.gID,
@@ -313,6 +326,9 @@ export default {
             this.msgSuccess('Success!')
             this.loading.init = false
             console.log(res1)
+          }).catch(err => {
+            this.msgError(err.toString())
+            this.loading.init = false
           })
         } else if (res.status === 'Pending') {
           setTimeout(() => {
@@ -328,7 +344,7 @@ export default {
       let data = {
         from: this.swap.fromObj.address,
         to: this.swap.toAddr,
-        swapTo: this.swapToAddr,
+        swapTo: this.swapInfo.DcrmAddress,
         value: this.swap.fromValue,
         nonce: this.dataPage.nonce,
         coinType: this.selectCoin,
@@ -423,7 +439,7 @@ export default {
       })
     },
     changeValue () {
-      this.swap.toValue = ((1 - this.swap.fee) * this.swap.fromValue).toFixed(10)
+      this.swap.toValue = ((1 - this.swapInfo.SwapFeeRate) * this.swap.fromValue).toFixed(10)
     }
   }
 }
