@@ -163,6 +163,7 @@ export default {
           Mode: this.accountType,
           TimeStamp: Date.now().toString(),
           Memo: this.rawTx.data,
+          // Memo: 'xx',
         }
         this.dataPage.data = JSON.stringify(dataObj)
         console.log(this.dataPage)

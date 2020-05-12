@@ -87,7 +87,7 @@
         <el-button type="primary" class="btn-primary W300 IH50 font16" @click="lockoutBtn">{{$t('btn').swap}}</el-button>
       </div>
     </div>
-    <div class="table-box">
+    <div class="table-box mb-30">
       <el-table :data="historyData" style="width: 100%" :empty-text="$t('warn').w_12">
         <!-- <el-table-column type="expand">
           <template slot-scope="scope">
@@ -114,6 +114,11 @@
           type="index"
           width="50">
         </el-table-column>
+        <el-table-column :label="$t('state').name" width="80" align="center">
+          <template slot-scope="scope">
+            <span :class="scope.row.status === 8 || scope.row.status === 9 || scope.row.status === 10 ? 'color_green' : 'color_red'">{{setHistoryState(scope.row.status)}}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="$t('label').hash" align="center">
           <template slot-scope="scope">
             <span class="cursorP" :title="scope.row.txid" @click="copyTxt(scope.row.txid)">{{ $$.cutOut(scope.row.txid, 6, 4) }}</span>
@@ -133,7 +138,7 @@
         </el-table-column>
         <el-table-column :label="$t('label').to" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.bind" @click="copyTxt(scope.row.bind)">{{ $$.cutOut(scope.row.bind, 6, 4) }}</span>
+            <span class="cursorP" :title="scope.row.bind" @click="copyTxt(scope.row.bind)">{{ $$.cutOut(scope.row.bind, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').pairHash" align="center">
@@ -227,13 +232,6 @@ export default {
   },
   mounted () {
     this.loading.init = true
-    // let hash = "2d5cdef72cee735cac911f9309e8d0fe5faa953ac85e12c04fb962d1513cefb8"
-    // web3Fn.swap.Swapin(hash).then(res1 => {
-    //   this.msgSuccess('Success!')
-    //   console.log(res1)
-    // }).catch(err => {
-    //   this.msgError(err.toString())
-    // })
     setTimeout(() => {
       this.init()
     }, 300)
@@ -309,7 +307,23 @@ export default {
         this.$$.lockOut(data.signTx).then(res => {
           console.log(res)
           if (res.msg === 'Success') {
-            this.getOutHash(res.info)
+            if (Number(this.swap.fromObj.accountType)) {
+              this.getOutHash(res.info)
+              this.saveTxnsDB(res.info)
+            } else  {
+              this.$$.getGroupObj(this.swap.fromObj.gID).then(res => {
+                console.log(res)
+                let enodeArr = []
+                if (res.msg === 'Success') {
+                  for (let obj of res.info) {
+                    enodeArr.push(obj)
+                  }
+                }
+                this.saveTxnsDB(res.info, enodeArr)
+                this.msgSuccess('Success!')
+                this.loading.init = false
+              })
+            }
           } else {
             this.msgError(res.error)
             this.loading.init = false
@@ -323,15 +337,20 @@ export default {
       this.$$.getLockOutStatus(key).then(res => {
         console.log(res)
         if (res.status === 'Success' || res.hash) {
-          web3Fn.swap.Swapin(res.hash).then(res1 => {
-            if (res1 === 'Success') {
-              this.msgSuccess('Success!')
-              this.loading.init = false
-            }
-          }).catch(err => {
-            this.msgError(err.toString())
-            this.loading.init = false
-          })
+          this.msgSuccess('Success!')
+          this.loading.init = false
+          setTimeout(() => {
+            this.getHistory()
+          }, 1000)
+          // web3Fn.swap.Swapin(res.hash).then(res1 => {
+          //   if (res1 === 'Success') {
+          //     this.msgSuccess('Success!')
+          //     this.loading.init = false
+          //   }
+          // }).catch(err => {
+          //   this.msgError(err.toString())
+          //   this.loading.init = false
+          // })
         } else if (res.status === 'Pending') {
           setTimeout(() => {
             this.getOutHash(key)
@@ -342,12 +361,12 @@ export default {
         }
       })
     },
-    saveTxnsDB (key) {
+    saveTxnsDB (key, enodeArr) {
       let data = {
         from: this.swap.fromObj.address,
         to: this.swap.toAddr,
         swapTo: this.swapInfo.DcrmAddress,
-        value: this.swap.fromValue,
+        value: this.dataPage.value,
         nonce: this.dataPage.nonce,
         coinType: this.selectCoin,
         hash: '',
@@ -357,34 +376,34 @@ export default {
         mode: this.swap.fromObj.mode,
         gId: this.swap.fromObj.gID,
       }
-      if (Number(this.accountType) === 1) {
+      if (Number(this.swap.fromObj.accountType)) {
         data.kId = this.address
         data.eNode = this.eNode
       } else {
         data.gArr = [
           {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
         ]
-        // for (let obj of this.gMemberSelect) {
-        //   if (obj === this.eNode) continue
-        //   data.gArr.push({eNode: obj, nodeKey: this.$$.eNodeCut(obj).key, kId: '', status: 0, timestamp: '', initiate: 0})
-        // }
+        for (let obj of enodeArr) {
+          if (obj === this.eNode) continue
+          data.gArr.push({eNode: obj, nodeKey: this.$$.eNodeCut(obj).key, kId: '', status: 0, timestamp: '', initiate: 0})
+        }
       }
       // console.log(data)
-      // if (Number(this.accountType) === 1) {
-      //   // AddPersonTxns(this, dataUrl, data)
-      //   if (this.networkMode) {
-      //     this.$socket.emit('PersonAddTxns', data)
-      //   } else {
-      //     this.$db.AddPersonTxns(data)
-      //   }
-      // } else {
-      //   // AddGroupTxns(this, dataUrl, data)
-      //   if (this.networkMode) {
-      //     this.$socket.emit('GroupAddTxns', data)
-      //   } else {
-      //     this.$db.AddGroupTxns(data)
-      //   }
-      // }
+      if (Number(this.swap.fromObj.accountType)) {
+        // AddPersonTxns(this, dataUrl, data)
+        if (this.networkMode) {
+          this.$socket.emit('PersonAddTxns', data)
+        } else {
+          this.$db.AddPersonTxns(data)
+        }
+      } else {
+        // AddGroupTxns(this, dataUrl, data)
+        if (this.networkMode) {
+          this.$socket.emit('GroupAddTxns', data)
+        } else {
+          this.$db.AddGroupTxns(data)
+        }
+      }
       // this.resetForm()
     },
     getAllCoins (res) {
@@ -437,8 +456,25 @@ export default {
       // console.log(data)
       web3Fn.swap.GetSwapinHistory(data).then(res => {
         console.log(res)
-        this.historyData = res
+        this.historyData = res.reverse()
       })
+    },
+    setHistoryState (num) {
+      let status = 'Waiting'
+      switch (num) {
+        case 8: 
+          status = 'Waiting'
+          break
+        case 9:
+          status = 'Pending'
+          break
+        case 10:
+          status = 'Success'
+          break
+        default:
+          status = 'Failure'
+      }
+      return status
     },
     changeValue () {
       this.swap.toValue = ((1 - this.swapInfo.SwapFeeRate) * this.swap.fromValue).toFixed(10)

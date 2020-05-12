@@ -66,7 +66,7 @@ import setEnode from '@/components/setEnode/index.vue'
 import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public'
 import getEnode from '@/assets/js/pages/node/getEnode.js'
-const {spawn} = require('child_process')
+// const {spawn} = require('child_process')
 export default {
   name: '',
   data () {
@@ -88,23 +88,23 @@ export default {
   },
   methods: {
     ...getEnode,
-    startLocalNode () {
-      try {
-        // console.log(config)
-        spawn(this.$$.config.gDcrm)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    testLocalNode () {
-      let url = this.$$.config.serverRPC
-      this.getEnode(url, true).then(res => {
-        console.log(res)
-        if (res.status === 'Success') {
+    // startLocalNode () {
+    //   try {
+    //     // console.log(config)
+    //     spawn(this.$$.config.gDcrm)
+    //   } catch (error) {
+    //     console.error(error)
+    //   }
+    // },
+    // testLocalNode () {
+    //   let url = this.$$.config.serverRPC
+    //   this.getEnode(url, true).then(res => {
+    //     console.log(res)
+    //     if (res.status === 'Success') {
 
-        }
-      })
-    },
+    //     }
+    //   })
+    // },
     modalClick () {
       this.eDialog.import = false
       this.eDialog.changeName = false

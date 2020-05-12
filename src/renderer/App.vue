@@ -31,6 +31,10 @@ export default {
       this.$$.web3.setProvider(url)
       this.setEnode()
     },
+    '$route' (cur) {
+      // console.log(cur)
+      this.validIsConnect()
+    }
   },
   computed: {
     ...computedPub,
@@ -58,10 +62,7 @@ export default {
     }
   },
   mounted () {
-    let url = this.$route.path
-    if (url === '/' || url === '/login' || url === '/register') {
-      this.isLoadingFlag = true
-    }
+    this.validIsConnect()
     // console.log(this.$$.web3)
     // console.log(this.$store.state)
   },
@@ -78,6 +79,14 @@ export default {
       this.getLanguage()
       this.getServerRPC()
       this.getServerRPCname()
+    },
+    validIsConnect () {
+      let url = this.$route.path
+      if (url === '/' || url === '/login' || url === '/register') {
+        this.isLoadingFlag = true
+      } else {
+        this.isLoadingFlag = false
+      }
     },
     setEnode () {
       if (!this.serverRPC) {
