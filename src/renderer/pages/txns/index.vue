@@ -10,9 +10,6 @@
           <el-input type="number" v-model="rawTx.value"></el-input>
           <span class="font12 color_99">{{$t('label').balance + ': ' + $$.fromWei(sendDataObj.balance, $$.cutERC20(sendDataObj.coinType).coinType)}}</span>
         </el-form-item>
-        <el-form-item label="Data">
-          <el-input v-model="rawTx.data"></el-input>
-        </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
@@ -35,12 +32,6 @@
 
 <style lang="scss">
 // @import '@/assets/scss/index';
-.d-content-view {
-  .el-form-item {
-    margin-bottom: 0;
-  }
-
-}
 </style>
 
 <script>
@@ -51,12 +42,6 @@ export default {
   props: {
     sendDataObj: {
       type: Object
-    },
-    gID: {
-      type: String
-    },
-    gMode: {
-      type: String
     },
     gMemberSelect: {
       type: Array,
@@ -71,7 +56,6 @@ export default {
       childGroupID: '',
       dataPage: {},
       rawTx: {
-        data: '',
         to: '',
         value: ''
       },
@@ -92,7 +76,6 @@ export default {
   },
   mounted () {
     this.initTxnsData = this.$route.query
-    this.gMode = this.initTxnsData.mode ? this.initTxnsData.mode : ''
     // console.log(this.initTxnsData)
     // console.log(this.gMemberSelect)
     // console.log(this.sendDataObj)
@@ -122,7 +105,7 @@ export default {
           arr.push(obj)
         }
       }
-      this.$$.createGroup(this.gMode, arr).then(res => {
+      this.$$.createGroup(this.sendDataObj.mode, arr).then(res => {
         if (res.msg === 'Success') {
           this.childGroupID = res.info.Gid
           this.openPwdDialog()
@@ -198,8 +181,8 @@ export default {
         status: 0,
         pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : '',
         key: key,
-        mode: this.gMode,
-        gId: this.gID
+        mode: this.sendDataObj.mode,
+        gId: this.sendDataObj.gID
       }
       if (Number(this.accountType) === 1) {
         data.kId = this.address

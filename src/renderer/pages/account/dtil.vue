@@ -121,7 +121,7 @@
       <div class="plr15 pt-20">
         <drawer-logo @close-drawer="drawer.send = false"></drawer-logo>
       </div>
-      <send-txns :sendDataObj="sendDataObj" :gID="gID" :gMode="gMode" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
+      <send-txns :sendDataObj="sendDataObj" :gMemberSelect="gMemberSelect" @closeModal="modalClick"></send-txns>
     </el-drawer>
     <!-- 发送交易 end -->
   </div>
@@ -384,7 +384,8 @@ export default {
         dcrmAddr: item.address,
         coinType: item.coinType,
         gID: this.gID,
-        mode: this.gMode
+        mode: this.gMode,
+        pubKey: this.pubKey
       }
     },
     openSendDialog (index, item) {
