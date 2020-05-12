@@ -219,12 +219,12 @@ export default {
                   nodeKey: this.$$.eNodeCut(this.eNode).key,
                   timestamp: Number(this.urlParams.TimeStamp),
                 }
-                for (let obj of this.urlParams.Enodes) {
+                for (let obj of this.gForm.eNode) {
                   // console.log(obj)
-                  if (obj === this.eNode) continue
+                  if (obj.eNode === this.eNode) continue
                   localData.member.push({
-                    eNode: obj,
-                    nodeKey: this.$$.eNodeCut(obj).key,
+                    eNode: obj.eNode,
+                    nodeKey: this.$$.eNodeCut(obj.eNode).key,
                     kId: '',
                     status: 0,
                     initiate: 0,

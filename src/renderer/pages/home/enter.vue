@@ -65,7 +65,7 @@ import wButton from '@/components/btn/index.vue'
 import setEnode from '@/components/setEnode/index.vue'
 import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public'
-import getEnode from '@/assets/js/pages/node/getEnode.js'
+// import getEnode from '@/assets/js/pages/node/getEnode.js'
 // const {spawn} = require('child_process')
 export default {
   name: '',
@@ -87,7 +87,7 @@ export default {
     console.log(this.$$)
   },
   methods: {
-    ...getEnode,
+    // ...getEnode,
     // startLocalNode () {
     //   try {
     //     // console.log(config)
