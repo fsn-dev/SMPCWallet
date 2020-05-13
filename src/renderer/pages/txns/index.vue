@@ -10,6 +10,9 @@
           <el-input type="number" v-model="rawTx.value"></el-input>
           <span class="font12 color_99">{{$t('label').balance + ': ' + $$.fromWei(sendDataObj.balance, $$.cutERC20(sendDataObj.coinType).coinType)}}</span>
         </el-form-item>
+        <el-form-item label="Data">
+          <el-input v-model="rawTx.data"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
@@ -32,6 +35,11 @@
 
 <style lang="scss">
 // @import '@/assets/scss/index';
+.d-content-view {
+  .el-form-item {
+    margin-bottom: size(10);
+  }
+}
 </style>
 
 <script>
@@ -56,6 +64,7 @@ export default {
       childGroupID: '',
       dataPage: {},
       rawTx: {
+        data: '',
         to: '',
         value: ''
       },
@@ -139,13 +148,13 @@ export default {
           TxType: "LOCKOUT",
           DcrmAddr: this.sendDataObj.dcrmAddr,
           DcrmTo: this.rawTx.to,
-          Value: this.dataPage.value,
+          Value: this.$$.toWei(this.rawTx.value, coin),
           Cointype: this.sendDataObj.coinType,
           GroupId: this.childGroupID,
-          ThresHold: this.gMode,
+          ThresHold: this.sendDataObj.mode,
           Mode: this.accountType,
           TimeStamp: Date.now().toString(),
-          Memo: this.rawTx.data,
+          Memo: this.rawTx.data
           // Memo: 'xx',
         }
         this.dataPage.data = JSON.stringify(dataObj)
