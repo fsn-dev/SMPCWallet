@@ -29,7 +29,8 @@ const store = new Vuex.Store({
     networkMode: config.networkMode,
     approvalObj: {},
     email: '',
-    connect: ''
+    connect: '',
+    selectPubKey: ''
   },
   mutations: {
     setEnode (state, data) {
@@ -121,6 +122,9 @@ const store = new Vuex.Store({
     },
     SOCKET_CONNECT(state, data) {
       state.connect = data
+    },
+    setSelectPubKey (state, data) {
+      state.selectPubKey = data
     }
   },
   actions: {

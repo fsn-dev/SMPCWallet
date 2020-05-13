@@ -181,6 +181,7 @@ export default {
         this.publicKey = item.publicKey
         this.toUrl('/account', {gID: item.gID, publicKey: item.publicKey, mode: item.mode, accountType: item.accountType})
         this.$store.commit('setAccountType', {info: item.accountType})
+        this.$store.commit('setSelectPubKey', item.publicKey)
       } else {
         this.toUrl('/account', {gID: '', publicKey: '', mode: '', accountType: this.accountType})
       }

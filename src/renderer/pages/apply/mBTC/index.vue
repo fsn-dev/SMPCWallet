@@ -201,6 +201,7 @@ export default {
       selectCoin: 'BTC',
       selectCoinArr: [],
       swap: {
+        fromIndex: '',
         fromValue: 0,
         toAddr: '',
         toValue: 0,
@@ -219,10 +220,13 @@ export default {
   },
   computed: {
     ...computedPub,
+    selectPubKey () {
+      return this.$store.state.selectPubKey
+    }
   },
   sockets: {
     NodeAndOtherData (res) {
-      console.log(res)
+      // console.log(res)
       for (let obj of res.info.nodeList) {
         if (obj.nodeType === 0) {
           this.unionNode.push(obj.name)
@@ -249,7 +253,7 @@ export default {
         this.getAllCoins(res)
       })
       web3Fn.swap.GetServerInfo().then(res => {
-        console.log(res)
+        // console.log(res)
         this.swapInfo = res.SrcToken
       })
     },
@@ -308,7 +312,7 @@ export default {
           console.log(res)
           if (res.msg === 'Success') {
             if (Number(this.swap.fromObj.accountType)) {
-              this.getOutHash(res.info)
+              // this.getOutHash(res.info)
               this.saveTxnsDB(res.info)
             } else  {
               this.$$.getGroupObj(this.swap.fromObj.gID).then(res => {
@@ -320,10 +324,12 @@ export default {
                   }
                 }
                 this.saveTxnsDB(res.info, enodeArr)
-                this.msgSuccess('Success!')
-                this.loading.init = false
               })
             }
+            setTimeout(() => {
+              this.msgSuccess('Success!')
+              this.loading.init = false
+            }, 1000)
           } else {
             this.msgError(res.error)
             this.loading.init = false
@@ -342,15 +348,6 @@ export default {
           setTimeout(() => {
             this.getHistory()
           }, 1000)
-          // web3Fn.swap.Swapin(res.hash).then(res1 => {
-          //   if (res1 === 'Success') {
-          //     this.msgSuccess('Success!')
-          //     this.loading.init = false
-          //   }
-          // }).catch(err => {
-          //   this.msgError(err.toString())
-          //   this.loading.init = false
-          // })
         } else if (res.status === 'Pending') {
           setTimeout(() => {
             this.getOutHash(key)
@@ -438,14 +435,26 @@ export default {
     },
     changeCoin () {
       this.selectCoinArr = this.coinInfoObj[this.selectCoin]
-      this.swap.fromIndex = ''
-      // console.log(123)
+      for (let i = 0, len = this.selectCoinArr.length; i < len; i ++) {
+        let obj = this.selectCoinArr[i]
+        if (obj.publicKey === this.selectPubKey) {
+          this.swap.fromIndex = i
+          break
+        }
+      }
+      if (this.swap.fromIndex === '') {
+        this.swap.fromIndex = 0
+      }
+      this.changeFromAddr()
+      // console.log(this.selectCoinArr)
     },
     changeFromAddr () {
       // console.log(this.swap.fromIndex)
       this.swap.fromObj = this.selectCoinArr[this.swap.fromIndex]
-      console.log(this.swap.fromObj)
-      this.getHistory()
+      // console.log(this.swap.fromObj)
+      setTimeout(() => {
+        this.getHistory()
+      }, 300)
     },
     getHistory () {
       let data = {
