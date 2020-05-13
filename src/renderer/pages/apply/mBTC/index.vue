@@ -173,20 +173,8 @@
 </style>
 
 <script>
+const Web3 = require('web3')
 import swap from '@/assets/js/web3/extends/swap.js'
-function newWeb3 () {
-  const Web3 = require('web3')
-  let url = 'http://47.92.168.85:11556/rpc'
-  let web3 = new Web3(new Web3.providers.HttpProvider(url))
-  web3.extend({
-    property: 'swap',
-    methods: [
-      ...swap
-    ]
-  })
-  return web3
-}
-
 
 import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public.js'
@@ -237,7 +225,8 @@ export default {
   mounted () {
     this.loading.init = true
     setTimeout(() => {
-      this.web3Fn = newWeb3()
+      let url = 'http://47.92.168.85:11556/rpc'
+      this.web3Fn = this.newWeb3(url)
       this.init()
     }, 300)
   },
@@ -256,7 +245,19 @@ export default {
       this.web3Fn.swap.GetServerInfo().then(res => {
         // console.log(res)
         this.swapInfo = res.SrcToken
+      }).catch(err => {
+        console.log(err)
       })
+    },
+    newWeb3 (url) {
+      let web3 = new Web3(new Web3.providers.HttpProvider(url))
+      web3.extend({
+        property: 'swap',
+        methods: [
+          ...swap
+        ]
+      })
+      return web3
     },
     lockoutBtn () {
       if (!this.swap.toAddr) {
@@ -467,6 +468,8 @@ export default {
       this.web3Fn.swap.GetSwapinHistory(data).then(res => {
         console.log(res)
         this.historyData = res.reverse()
+      }).catch(err => {
+        console.log(err)
       })
     },
     setHistoryState (num) {
