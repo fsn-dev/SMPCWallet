@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 container" v-loading="loading.init" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1 container" v-loading.fullscreen.lock="loading.init" :element-loading-text="$t('loading').l_1">
     <el-breadcrumb separator-class="el-icon-arrow-right" class="mt-15 mb-25 relative">
       <el-breadcrumb-item :to="{ path: '/dapp' }">{{$t('title').dapp}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{$t('title').CrossChainBTC}}</el-breadcrumb-item>
