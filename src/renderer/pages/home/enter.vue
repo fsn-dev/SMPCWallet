@@ -84,7 +84,7 @@ export default {
     ...computedPub
   },
   mounted () {
-    console.log(this.$$)
+    // console.log(this.$$)
   },
   methods: {
     // ...getEnode,

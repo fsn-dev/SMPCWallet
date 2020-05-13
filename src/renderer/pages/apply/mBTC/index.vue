@@ -187,7 +187,6 @@ function newWeb3 () {
   return web3
 }
 
-let web3Fn = newWeb3()
 
 import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public.js'
@@ -216,6 +215,7 @@ export default {
       },
       unionNode: [],
       dataPage: {},
+      web3Fn: ''
     }
   },
   computed: {
@@ -237,6 +237,7 @@ export default {
   mounted () {
     this.loading.init = true
     setTimeout(() => {
+      this.web3Fn = newWeb3()
       this.init()
     }, 300)
   },
@@ -252,7 +253,7 @@ export default {
         // console.log(res)
         this.getAllCoins(res)
       })
-      web3Fn.swap.GetServerInfo().then(res => {
+      this.web3Fn.swap.GetServerInfo().then(res => {
         // console.log(res)
         this.swapInfo = res.SrcToken
       })
@@ -463,7 +464,7 @@ export default {
         Limit: 20
       }
       // console.log(data)
-      web3Fn.swap.GetSwapinHistory(data).then(res => {
+      this.web3Fn.swap.GetSwapinHistory(data).then(res => {
         console.log(res)
         this.historyData = res.reverse()
       })
