@@ -140,6 +140,9 @@ export default {
   },
   computed: {
     ...computedPub,
+    selectPubKey () {
+      return this.$store.state.selectPubKey
+    }
   },
   mounted () {
     this.loading.list = true
@@ -157,10 +160,20 @@ export default {
           this.gAccountList.push(res[i])
           this.getGName(res[i], i)
         }
+        // console.log(this.gAccountList)
         if (this.$route.query.gID) {
           this.changeGroup(this.$route.query)
         } else if (this.gAccountList.length > 0) {
-          this.changeGroup(this.gAccountList[0])
+          if (this.selectPubKey) {
+            for (let obj of this.gAccountList) {
+              if (this.selectPubKey === obj.publicKey) {
+                this.changeGroup(obj)
+                break
+              }
+            }
+          } else {
+            this.changeGroup(this.gAccountList[0])
+          }
         } else {
           this.changeGroup()
         }

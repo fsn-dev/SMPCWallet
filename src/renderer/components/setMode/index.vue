@@ -5,9 +5,9 @@
       <el-option v-for="(item, index) in mode.init" :key="index" :label="item.name + ' ' + $t('label').mode" :value="item.val"></el-option>
     </el-select>
     <div class="flex-bc" :class="size === 'mini' ? 'mt-5' : 'mt-20'" v-if="!mode.select">
-      <el-input type="number" :size="size" step="1" min="1" v-model="mode.min" class="mr-10" :disabled="isReset"></el-input>
+      <el-input type="number" :size="size" step="1" min="1" v-model="mode.min" class="mr-10" :disabled="isReset" @blur="changeNum('min', 'max')"></el-input>
       /
-      <el-input type="number" :size="size" step="1" min="1" v-model="mode.max" class="ml-10" :disabled="isReset"></el-input>
+      <el-input type="number" :size="size" step="1" min="1" v-model="mode.max" class="ml-10" :disabled="isReset" @blur="changeNum('max', 'min')"></el-input>
       <el-button type="success" :size="size" class="ml-10" v-if="isReset" @click="resetMode">{{$t('btn').restart}}</el-button>
       <el-button type="primary" :size="size" class="ml-10" v-else @click="setMode">{{$t('btn').set}}</el-button>
     </div>
@@ -34,16 +34,6 @@ export default {
     }
   },
   watch: {
-    'mode.min' () {
-      if (this.mode.min <= this.mode.max) {
-        this.changeMode()
-      }
-    },
-    'mode.max' () {
-      if (this.mode.min <= this.mode.max) {
-        this.changeMode()
-      }
-    }
   },
   mounted () {
     this.mode = {
@@ -52,10 +42,25 @@ export default {
     }
   },
   methods: {
+    changeNum (v1, v2) {
+      if (typeof this.mode[v1] !== 'undefined' && this.mode[v1] !== '') {
+        if (this.mode[v1].toString().indexOf('.') >= 0) {
+          this.mode[v1] = parseInt(this.mode[v1])
+        }
+        if (this.mode[v1] < 0) {
+          this.mode[v1] = -this.mode[v1]
+        }
+        if (this.mode.min <= this.mode.max) {
+          this.changeMode()
+        } else if (this.mode.max !== '' && typeof this.mode.max !== 'undefined') {
+          this.mode.min = ''
+        }
+      } else {
+        this.msgError(this.$t('warn').w_17)
+      }
+    },
     changeMode () {
-      // console.log(this.mode.select)
       let _mode = ''
-      // this.mode.min = this.mode.max = ''
       if (this.mode.select) {
         _mode = this.mode.select
       } else if (!this.mode.select && this.mode.min && this.mode.max) {
