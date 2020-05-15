@@ -26,7 +26,7 @@ export default {
     let data = {msg: '', info: ''}
     return new Promise(resolve => {
       web3.dcrm.getSDKGroup(enode).then(res => {
-        cbData = res
+        let cbData = res
         if (typeof res === 'string') {
           cbData = JSON.parse(cbData)
         }
