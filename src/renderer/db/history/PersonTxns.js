@@ -18,6 +18,7 @@ const AddPersonTxns = (params) => {
       eNode: params.eNode ? params.eNode : '',
       mode: params.mode ? params.mode : 0,
       pubKey: params.pubKey ? params.pubKey : '',
+      data: params.data ? params.data : '',
     }
     let data = {
       msg: 'Error',

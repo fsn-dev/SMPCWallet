@@ -1,12 +1,15 @@
-let allCoins = [
-  { coinType: 'BTC', address: '', balance: '', isOpen: 1},
-  { coinType: 'ETH', address: '', balance: '', isOpen: 1},
-  { coinType: 'USDT', address: '', balance: '', isOpen: 0},
-  { coinType: 'FSN', address: '', balance: '', isOpen: 1},
-  { coinType: 'RMBT', address: '', balance: '', isOpen: 0},
-]
 
 export default {
+  allCoinsList () {
+    let allCoins = [
+      { coinType: 'BTC', address: '', balance: '', isOpen: 1},
+      { coinType: 'ETH', address: '', balance: '', isOpen: 1},
+      { coinType: 'USDT', address: '', balance: '', isOpen: 0},
+      { coinType: 'FSN', address: '', balance: '', isOpen: 1},
+      { coinType: 'RMBT', address: '', balance: '', isOpen: 0},
+    ]
+    return allCoins
+  },
   formatAccountCoins (res, accountType, otherObj) {
     otherObj = otherObj ? otherObj : {}
     let arr = res, coinList = []
@@ -18,6 +21,7 @@ export default {
         address: obj.DcrmAddr
       }
     }
+    let allCoins = this.allCoinsList()
     for (let obj of allCoins) {
       let address =  '', balance = 0, coinTypeObj = this.$$.cutERC20(obj.coinType)
       if (!coinObj[obj.coinType] && coinObj['ETH'] && coinObj['ETH'].address) {

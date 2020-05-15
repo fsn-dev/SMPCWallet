@@ -22,7 +22,7 @@
                   <div class="coin-logo-view">
                     <div v-if="coinInfoObj[selectCoin]" class="HH100 WW100"><img :src="coinInfoObj[selectCoin][0].logo"></div>
                   </div>
-                  <el-select v-model="selectCoin" @change="changeCoin" class="W120">
+                  <el-select v-model="selectCoin" @change="changeCoin" class="W120" no-data-text="Null">
                     <el-option v-for="(item, index) in coinInfoObj" :key="index" :label="index" :value="index">
                       <div class="flex-sc">
                         <div class="coin-logo" v-if="item[0].logo"><img :src="item[0].logo"></div>
@@ -62,7 +62,7 @@
             </h3>
             <div class="swap-input-box">
               <div class="swap-select flex-bc">
-                <el-select v-model="swap.fromIndex" class="WW100" @change="changeFromAddr">
+                <el-select v-model="swap.fromIndex" class="WW100" @change="changeFromAddr" no-data-text="Null">
                   <el-option v-for="(item, index) in selectCoinArr" :key="index" :label="item.address" :value="index">
                   </el-option>
                 </el-select>
@@ -239,7 +239,7 @@ export default {
     init () {
       this.$socket.emit('NodeAndOtherData')
       this.getAllAccountList().then(res => {
-        // console.log(res)
+        console.log(res)
         this.getAllCoins(res)
       })
       this.web3Fn.swap.GetServerInfo().then(res => {
@@ -407,6 +407,18 @@ export default {
     },
     getAllCoins (res) {
       let arr = [], allCoins = []
+      if (res.length <= 0) {
+        this.loading.init = false
+        allCoins = this.allCoinsList()
+        for (let obj of allCoins) {
+          if (!this.coinInfoObj[obj.coinType]) {
+            this.coinInfoObj[obj.coinType] = []
+          }
+          obj.logo = this.$$.setDollar(obj.coinType) ? this.$$.setDollar(obj.coinType).logo : ''
+          this.coinInfoObj[obj.coinType].push(obj)
+        }
+        return
+      }
       for (let obj of res) {
         arr.push({ p1: 'dcrm', p2: 'getAccountsBalance', p3: [obj.publicKey, this.address] })
       }
@@ -436,6 +448,7 @@ export default {
       })
     },
     changeCoin () {
+      if (!this.coinInfoObj[this.selectCoin]) return
       this.selectCoinArr = this.coinInfoObj[this.selectCoin]
       for (let i = 0, len = this.selectCoinArr.length; i < len; i ++) {
         let obj = this.selectCoinArr[i]
@@ -459,6 +472,7 @@ export default {
       }, 300)
     },
     getHistory () {
+      if (!this.swap.fromObj.address) return
       let data = {
         Address: this.swap.fromObj.address,
         Offset: 0,

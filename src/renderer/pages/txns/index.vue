@@ -191,7 +191,8 @@ export default {
         pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : '',
         key: key,
         mode: this.sendDataObj.mode,
-        gId: this.sendDataObj.gID
+        gId: this.sendDataObj.gID,
+        data: this.rawTx.data
       }
       if (Number(this.accountType) === 1) {
         data.kId = this.address

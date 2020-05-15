@@ -18,6 +18,7 @@ const AddGroupTxns = (params) => {
       timestamp: dateNow,
       mode: params.mode ? params.mode : 0,
       pubKey: params.pubKey ? params.pubKey : '',
+      data: params.data ? params.data : '',
     }
     let data = {
       msg: 'Error',
@@ -92,6 +93,7 @@ const EditGroupMemberTxns = (params) => {
       timestamp: dateNow,
       pubKey: params.local.pubKey ? params.local.pubKey : '',
       mode: params.local.mode ? params.local.mode : '',
+      data: params.local.data ? params.local.data : '',
     }
     let data = {
       msg: 'Error',

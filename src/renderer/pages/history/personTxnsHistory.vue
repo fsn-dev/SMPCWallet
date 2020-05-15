@@ -35,6 +35,9 @@
               <el-form-item :label="$t('label').date + ':'">
                 <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
               </el-form-item>
+              <el-form-item label="Data:" v-if="scope.row.data">
+                <span>{{ scope.row.data }}</span>
+              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
