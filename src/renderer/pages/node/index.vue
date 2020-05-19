@@ -36,8 +36,12 @@
         <template slot-scope="scope">
           <span>
             {{timeToDays(scope.row.timestamp)}}
-            <!-- -{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}} -->
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('label').version" width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.version}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('state').name" width="100">
