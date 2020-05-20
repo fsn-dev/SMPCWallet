@@ -10,7 +10,7 @@
       <p class="p">{{$t('tip').mBTC.d1 + ',' + $t('tip').mBTC.d2 + ',' + $t('tip').mBTC.d3}}</p>
       <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" :title="unionNode.join(',')">{{unionNode.join(',')}}</span></p>
     </div>
-
+    <!-- {{coinInfoObj[selectCoin][0]}} -->
     <div class="swap-box">
       <div class="swap-cont">
         <div class="swap-up flex-bc">
@@ -23,7 +23,7 @@
                     <div v-if="coinInfoObj[selectCoin]" class="HH100 WW100"><img :src="coinInfoObj[selectCoin][0].logo"></div>
                   </div>
                   <el-select v-model="selectCoin" @change="changeCoin" class="W120" no-data-text="Null">
-                    <el-option v-for="(item, index) in coinInfoObj" :key="index" :label="index" :value="index">
+                    <el-option v-for="(item, index) in coinInfoObj" :key="index" :label="index" :value="index" :disabled="item[0].isOpen ? false : true">
                       <div class="flex-sc">
                         <div class="coin-logo" v-if="item[0].logo"><img :src="item[0].logo"></div>
                         <div class="coin-logo txt" v-else>{{$$.titleCase(index)}}</div>
@@ -79,7 +79,7 @@
           </div>
           <div class="swap-style swap-down">
             <h3 class="label flex-bc">
-              ETH Address:
+              {{netObj.list[netObj.val].coin}} Address:
             </h3>
             <div class="swap-input-box">
               <div class="swap-select flex-bc">
@@ -463,7 +463,7 @@ export default {
         this.swap.fromIndex = 0
       }
       this.changeFromAddr()
-      // console.log(this.selectCoinArr)
+      console.log(this.selectCoinArr)
     },
     changeFromAddr () {
       // console.log(this.swap.fromIndex)
