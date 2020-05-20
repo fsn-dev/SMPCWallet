@@ -45,9 +45,16 @@
               <div class="swap-select flex-bc">
                 <div class="flex-sc">
                   <div class="coin-logo-view">
-                    <div v-if="coinInfoObj[selectCoin]" class="HH100 WW100"><img :src="coinInfoObj[selectCoin][0].logo"></div>
+                    <div class="HH100 WW100"><img :src="$$.setDollar(netObj.list[netObj.val].coin).logo"></div>
                   </div>
-                  <div class="coin">mBTC</div>
+                  <el-select v-model="netObj.val" @change="changeNetwork" class="W120" no-data-text="Null">
+                    <el-option v-for="(item, index) in netObj.list" :key="index" :label="item.name" :value="index">
+                      <div class="flex-sc">
+                        <div class="coin-logo"><img :src="$$.setDollar(item.coin).logo"></div>
+                        {{ item.name }}
+                      </div>
+                    </el-option>
+                  </el-select>
                 </div>
                 <el-input type="number" class="WW50 input-value" v-model="swap.toValue" disabled></el-input>
               </div>
@@ -89,27 +96,6 @@
     </div>
     <div class="table-box mb-30">
       <el-table :data="historyData" style="width: 100%" :empty-text="$t('warn').w_12">
-        <!-- <el-table-column type="expand">
-          <template slot-scope="scope">
-            <el-form label-position="left" inline class="tables-expand">
-              <el-form-item label="Key ID:">
-                <span>{{ scope.row.key }}</span>
-              </el-form-item>
-              <el-form-item :label="$t('label').groupId + ':'">
-                <span v-if="refresh.g">{{ scope.row.gName ? scope.row.gName : scope.row.gId }}</span>
-              </el-form-item>
-              <el-form-item :label="$t('label').groupAccountId + ':'">
-                <span v-if="refresh.a">{{ scope.row.aName ? scope.row.aName : scope.row.pubKey }}</span>
-              </el-form-item>
-              <el-form-item :label="$t('label').mode + ':'">
-                <span>{{scope.row.mode}}</span>
-              </el-form-item>
-              <el-form-item :label="$t('label').date + ':'">
-                <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column> -->
         <el-table-column
           type="index"
           width="50">
@@ -203,7 +189,14 @@ export default {
       },
       unionNode: [],
       dataPage: {},
-      web3Fn: ''
+      web3Fn: '',
+      netObj: {
+        val: 0,
+        list: [
+          {name: 'Fusion', url: 'http://47.92.168.85:12556/rpc', coin: 'FSN'},
+          {name: 'Ethereum', url: 'http://47.92.168.85:11556/rpc', coin: 'ETH'},
+        ]
+      }
     }
   },
   computed: {
@@ -224,9 +217,8 @@ export default {
   },
   mounted () {
     this.loading.init = true
+    this.web3Fn = this.newWeb3()
     setTimeout(() => {
-      let url = 'http://47.92.168.85:11556/rpc'
-      this.web3Fn = this.newWeb3(url)
       this.init()
     }, 300)
   },
@@ -237,20 +229,30 @@ export default {
       this.eDialog.pwd = false
     },
     init () {
+      this.changeNetwork()
       this.$socket.emit('NodeAndOtherData')
       this.getAllAccountList().then(res => {
-        console.log(res)
+        // console.log(res)
         this.getAllCoins(res)
       })
+    },
+    changeNetwork () {
+      let url = this.netObj.list[this.netObj.val].url
+      // this.web3Fn = this.newWeb3(url)
+      this.web3Fn.setProvider(url)
       this.web3Fn.swap.GetServerInfo().then(res => {
-        // console.log(res)
+        console.log(res)
         this.swapInfo = res.SrcToken
       }).catch(err => {
         console.log(err)
       })
+      setTimeout(() => {
+        this.getHistory()
+      }, 300)
     },
     newWeb3 (url) {
-      let web3 = new Web3(new Web3.providers.HttpProvider(url))
+      // let web3 = new Web3(new Web3.providers.HttpProvider(url))
+      let web3 = new Web3()
       web3.extend({
         property: 'swap',
         methods: [
@@ -472,7 +474,7 @@ export default {
       }, 300)
     },
     getHistory () {
-      if (!this.swap.fromObj.address) return
+      if (!this.swap.fromObj || !this.swap.fromObj.address) return
       let data = {
         Address: this.swap.fromObj.address,
         Offset: 0,
@@ -480,7 +482,7 @@ export default {
       }
       // console.log(data)
       this.web3Fn.swap.GetSwapinHistory(data).then(res => {
-        console.log(res)
+        // console.log(res)
         this.historyData = res.reverse()
       }).catch(err => {
         console.log(err)
