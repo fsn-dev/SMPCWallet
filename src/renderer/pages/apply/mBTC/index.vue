@@ -376,6 +376,7 @@ export default {
         key: key,
         mode: this.swap.fromObj.mode,
         gId: this.swap.fromObj.gID,
+        data: 'SWAPTO:' + this.swap.toAddr,
       }
       if (Number(this.swap.fromObj.accountType)) {
         data.kId = this.address

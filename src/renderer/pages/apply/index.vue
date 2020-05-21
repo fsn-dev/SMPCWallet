@@ -10,7 +10,7 @@
               <p class="p p1">{{$t('title').bestApply}}</p>
               <h1 class="h1">{{$t('title').CrossChainTitle}}</h1>
               <p class="p p2">{{$t('tip').CrossChainTip}}</p>
-              <el-button type="primary" class="btn-primary btn-install" @click="comingSoon">{{$t('btn').lookDtil}}</el-button>
+              <el-button type="primary" class="btn-primary btn-install" @click="toUrl('/dapp/mBTC')">{{$t('btn').lookDtil}}</el-button>
             </div>
           </div>
         </el-carousel-item>
