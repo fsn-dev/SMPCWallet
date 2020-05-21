@@ -123,7 +123,7 @@ export default {
 		add: 'Add',
 		assets: 'Assets',
 		network: 'Network',
-		dapp: 'DAPP',
+		dapp: 'DeFi',
 		bestApply: 'Select application',
 		CrossChainTitle: 'CrossChain-Bridge',
 		CrossChainBTC: 'CrossChain Bitcoin'

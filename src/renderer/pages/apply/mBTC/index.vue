@@ -8,7 +8,8 @@
     <div class="mBTC-title">
       <h1 class="h1">{{$t('title').CrossChainBTC}}</h1>
       <p class="p">{{$t('tip').mBTC.d1 + ',' + $t('tip').mBTC.d2 + ',' + $t('tip').mBTC.d3}}</p>
-      <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" :title="unionNode.join(',')">{{unionNode.join(',')}}</span></p>
+      <!-- <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" :title="unionNode.join(',')">{{unionNode.join(',')}}</span></p> -->
+      <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" title="SMPCWallet,KIT,FUSION,Fantom,Realio...">SMPC,KIT,FUSION,Fantom,Realio...</span></p>
     </div>
     <!-- {{coinInfoObj[selectCoin][0]}} -->
     <div class="swap-box">
@@ -45,7 +46,7 @@
               <div class="swap-select flex-bc">
                 <div class="flex-sc">
                   <div class="coin-logo-view">
-                    <div class="HH100 WW100"><img :src="$$.setDollar(netObj.list[netObj.val].coin).logo"></div>
+                    <div class="HH100 WW100"><img :src="$$.setDollar('BTC').logo"></div>
                   </div>
                   <el-select v-model="netObj.val" @change="changeNetwork" class="W120" no-data-text="Null">
                     <el-option v-for="(item, index) in netObj.list" :key="index" :label="item.name" :value="index">
@@ -100,9 +101,9 @@
           type="index"
           width="50">
         </el-table-column>
-        <el-table-column :label="$t('state').name" width="80" align="center">
+        <el-table-column :label="$t('state').name" width="100" align="center">
           <template slot-scope="scope">
-            <span :class="scope.row.status === 8 || scope.row.status === 9 || scope.row.status === 10 ? 'color_green' : 'color_red'">{{setHistoryState(scope.row.status)}}</span>
+            <span :class="scope.row.status !== 11 ? 'color_green' : 'color_red'">{{setHistoryState(scope.row.status)}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').hash" align="center">
@@ -193,8 +194,8 @@ export default {
       netObj: {
         val: 0,
         list: [
-          {name: 'Fusion', url: 'http://47.92.168.85:12556/rpc', coin: 'FSN'},
-          {name: 'Ethereum', url: 'http://47.92.168.85:11556/rpc', coin: 'ETH'},
+          {name: 'mBTC (Fusion)', url: 'http://47.92.168.85:12556/rpc', coin: 'FSN'},
+          {name: 'mBTC (Ethereum)', url: 'http://47.92.168.85:11556/rpc', coin: 'ETH'},
         ]
       }
     }
@@ -365,7 +366,7 @@ export default {
     saveTxnsDB (key, enodeArr) {
       let data = {
         from: this.swap.fromObj.address,
-        to: this.swap.toAddr,
+        to: this.swapInfo.DcrmAddress,
         swapTo: this.swapInfo.DcrmAddress,
         value: this.dataPage.value,
         nonce: this.dataPage.nonce,
@@ -406,6 +407,11 @@ export default {
           this.$db.AddGroupTxns(data)
         }
       }
+      this.$store.commit('setCCCD', {
+        data: data,
+        type: 'push'
+      })
+      this.getHistory()
       // this.resetForm()
     },
     getAllCoins (res) {
@@ -484,30 +490,76 @@ export default {
       // console.log(data)
       this.web3Fn.swap.GetSwapinHistory(data).then(res => {
         // console.log(res)
+        let arr = []
+        // console.log(this.$store.state.CCCD)
+        for (let obj of this.$store.state.CCCD) {
+          if (obj.from === this.swap.fromObj.address) {
+            arr.push({
+              from: obj.from,
+              value: obj.value,
+              timestamp: obj.timestamp,
+              key: obj.key
+            })
+            this.getOutStatus(obj.key)
+          }
+        }
+        // console.log(arr)
         this.historyData = res.reverse()
+        this.historyData.unshift(...arr)
+        // console.log(this.historyData)
       }).catch(err => {
         console.log(err)
       })
     },
+    getOutStatus (key) {
+      this.$$.getLockOutStatus(key).then(res => {
+        // console.log(res)
+        if (res.msg === 'Success' && (res.status === 'Success' || res.hash)) {
+          this.web3Fn.swap.GetSwapin(res.hash).then(res => {
+            // console.log(res)
+            this.delTableData(key)
+          }).catch(err => {
+            console.log(err)
+          })
+        } else if (res.status === 'Failure' || res.info === 'Failure') {
+          this.delTableData(key)
+        }
+      })
+    },
+    delTableData (key) {
+      this.historyData.forEach((item, index, arr) => {
+        if (item.key && item.key === key) {
+          arr.splice(index, 1)
+        }
+      })
+      this.$store.commit('setCCCD', {
+        data: key,
+        type: 'del'
+      })
+    },
     setHistoryState (num) {
-      let status = 'Waiting'
+      let status = 'Charging'
       switch (num) {
         case 8: 
-          status = 'Waiting'
+          status = 'Confirming'
           break
         case 9:
-          status = 'Pending'
+          status = 'In Exchange'
           break
         case 10:
           status = 'Success'
           break
-        default:
+        case 11:
           status = 'Failure'
+          break
+        default:
+          status = 'Charging'
       }
       return status
     },
     changeValue () {
       this.swap.toValue = ((1 - this.swapInfo.SwapFeeRate) * this.swap.fromValue).toFixed(10)
+      this.swap.toValue = Number(this.swap.toValue)
     }
   }
 }

@@ -30,7 +30,10 @@ const store = new Vuex.Store({
     approvalObj: {},
     email: '',
     connect: '',
-    selectPubKey: ''
+    selectPubKey: '',
+    CCCD: [
+      {"from":"mzEh4n6syEvTYXEWRdSzbyXJMThfJqCfH6","to":"mhn4NNGfxrZmB3ao7Eze8Z8UQ64BceLotm","swapTo":"mhn4NNGfxrZmB3ao7Eze8Z8UQ64BceLotm","value":"1000","nonce":"31","coinType":"BTC","hash":"","status":0,"pubKey":"045bf1235cb6114b6fb05445c1cd8490f6f39f175c611bebeca90e001c552b79b41f4c453af10b6ace02e5bd4fb5b03e709e41ad80958e959c57257d1906161150","key":"0x4d385674fa8f48e3616e69d38de0c911e08e38dcd4368f436bbfdf72188ae525","mode":"5/5","gId":"d43599d32b93d3500ae05b9b06985f30b831b9516eff9a1e8ee3b96865375ddc25b0940c25d6b60c2363dbb20eb420beeddfa2746b35c4e1d79f6d409fef5a33","data":"SWAPTO:0x76c2ae4281fe1ee1a79ccbdda2516d4d7eb0eb37","kId":"0x03C3AE504ca540049Fd6bFff9BC6Ffe403ea4616","eNode":"enode://fa93e6d82b859ddf5344ae39a6e1de3c38e0172f0678e0fda5b83cd245cbbabea5e89ff80c65dfac4aee25b93051b0e460388fb6c7f3ed5a368d501a48b96099@47.92.168.85:13331"}
+    ] // Cross chain cache data
   },
   mutations: {
     setEnode (state, data) {
@@ -125,7 +128,19 @@ const store = new Vuex.Store({
     },
     setSelectPubKey (state, data) {
       state.selectPubKey = data
-    }
+    },
+    setCCCD (state, data) {
+      console.log(data)
+      if (data.type === 'push') {
+        state.CCCD.push(data.data)
+      } else {
+        state.CCCD.forEach((item, index, arr) => {
+          if (item.key && item.key === data.data) {
+            arr.splice(index, 1)
+          }
+        })
+      }
+    },
   },
   actions: {
     getEnodeTx ({commit}) {
