@@ -568,9 +568,10 @@ export default {
             network: obj.extendObj && obj.extendObj.network ? obj.extendObj.network : this.netObj.val
           }
           // if (obj.status === 2) {
-          if (obj.status === 0 || (obj.extendObj && obj.extendObj.status === 0)) {
+          if (obj.status === 0 || (obj.extendObj && obj.extendObj.status === '')) {
             this.getOutStatus(obj.key, i, obj._id, extendObj)
-          } else if (obj.status === 1 && obj.extendObj && (obj.extendObj.status === 0 || obj.extendObj.status === 8 || obj.extendObj.status === 9)) {
+          // } else if (obj.status === 1 && obj.extendObj && (obj.extendObj.status === 0 || obj.extendObj.status === 8 || obj.extendObj.status === 9)) {
+          } else if (obj.status === 1 && obj.extendObj && [0, 5, 7, 8, 9].includes(obj.extendObj.status)) {
             this.getSwapTxnData(obj.key, i, obj._id, extendObj, obj.hash)
           }
           if (!obj.extendObj) {
