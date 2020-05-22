@@ -554,7 +554,8 @@ export default {
       if (res.msg === 'Success' && res.info.length > 0) {
         // this.page.total = res.total
         // this.formatData(res.info)
-        this.historyData = res.info
+        // this.historyData = res.info
+        this.historyData = []
         for (let i = 0, len = res.info.length; i < len; i++) {
           let obj = res.info[i], extendObj = {
             type: 'SWAPTO',
@@ -568,12 +569,14 @@ export default {
           }
           // if (obj.status === 1) {
           if (obj.status === 0) {
-            console.log(1)
             this.getOutStatus(obj.key, i, obj._id, extendObj)
           } else if (obj.status === 1 && obj.extendObj && (obj.extendObj.status === 0 || obj.extendObj.status === 8 || obj.extendObj.status === 9)) {
-            console.log(2)
             this.getSwapTxnData(obj.key, i, obj._id, extendObj, obj.hash)
           }
+          if (!obj.extendObj) {
+            obj.extendObj = extendObj
+          }
+          this.historyData.push(obj)
         }
       } else {
         // this.page.total = 0
