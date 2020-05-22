@@ -390,7 +390,7 @@ export default {
         data: 'SWAPTO:' + this.swap.toAddr,
         extendObj: {
           type: 'SWAPTO',
-          status: 0,
+          status: '',
           to: this.swap.toAddr,
           fee: Number(this.dataPage.value) * Number(this.swapInfo.SwapFeeRate),
           txheight: '',
