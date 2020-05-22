@@ -19,6 +19,7 @@ const AddGroupTxns = (params) => {
       mode: params.mode ? params.mode : 0,
       pubKey: params.pubKey ? params.pubKey : '',
       data: params.data ? params.data : '',
+      expend: params.expend ? params.expend : {},
     }
     let data = {
       msg: 'Error',
@@ -56,6 +57,9 @@ const EditGroupTxns = (params) => {
       }
       if (params.hash || params.hash === 0) {
         updateParams['hash'] = params.hash
+      }
+      if (params.expend || params.expend === 0) {
+        updateParams['expend'] = params.expend
       }
     }
     db.historyGroupTxns.update(query, {$set: updateParams}, {}, (err, res) => {

@@ -48,7 +48,7 @@
                   <div class="coin-logo-view">
                     <div class="HH100 WW100"><img :src="$$.setDollar('BTC').logo"></div>
                   </div>
-                  <el-select v-model="netObj.val" @change="changeNetwork" class="W120" no-data-text="Null">
+                  <el-select v-model="netObj.val" @change="changeNetwork" class="W200" no-data-text="Null">
                     <el-option v-for="(item, index) in netObj.list" :key="index" :label="item.name" :value="index">
                       <div class="flex-sc">
                         <div class="coin-logo"><img :src="$$.setDollar(item.coin).logo"></div>
@@ -103,12 +103,12 @@
         </el-table-column>
         <el-table-column :label="$t('state').name" width="100" align="center">
           <template slot-scope="scope">
-            <span :class="scope.row.status !== 11 ? 'color_green' : 'color_red'">{{setHistoryState(scope.row.status)}}</span>
+            <span :class="setHistoryState(scope.row.extendObj.status).class">{{setHistoryState(scope.row.extendObj.status).status}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').hash" align="center">
           <template slot-scope="scope">
-            <span class="cursorP" :title="scope.row.txid" @click="copyTxt(scope.row.txid)">{{ $$.cutOut(scope.row.txid, 6, 4) }}</span>
+            <span class="cursorP" :title="scope.row.hash" @click="copyTxt(scope.row.hash)">{{ $$.cutOut(scope.row.hash, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').from" align="center">
@@ -125,20 +125,23 @@
         </el-table-column>
         <el-table-column :label="$t('label').to" align="center">
           <template slot-scope="scope">
-            <span class="cursorP" :title="scope.row.bind" @click="copyTxt(scope.row.bind)">{{ $$.cutOut(scope.row.bind, 6, 4) }}</span>
+            <span class="cursorP" :title="scope.row.extendObj.to" @click="copyTxt(scope.row.extendObj.to)">{{ $$.cutOut(scope.row.extendObj.to, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').pairHash" align="center">
           <template slot-scope="scope">
-            <span :title="scope.row.swaptx" @click="copyTxt(scope.row.swaptx)">{{ $$.cutOut(scope.row.swaptx, 6, 4) }}</span>
+            <span :title="scope.row.extendObj.swapHash" @click="copyTxt(scope.row.extendObj.swapHash)">{{ $$.cutOut(scope.row.extendObj.swapHash, 6, 4) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').fee" align="center">
           <template slot-scope="scope">
             <span>
-              {{
-              Number($$.thousandBit($$.fromWei(Number(scope.row.value) - Number(scope.row.swapvalue), $$.cutERC20(selectCoin).coinType), 20))
-            }}</span>
+              <!-- {{
+              Number(scope.row.extendObj.fee) !== 0 ? Number($$.thousandBit($$.fromWei(Number(scope.row.value) - Number(scope.row.swapvalue), $$.cutERC20(selectCoin).coinType), 20)) : 0
+            }} -->
+            {{Number(scope.row.extendObj.fee) !== 0 ? 
+                $$.fromWei(Number(scope.row.extendObj.fee), $$.cutERC20(selectCoin).coinType) : 0}}
+            </span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').date" width="200" align="center">
@@ -214,9 +217,16 @@ export default {
           this.unionNode.push(obj.name)
         }
       }
+    },
+    GroupFindTxns (res) {
+      this.initFormat(res)
+    },
+    PersonFindTxns (res) {
+      this.initFormat(res)
     }
   },
   mounted () {
+    this.netObj.val = Number(this.$route.query.nodeType) ? Number(this.$route.query.nodeType) : 0
     this.loading.init = true
     this.web3Fn = this.newWeb3()
     setTimeout(() => {
@@ -239,10 +249,11 @@ export default {
     },
     changeNetwork () {
       let url = this.netObj.list[this.netObj.val].url
+      this.$router.push({path: this.$route.path, query: {nodeType: this.netObj.val}})
       // this.web3Fn = this.newWeb3(url)
       this.web3Fn.setProvider(url)
       this.web3Fn.swap.GetServerInfo().then(res => {
-        console.log(res)
+        // console.log(res)
         this.swapInfo = res.SrcToken
       }).catch(err => {
         console.log(err)
@@ -367,7 +378,6 @@ export default {
       let data = {
         from: this.swap.fromObj.address,
         to: this.swapInfo.DcrmAddress,
-        swapTo: this.swapInfo.DcrmAddress,
         value: this.dataPage.value,
         nonce: this.dataPage.nonce,
         coinType: this.selectCoin,
@@ -378,6 +388,16 @@ export default {
         mode: this.swap.fromObj.mode,
         gId: this.swap.fromObj.gID,
         data: 'SWAPTO:' + this.swap.toAddr,
+        extendObj: {
+          type: 'SWAPTO',
+          status: 0,
+          to: this.swap.toAddr,
+          fee: Number(this.dataPage.value) * Number(this.swapInfo.SwapFeeRate),
+          txheight: '',
+          swapheight: '',
+          swapHash: '',
+          network: this.netObj.val
+        }
       }
       if (Number(this.swap.fromObj.accountType)) {
         data.kId = this.address
@@ -407,10 +427,6 @@ export default {
           this.$db.AddGroupTxns(data)
         }
       }
-      this.$store.commit('setCCCD', {
-        data: data,
-        type: 'push'
-      })
       this.getHistory()
       // this.resetForm()
     },
@@ -470,7 +486,7 @@ export default {
         this.swap.fromIndex = 0
       }
       this.changeFromAddr()
-      console.log(this.selectCoinArr)
+      // console.log(this.selectCoinArr)
     },
     changeFromAddr () {
       // console.log(this.swap.fromIndex)
@@ -482,80 +498,193 @@ export default {
     },
     getHistory () {
       if (!this.swap.fromObj || !this.swap.fromObj.address) return
+      // let data = {
+      //   Address: this.swap.fromObj.address,
+      //   Offset: 0,
+      //   Limit: 20
+      // }
       let data = {
-        Address: this.swap.fromObj.address,
-        Offset: 0,
-        Limit: 20
+        from: this.swap.fromObj.address,
+        to: this.swapInfo.DcrmAddress,
+        kId: this.address
+      }
+      if (Number(this.swap.fromObj.accountType)) {
+        if (this.networkMode) {
+          this.$socket.emit('PersonFindTxns', data)
+        } else {
+          this.$db.FindPersonTxns(data).then(res => {
+            this.initFormat(res)
+          })
+        }
+      } else {
+        if (this.networkMode) {
+          this.$socket.emit('GroupFindTxns', data)
+        } else {
+          this.$db.FindGroupTxns(data).then(res => {
+            this.initFormat(res)
+          })
+        }
       }
       // console.log(data)
-      this.web3Fn.swap.GetSwapinHistory(data).then(res => {
-        // console.log(res)
-        let arr = []
-        // console.log(this.$store.state.CCCD)
-        for (let obj of this.$store.state.CCCD) {
-          if (obj.from === this.swap.fromObj.address) {
-            arr.push({
-              from: obj.from,
-              value: obj.value,
-              timestamp: obj.timestamp,
-              key: obj.key
-            })
-            this.getOutStatus(obj.key)
+      // this.web3Fn.swap.GetSwapinHistory(data).then(res => {
+      //   console.log(res)
+      //   let arr = []
+      //   // console.log(this.$store.state.CCCD)
+      //   for (let obj of this.$store.state.CCCD) {
+      //     if (obj.from === this.swap.fromObj.address) {
+      //       arr.push({
+      //         from: obj.from,
+      //         value: obj.value,
+      //         timestamp: obj.timestamp,
+      //         key: obj.key
+      //       })
+      //       this.getOutStatus(obj.key)
+      //     }
+      //   }
+      //   // console.log(arr)
+      //   this.historyData = res.reverse()
+      //   this.historyData.unshift(...arr)
+      //   // console.log(this.historyData)
+      // }).catch(err => {
+      //   console.log(err)
+      // })
+    },
+    initFormat (res) {
+      console.log(res)
+      if (res.msg === 'Success' && res.info.length > 0) {
+        // this.page.total = res.total
+        // this.formatData(res.info)
+        this.historyData = res.info
+        for (let i = 0, len = res.info.length; i < len; i++) {
+          let obj = res.info[i], extendObj = {
+            type: 'SWAPTO',
+            status: 0,
+            to: obj.data.indexOf('SWAPTO:') === 0 ? obj.data.replace('SWAPTO:', '') : obj.to,
+            fee: Number(obj.value) * Number(this.swapInfo.SwapFeeRate),
+            txheight: '',
+            swapheight: '',
+            swapHash: '',
+            network: this.netObj.val
+          }
+          // if (obj.status === 1) {
+          if (obj.status === 0) {
+            console.log(1)
+            this.getOutStatus(obj.key, i, obj._id, extendObj)
+          } else if (obj.status === 1 && obj.extendObj && (obj.extendObj.status === 0 || obj.extendObj.status === 8 || obj.extendObj.status === 9)) {
+            console.log(2)
+            this.getSwapTxnData(obj.key, i, obj._id, extendObj, obj.hash)
           }
         }
-        // console.log(arr)
-        this.historyData = res.reverse()
-        this.historyData.unshift(...arr)
-        // console.log(this.historyData)
+      } else {
+        // this.page.total = 0
+        this.historyData = []
+        // this.loading.history = false
+      }
+    },
+    getOutStatus (key, index, id, extendObj) {
+      this.$$.getLockOutStatus(key).then(res => {
+        console.log(res)
+        if (res.msg === 'Success' && (res.status === 'Success' || res.hash)) {
+          let hash = res.hash
+          this.historyData[index].hash = hash
+          this.setDBState(id, index, hash, 1, extendObj)
+          this.getSwapTxnData(key, index, id, extendObj, hash)
+          // this.historyData[index].status = 1
+        } else if (res.status === 'Failure' || res.info === 'Failure') {
+          extendObj.status = this.historyData[index].extendObj.status = 6
+          this.setDBState(id, index, '', 2, extendObj)
+        } else if (res.status === 'Timeout' || res.info === 'Timeout') {
+          extendObj.status = this.historyData[index].extendObj.status = 20
+          this.setDBState(id, index, '', 6, extendObj)
+        }
+      })
+    },
+    getSwapTxnData (key, index, id, extendObj, hash) {
+      this.web3Fn.swap.GetSwapin(hash).then(res => {
+        console.log(res)
+        extendObj.status = res.status
+        extendObj.txheight = res.txheight
+        extendObj.swapheight = res.swapheight
+        extendObj.swapHash = res.swaptx
+        this.setDBState(id, index, hash, 1, extendObj)
+        // this.delTableData(key)
       }).catch(err => {
         console.log(err)
       })
     },
-    getOutStatus (key) {
-      this.$$.getLockOutStatus(key).then(res => {
-        // console.log(res)
-        if (res.msg === 'Success' && (res.status === 'Success' || res.hash)) {
-          this.web3Fn.swap.GetSwapin(res.hash).then(res => {
-            // console.log(res)
-            this.delTableData(key)
-          }).catch(err => {
-            console.log(err)
-          })
-        } else if (res.status === 'Failure' || res.info === 'Failure') {
-          this.delTableData(key)
+    setDBState (id, index, hash, status, extendObj) {
+      let data = {
+        id: id,
+        hash: hash,
+        status: status,
+        extendObj: extendObj
+      }
+      // EditPersonTxnsFn(this, 'changePersonTxnsStatus', data)
+      if (Number(this.swap.fromObj.accountType)) {
+        if (this.networkMode) {
+          this.$socket.emit('changePersonTxnsStatus', data)
+        } else {
+          this.$db.EditPersonTxns(data)
         }
-      })
-    },
-    delTableData (key) {
-      this.historyData.forEach((item, index, arr) => {
-        if (item.key && item.key === key) {
-          arr.splice(index, 1)
+      } else {
+        if (this.networkMode) {
+          this.$socket.emit('changeGroupTxnsStatus', data)
+        } else {
+          this.$db.EditGroupTxns(data)
         }
-      })
-      this.$store.commit('setCCCD', {
-        data: key,
-        type: 'del'
-      })
+      }
     },
     setHistoryState (num) {
-      let status = 'Charging'
+      let obj = {
+        status: 'Depositing',
+        class: 'color_green'
+      }
       switch (num) {
+        case 6:
+          obj = {
+            status: 'Failure',
+            class: 'color_red'
+          }
+          break
         case 8: 
-          status = 'Confirming'
+          obj = {
+            status: 'Confirming',
+            class: 'color_green'
+          }
           break
         case 9:
-          status = 'In Exchange'
+          obj = {
+            status: 'In Exchange',
+            class: 'color_green'
+          }
           break
         case 10:
-          status = 'Success'
+          obj = {
+            status: 'Success',
+            class: 'color_green'
+          }
           break
         case 11:
-          status = 'Failure'
+          obj = {
+            status: 'Failure',
+            class: 'color_red'
+          }
+          break
+        case 20:
+          obj = {
+            status: 'Failure',
+            class: 'Timeout'
+          }
           break
         default:
-          status = 'Charging'
+          obj = {
+            status: 'Depositing',
+            class: 'color_green'
+          }
       }
-      return status
+      // console.log(num)
+      // console.log(obj)
+      return obj
     },
     changeValue () {
       this.swap.toValue = ((1 - this.swapInfo.SwapFeeRate) * this.swap.fromValue).toFixed(10)
