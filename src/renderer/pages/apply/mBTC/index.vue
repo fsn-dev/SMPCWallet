@@ -558,14 +558,14 @@ export default {
         this.historyData = []
         for (let i = 0, len = res.info.length; i < len; i++) {
           let obj = res.info[i], extendObj = {
-            type: 'SWAPTO',
-            status: 0,
-            to: obj.data.indexOf('SWAPTO:') === 0 ? obj.data.replace('SWAPTO:', '') : obj.to,
-            fee: Number(obj.value) * Number(this.swapInfo.SwapFeeRate),
-            txheight: '',
-            swapheight: '',
-            swapHash: '',
-            network: this.netObj.val
+            type: obj.extendObj && obj.extendObj.type ? obj.extendObj.type : 'SWAPTO',
+            status: obj.extendObj && obj.extendObj.status ? obj.extendObj.status : 0,
+            to: obj.extendObj && obj.extendObj.to ? obj.extendObj.to : (obj.data.indexOf('SWAPTO:') === 0 ? obj.data.replace('SWAPTO:', '') : obj.to),
+            fee: obj.extendObj && obj.extendObj.fee ? obj.extendObj.fee : Number(obj.value) * Number(this.swapInfo.SwapFeeRate),
+            txheight: obj.extendObj && obj.extendObj.txheight ? obj.extendObj.txheight : '',
+            swapheight: obj.extendObj && obj.extendObj.swapheight ? obj.extendObj.swapheight : '',
+            swapHash: obj.extendObj && obj.extendObj.swapHash ? obj.extendObj.swapHash : '',
+            network: obj.extendObj && obj.extendObj.network ? obj.extendObj.network : this.netObj.val
           }
           // if (obj.status === 1) {
           if (obj.status === 0) {
