@@ -559,7 +559,7 @@ export default {
         for (let i = 0, len = res.info.length; i < len; i++) {
           let obj = res.info[i], extendObj = {
             type: obj.extendObj && obj.extendObj.type ? obj.extendObj.type : 'SWAPTO',
-            status: obj.extendObj && obj.extendObj.status ? obj.extendObj.status : 0,
+            status: obj.extendObj && obj.extendObj.status !== '' ? obj.extendObj.status : '',
             to: obj.extendObj && obj.extendObj.to ? obj.extendObj.to : (obj.data.indexOf('SWAPTO:') === 0 ? obj.data.replace('SWAPTO:', '') : obj.to),
             fee: obj.extendObj && obj.extendObj.fee ? obj.extendObj.fee : Number(obj.value) * Number(this.swapInfo.SwapFeeRate),
             txheight: obj.extendObj && obj.extendObj.txheight ? obj.extendObj.txheight : '',
@@ -642,48 +642,16 @@ export default {
         status: this.$t('state').depositing,
         class: 'color_green'
       }
-      switch (num) {
-        case 6:
-          obj = {
-            status: this.$t('state').fail,
-            class: 'color_red'
-          }
-          break
-        case 8: 
-          obj = {
-            status: this.$t('state').confirming,
-            class: 'color_green'
-          }
-          break
-        case 9:
-          obj = {
-            status: this.$t('state').swapping,
-            class: 'color_green'
-          }
-          break
-        case 10:
-          obj = {
-            status: this.$t('state').success,
-            class: 'color_green'
-          }
-          break
-        case 11:
-          obj = {
-            status: this.$t('state').fail,
-            class: 'color_red'
-          }
-          break
-        case 20:
-          obj = {
-            status: this.$t('state').timeout,
-            class: 'color_red'
-          }
-          break
-        default:
-          obj = {
-            status: this.$t('state').depositing,
-            class: 'color_green'
-          }
+      if ([0, 5, 8].includes(num)) {
+        obj = { status: this.$t('state').confirming, class: 'color_green' }
+      } else if ([7, 9].includes(num)) {
+        obj = { status: this.$t('state').swapping, class: 'color_green' }
+      } else if ([10].includes(num)) {
+        obj = { status: this.$t('state').success, class: 'color_green' }
+      } else if ([1, 2, 3, 4, 6, 11].includes(num)) {
+        obj = { status: this.$t('state').fail, class: 'color_red' }
+      } else if ([20].includes(num)) {
+        obj = { status: this.$t('state').timeout, class: 'color_red' }
       }
       // console.log(num)
       // console.log(obj)
