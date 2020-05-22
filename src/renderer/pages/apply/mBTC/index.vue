@@ -639,49 +639,49 @@ export default {
     },
     setHistoryState (num) {
       let obj = {
-        status: 'Depositing',
+        status: this.$t('state').depositing,
         class: 'color_green'
       }
       switch (num) {
         case 6:
           obj = {
-            status: 'Failure',
+            status: this.$t('state').fail,
             class: 'color_red'
           }
           break
         case 8: 
           obj = {
-            status: 'Confirming',
+            status: this.$t('state').confirming,
             class: 'color_green'
           }
           break
         case 9:
           obj = {
-            status: 'In Exchange',
+            status: this.$t('state').swapping,
             class: 'color_green'
           }
           break
         case 10:
           obj = {
-            status: 'Success',
+            status: this.$t('state').success,
             class: 'color_green'
           }
           break
         case 11:
           obj = {
-            status: 'Failure',
+            status: this.$t('state').fail,
             class: 'color_red'
           }
           break
         case 20:
           obj = {
-            status: 'Failure',
-            class: 'Timeout'
+            status: this.$t('state').timeout,
+            class: 'color_red'
           }
           break
         default:
           obj = {
-            status: 'Depositing',
+            status: this.$t('state').depositing,
             class: 'color_green'
           }
       }

@@ -202,7 +202,11 @@ export default {
 		pending: '等待中',
 		null: '无',
 		new: '新',
-		end: '结束'
+		end: '结束',
+		depositing: '充值中',
+		confirming: '确认中',
+		swapping: '交换中',
+		timeout: '超时'
 	},
 	action: {
 		copy: '复制',

@@ -198,11 +198,15 @@ export default {
 		on: 'Online',
 		off: 'Offline',
 		success: 'Success',
-		fail: 'Fail',
+		fail: 'Failure',
 		pending: 'Pending',
 		null: 'Null',
 		new: 'New',
-		end: 'End'
+		end: 'End',
+		depositing: 'Depositing',
+		confirming: 'Confirming',
+		swapping: 'Swapping',
+		timeout: 'Timeout'
 	},
 	action: {
 		copy: 'Copy',
