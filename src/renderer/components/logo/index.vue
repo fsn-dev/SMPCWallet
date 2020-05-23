@@ -12,7 +12,7 @@
     <!-- <div class="logoImg flex-sc cursorP" @click="goHome" :title="$$.config.AppName + (token ? '--' + token : '')"> -->
     <div class="logoImg flex-sc cursorP" @click="goHome">
       <img src="@/assets/img/logo/logo.svg" class="logoImgVisibleLg">
-      <p class="appTitle ml-10 flex-c font18"><span>SMPC</span> Wallet</p>
+      <p class="appTitle ml-10 flex-c font18" v-html="$t('title').walletTitle"></p>
       <span class="color_red font12" v-if="$$.config.env === 'dev'" style="white-space:nowrap;">（{{$t('label').versionTest}}）</span>
     </div>
   </el-tooltip>

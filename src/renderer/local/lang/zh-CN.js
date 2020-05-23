@@ -101,6 +101,7 @@ export default {
 	},
 	title: {
 		walletTitle: '<span>SMPC</span> Wallet',
+		// walletTitle: '<span>RMBT</span> Wallet',
 		login: '登陆账户',
 		register: '创建账户',
 		gMember: '当前组成员',
