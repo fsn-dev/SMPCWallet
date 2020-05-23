@@ -86,7 +86,7 @@ let publicSet = {
   /**
    * @description 是否打开邮箱验证
    */
-  isOpenEmail: 1, // '0': 否； '1': 是
+  isOpenEmail: 0, // '0': 否； '1': 是
 }
 
 // publicSet.appURL = 'http://smpcwallet.com'
