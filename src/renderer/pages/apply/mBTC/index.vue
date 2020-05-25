@@ -610,6 +610,8 @@ export default {
         extendObj.txheight = res.txheight
         extendObj.swapheight = res.swapheight
         extendObj.swapHash = res.swaptx
+        this.historyData[index].extendObj.status = res.status
+        this.historyData[index].extendObj.swapHash = res.swaptx
         this.setDBState(id, index, hash, 1, extendObj)
         // this.delTableData(key)
       }).catch(err => {
