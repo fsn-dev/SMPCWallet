@@ -4,7 +4,9 @@ export default {
     let data = {msg: '', info: ''}
     return new Promise(resolve => {
       let cbData = ''
-      web3.dcrm.createSDKGroup(mode, nodeArr).then(res => {
+      console.log(mode)
+      console.log(nodeArr)
+      web3.dcrm.createGroup(mode, nodeArr).then(res => {
         cbData = res
         if (res && typeof res === 'string') {
           cbData = JSON.parse(cbData)

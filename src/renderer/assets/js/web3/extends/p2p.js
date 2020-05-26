@@ -21,6 +21,13 @@ const p2p = [
     outputFormatter: null
   },
   {
+    name: 'createGroup',
+    call: 'dcrm_createGroup',
+    params: 2,
+    inputFormatter: [null, null],
+    outputFormatter: null
+  },
+  {
     name: 'getSDKGroup',
     call: 'dcrm_getSDKGroup',
     params: 1,
