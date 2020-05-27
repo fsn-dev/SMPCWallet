@@ -23,7 +23,7 @@
       <el-table-column :label="$t('label').pubKeyAddr">
         <template slot-scope="scope">
           <span class="cursorP" @click="copyTxt($$.eNodeCut(scope.row.enode).key)" :title="$$.eNodeCut(scope.row.enode).key">
-            {{scope.row.enode.length > 22 ? $$.cutOut($$.eNodeCut(scope.row.enode).key, 18, 12) : $$.eNodeCut(scope.row.enode).key}}
+            {{scope.row.enode && scope.row.enode.length > 22 ? $$.cutOut($$.eNodeCut(scope.row.enode).key, 18, 12) : $$.eNodeCut(scope.row.enode).key}}
           </span>
         </template>
       </el-table-column>
