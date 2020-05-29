@@ -130,7 +130,7 @@ export default {
   },
   "XRP": {
     "coinName": "XRP",
-    "logo": require("@/assets/img/coin/xpr.png"),
+    "logo": require("@/assets/img/coin/xrp.png"),
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
