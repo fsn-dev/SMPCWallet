@@ -4,9 +4,20 @@ export default {
     let allCoins = [
       { coinType: 'BTC', address: '', balance: '', isOpen: 1},
       { coinType: 'ETH', address: '', balance: '', isOpen: 1},
-      { coinType: 'USDT', address: '', balance: '', isOpen: 0},
       { coinType: 'FSN', address: '', balance: '', isOpen: 1},
-      { coinType: 'RMBT', address: '', balance: '', isOpen: 0},
+      { coinType: 'XRP', address: '', balance: '', isOpen: 1},
+      { coinType: 'ERC20USDT', address: '', balance: '', isOpen: 1},
+      { coinType: 'ERC20RMBT', address: '', balance: '', isOpen: 1},
+      { coinType: 'BCH', address: '', balance: '', isOpen: 1},
+      { coinType: 'BNB', address: '', balance: '', isOpen: 1},
+      // { coinType: 'ERC20BNB', address: '', balance: '', isOpen: 1},
+      { coinType: 'TRX', address: '', balance: '', isOpen: 1},
+      
+      // { coinType: 'ATOM', address: '', balance: '', isOpen: 1},
+      // { coinType: 'ERC20GUSD', address: '', balance: '', isOpen: 1},
+      // { coinType: 'ERC20MKR', address: '', balance: '', isOpen: 1},
+      // { coinType: 'ERC20HT', address: '', balance: '', isOpen: 1},
+      // { coinType: 'ERC20BNT', address: '', balance: '', isOpen: 1},
     ]
     return allCoins
   },

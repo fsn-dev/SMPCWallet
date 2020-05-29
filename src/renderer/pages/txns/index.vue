@@ -1,14 +1,14 @@
 <template>
   <div class="boxConntent1 container">
     <div class="d-content-view">
-      <h3 class="h3">{{$t('label').send}}{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
+      <h3 class="h3">{{$t('label').send}}{{sendDataObj.coinType}}</h3>
       <el-form ref="txnsInfoForm" :model="rawTx" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('label').sendAddr" prop="to">
           <el-input v-model="rawTx.to"></el-input>
         </el-form-item>
         <el-form-item :label="$t('label').amount" prop="value">
           <el-input type="number" v-model="rawTx.value"></el-input>
-          <span class="font12 color_99">{{$t('label').balance + ': ' + $$.fromWei(sendDataObj.balance, $$.cutERC20(sendDataObj.coinType).coinType)}}</span>
+          <span class="font12 color_99">{{$t('label').balance + ': ' + $$.fromWei(sendDataObj.balance, sendDataObj.coinType)}}</span>
         </el-form-item>
         <el-form-item label="Data">
           <el-input v-model="rawTx.data"></el-input>
@@ -129,7 +129,7 @@ export default {
         this.msgError(this.$t('warn').w_1)
         return
       }
-      let coin = this.$$.cutERC20(this.sendDataObj.coinType).coinType
+      let coin = this.sendDataObj.coinType
       let balance = this.$$.fromWei(this.sendDataObj.balance, coin)
       if (!regExp.coin[coin].test(this.rawTx.to) && coin !== 'BTC') {
         this.msgError('This to address is illegal!')
@@ -141,7 +141,6 @@ export default {
       }
       this.dataPage = {}
       this.$$.getLockOutNonce(this.address).then(nonce => {
-      // this.$$.getLockOutNonce(this.address, this.sendDataObj.coinType, this.sendDataObj.dcrmAddr).then(nonce => {
         this.dataPage.nonce = nonce
         this.dataPage.value = this.$$.toWei(this.rawTx.value, coin)
         let dataObj = {
@@ -149,7 +148,7 @@ export default {
           DcrmAddr: this.sendDataObj.dcrmAddr,
           DcrmTo: this.rawTx.to,
           Value: this.$$.toWei(this.rawTx.value, coin),
-          Cointype: this.sendDataObj.coinType,
+          Cointype: this.sendDataObj.allCoinType,
           GroupId: this.childGroupID,
           ThresHold: this.sendDataObj.mode,
           Mode: this.accountType,
@@ -185,7 +184,7 @@ export default {
         to: this.rawTx.to,
         value: this.dataPage.value,
         nonce: this.dataPage.nonce,
-        coinType: this.sendDataObj.coinType,
+        coinType: this.sendDataObj.allCoinType,
         hash: '',
         status: 0,
         pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : '',

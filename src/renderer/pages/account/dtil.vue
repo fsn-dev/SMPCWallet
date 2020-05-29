@@ -379,14 +379,17 @@ export default {
       })
     },
     setTxnsData (item) {
+      console.log(item)
       this.sendDataObj = {
         balance: item.balance,
         dcrmAddr: item.address,
         coinType: item.coinType,
         gID: this.gID,
         mode: this.gMode,
-        pubKey: this.pubKey
+        pubKey: this.pubKey,
+        allCoinType: item.isERC20 ? 'ERC20' + item.coinType : item.coinType
       }
+      console.log(this.sendDataObj)
     },
     openSendDialog (index, item) {
       this.setTxnsData(item)

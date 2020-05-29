@@ -22,27 +22,27 @@ const routers = new Router({
 //   console.log(to)
 //   next()
 // })
-routers.beforeEach((to, from, next) => {
-  // console.log(to)
-  const token = store.state.address
-  const hideSearchURL = ['/login', '/register']
-  if (token) {
-    next()
-  } else {
-    let toFlag = false
-    for (let i of hideSearchURL) {
-      if (to.path.toUpperCase().indexOf(i.toUpperCase()) !== -1 || to.path.toUpperCase() === '/') {
-        toFlag = true
-        break
-      }
-    }
-    if (toFlag) {
-      next()
-    } else {
-      next('/')
-      $$.clearCookies()
-    }
-  }
-})
+// routers.beforeEach((to, from, next) => {
+//   // console.log(to)
+//   const token = store.state.address
+//   const hideSearchURL = ['/login', '/register']
+//   if (token) {
+//     next()
+//   } else {
+//     let toFlag = false
+//     for (let i of hideSearchURL) {
+//       if (to.path.toUpperCase().indexOf(i.toUpperCase()) !== -1 || to.path.toUpperCase() === '/') {
+//         toFlag = true
+//         break
+//       }
+//     }
+//     if (toFlag) {
+//       next()
+//     } else {
+//       next('/')
+//       $$.clearCookies()
+//     }
+//   }
+// })
 
 export default routers
