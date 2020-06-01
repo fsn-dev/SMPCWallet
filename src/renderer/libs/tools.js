@@ -11,6 +11,8 @@ import {BigNumber} from 'bignumber.js'
  */
 import Identicon from 'identicon.js'
 
+const shell = require('electron').shell
+
 export default {
   fromTime (timestamp) {
     if (timestamp.toString().length === 10) {
@@ -358,5 +360,8 @@ export default {
     let imgData = new Identicon(hex).toString()
     let imgInfo = 'data:image/png;base64,' + imgData // 这就是头像的base64码
     return imgInfo
+  },
+  openUrl (url) {
+    shell.openExternal(url)
   }
 }

@@ -157,15 +157,18 @@ export default {
             {cont: this.$t('tip').DEX.d2},
             {cont: this.$t('tip').DEX.d3},
           ],
-          url: '',
-          type: 0,
+          url: 'https://uniswap.smpcwallet.com/',
+          type: 2,
           bg: require('@/assets/img/apply/DEX.png')
         },
       ]
     },
     openUrl (url, type) {
-      if (type) {
+      if (type === 1) {
         this.toUrl(url)
+      } else if (type === 2) {
+        // require("shell").openExternal(url)
+        this.$$.openUrl(url)
       } else {
         this.comingSoon()
       }
