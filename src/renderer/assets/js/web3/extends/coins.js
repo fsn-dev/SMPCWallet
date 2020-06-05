@@ -56,3 +56,5 @@ const coins = [
     outputFormatter: null
   },
 ]
+
+export default coins
