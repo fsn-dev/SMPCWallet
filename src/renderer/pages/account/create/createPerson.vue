@@ -141,8 +141,8 @@ export default {
   },
   watch: {
     ...watchs,
-    netUrlArr () {
-      this.userlist = this.netUrlArr
+    limitVersion () {
+      this.userlist = this.limitVersion
     },
     checkList (cur, old) {
       // console.log(cur)
@@ -181,11 +181,11 @@ export default {
     searchEnode () {
       let query = this.searchVal
       if (query) {
-        this.userlist = this.netUrlArr.filter(item => {
+        this.userlist = this.limitVersion.filter(item => {
           return item.name.toLowerCase().indexOf(query.toString().toLowerCase()) > -1 || item.url.toLowerCase().indexOf(query.toString().toLowerCase()) > -1
         })
       } else {
-        this.userlist = this.netUrlArr
+        this.userlist = this.limitVersion
       }
     },
     addNode () {
@@ -237,7 +237,7 @@ export default {
     },
     setNode (nodeUrl, index) {
       let isExist = true, nowSelect = {}
-      for (let obj of this.netUrlArr) {
+      for (let obj of this.limitVersion) {
         if (obj.url === nodeUrl) {
           isExist = false
           nowSelect = obj
