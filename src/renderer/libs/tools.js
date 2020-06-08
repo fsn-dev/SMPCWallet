@@ -363,5 +363,22 @@ export default {
   },
   openUrl (url) {
     shell.openExternal(url)
+  },
+  compareVersion (vOld, vNew) {
+    let level = 0
+    if (vOld) {
+      let vOldArr = vOld.split('.')
+      let vNewArr = vNew.split('.')
+      if (vOldArr[0] < vNewArr[0]) {
+        level = 1
+      } else if (vOldArr[1] < vNewArr[1]) {
+        level = 2
+      } else if (vOldArr[2] < vNewArr[2]) {
+        level = 3
+      }
+    } else {
+      level = 1
+    }
+    return level
   }
 }

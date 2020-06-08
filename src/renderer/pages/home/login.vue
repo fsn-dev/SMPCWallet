@@ -20,7 +20,7 @@
               </div>
               <el-select class="WW100 mt-10" v-model="netUrl" filterable allow-create default-first-option placeholder="" :title="netUrl" no-data-text="Null" :loading="loadingSelect" :loading-text="$t('loading').l_1">
                 <el-option
-                  v-for="(item, index) in netUrlArr"
+                  v-for="(item, index) in limitVersion"
                   :key="index"
                   :label="item.name"
                   :value="item.url">

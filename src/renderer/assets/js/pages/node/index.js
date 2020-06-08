@@ -3,6 +3,7 @@ export const nodeDatas = {
   netUrlArr: [],
   localUrlArr: [],
   loadingSelect: true,
+  limitVersion: []
 }
 
 export const nodeSockets = {
@@ -16,26 +17,39 @@ export const nodeSockets = {
 
 export const nodeMethods = {
   formatData (res) {
-    let noRepeat = new Set(), arr = []
+    this.limitVersion = []
+    let noRepeat = new Set(), noRepeat1 = new Set(), arr = []
     if (res.msg === 'Success') {
       for (let obj of res.info) {
         obj.url = obj.url.replace(/\s/g, '')
         arr.push({
           url: obj.url,
           name: obj.name ? obj.name : obj.url,
-          status: obj.status
+          status: obj.status,
         })
+        if (obj.version) {
+          let level = this.$$.compareVersion(obj.version, '5.2.0')
+          // console.log(obj.version)
+          // console.log(level)
+          if (level > 2 || level === 0) {
+            this.limitVersion.push(obj)
+            noRepeat1.add(obj.url)
+          }
+        }
         noRepeat.add(obj.url)
       }
+      // console.log(this.limitVersion)
     }
     for (let obj of this.localUrlArr) {
       if (!noRepeat.has(obj.url)) {
         obj.url = obj.url.replace(/\s/g, '')
-        arr.push({
+        let obj1 = {
           url: obj.url,
           name: obj.name ? obj.name : obj.url,
           status: ''
-        })
+        }
+        arr.push(obj1)
+        this.limitVersion.push(obj1)
         noRepeat.add(obj.url)
       }
     }
