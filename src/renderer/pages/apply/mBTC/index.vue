@@ -198,7 +198,7 @@ export default {
         list: [
           // {name: 'mBTC (Fusion)', url: 'http://47.92.168.85:12556/rpc', coin: 'FSN'},
           // {name: 'mBTC (Fusion)', url: 'http://47.92.168.85:13556/rpc', coin: 'FSN'},
-          {name: 'mBTC (Fusion)', url: 'http://47.56.150.104:13556/rpc', coin: 'FSN'},
+          {name: 'mBTC (Fusion)', url: 'https://testnet.smpcwallet.com/btc2fsn', coin: 'FSN'},
           {name: 'mBTC (Ethereum)', url: 'http://47.92.168.85:11556/rpc', coin: 'ETH'},
         ]
       }
