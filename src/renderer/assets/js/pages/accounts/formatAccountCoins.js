@@ -41,8 +41,10 @@ export default {
         address = coinObj[obj.coinType].address
         balance = coinObj[obj.coinType].balance
       }
+      // console.log(coinTypeObj)
       let obj1 = {
         ...otherObj,
+        coinAll: obj.coinType,
         coinType: coinTypeObj.coinType,
         balance: balance,
         address: address,

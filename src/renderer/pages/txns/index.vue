@@ -131,7 +131,10 @@ export default {
       }
       let coin = this.sendDataObj.coinType
       let balance = this.$$.fromWei(this.sendDataObj.balance, coin)
-      if (!regExp.coin[coin].test(this.rawTx.to) && coin !== 'BTC') {
+      if (this.sendDataObj.allCoinType.indexOf('ERC20') === 0 && !regExp.coin['ETH'].test(this.rawTx.to)) {
+        this.msgError('This to address is illegal!')
+        return
+      } else if (this.sendDataObj.allCoinType.indexOf('ERC20') !== 0 && regExp.coin[coin] && !regExp.coin[coin].test(this.rawTx.to) && coin !== 'BTC') {
         this.msgError('This to address is illegal!')
         return
       }

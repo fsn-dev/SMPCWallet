@@ -11,7 +11,6 @@
       <!-- <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" :title="unionNode.join(',')">{{unionNode.join(',')}}</span></p> -->
       <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" title="SMPCWallet,KIT,FUSION,Fantom,Realio...">SMPC,KIT,FUSION,Fantom,Realio...</span></p>
     </div>
-    <!-- {{coinInfoObj[selectCoin][0]}} -->
     <div class="swap-box">
       <div class="swap-cont">
         <div class="swap-up flex-bc">
@@ -21,13 +20,13 @@
               <div class="swap-select flex-bc">
                 <div class="flex-sc">
                   <div class="coin-logo-view">
-                    <div v-if="coinInfoObj[selectCoin]" class="HH100 WW100"><img :src="coinInfoObj[selectCoin][0].logo"></div>
+                    <div v-if="coinInfoObj[$$.cutERC20(selectCoin).coinType]" class="HH100 WW100"><img :src="coinInfoObj[$$.cutERC20(selectCoin).coinType][0].logo"></div>
                   </div>
                   <el-select v-model="selectCoin" @change="changeCoin" class="W120" no-data-text="Null">
-                    <el-option v-for="(item, index) in coinInfoObj" :key="index" :label="index" :value="index" :disabled="item[0].isOpen ? false : true">
+                    <el-option v-for="(item, index) in coinInfoObj" :key="index" :value="item[0].coinAll" :label="item[0].coinType" :disabled="item[0].isOpen ? false : true">
                       <div class="flex-sc">
                         <div class="coin-logo" v-if="item[0].logo"><img :src="item[0].logo"></div>
-                        <div class="coin-logo txt" v-else>{{$$.titleCase(index)}}</div>
+                        <div class="coin-logo txt flex-c" v-else>{{$$.titleCase(index)}}</div>
                         {{ index }}
                       </div>
                     </el-option>
@@ -66,7 +65,7 @@
         <div class="swap-up flex-bc swap-receive mt-30">
           <div class="swap-style swap-down">
             <h3 class="label flex-bc">
-              {{selectCoin}} Address:
+              {{$$.cutERC20(selectCoin).coinType}} Address:
             </h3>
             <div class="swap-input-box">
               <div class="swap-select flex-bc">
@@ -76,7 +75,7 @@
                 </el-select>
               </div>
             </div>
-            <div class="font12 color_99 H30">{{ this.swap.fromObj ? $$.fromWei(this.swap.fromObj.balance, this.swap.fromObj.coinType) + ' ' + selectCoin : ''}}</div>
+            <div class="font12 color_99 H30">{{ this.swap.fromObj ? $$.fromWei(this.swap.fromObj.balance, this.swap.fromObj.coinType) + ' ' + $$.cutERC20(selectCoin).coinType : ''}}</div>
           </div>
           <div class="swap-style swap-down">
             <h3 class="label flex-bc">
@@ -198,7 +197,8 @@ export default {
         val: 0,
         list: [
           // {name: 'mBTC (Fusion)', url: 'http://47.92.168.85:12556/rpc', coin: 'FSN'},
-          {name: 'mBTC (Fusion)', url: 'http://47.92.168.85:13556/rpc', coin: 'FSN'},
+          // {name: 'mBTC (Fusion)', url: 'http://47.92.168.85:13556/rpc', coin: 'FSN'},
+          {name: 'mBTC (Fusion)', url: 'http://47.56.150.104:13556/rpc', coin: 'FSN'},
           {name: 'mBTC (Ethereum)', url: 'http://47.92.168.85:11556/rpc', coin: 'ETH'},
         ]
       }
@@ -282,9 +282,13 @@ export default {
       this.openPwdDialog()
     },
     openPwdDialog () {
+      console.log(this.selectCoin)
       let coin = this.$$.cutERC20(this.selectCoin).coinType
       let balance = this.$$.fromWei(this.swap.fromObj.balance, coin)
-      if (!regExp.coin[coin].test(this.swap.toAddr) && coin !== 'BTC') {
+      if (this.$$.cutERC20(this.selectCoin).type && !regExp.coin['ETH'].test(this.swap.toAddr)) {
+        this.msgError('This to address is illegal!')
+        return
+      } else if (!this.$$.cutERC20(this.selectCoin).type && !regExp.coin[coin].test(this.swap.toAddr) && coin !== 'BTC') {
         this.msgError('This to address is illegal!')
         return
       }
@@ -309,7 +313,7 @@ export default {
           DcrmAddr: this.swap.fromObj.address,
           DcrmTo: this.swapInfo.DcrmAddress,
           Value: this.dataPage.value,
-          Cointype: coin,
+          Cointype: this.selectCoin,
           GroupId: this.swap.fromObj.gID,
           ThresHold: this.swap.fromObj.mode,
           Mode: this.swap.fromObj.accountType.toString(),
@@ -437,11 +441,14 @@ export default {
         this.loading.init = false
         allCoins = this.allCoinsList()
         for (let obj of allCoins) {
-          if (!this.coinInfoObj[obj.coinType]) {
-            this.coinInfoObj[obj.coinType] = []
+          console.log(obj)
+          let coinTypeObj = this.$$.cutERC20(obj.coinType)
+          if (!this.coinInfoObj[coinTypeObj.coinType]) {
+            this.coinInfoObj[coinTypeObj.coinType] = []
           }
-          obj.logo = this.$$.setDollar(obj.coinType) ? this.$$.setDollar(obj.coinType).logo : ''
-          this.coinInfoObj[obj.coinType].push(obj)
+          obj.logo = this.$$.setDollar(coinTypeObj.coinType) ? this.$$.setDollar(coinTypeObj.coinType).logo : ''
+          obj.coinAll = obj.coinType
+          this.coinInfoObj[coinTypeObj.coinType].push(obj)
         }
         return
       }
@@ -474,8 +481,8 @@ export default {
       })
     },
     changeCoin () {
-      if (!this.coinInfoObj[this.selectCoin]) return
-      this.selectCoinArr = this.coinInfoObj[this.selectCoin]
+      if (!this.coinInfoObj[this.$$.cutERC20(this.selectCoin).coinType]) return
+      this.selectCoinArr = this.coinInfoObj[this.$$.cutERC20(this.selectCoin).coinType]
       for (let i = 0, len = this.selectCoinArr.length; i < len; i ++) {
         let obj = this.selectCoinArr[i]
         if (obj.publicKey === this.selectPubKey) {
@@ -526,29 +533,6 @@ export default {
           })
         }
       }
-      // console.log(data)
-      // this.web3Fn.swap.GetSwapinHistory(data).then(res => {
-      //   console.log(res)
-      //   let arr = []
-      //   // console.log(this.$store.state.CCCD)
-      //   for (let obj of this.$store.state.CCCD) {
-      //     if (obj.from === this.swap.fromObj.address) {
-      //       arr.push({
-      //         from: obj.from,
-      //         value: obj.value,
-      //         timestamp: obj.timestamp,
-      //         key: obj.key
-      //       })
-      //       this.getOutStatus(obj.key)
-      //     }
-      //   }
-      //   // console.log(arr)
-      //   this.historyData = res.reverse()
-      //   this.historyData.unshift(...arr)
-      //   // console.log(this.historyData)
-      // }).catch(err => {
-      //   console.log(err)
-      // })
     },
     initFormat (res) {
       console.log(res)
