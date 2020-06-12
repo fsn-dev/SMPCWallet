@@ -124,7 +124,7 @@ export default {
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
-    "rate": 8,
+    "rate": 2,
     "isCase": 0,
     "dollarURL": "https://api.coinmarketcap.com/v1/ticker/tether/"
   },
@@ -154,7 +154,7 @@ export default {
     "token": "tokentx",
     "hashFM": "",
     "limit": 0,
-    "rate": 18,
+    "rate": 5,
     "isCase": 0,
     "dollarURL": "https://api.cryptorank.io/v0/coins/everitoken/tickers"
   }
