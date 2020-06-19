@@ -28,6 +28,17 @@ export default {
       resolve(rawTx)
     })
   },
+  toSignRsv (data) {
+    let tx = new Tx(data)
+    let signTx = tx.serialize().toString("hex")
+    signTx = signTx.indexOf("0x") === 0 ? signTx : ("0x" + signTx)
+    return signTx
+  },
+  toHash (message) {
+    let messageBytes = ethers.utils.toUtf8Bytes(message)
+    let messageDigest = ethers.utils.keccak256(messageBytes)
+    return messageDigest
+  },
   hexToSign (str, pwd) {
     // let hex = web3.utils.keccak256(str)
     let signingKey = new ethers.SigningKey(pwd)

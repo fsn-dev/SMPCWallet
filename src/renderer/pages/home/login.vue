@@ -222,7 +222,7 @@ export default {
           )
           let address = walletInfo.getChecksumAddressString()
           let pwd = walletInfo.getPrivateKeyString()
-          // console.log(pwd)
+          console.log(pwd)
           // console.log(walletInfo.getPublicKeyString())
           if (!this.eNode) {
             this.msgError(this.$t('error').err_10)

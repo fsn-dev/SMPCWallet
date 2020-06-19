@@ -31,6 +31,7 @@ const store = new Vuex.Store({
     email: '',
     connect: '',
     selectPubKey: '',
+    allAccount: {}
   },
   mutations: {
     setEnode (state, data) {
@@ -125,6 +126,12 @@ const store = new Vuex.Store({
     },
     setSelectPubKey (state, data) {
       state.selectPubKey = data
+    },
+    setAllAccount (state, data) {
+      state.allAccount = {
+        timestamp: Date.now(),
+        list: data
+      }
     },
   },
   actions: {

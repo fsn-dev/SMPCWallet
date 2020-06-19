@@ -36,12 +36,23 @@ import qrCode from '@/libs/qrCode'
  */
 import mode from '@/assets/js/config/mode.js'
 
+/**
+ * @description api
+ */
+import api from '@/api/index.js'
+
+/**
+ * @description file
+ */
+import files from '@/libs/files'
 
 let $$ = {
+  ...api,
   ...tools,
   ...cookies,
   ...qrCode,
   ...web3Util,
+  ...files,
   config,
   wallet,
   web3,

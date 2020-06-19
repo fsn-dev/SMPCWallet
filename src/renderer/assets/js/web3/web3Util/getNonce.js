@@ -36,4 +36,22 @@ export default {
       })
     })
   },
+  async getSignNonce (addr) {
+    let data = 0
+    return new Promise(resolve => {
+      web3.dcrm.getSignNonce(addr).then(res => {
+        let cbData = res
+        if (cbData.Status !== 'Error') {
+          data = cbData.Data.result
+        } else {
+          data = 0
+        }
+        resolve(data)
+      }).catch(err => {
+        console.log(err)
+        data = 0
+        resolve(data)
+      })
+    })
+  },
 }

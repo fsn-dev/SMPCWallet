@@ -16,7 +16,7 @@
             <div class="item" :class="publicKey === item.publicKey ? 'active' : ''" slot="reference">
               <div class="label flex-c">
                 <!-- {{item.name ? $$.titleCase(item.name) : 'A'}} -->
-                <img :src="item.img">
+                <img :src="$$.createImg(item.publicKey)">
               </div>
               <div class="flex-sc flex-wrap" style="width:223px;">
                 <div class="WW100 pubkey flex-bc">
@@ -154,13 +154,9 @@ export default {
   methods: {
     ...getAllAccountList,
     init () {
-      this.getAllAccountList().then(res => {
+      this.getAllAccount().then(res => {
         // console.log(res)
-        for (let i = 0, len = res.length; i < len; i++) {
-          this.gAccountList.push(res[i])
-          this.getGName(res[i], i)
-        }
-        // console.log(this.gAccountList)
+        this.gAccountList = res
         if (this.$route.query.gID) {
           this.changeGroup(this.$route.query)
         } else if (this.gAccountList.length > 0) {
@@ -180,14 +176,6 @@ export default {
         this.loading.list = false
       })
     },
-    getGName (item, i) {
-      this.$db.findGaccount({publicKey: item.publicKey, address: this.address}).then(res => {
-        // console.log(res)
-        if (res.length > 0) {
-          this.gAccountList[i].name = res[0].name
-        }
-      })
-    },
     changeGroup (item) {
       // console.log(item)
       if (item) {
@@ -198,7 +186,6 @@ export default {
       } else {
         this.toUrl('/account', {gID: '', publicKey: '', mode: '', accountType: this.accountType})
       }
-      // this.$store.commit('setAccountType', {info: type})
       this.$emit('changeAccount')
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="boxConntent1 container">
     <div class="d-content-view">
-      <h3 class="h3">{{$t('label').send}}{{sendDataObj.coinType}}</h3>
+      <h3 class="h3">{{$t('label').send}}{{$$.cutERC20(sendDataObj.coinType).coinType}}</h3>
       <el-form ref="txnsInfoForm" :model="rawTx" :rules="rules" label-width="120px" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('label').sendAddr" prop="to">
           <el-input v-model="rawTx.to"></el-input>
@@ -129,12 +129,12 @@ export default {
         this.msgError(this.$t('warn').w_1)
         return
       }
-      let coin = this.sendDataObj.coinType
+      let coin = this.$$.cutERC20(this.sendDataObj.coinType).coinType
       let balance = this.$$.fromWei(this.sendDataObj.balance, coin)
-      if (this.sendDataObj.allCoinType.indexOf('ERC20') === 0 && !regExp.coin['ETH'].test(this.rawTx.to)) {
+      if (this.sendDataObj.coinType.indexOf('ERC20') === 0 && !regExp.coin['ETH'].test(this.rawTx.to)) {
         this.msgError('This to address is illegal!')
         return
-      } else if (this.sendDataObj.allCoinType.indexOf('ERC20') !== 0 && regExp.coin[coin] && !regExp.coin[coin].test(this.rawTx.to) && coin !== 'BTC') {
+      } else if (this.sendDataObj.coinType.indexOf('ERC20') !== 0 && regExp.coin[coin] && !regExp.coin[coin].test(this.rawTx.to) && coin !== 'BTC') {
         this.msgError('This to address is illegal!')
         return
       }
@@ -151,7 +151,7 @@ export default {
           DcrmAddr: this.sendDataObj.dcrmAddr,
           DcrmTo: this.rawTx.to,
           Value: this.$$.toWei(this.rawTx.value, coin),
-          Cointype: this.sendDataObj.allCoinType,
+          Cointype: this.sendDataObj.coinType,
           GroupId: this.childGroupID,
           ThresHold: this.sendDataObj.mode,
           Mode: this.accountType,
@@ -187,7 +187,7 @@ export default {
         to: this.rawTx.to,
         value: this.dataPage.value,
         nonce: this.dataPage.nonce,
-        coinType: this.sendDataObj.allCoinType,
+        coinType: this.sendDataObj.coinType,
         hash: '',
         status: 0,
         pubKey: this.initTxnsData.publicKey ? this.initTxnsData.publicKey : '',

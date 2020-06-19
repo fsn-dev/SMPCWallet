@@ -87,6 +87,12 @@ let publicSet = {
    * @description 是否打开邮箱验证
    */
   isOpenEmail: 0, // '0': 否； '1': 是
+  /**
+   * @description 二进制文件
+   */
+  file: {
+    btc: __static + '/bytecode/mbtc.bytecode.txt'
+  }
 }
 
 // publicSet.appURL = 'http://smpcwallet.com'

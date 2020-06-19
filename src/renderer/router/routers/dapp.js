@@ -34,4 +34,21 @@ export default [
       }
     ]
   },
+  {
+    path: '/dapp/dao',
+    component: Main,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: 'DAO',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/apply/DAO/index.vue')) ),
+      }
+    ]
+  },
 ]

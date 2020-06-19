@@ -83,4 +83,49 @@ export default {
       })
     })
   },
+  async sign (signTx) {
+    let data = {msg: '', info: ''}
+    return new Promise(resolve => {
+      let cbData = ''
+      web3.dcrm.sign(signTx).then(res => {
+        cbData = res
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          cbData = cbData.Data && cbData.Data.result ? cbData.Data.result : ''
+          data = {msg: 'Success', info: cbData}
+        } else {
+          data = {msg: 'Error', error: cbData.Error}
+        }
+        resolve(data)
+      }).catch(err => {
+        console.log(err)
+        data = {msg: 'Error', error: err.toString()}
+        resolve(data)
+      })
+    })
+  },
+  acceptSign (signTx) {
+    let data = {msg: '', info: ''}
+    return new Promise(resolve => {
+      let cbData = ''
+      web3.dcrm.acceptSign(signTx).then(res => {
+        cbData = res
+        if (res && typeof res === 'string') {
+          cbData = JSON.parse(cbData)
+        }
+        console.log(cbData)
+        if (cbData.Status !== 'Error') {
+          cbData = cbData.Data && cbData.Data.result ? cbData.Data.result : ''
+          data = {msg: 'Success', info: cbData}
+        } else {
+          data = {msg: 'Error', error: cbData.Tip}
+        }
+        resolve(data)
+      }).catch(err => {
+        console.log(err)
+        data = {msg: 'Error', error: err.toString()}
+        resolve(data)
+      })
+    })
+  },
 }

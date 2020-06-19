@@ -146,8 +146,8 @@ export default {
             {cont: this.$t('tip').DAO.d2},
             {cont: this.$t('tip').DAO.d3},
           ],
-          url: '',
-          type: 0,
+          url: '/dapp/dao',
+          type: 1,
           bg: require('@/assets/img/apply/DAO.png')
         },
         {

@@ -8,7 +8,6 @@
     <div class="mBTC-title">
       <h1 class="h1">{{$t('title').CrossChainBTC}}</h1>
       <p class="p">{{$t('tip').mBTC.d1 + ',' + $t('tip').mBTC.d2 + ',' + $t('tip').mBTC.d3}}</p>
-      <!-- <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" :title="unionNode.join(',')">{{unionNode.join(',')}}</span></p> -->
       <p class="p flex-c">{{$t('label').unionNode}}:  <span class="WW30 ellipsis ml-10" title="SMPCWallet,KIT,FUSION,Fantom,Realio...">SMPC,KIT,FUSION,Fantom,Realio...</span></p>
     </div>
     <div class="swap-box">
@@ -20,14 +19,14 @@
               <div class="swap-select flex-bc">
                 <div class="flex-sc">
                   <div class="coin-logo-view">
-                    <div v-if="coinInfoObj[$$.cutERC20(selectCoin).coinType]" class="HH100 WW100"><img :src="coinInfoObj[$$.cutERC20(selectCoin).coinType][0].logo"></div>
+                    <div v-if="coinInfoObj[selectCoin]" class="HH100 WW100"><img :src="coinInfoObj[selectCoin][0].logo"></div>
                   </div>
                   <el-select v-model="selectCoin" @change="changeCoin" class="W120" no-data-text="Null">
-                    <el-option v-for="(item, index) in coinInfoObj" :key="index" :value="item[0].coinAll" :label="item[0].coinType" :disabled="item[0].isOpen ? false : true">
+                    <el-option v-for="(item, index) in coinInfoObj" :key="index" :value="item[0].coinType" :label="$$.cutERC20(item[0].coinType).coinType" :disabled="item[0].isOpen ? false : true">
                       <div class="flex-sc">
                         <div class="coin-logo" v-if="item[0].logo"><img :src="item[0].logo"></div>
                         <div class="coin-logo txt flex-c" v-else>{{$$.titleCase(index)}}</div>
-                        {{ index }}
+                        {{ $$.cutERC20(index).coinType }}
                       </div>
                     </el-option>
                   </el-select>
@@ -135,9 +134,6 @@
         <el-table-column :label="$t('label').fee" align="center">
           <template slot-scope="scope">
             <span>
-              <!-- {{
-              Number(scope.row.extendObj.fee) !== 0 ? Number($$.thousandBit($$.fromWei(Number(scope.row.value) - Number(scope.row.swapvalue), $$.cutERC20(selectCoin).coinType), 20)) : 0
-            }} -->
             {{Number(scope.row.extendObj.fee) !== 0 ? 
                 $$.fromWei(Number(scope.row.extendObj.fee), $$.cutERC20(selectCoin).coinType) : 0}}
             </span>
@@ -168,7 +164,6 @@ import swap from '@/assets/js/web3/extends/swap.js'
 import regExp from '@/assets/js/config/RegExp.js'
 import {computedPub} from '@/assets/js/pages/public.js'
 import getAllAccountList from '@/assets/js/pages/accounts/getAllAccountList.js'
-import formatAccountCoins from '@/assets/js/pages/accounts/formatAccountCoins.js'
 export default {
   name: 'crossChain',
   data () {
@@ -236,17 +231,29 @@ export default {
   },
   methods: {
     ...getAllAccountList,
-    ...formatAccountCoins,
     modalClick () {
       this.eDialog.pwd = false
     },
     init () {
       this.changeNetwork()
       this.$socket.emit('NodeAndOtherData')
-      this.getAllAccountList().then(res => {
+      this.getAllAccount().then(res => {
         // console.log(res)
         this.getAllCoins(res)
       })
+    },
+    getAllCoins (res) {
+      let arr = [], allCoins = []
+      for (let obj of res) {
+        for (let obj1 of obj.coinArr) {
+          if (!this.coinInfoObj[obj1.coinType]) {
+            this.coinInfoObj[obj1.coinType] = []
+          }
+          this.coinInfoObj[obj1.coinType].push(obj1)
+        }
+      }
+      this.changeCoin()
+      this.loading.init = false
     },
     changeNetwork () {
       let url = this.netObj.list[this.netObj.val].url
@@ -285,10 +292,10 @@ export default {
       console.log(this.selectCoin)
       let coin = this.$$.cutERC20(this.selectCoin).coinType
       let balance = this.$$.fromWei(this.swap.fromObj.balance, coin)
-      if (this.$$.cutERC20(this.selectCoin).type && !regExp.coin['ETH'].test(this.swap.toAddr)) {
+      if (this.selectCoin.indexOf('ERC20') === 0 && !regExp.coin['ETH'].test(this.swap.toAddr)) {
         this.msgError('This to address is illegal!')
         return
-      } else if (!this.$$.cutERC20(this.selectCoin).type && !regExp.coin[coin].test(this.swap.toAddr) && coin !== 'BTC') {
+      } else if (!this.selectCoin.indexOf('ERC20') === 0 && !regExp.coin[coin].test(this.swap.toAddr) && coin !== 'BTC') {
         this.msgError('This to address is illegal!')
         return
       }
@@ -435,54 +442,9 @@ export default {
       this.getHistory()
       // this.resetForm()
     },
-    getAllCoins (res) {
-      let arr = [], allCoins = []
-      if (res.length <= 0) {
-        this.loading.init = false
-        allCoins = this.allCoinsList()
-        for (let obj of allCoins) {
-          console.log(obj)
-          let coinTypeObj = this.$$.cutERC20(obj.coinType)
-          if (!this.coinInfoObj[coinTypeObj.coinType]) {
-            this.coinInfoObj[coinTypeObj.coinType] = []
-          }
-          obj.logo = this.$$.setDollar(coinTypeObj.coinType) ? this.$$.setDollar(coinTypeObj.coinType).logo : ''
-          obj.coinAll = obj.coinType
-          this.coinInfoObj[coinTypeObj.coinType].push(obj)
-        }
-        return
-      }
-      for (let obj of res) {
-        arr.push({ p1: 'dcrm', p2: 'getAccountsBalance', p3: [obj.publicKey, this.address] })
-      }
-      this.$$.batchRequest(arr).then(res1 => {
-        // console.log(res1)
-        for (let i = 0, len = res1.length; i < len; i++) {
-          let cbData = res1[i], arr1 = []
-          if (typeof cbData === 'string') {
-            cbData = JSON.parse(cbData)
-          }
-          if (cbData.Status !== 'Error') {
-            arr1 = cbData.Data.result.Balances
-          }
-          let coinArr = this.formatAccountCoins(arr1, res[i].accountType, res[i])
-          // console.log(coinArr)
-          allCoins.push(...coinArr)
-        }
-        for (let obj of allCoins) {
-          if (!this.coinInfoObj[obj.coinType]) {
-            this.coinInfoObj[obj.coinType] = []
-          }
-          this.coinInfoObj[obj.coinType].push(obj)
-        }
-        // console.log(allCoins)
-        this.changeCoin()
-        this.loading.init = false
-      })
-    },
     changeCoin () {
-      if (!this.coinInfoObj[this.$$.cutERC20(this.selectCoin).coinType]) return
-      this.selectCoinArr = this.coinInfoObj[this.$$.cutERC20(this.selectCoin).coinType]
+      if (!this.coinInfoObj[this.selectCoin]) return
+      this.selectCoinArr = this.coinInfoObj[this.selectCoin]
       for (let i = 0, len = this.selectCoinArr.length; i < len; i ++) {
         let obj = this.selectCoinArr[i]
         if (obj.publicKey === this.selectPubKey) {
@@ -506,11 +468,6 @@ export default {
     },
     getHistory () {
       if (!this.swap.fromObj || !this.swap.fromObj.address) return
-      // let data = {
-      //   Address: this.swap.fromObj.address,
-      //   Offset: 0,
-      //   Limit: 20
-      // }
       let data = {
         from: this.swap.fromObj.address,
         to: this.swapInfo.DcrmAddress,
@@ -535,11 +492,8 @@ export default {
       }
     },
     initFormat (res) {
-      console.log(res)
+      // console.log(res)
       if (res.msg === 'Success' && res.info.length > 0) {
-        // this.page.total = res.total
-        // this.formatData(res.info)
-        // this.historyData = res.info
         this.historyData = []
         for (let i = 0, len = res.info.length; i < len; i++) {
           let obj = res.info[i], extendObj = {
@@ -552,10 +506,8 @@ export default {
             swapHash: obj.extendObj && obj.extendObj.swapHash ? obj.extendObj.swapHash : '',
             network: obj.extendObj && obj.extendObj.network ? obj.extendObj.network : this.netObj.val
           }
-          // if (obj.status === 2) {
           if (obj.status === 0 || (obj.extendObj && obj.extendObj.status === '')) {
             this.getOutStatus(obj.key, i, obj._id, extendObj)
-          // } else if (obj.status === 1 && obj.extendObj && (obj.extendObj.status === 0 || obj.extendObj.status === 8 || obj.extendObj.status === 9)) {
           } else if (obj.status === 1 && obj.extendObj && [0, 5, 7, 8, 9].includes(obj.extendObj.status)) {
             this.getSwapTxnData(obj.key, i, obj._id, extendObj, obj.hash)
           }
@@ -565,9 +517,7 @@ export default {
           this.historyData.push(obj)
         }
       } else {
-        // this.page.total = 0
         this.historyData = []
-        // this.loading.history = false
       }
     },
     getOutStatus (key, index, id, extendObj) {
@@ -641,8 +591,6 @@ export default {
       } else if ([20].includes(num)) {
         obj = { status: this.$t('state').timeout, class: 'color_red' }
       }
-      // console.log(num)
-      // console.log(obj)
       return obj
     },
     changeValue () {

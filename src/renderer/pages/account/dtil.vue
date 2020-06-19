@@ -17,8 +17,8 @@
               <div class="coinTxt flex-c" v-else>
                 {{$$.titleCase(scope.row.coinType)}}
               </div>
-              <span style="margin-left: 10px">{{ scope.row.coinType }}</span>
-              <i v-if="scope.row.isERC20" class="isErc20">ERC20</i>
+              <span style="margin-left: 10px">{{ $$.cutERC20(scope.row.coinType).coinType }}</span>
+              <i v-if="$$.cutERC20(scope.row.coinType).type" class="isErc20">ERC20</i>
             </div>
           </template>
         </el-table-column>
@@ -135,7 +135,6 @@
 import {computedPub} from '@/assets/js/pages/public'
 import wButton from '@/components/btn/index.vue'
 import getEnode from '@/assets/js/pages/node/getEnode.js'
-import formatAccountCoins from '@/assets/js/pages/accounts/formatAccountCoins'
 import sendTxns from '@/pages/txns/index.vue'
 export default {
   name: '',
@@ -179,7 +178,6 @@ export default {
   },
   methods: {
     ...getEnode,
-    ...formatAccountCoins,
     changeEnode (item, index) {
       if (Number(this.accountType)) {
         if (item.isEdit) {
@@ -355,13 +353,14 @@ export default {
       }
       // console.log(this.pubKey)
       if (this.pubKey) {
-        this.$$.getAccountsBalance(this.pubKey, this.address).then(res => {
-          // console.log(res)
-          if (res.msg === 'Success') {
-            this.tableData = this.formatAccountCoins(res.info, this.accountType)
+        let sAccount = this.$store.state.allAccount
+        for (let obj of sAccount.list) {
+          if (obj.publicKey === this.pubKey) {
+            this.tableData = obj.coinArr
+            break
           }
-          this.loading.account = false
-        })
+        }
+        this.loading.account = false
       } else {
         this.loading.account = false
       }
@@ -386,8 +385,7 @@ export default {
         coinType: item.coinType,
         gID: this.gID,
         mode: this.gMode,
-        pubKey: this.pubKey,
-        allCoinType: item.isERC20 ? 'ERC20' + item.coinType : item.coinType
+        pubKey: this.pubKey
       }
       console.log(this.sendDataObj)
     },

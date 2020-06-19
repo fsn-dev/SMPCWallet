@@ -70,4 +70,28 @@ export default {
       })
     })
   },
+  async getSignStatus (key) {
+    let data = {msg: '', info: ''}
+    return new Promise(resolve => {
+      let cbData = ''
+      web3.dcrm.getSignStatus(key).then(res => {
+        cbData = res
+        if (res && typeof res === 'string') {
+          cbData = JSON.parse(cbData)
+        }
+        if (cbData.Status !== 'Error') {
+          let status = cbData.Data && cbData.Data.result ? JSON.parse(cbData.Data.result) : ''
+          console.log(status)
+          data = {msg: 'Success', status: status.Status, info: status.AllReply, hash: status.Rsv, timestamp: status.TimeStamp}
+        } else {
+          data = {msg: 'Error', status: 'Failure', hash: '', error: cbData.Error, info: []}
+        }
+        resolve(data)
+      }).catch(err => {
+        console.log(err)
+        data = {msg: 'Error', status: '', hash: '', error: err.toString(), info: []}
+        resolve(data)
+      })
+    })
+  },
 }
