@@ -175,7 +175,13 @@ export default {
       }, 500)
     },
     approvalAll (cur) {
-      this.newsLen = cur[0].approved + cur[1].approved
+      this.newsLen = 0
+      if (cur) {
+        for (let obj of cur) {
+          this.newsLen += obj.approved
+        }
+      }
+      // this.newsLen = cur[0].approved + cur[1].approved
     }
   },
   computed: {
@@ -245,6 +251,10 @@ export default {
       }
     },
     reload () {
+      if (this.$route.path.indexOf('account') !== -1) {
+        this.$store.commit('setSelectPubKey', '')
+        this.$store.commit('setAllAccount', '')
+      }
 			this.isRouterAlive = false
 			this.$nextTick(() => {
 				this.isRouterAlive = true

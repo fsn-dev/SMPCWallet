@@ -45,7 +45,7 @@ import wButton from '@/components/btn/index'
 export default {
   name: 'tNewsList',
   props: {
-    tNewsData: {
+    tableData: {
       type: Object ,
       default: {}
     }
@@ -60,7 +60,7 @@ export default {
     ...computedPub,
   },
   watch: {
-    tNewsData (cur) {
+    tableData (cur) {
       // console.log(cur)
       this.setList(cur.info)
     }
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     init () {
-      this.setList(this.tNewsData.info)
+      this.setList(this.tableData.info)
     },
     setList (data) {
       this.newsList = data ? data : []

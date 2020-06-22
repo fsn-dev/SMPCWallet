@@ -13,6 +13,13 @@ import {
 } from './GroupTxns'
 
 import {
+  AddSigns,
+  EditSigns,
+  EditMemberSigns,
+  FindSigns
+} from './Signs'
+
+import {
   AddPersonAccounts,
   EditPersonAccounts,
   FindPersonAccounts
@@ -24,6 +31,12 @@ import {
   FindPersonTxns
 } from './PersonTxns'
 
+import {
+  AddPersonSigns,
+  EditPersonSigns,
+  FindPersonSigns
+} from './PersonSigns'
+
 export default {
   AddGroupAccounts,
   EditGroupAccounts,
@@ -33,10 +46,17 @@ export default {
   EditGroupTxns,
   EditGroupMemberTxns,
   FindGroupTxns,
+  AddSigns,
+  EditSigns,
+  EditMemberSigns,
+  FindSigns,
   AddPersonAccounts,
   EditPersonAccounts,
   FindPersonAccounts,
   AddPersonTxns,
   EditPersonTxns,
-  FindPersonTxns
+  FindPersonTxns,
+  AddPersonSigns,
+  EditPersonSigns,
+  FindPersonSigns
 }

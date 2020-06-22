@@ -11,26 +11,23 @@
               <el-form-item :label="$t('label').groupId + ':'">
                 <span v-if="refresh.g">{{ scope.row.gName ? scope.row.gName : scope.row.gId }}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').groupAccountId + ':'" v-if="networkMode">
+              <el-form-item :label="$t('label').groupAccountId + ':'" v-if="networkMode && !isView.pubKey">
                 <span v-if="refresh.a">{{ scope.row.aName ? scope.row.aName : scope.row.pubKey }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').mode + ':'">
                 <span>{{scope.row.mode}}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').from + ':'">
+              <el-form-item :label="$t('label').from + ':'" v-if="!isView.from">
                 <span>{{ scope.row.from }}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').to + ':'">
+              <el-form-item :label="$t('label').to + ':'"  v-if="!isView.to">
                 <span>{{ scope.row.to }}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').coinType + ':'">
+              <el-form-item :label="$t('label').coinType + ':'" v-if="!isView.coinType">
                 <span>{{ $$.cutERC20(scope.row.coinType).coinType}}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').value + ':'">
+              <el-form-item :label="$t('label').value + ':'" v-if="!isView.coinType && !isView.value">
                 <span>{{ $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 6) }}</span>
-              </el-form-item>
-              <el-form-item label="Data:" v-if="scope.row.data">
-                <span>{{ scope.row.data }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').date + ':'">
                 <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
@@ -75,22 +72,22 @@
             <span :class="scope.row.status === 0 || scope.row.status === 1 || scope.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(scope.row.status)}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').coinType" width="85" align="center">
+        <el-table-column :label="$t('label').coinType" width="85" align="center" v-if="!isView.coinType">
           <template slot-scope="scope">
             {{ $$.cutERC20(scope.row.coinType).coinType}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').groupAccountId" width="180" align="center" v-if="networkMode">
+        <el-table-column :label="$t('label').groupAccountId" width="180" align="center" v-if="networkMode && isView.pubKey">
           <template slot-scope="scope">
             <span :title="scope.row.pubKey" @click="copyTxt(scope.row.pubKey)" class="cursorP" v-if="refresh.a">{{scope.row.aName ? scope.row.aName : $$.cutOut(scope.row.pubKey, 8, 6)}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').from" width="150" align="center">
+        <el-table-column :label="$t('label').from" width="150" align="center" v-if="!isView.from">
           <template slot-scope="scope">
             <span :title="scope.row.from" @click="copyTxt(scope.row.from)" class="cursorP">{{$$.cutOut(scope.row.from, 6, 4)}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').to" width="150" align="center">
+        <el-table-column :label="$t('label').to" width="150" align="center" v-if="!isView.to">
           <template slot-scope="scope">
             <span :title="scope.row.to" @click="copyTxt(scope.row.to)" class="cursorP">{{$$.cutOut(scope.row.to, 6, 4)}}</span>
           </template>
@@ -100,16 +97,21 @@
             {{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').value" width="120" align="right">
+        <el-table-column :label="$t('label').value" width="120" align="right" v-if="!isView.coinType && !isView.value">
           <template slot-scope="scope">
             {{
               $$.thousandBit($$.fromWei(scope.row.value, $$.cutERC20(scope.row.coinType).coinType), 'no')
             }}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').hash" align="center">
+        <el-table-column :label="$t('label').hash" align="center" v-if="!isView.rsv">
           <template slot-scope="scope">
-            <span :title="scope.row.hash" @click="copyTxt(scope.row.hash)" class="cursorP">{{$$.cutOut(scope.row.hash, 8, 6)}}</span>
+            <span :title="scope.row.hash.join(',')" @click="copyTxt(scope.row.hash.join(','))" class="cursorP">{{scope.row.hash && scope.row.hash.length > 0 ? $$.cutOut(scope.row.hash.join(','), 8, 6) : ''}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('label').action" align="center" width="150">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="openSignEdialog(scope.row)" v-if="scope.row.rsv && scope.row.rsv.length > 0 && refresh.s">{{$t('btn').createSign}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -125,6 +127,16 @@
         :total="page.total">
       </el-pagination>
     </div>
+    <el-dialog :title="$t('label').signTxn" :visible.sync="eDialog.signTxn" width="960px" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
+      <div class="flex-bc">
+        <p class="mr-10">{{signTxn}}</p>
+        <div id="signTxnsId"></div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
+        <el-button type="primary" @click="copyTxt(signTxn)">{{$t('btn').copy}}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -138,25 +150,44 @@ import {datas, commonMethods} from '@/assets/js/pages/history/common.js'
 import {methods} from '@/assets/js/pages/history/group.js'
 export default {
   name: 'txnsHistory',
+  props: {
+    query: {},
+    isView: {
+      type: Object,
+      default: {
+        coinType: false,
+        pubKey: false,
+        from: false,
+        to: false,
+        value: false,
+        rsv: false
+      }
+    }
+  },
   data () {
     return {
-      ...datas
+      ...datas,
+      eDialog: {
+        signTxn: false
+      },
+      signTxn: ''
     }
   },
   computed: {
     ...computedPub,
   },
   sockets: {
-    GroupFindTxns (res) {
+    SignsFind (res) {
       this.initFormat(res)
     }
   },
   mounted () {
-    let urlParams = this.$route.query
-    // console.log(urlParams)
-    this.coinType = urlParams.coinType ? urlParams.coinType : ''
-    this.dcrmAddr = urlParams.address ? urlParams.address : ''
-    this.page.cur = 1
+    // let urlParams = this.$route.query
+    // // console.log(urlParams)
+    // this.coinType = urlParams.coinType ? urlParams.coinType : ''
+    console.log(this.isView)
+    // this.dcrmAddr = urlParams.address ? urlParams.address : ''
+    this.page.cur = 0
     setTimeout(() => {
       this.init()
     }, 100)
@@ -167,39 +198,67 @@ export default {
     init () {
       this.loading.history = true
       let data = {
-        kId: this.address,
-        coinType: this.coinType,
-        from: this.dcrmAddr,
+        ...this.query,
+        // kId: this.address,
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
       if (this.networkMode) {
-        this.$socket.emit('GroupFindTxns', data)
+        this.$socket.emit('SignsFind', data)
       } else {
-        this.$db.FindGroupTxns(data).then(res => {
+        this.$db.AddSigns(data).then(res => {
           this.initFormat(res)
         })
       }
-      // FindGroupTxnsFn(this, 'GroupFindTxns', data).then(res => {
-      //   this.initFormat(res)
-      // })
+    },
+    modalClick () {
+      this.eDialog.signTxn = false
+    },
+    openSignEdialog (item) {
+      console.log(item)
+      let dataObj = {
+        from: item.from,
+        to: item.to,
+        value: item.value,
+        coinType: item.coinType,
+        // GroupId: item.gId,
+        ThresHold: item.mode,
+        Mode: '0',
+        TimeStamp: Date.now().toString(),
+        rsv: item.rsv,
+        hash: item.hash,
+        gas: item.extendObj.gas,
+        gasPrice: item.extendObj.gasPrice,
+        nonce: item.extendObj.nonce,
+        data: item.data,
+      }
+      let str = JSON.stringify(dataObj)
+      this.signTxn = this.$$.web3.utils.utf8ToHex(str)
+      this.eDialog.signTxn = true
+      this.$nextTick(() => {
+        this.$$.qrCode(this.signTxn, 'signTxnsId')
+      })
     },
     getHistoryState (id, key, index) {
-      this.$$.getLockOutStatus(key).then(res => {
+      this.$$.getSignStatus(key).then(res => {
         this.getStateFormat(id, index, res)
       })
     },
     setDBState (id, index, hash, status) {
       let data = {
         id: id,
-        hash: hash,
+        rsv: hash,
         status: status
       }
-      // EditGroupTxnsFn(this, 'changeGroupTxnsStatus', data)
+      this.refresh.s = false
+      this.$nextTick(() => {
+        this.refresh.s = true
+      })
+      console.log(data)
       if (this.networkMode) {
-        this.$socket.emit('changeGroupTxnsStatus', data)
+        this.$socket.emit('changeSignsStatus', data)
       } else {
-        this.$db.EditGroupTxns(data)
+        this.$db.EditSigns(data)
       }
     },
   }

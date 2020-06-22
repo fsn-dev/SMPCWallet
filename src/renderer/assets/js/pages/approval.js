@@ -2,10 +2,6 @@
 export const approvalMethods = {
   getStatusInfo (key) {
     return new Promise((resolve) => {
-      // console.log({
-      //   key: key,
-      //   address: this.address
-      // })
       this.$db.findStatus({
         key: key,
         address: this.address
@@ -65,12 +61,13 @@ export const approvalMethods = {
       let arr = [
         { p1: 'dcrm', p2: 'getCurNodeReqAddrInfo', p3: [this.address] },
         { p1: 'dcrm', p2: 'getCurNodeLockOutInfo', p3: [this.address] },
+        { p1: 'dcrm', p2: 'getCurNodeSignInfo', p3: [this.address] },
       ]
       this.$$.batchRequest(arr).then(res => {
-        let arr = [
-          this.getGroupList(res[0]),
-          this.getGroupList(res[1])
-        ]
+        let arr = []
+        for (let obj of res) {
+          arr.push(this.getGroupList(obj))
+        }
         Promise.all(arr).then(data => {
           // console.log(data)
           resolve(data)

@@ -34,24 +34,32 @@ export default {
     signTx = signTx.indexOf("0x") === 0 ? signTx : ("0x" + signTx)
     return signTx
   },
-  toHash (message) {
-    let messageBytes = ethers.utils.toUtf8Bytes(message)
-    let messageDigest = ethers.utils.keccak256(messageBytes)
-    return messageDigest
+  toHash (str) {
+    let messageBytes = ethers.utils.toUtf8Bytes(str)
+    let hash = ethers.utils.keccak256(messageBytes)
+    return hash
   },
-  hexToSign (str, pwd) {
+  toTxnHash (TxnData) {
+    let tx = new Tx(TxnData)
+    let hash = Buffer.from(tx.hash(false)).toString('hex')
+    hash = hash.indexOf('0x') == 0 ? hash : '0x' + hash
+    return hash
+  },
+  hexToSign (str, pwd, v) {
     // let hex = web3.utils.keccak256(str)
     let signingKey = new ethers.SigningKey(pwd)
-    let message = str
-    let messageBytes = ethers.utils.toUtf8Bytes(message)
-    let messageDigest = ethers.utils.keccak256(messageBytes)
-    let signature = signingKey.signDigest(messageDigest)
-    let v = signature.s
-    if (signature.recoveryParam === 0) {
-      v = '00'
-    } else if (signature.recoveryParam === 1) {
-      v = '01'
-    }
+    // let message = str
+    // let messageBytes = ethers.utils.toUtf8Bytes(message)
+    // let messageDigest = ethers.utils.keccak256(messageBytes)
+    let signature = signingKey.signDigest(str)
+    // console.log(signature)
+    v = v ? v : signature.v
+    // let v = signature.s
+    // if (signature.recoveryParam === 0) {
+    //   v = '00'
+    // } else if (signature.recoveryParam === 1) {
+    //   v = '01'
+    // }
     let sign = signature.r + signature.s.replace('0x', '') + v
     return sign
   },

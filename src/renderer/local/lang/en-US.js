@@ -91,7 +91,8 @@ export default {
 		backFriend: 'Return friends list',
 		nowInstall: 'Install immediately',
 		lookDtil: 'Details',
-		swap: 'Swap'
+		swap: 'Swap',
+		createSign: 'Generate Sign'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -114,6 +115,7 @@ export default {
 		createGroup: 'Create validation',
 		groupNews: 'Managed Account News',
 		txnsNews: 'Transaction News',
+		signsNews: 'Signs News',
 		accountList: 'Account list',
 		netSet: 'Network settings',
 		groupSet: 'Group information settings',

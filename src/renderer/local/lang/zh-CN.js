@@ -93,7 +93,8 @@ export default {
 		backFriend: '返回好友列表',
 		nowInstall: '马上安装',
 		lookDtil: '查看详情',
-		swap: '交换'
+		swap: '交换',
+		createSign: '生成签名'
 	},
 	loading: {
 		l_1: 'Loading……',
@@ -117,6 +118,7 @@ export default {
 		createGroup: '创建确认',
 		groupNews: '共管账户消息',
 		txnsNews: '交易消息',
+		signsNews: '签名消息',
 		accountList: '账户列表',
 		netSet: '网络设置',
 		groupSet: '组信息设置',

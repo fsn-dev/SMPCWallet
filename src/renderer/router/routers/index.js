@@ -44,6 +44,23 @@ export default [
     ]
   },
   {
+    path: '/sValid',
+    component: Main,
+    meta: {
+      notCache: true
+    },
+    children: [
+      {
+        path: '/',
+        meta: {
+          title: '签名',
+          notCache: true
+        },
+        component: resolve => require.ensure([], () => resolve(require('@/pages/txns/sValid.vue')) )
+      }
+    ]
+  },
+  {
     path: '/approvalList',
     component: Main,
     meta: {

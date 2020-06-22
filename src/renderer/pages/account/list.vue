@@ -1,5 +1,5 @@
 <template>
-  <div class="boxConntent1 pb-20" v-loading="loading.list" element-loading-text="Loading……">
+  <div class="boxConntent1 pb-20" v-loading.fullscreen.lock="loading.list" element-loading-text="Loading……">
     <div class="g-list-box">
       <ul class="boxConntent1" v-if="gAccountList.length > 0">
         <li v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)">

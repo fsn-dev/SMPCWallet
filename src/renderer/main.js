@@ -109,6 +109,11 @@ Vue.prototype.quitApp = function() {
   $$.clearCookies()
   this.$store.commit('setToken', '')
   this.$store.commit('setAddress', '')
+  this.$store.commit('setApprovalObj', '')
+  this.$store.commit('setSelectPubKey', '')
+  this.$store.commit('setAllAccount', '')
+  this.$store.commit('setEnodeTx', '')
+  this.$store.commit('setEnode', '')
   this.$router.push('/')
 }
 

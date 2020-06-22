@@ -103,8 +103,8 @@
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
-import {datas, commonMethods} from './js/common.js'
-import {methods} from './js/group.js'
+import {datas, commonMethods} from '@/assets/js/pages/history/common.js'
+import {methods} from '@/assets/js/pages/history/group.js'
 export default {
   name: 'txnsHistory',
   data () {

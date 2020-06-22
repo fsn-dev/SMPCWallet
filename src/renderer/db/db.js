@@ -31,9 +31,12 @@ const db = {
   status: InitDB('status'),
   historyPersonAccpunts: InitDB('historyPersonAccpunts'),
   historyPersonTxns: InitDB('historyPersonTxns'),
+  historyPersonSigns: InitDB('historyPersonSigns'),
   historyGroupAccpunts: InitDB('historyGroupAccpunts'),
-  historyGroupTxns: InitDB('historyGroupTxns')
+  historyGroupTxns: InitDB('historyGroupTxns'),
+  historySigns: InitDB('historySigns')
 }
+
 
 db.ks.ensureIndex({fieldName: 'address', unique: true}, cb)
 // db.node.ensureIndex({fieldName: 'url', unique: true}, cb)
@@ -43,8 +46,10 @@ db.gAccount.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.status.ensureIndex({fieldName: 'keyId', unique: true}, cb)
 db.historyPersonAccpunts.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyPersonTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
+db.historyPersonSigns.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyGroupAccpunts.ensureIndex({fieldName: 'keyId', unique: true}, cb)
 db.historyGroupTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
+db.historySigns.ensureIndex({fieldName: 'key', unique: true}, cb)
 
 
 // let compactionInterval = 3000
@@ -67,7 +72,9 @@ db.gAccount.persistence.compactDatafile()
 db.status.persistence.compactDatafile()
 db.historyPersonAccpunts.persistence.compactDatafile()
 db.historyPersonTxns.persistence.compactDatafile()
+db.historyPersonSigns.persistence.compactDatafile()
 db.historyGroupAccpunts.persistence.compactDatafile()
 db.historyGroupTxns.persistence.compactDatafile()
+db.historySigns.persistence.compactDatafile()
 
 export default db

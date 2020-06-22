@@ -43,7 +43,7 @@ import {computedPub} from '@/assets/js/pages/public'
 export default {
   name: 'gNewsList',
   props: {
-    gNewsData: {
+    tableData: {
       type: Object ,
       default: {}
     }
@@ -58,7 +58,7 @@ export default {
     ...computedPub,
   },
   watch: {
-    gNewsData (cur) {
+    tableData (cur) {
       // console.log(cur)
       this.setList(cur.info)
     }
@@ -68,8 +68,8 @@ export default {
   },
   methods: {
     init () {
-      console.log(this.gNewsData.info)
-      this.setList(this.gNewsData.info)
+      // console.log(this.tableData.info)
+      this.setList(this.tableData.info)
     },
     setList (data) {
       this.newsList = data ? data : []

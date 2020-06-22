@@ -35,7 +35,7 @@ export const commonMethods ={
   },
   getStateFormat (id, index, res) {
     // console.log(res)
-    if (res.msg === 'Success' && (res.status === 'Success' || res.hash)) {
+    if (res.msg === 'Success' && (res.status === 'Success' || (res.hash && res.hash.length > 0))) {
       let hash = res.hash
       this.setDBState(id, index, hash, 1)
       this.tableData[index].hash = hash

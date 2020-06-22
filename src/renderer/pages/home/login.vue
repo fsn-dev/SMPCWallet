@@ -244,7 +244,10 @@ export default {
     },
     signEnode (pwd, address) {
       let eNodeKey = this.$$.eNodeCut(this.eNode).key
-      let sign = this.$$.hexToSign(eNodeKey, pwd)
+      let hash = this.$$.toHash(eNodeKey)
+      // console.log(hash)
+      let sign = this.$$.hexToSign(hash, pwd, '01')
+      // console.log(sign)
       this.$socket.emit('UserEnodeAdd', {
         // nodeKey: eNodeKey,
         enode: this.eNode,

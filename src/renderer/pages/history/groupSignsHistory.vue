@@ -11,14 +11,11 @@
               <el-form-item :label="$t('label').groupId + ':'">
                 <span v-if="refresh.g">{{ scope.row.gName ? scope.row.gName : scope.row.gId }}</span>
               </el-form-item>
-              <el-form-item :label="$t('label').groupAccountId + ':'">
+              <el-form-item :label="$t('label').groupAccountId + ':'" v-if="networkMode">
                 <span v-if="refresh.a">{{ scope.row.aName ? scope.row.aName : scope.row.pubKey }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').mode + ':'">
                 <span>{{scope.row.mode}}</span>
-              </el-form-item>
-              <el-form-item :label="$t('label').hash + ':'">
-                <span>{{ scope.row.hash }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').from + ':'">
                 <span>{{ scope.row.from }}</span>
@@ -35,8 +32,33 @@
               <el-form-item :label="$t('label').date + ':'">
                 <span>{{$$.timeChange(scope.row.timestamp, 'yyyy-mm-dd hh:mm')}}</span>
               </el-form-item>
-              <el-form-item label="Data:" v-if="scope.row.data">
-                <span>{{ scope.row.data }}</span>
+              <el-form-item :label="$t('label').details + ':'">
+                <el-table :data="scope.row.member" border style="width: 100%" size="mini">
+                  <el-table-column
+                    type="index"
+                    width="50"
+                  ></el-table-column>
+                  <el-table-column :label="$t('label').identity" width="90" align="center">
+                    <template slot-scope="props">
+                      <span>{{props.row.initiate ? $t('label').initiator : $t('label').approver}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="ENODE" align="center">
+                    <template slot-scope="props">
+                      <span>{{props.row.eNode}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('label').date" width="140" align="center" v-if="networkMode">
+                    <template slot-scope="props">
+                      {{props.row.timestamp ? $$.timeChange(props.row.timestamp, 'yyyy-mm-dd hh:mm') : ''}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('state').name" width="90" align="center" v-if="networkMode">
+                    <template slot-scope="props">
+                      <span :class="props.row.status === 0 || props.row.status === 1 || props.row.status === 5 ? 'color_green' : 'color_red'">{{$$.changeState(props.row.status)}}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </el-form-item>
             </el-form>
           </template>
@@ -55,7 +77,7 @@
             {{ $$.cutERC20(scope.row.coinType).coinType}}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').groupAccountId" width="180" align="center">
+        <el-table-column :label="$t('label').groupAccountId" width="180" align="center" v-if="networkMode">
           <template slot-scope="scope">
             <span :title="scope.row.pubKey" @click="copyTxt(scope.row.pubKey)" class="cursorP" v-if="refresh.a">{{scope.row.aName ? scope.row.aName : $$.cutOut(scope.row.pubKey, 8, 6)}}</span>
           </template>
@@ -87,6 +109,11 @@
             <span :title="scope.row.hash" @click="copyTxt(scope.row.hash)" class="cursorP">{{$$.cutOut(scope.row.hash, 8, 6)}}</span>
           </template>
         </el-table-column>
+        <el-table-column :label="$t('label').action" align="center">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="openSignEdialog(scope.row)" v-if="scope.row.rsv && refresh.s">{{$t('btn').createSign}}</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="mt-20 flex-ec">
@@ -100,37 +127,50 @@
         :total="page.total">
       </el-pagination>
     </div>
+    <el-dialog :title="$t('label').signTxn" :visible.sync="eDialog.signTxn" width="960px" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
+      <div class="flex-bc">
+        <p class="mr-10">{{signTxn}}</p>
+        <div id="signTxnsId"></div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
+        <el-button type="primary" @click="copyTxt(signTxn)">{{$t('btn').copy}}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <style lang="scss">
+
 </style>
 
 <script>
 import {computedPub} from '@/assets/js/pages/public'
 import {datas, commonMethods} from '@/assets/js/pages/history/common.js'
-import {methods} from '@/assets/js/pages/history/person.js'
+import {methods} from '@/assets/js/pages/history/group.js'
 export default {
   name: 'txnsHistory',
+  props: {
+    query: {}
+  },
   data () {
     return {
-      ...datas
+      ...datas,
+      eDialog: {
+        signTxn: false
+      },
+      signTxn: ''
     }
   },
   computed: {
     ...computedPub,
-  },
-  sockets: {
-    PersonFindTxns (res) {
-      this.initFormat(res)
-    }
   },
   mounted () {
     let urlParams = this.$route.query
     // console.log(urlParams)
     this.coinType = urlParams.coinType ? urlParams.coinType : ''
     this.dcrmAddr = urlParams.address ? urlParams.address : ''
-    this.page.cur = 1
+    this.page.cur = 0
     setTimeout(() => {
       this.init()
     }, 100)
@@ -147,32 +187,60 @@ export default {
         pageSize: this.page.pageSize,
         pageNum: this.page.cur
       }
-      
-      if (this.networkMode) {
-        this.$socket.emit('PersonFindTxns', data)
-      } else {
-        this.$db.FindPersonTxns(data).then(res => {
-          this.initFormat(res)
-        })
+      this.$db.FindGroupSigns(data).then(res => {
+        this.initFormat(res)
+      })
+    },
+    modalClick () {
+      this.eDialog.signTxn = false
+    },
+    openSignEdialog (item) {
+      console.log(item)
+      let dataObj = {
+        from: item.from,
+        to: item.to,
+        value: item.value,
+        coinType: item.coinType,
+        // GroupId: item.gId,
+        ThresHold: item.mode,
+        Mode: '0',
+        TimeStamp: Date.now().toString(),
+        rsv: item.rsv,
+        hash: item.hash,
+        gas: item.extendObj.gas,
+        gasPrice: item.extendObj.gasPrice,
+        nonce: item.extendObj.nonce,
+        data: item.data,
+        // Memo: item.nonce,
       }
+      // let data = {
+      //   nonce: item.nonce,
+      //   value: '0',
+      //   data: JSON.stringify(dataObj)
+      // }
+      let str = JSON.stringify(dataObj)
+      this.signTxn = this.$$.web3.utils.utf8ToHex(str)
+      this.eDialog.signTxn = true
+      this.$nextTick(() => {
+        this.$$.qrCode(this.signTxn, 'signTxnsId')
+      })
     },
     getHistoryState (id, key, index) {
-      this.$$.getLockOutStatus(key).then(res => {
+      this.$$.getSignStatus(key).then(res => {
         this.getStateFormat(id, index, res)
       })
     },
     setDBState (id, index, hash, status) {
       let data = {
         id: id,
-        hash: hash,
+        rsv: hash,
         status: status
       }
-      // EditPersonTxnsFn(this, 'changePersonTxnsStatus', data)
-      if (this.networkMode) {
-        this.$socket.emit('changePersonTxnsStatus', data)
-      } else {
-        this.$db.EditPersonTxns(data)
-      }
+      this.refresh.s = false
+      this.$nextTick(() => {
+        this.refresh.s = true
+      })
+      this.$db.EditGroupSigns(data)
     },
   }
 }
