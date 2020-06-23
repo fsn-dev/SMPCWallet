@@ -220,28 +220,6 @@ export default {
               from: this.address,
               nonce: nonce,
               data: JSON.stringify(dataObj)
-              // data: 'ACCEPTLOCKOUT:' 
-              //       + this.urlParams.Account
-              //       + ':'
-              //       + this.urlParams.GroupId 
-              //       + ':' 
-              //       + this.urlParams.Nonce 
-              //       + ':' 
-              //       + this.urlParams.DcrmFrom 
-              //       + ':' 
-              //       + this.urlParams.DcrmTo 
-              //       + ':' 
-              //       + this.urlParams.Value 
-              //       + ':' 
-              //       + this.urlParams.Cointype 
-              //       + ':' 
-              //       + this.urlParams.ThresHold
-              //       + ':' 
-              //       + '0'
-              //       + ':'
-              //       + type
-              //       + ':'
-              //       + Date.now()
             }
             this.eDialog.pwd = true
           } else {

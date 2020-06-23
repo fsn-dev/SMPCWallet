@@ -79,6 +79,7 @@ export const nodeMethods = {
             arr.push(obj.url)
           }
         }
+        this.limitVersion = this.netUrlArr
         // this.netUrlArr = this.localUrlArr
         this.loadingSelect = false
       }

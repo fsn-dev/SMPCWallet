@@ -193,7 +193,9 @@ export default {
 		unionNode: 'Alliance Node',
 		CBONode: 'Community Node',
 		pairHash: 'Pair Hash',
-		fee: 'Fee'
+		fee: 'Fee',
+		outHash: 'Chain Hash',
+		RSV: 'RSV'
 	},
 	state: {
 		name: 'Status',

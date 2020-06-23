@@ -12,7 +12,8 @@ export const datas = {
   },
   refresh: {
     g: true,
-    a: true
+    a: true,
+    s: true
   }
 }
 

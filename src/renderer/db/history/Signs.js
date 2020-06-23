@@ -7,18 +7,18 @@ const AddSigns = (params) => {
       key: params.key ? params.key : '',
       from: params.from ? params.from : '',
       to: params.to ? params.to : '',
+      hash: params.hash ? params.hash : '',
       value: params.value ? params.value : 0,
       nonce: params.nonce ? params.nonce : 0,
-      member: params.gArr ? params.gArr : [],
-      gId: params.gId ? params.gId : '',
       coinType: params.coinType ? params.coinType : 0,
-      hash: params.hash ? params.hash : '',
       status: params.status ? params.status : 0,
-      timestamp: dateNow,
-      mode: params.mode ? params.mode : 0,
       pubKey: params.pubKey ? params.pubKey : '',
-      rsv: params.rsv && params.rsv.length > 0 ? params.rsv : [],
+      mode: params.mode ? params.mode : 0,
+      gId: params.gId ? params.gId : '',
       data: params.data ? params.data : '',
+      member: params.gArr ? params.gArr : [],
+      timestamp: dateNow,
+      rsv: params.rsv && params.rsv.length > 0 ? params.rsv : [],
       extendObj: params.extendObj ? params.extendObj : '',
       accountType: params.accountType ? params.accountType : 0,
     }
@@ -84,18 +84,18 @@ const EditMemberSigns = (params) => {
       key: params.local.key ? params.local.key : '',
       from: params.local.from ? params.local.from : '',
       to: params.local.to ? params.local.to : '',
+      hash: params.local.hash ? params.local.hash : '',
       value: params.local.value ? params.local.value : 0,
       nonce: params.local.nonce ? params.local.nonce : 0,
-      member: params.local.gArr ? params.local.gArr : [],
-      gId: params.local.gId ? params.local.gId : '',
       coinType: params.local.coinType ? params.local.coinType : 0,
-      hash: params.local.hash ? params.local.hash : '',
       status: params.local.status ? params.local.status : 0,
-      timestamp: dateNow,
       pubKey: params.local.pubKey ? params.local.pubKey : '',
       mode: params.local.mode ? params.local.mode : '',
-      rsv: params.local.rsv && params.local.rsv.length > 0 ? params.local.rsv : [],
+      gId: params.local.gId ? params.local.gId : '',
       data: params.local.data ? params.local.data : '',
+      member: params.local.gArr ? params.local.gArr : [],
+      timestamp: dateNow,
+      rsv: params.local.rsv && params.local.rsv.length > 0 ? params.local.rsv : [],
       extendObj: params.local.extendObj ? params.local.extendObj : '',
       accountType: params.accountType ? params.accountType : 0,
     }
@@ -170,6 +170,9 @@ const FindSigns = (params) => {
       if (params.key) {
         query.key = params.key
       }
+      if (params.pubKey) {
+        query.pubKey = params.pubKey
+      }
       if (params.from || params.from === 0) {
         query.from = params.from
       }
@@ -188,7 +191,12 @@ const FindSigns = (params) => {
       if (params.kId || params.kId === 0) {
         query.member = {$elemMatch: {kId: params.kId}}
       }
+      if (params.extendObj && params.extendObj.type) {
+        query['extendObj.type'] = params.extendObj.type
+        // query['extendObj']['type'] = params.extendObj.type
+      }
     }
+    console.log(query)
     db.historySigns.count(query, (err, count) => {
       if (err) {
         data.error = err

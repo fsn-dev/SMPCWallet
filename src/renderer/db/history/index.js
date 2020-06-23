@@ -31,12 +31,6 @@ import {
   FindPersonTxns
 } from './PersonTxns'
 
-import {
-  AddPersonSigns,
-  EditPersonSigns,
-  FindPersonSigns
-} from './PersonSigns'
-
 export default {
   AddGroupAccounts,
   EditGroupAccounts,
@@ -56,7 +50,4 @@ export default {
   AddPersonTxns,
   EditPersonTxns,
   FindPersonTxns,
-  AddPersonSigns,
-  EditPersonSigns,
-  FindPersonSigns
 }

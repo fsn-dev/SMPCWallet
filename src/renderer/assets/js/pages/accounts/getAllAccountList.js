@@ -83,7 +83,7 @@ export default {
             publicKey: obj2.PubKey,
             gID: obj1.GroupID,
             mode: obj2.ThresHold,
-            name: pubName && pubName.length > 0 ? pubName[0].name : obj2.PubKey.substr(2),
+            name: pubName && pubName.length > 0 ? pubName[0].name : obj2.PubKey.substr(2, 6),
             timestamp: obj2.TimeStamp,
             accountType: type,
           }

@@ -70,6 +70,7 @@ export default {
       dataPage: {},
       modeArr: this.$$.mode,
       urlParams: {},
+      extendObj: {},
       isApplySataus: false,
       isReplySet: true,
       applyStatus: '',
@@ -85,12 +86,14 @@ export default {
   },
   mounted () {
     this.urlParams = this.$route.query
+    console.log(this.urlParams)
     this.key = this.urlParams.Key
-    // this.showGroupData()
+    if (this.urlParams.MsgContext) {
+      this.extendObj = this.urlParams.MsgContext ? JSON.parse(this.urlParams.MsgContext) : {}
+    }
     setTimeout(() => {
       this.init()
     }, 300)
-    console.log(this.urlParams)
   },
   methods: {
     refreshActionFn () {
@@ -194,11 +197,12 @@ export default {
             let dataObj = {
               TxType: 'ACCEPTSIGN',
               Key: this.urlParams.Key,
-              MsgHash: this.urlParams.MsgContext,
-              MsgContext: this.urlParams.MsgHash,
+              MsgHash: JSON.parse(this.urlParams.MsgHash),
+              MsgContext: [this.urlParams.MsgContext],
               Accept: type,
               TimeStamp: Date.now().toString()
             }
+            console.log(dataObj)
             this.dataPage = {
               from: this.address,
               nonce: nonce,
@@ -217,6 +221,7 @@ export default {
       if (data && data.signTx) {
         this.$$.acceptSign(data.signTx).then(res => {
           if (res.msg === 'Success') {
+
             let localData = {}
             let params = {
               key: this.key,
@@ -225,44 +230,43 @@ export default {
               status: this.applyStatus === 'AGREE' ? 5 : 4,
               local: localData
             }
-            localData = {
-              from: this.urlParams.from ,
-              to: this.urlParams.to,
-              value: this.$$.toWei(this.urlParams.value, this.urlParams.coinType),
-              nonce: this.urlParams.Nonce,
-              coinType: this.urlParams.coinType,
-              hash: this.urlParams.MsgHash,
-              status: 0,
-              pubKey: this.urlParams.PubKey,
-              key: this.urlParams.Key,
-              gId: this.urlParams.GroupId,
-              gArr: [
-                {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 0, timestamp: Date.now(), initiate: 0}
-              ],
-              kId: this.address,
-              nodeKey: this.$$.eNodeCut(this.eNode).key,
-              mode: this.urlParams.ThresHold,
-              data: this.urlParams.data,
-              extendObj: {
-                nonce: this.urlParams.nonce,
-                gas: this.urlParams.gas,
-                gasPrice: this.urlParams.gasPrice,
-              }
-            }
-            for (let obj of this.gForm.eNode) {
-              // console.log(obj)
-              if (obj === this.eNode) continue
-              localData.gArr.push({
-                eNode: obj.eNode,
-                nodeKey: obj.key,
-                kId: '',
+            if (!this.networkMode) {
+              localData = {
+                from: this.urlParams.from ,
+                to: this.urlParams.to,
+                hash: this.urlParams.MsgHash,
+                value: this.urlParams.value,
+                nonce: this.urlParams.Nonce,
+                coinType: this.urlParams.coinType,
                 status: 0,
-                timestamp: '',
-                initiate: 0
-              })
+                pubKey: this.urlParams.PubKey,
+                key: this.urlParams.Key,
+                mode: this.urlParams.ThresHold,
+                gId: this.urlParams.GroupId,
+                data: this.urlParams.data,
+                gArr: [
+                  {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 0, timestamp: Date.now(), initiate: 0}
+                ],
+                extendObj: this.extendObj,
+                accountType: '0'
+              }
+              for (let obj of this.gForm.eNode) {
+                // console.log(obj)
+                if (obj === this.eNode) continue
+                localData.gArr.push({
+                  eNode: obj.eNode,
+                  nodeKey: obj.key,
+                  kId: '',
+                  status: 0,
+                  timestamp: '',
+                  initiate: 0
+                })
+              }
+              params.local = localData
+              this.$db.EditMemberSigns(params)
+            } else {
+              this.$socket.emit('changeSignMemberStatus', params)
             }
-            params.local = localData
-            this.$db.EditGroupMemberSigns(params)
 
             this.updateStatus(this.urlParams.Key)
             this.msgSuccess('Success!')

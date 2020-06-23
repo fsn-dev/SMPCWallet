@@ -3,9 +3,9 @@
     <div class="g-list-box">
       <ul class="boxConntent1" v-if="gAccountList.length > 0">
         <li v-for="(item, index) in gAccountList" :key="index" @click="changeGroup(item)">
-          <el-popover placement="right" trigger="hover" :open-delay="2000">
+          <el-popover placement="right" trigger="hover" :open-delay="2000" width="220">
             <div class="pubKeyTip">
-              <p class="flex-sc info"><span class="flex-ec label">ID:</span> {{$$.cutOut(item.publicKey, 8 ,8)}}</p>
+              <p class="flex-sc info"><span class="flex-ec label">PubKey:</span> {{$$.cutOut(item.publicKey, 8 ,8)}}</p>
               <p class="mt-5 flex-sc info"><span class="flex-ec label">GID:</span> {{$$.cutOut(item.gID, 8 ,8)}}</p>
               <p class="mt-5 flex-sc info"><span class="flex-ec label">Mode:</span> {{item.mode}}</p>
               <p class="mt-5 flex-sc info"><span class="flex-ec label">Date:</span> {{item.timestamp ? $$.timeChange(item.timestamp, 'yyyy-mm-dd hh:mm') : ''}}</p>
@@ -21,7 +21,7 @@
               <div class="flex-sc flex-wrap" style="width:223px;">
                 <div class="WW100 pubkey flex-bc">
                   <!-- <span class="name">{{item.name.length > 16 ? '04' + $$.cutOut(item.name, 6 ,0) : item.name}}</span> -->
-                  <span class="name">{{item.name.length > 16 ? item.name.substr(0,6) : item.name}}</span>
+                  <span class="name">{{item.name}}</span>
                   <div class="flex-ec WW40">
                     <i class="account person" v-if="item.accountType">{{$t('title').person}}</i>
                     <i class="account group" v-if="!item.accountType">{{$t('title').group}}</i>
@@ -96,7 +96,7 @@
 .pubKeyTip {
   font-size: 12px;
   .label {
-    width: 40px;margin-right: 5px;
+    width: 50px;margin-right: 5px;
   }
 }
 

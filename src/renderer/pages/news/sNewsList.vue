@@ -74,25 +74,28 @@ export default {
     },
     setList (data) {
       let arr = []
-      console.log(data)
+      // console.log(data)
       for (let obj of data) {
         if (obj.MsgContext) {
           try {
-            let obj2 = obj.MsgContext.length > 0 ? JSON.parse(obj.MsgContext[0]) : ''
-            console.log(obj2)
-            // obj.MsgContext = JSON.parse(obj.MsgContext)
+            let obj2 = obj.MsgContext.length > 0 ? JSON.parse(obj.MsgContext[0]) : {}
+            // console.log(obj2)
+            obj.MsgContext = JSON.stringify(obj2)
+            obj.MsgHash = JSON.stringify(obj.MsgHash)
             obj.from = obj2.from
             obj.to = obj2.to
             obj.value = parseFloat(obj2.value)
             obj.coinType = obj2.coinType
-            obj.nonce = obj2.nonce
-            obj.gas = obj2.gas
-            obj.gasPrice = obj2.gasPrice
-            obj.data = obj2.data
+            // obj.MsgContext = JSON.parse(obj.MsgContext)
+            // for (let key in obj2) {
+            //   // console.log(key)
+            //   obj[key] = obj2[key]
+            // }
           } catch (error) {
             obj.MsgContext = ''
           }
         }
+        console.log(obj)
         arr.push(obj)
       }
       this.newsList = arr

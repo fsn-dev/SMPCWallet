@@ -194,7 +194,9 @@ export default {
 		unionNode: '联盟节点',
 		CBONode: '社区节点',
 		pairHash: '配对Hash',
-		fee: '手续费'
+		fee: '手续费',
+		outHash: '链上Hash',
+		RSV: 'RSV'
 	},
 	state: {
 		name: '状态',

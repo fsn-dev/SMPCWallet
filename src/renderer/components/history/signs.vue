@@ -1,6 +1,6 @@
 <template>
   <div class="boxConntent1" v-loading="loading.history" :element-loading-text="$t('loading').l_1">
-    <div class="table-box">
+    <div class="table-box" v-if="refresh.s">
       <el-table :data="tableData" style="width: 100%" :empty-text="$t('warn').w_12">
         <el-table-column type="expand">
           <template slot-scope="scope">
@@ -19,6 +19,9 @@
               </el-form-item>
               <el-form-item :label="$t('label').from + ':'" v-if="!isView.from">
                 <span>{{ scope.row.from }}</span>
+              </el-form-item>
+              <el-form-item :label="$t('label').outHash + ':'" v-if="!isView.outHash && networkMode">
+                <span>{{ scope.row.extendObj && scope.row.extendObj.hash ? scope.row.extendObj.hash : '' }}</span>
               </el-form-item>
               <el-form-item :label="$t('label').to + ':'"  v-if="!isView.to">
                 <span>{{ scope.row.to }}</span>
@@ -104,14 +107,31 @@
             }}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('label').hash" align="center" v-if="!isView.rsv">
+        <el-table-column :label="$t('label').RSV" align="center" v-if="!isView.rsv">
           <template slot-scope="scope">
-            <span :title="scope.row.hash.join(',')" @click="copyTxt(scope.row.hash.join(','))" class="cursorP">{{scope.row.hash && scope.row.hash.length > 0 ? $$.cutOut(scope.row.hash.join(','), 8, 6) : ''}}</span>
+            <span 
+              :title="scope.row.rsv.join(',')"
+              @click="copyTxt(scope.row.rsv.join(','))"
+              class="cursorP"
+            >
+              {{scope.row.rsv && scope.row.rsv.length > 0 ? $$.cutOut(scope.row.rsv.join(','), 8, 6) : ''}}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('label').outHash" align="center" v-if="!isView.rsv && networkMode">
+          <template slot-scope="scope">
+            <span
+              :title="scope.row.extendObj && scope.row.extendObj.hash ? scope.row.extendObj.hash : ''"
+              @click="copyTxt(scope.row.extendObj && scope.row.extendObj.hash ? scope.row.extendObj.hash : '')"
+              class="cursorP"
+            >
+              {{scope.row.extendObj && scope.row.extendObj.hash ? $$.cutOut(scope.row.extendObj.hash, 8, 6) : ''}}
+            </span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('label').action" align="center" width="150">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="openSignEdialog(scope.row)" v-if="scope.row.rsv && scope.row.rsv.length > 0 && refresh.s">{{$t('btn').createSign}}</el-button>
+            <el-button type="primary" size="mini" @click="openSignEmit(scope.row)" v-if="scope.row.rsv && scope.row.rsv.length > 0">{{$t('btn').createSign}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -127,16 +147,6 @@
         :total="page.total">
       </el-pagination>
     </div>
-    <el-dialog :title="$t('label').signTxn" :visible.sync="eDialog.signTxn" width="960px" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
-      <div class="flex-bc">
-        <p class="mr-10">{{signTxn}}</p>
-        <div id="signTxnsId"></div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
-        <el-button type="primary" @click="copyTxt(signTxn)">{{$t('btn').copy}}</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -167,10 +177,6 @@ export default {
   data () {
     return {
       ...datas,
-      eDialog: {
-        signTxn: false
-      },
-      signTxn: ''
     }
   },
   computed: {
@@ -185,7 +191,7 @@ export default {
     // let urlParams = this.$route.query
     // // console.log(urlParams)
     // this.coinType = urlParams.coinType ? urlParams.coinType : ''
-    console.log(this.isView)
+    // console.log(this.isView)
     // this.dcrmAddr = urlParams.address ? urlParams.address : ''
     this.page.cur = 0
     setTimeout(() => {
@@ -206,38 +212,14 @@ export default {
       if (this.networkMode) {
         this.$socket.emit('SignsFind', data)
       } else {
-        this.$db.AddSigns(data).then(res => {
+        this.$db.FindSigns(data).then(res => {
           this.initFormat(res)
         })
       }
     },
-    modalClick () {
-      this.eDialog.signTxn = false
-    },
-    openSignEdialog (item) {
-      console.log(item)
-      let dataObj = {
-        from: item.from,
-        to: item.to,
-        value: item.value,
-        coinType: item.coinType,
-        // GroupId: item.gId,
-        ThresHold: item.mode,
-        Mode: '0',
-        TimeStamp: Date.now().toString(),
-        rsv: item.rsv,
-        hash: item.hash,
-        gas: item.extendObj.gas,
-        gasPrice: item.extendObj.gasPrice,
-        nonce: item.extendObj.nonce,
-        data: item.data,
-      }
-      let str = JSON.stringify(dataObj)
-      this.signTxn = this.$$.web3.utils.utf8ToHex(str)
-      this.eDialog.signTxn = true
-      this.$nextTick(() => {
-        this.$$.qrCode(this.signTxn, 'signTxnsId')
-      })
+    openSignEmit (item) {
+      // console.log(item)
+      this.$emit('onClickRSV', item)
     },
     getHistoryState (id, key, index) {
       this.$$.getSignStatus(key).then(res => {
@@ -250,10 +232,7 @@ export default {
         rsv: hash,
         status: status
       }
-      this.refresh.s = false
-      this.$nextTick(() => {
-        this.refresh.s = true
-      })
+      this.init()
       console.log(data)
       if (this.networkMode) {
         this.$socket.emit('changeSignsStatus', data)

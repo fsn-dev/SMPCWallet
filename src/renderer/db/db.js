@@ -49,7 +49,7 @@ db.historyPersonTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyPersonSigns.ensureIndex({fieldName: 'key', unique: true}, cb)
 db.historyGroupAccpunts.ensureIndex({fieldName: 'keyId', unique: true}, cb)
 db.historyGroupTxns.ensureIndex({fieldName: 'key', unique: true}, cb)
-db.historySigns.ensureIndex({fieldName: 'key', unique: true}, cb)
+db.historySigns.ensureIndex({fieldName: 'keyId', unique: true}, cb)
 
 
 // let compactionInterval = 3000

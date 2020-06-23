@@ -1,12 +1,12 @@
 <template>
-  <div class="boxConntent1 container" v-loading="loading.init" :element-loading-text="$t('loading').l_1">
+  <div class="boxConntent1 container" v-loading.fullscreen.lock="loading.init" :element-loading-text="$t('loading').l_1">
     <div class="c-form-box">
       <el-form label-width="100px" label-position="top">
         <el-form-item>
           <span slot="label">{{$t('title').groupAccount}}</span>
           <el-select v-model="selectIndex" class="WW100" @change="changeAccount">
             <el-option v-for="(item, index) in groupAccount" :key="index" :value="index" :label="item.name">
-              {{item.name.length > 16 ? item.name.substr(0,6) : item.name}}
+              {{item.name}}
             </el-option>
           </el-select>
         </el-form-item>
@@ -21,9 +21,20 @@
         </el-form-item>
       </el-form>
     </div>
-    <signsHistory v-if="history.isRefresh" :query="history.query" :isView="{coinType: true, to: true, value: true}"></signsHistory>
+    <signsHistory v-if="history.isRefresh" :query="history.query" :isView="{coinType: true, to: true, value: true}" @onClickRSV="sendTxns"></signsHistory>
     <el-dialog :title="$t('btn').unlock" :visible.sync="eDialog.pwd" width="300" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
       <pwdSure @sendSignData="getSignData" :sendDataPage="dataPage" @elDialogView="modalClick" v-if="eDialog.pwd"></pwdSure>
+    </el-dialog>
+
+    <el-dialog :title="$t('label').signTxn" :visible.sync="eDialog.signTxn" width="960px" :before-close="modalClick" :close-on-click-modal="false" :modal-append-to-body='false'>
+      <div class="flex-bc">
+        <p class="mr-10">{{signTx}}</p>
+        <div id="signTxnsId"></div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modalClick">{{$t('btn').cancel}}</el-button>
+        <el-button type="primary" @click="copyTxt(signTx)">{{$t('btn').copy}}</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -45,7 +56,8 @@ export default {
         init: true
       },
       eDialog: {
-        pwd: false
+        pwd: false,
+        signTxn: false
       },
       selectIndex: '',
       groupAccount: [],
@@ -57,7 +69,13 @@ export default {
       history: {
         isRefresh: false,
         query: {}
-      }
+      },
+      extendObj: {},
+      chainInfo: {
+        chainId: this.$$.config.env === 'dev' ? 46688 : 32659,
+        url: this.$$.config.env === 'dev' ? 'https://testnet.fsn.dev/api' : 'https://fsn.dev/api'
+      },
+      signTx: ''
     }
   },
   computed: {
@@ -74,12 +92,64 @@ export default {
     // this.$$.getSignStatus("0x75ddbccdec9a71a87cd72d1b2bf8600de76e040d492dc3a9315085f8a7fd286d").then(res => {
     //   console.log(res)
     // })
-    // console.log(this.$$.web3.eth.accounts.recoverTransaction("0xd608be1aba865b699e0fc19c12172d8bd2c2f022a5f7b3a47fdfd613d2c330530283af5509355a2a19bd331a8018bf4cb2b6d9b645b4a911aa1e1f9fd0ab76b201"))
+    // console.log(this.$$.web3.eth.accounts.recoverTransaction(""))
   },
   methods: {
     ...getAllAccountList,
     modalClick () {
       this.eDialog.pwd = false
+      this.eDialog.signTxn = false
+    },
+    sendTxns (item) {
+      console.log(item)
+      this.loading.init = true
+      this.createHash().then(res  => {
+        let rawTx = {
+          from: item.extendObj.from,
+          to: item.extendObj.to,
+          value: item.extendObj.value,
+          gas: item.extendObj.gas,
+          gasPrice: item.extendObj.gasPrice,
+          nonce: item.extendObj.nonce,
+          data: res,
+          r: '0x' + item.rsv[0].substr(0, 64),
+          s: '0x' + item.rsv[0].substr(64, 64),
+          v: this.$$.web3.utils.toHex(parseInt(item.extendObj.chainId) * 2 + 35),
+          chainId: item.extendObj.chainId,
+        }
+        this.signTx = this.$$.toSignRsv(rawTx)
+        // console.log(rawTx)
+        console.log(this.signTx)
+        if (this.networkMode) {
+          this.web3Fn.eth.sendSignedTransaction(this.signTx, (err, hash) => {
+            if (err) {
+              this.msgError(err.toString())
+              this.loading.init = false
+            } else {
+              console.log(hash)
+              this.setDBState(item._id, hash)
+              this.loading.init = false
+              this.msgSuccess(this.$t('success').s_1 + 'Hash:' + hash)
+            }
+          })
+        } else {
+          this.eDialog.signTxn = true
+        }
+      })
+    },
+    setDBState (id, hash) {
+      let data = {
+        id: id,
+        extendObj: {
+          hash: hash
+        }
+      }
+      // console.log(data)
+      if (this.networkMode) {
+        this.$socket.emit('changeSignsStatus', data)
+      } else {
+        this.$db.EditSigns(data)
+      }
     },
     init () {
       this.initGetAccount()
@@ -119,32 +189,35 @@ export default {
       })
     },
     newWeb3 () {
-      const baseUrl = this.$$.config.env === 'dev' ? 'https://testnet.fsn.dev/api' : 'https://fsn.dev/api'
+      const baseUrl = this.chainInfo.url
       let web3 = new Web3(new Web3.providers.HttpProvider(baseUrl))
       return web3
     },
     getGroupData () {
+      this.loading.init = true
       this.$$.getGroupObj(this.groupAccount[this.selectIndex].gID).then(res => {
         console.log(res)
         if (res.msg === 'Success') {
           this.gMember = res.info
-          this.createHash()
+          this.createHash().then(res  => {
+            this.getTxnsBaseData(res)
+          })
         } else {
           this.msgError(res.error)
         }
       })
     },
     createHash () {
-      this.$$.readFile(this.$$.config.file.btc).then(res => {
-        // console.log(res)
-        this.getTxnsBaseData(res)
+      return new Promise(resolve => {
+        this.$$.readFile(this.$$.config.file.btc).then(res => {
+          // console.log(res)
+          resolve(res)
+        })
       })
     },
     getTxnsBaseData (fileData) {
-      let chainId = this.$$.config.env === 'dev' ? '46688' : '32659'
-      chainId = this.$$.web3.utils.toHex(chainId)
       let data = {
-        chainId: chainId,
+        chainId: this.$$.web3.utils.toHex(this.chainInfo.chainId),
         gas: '',
         gasPrice: '',
         nonce: '',
@@ -166,7 +239,7 @@ export default {
           console.log(err)
         } else {
           // console.log(1)
-          data.gas = this.$$.web3.utils.toHex(res * 6)
+          data.gas = this.$$.web3.utils.toHex(res * 6 * 10)
           count ++
         }
       }))
@@ -205,10 +278,19 @@ export default {
       this.rawTx = data
       this.$$.getSignNonce(this.address).then(nonce => {
         let hash = this.$$.toTxnHash(data)
-        // console.log(data)
-        // console.log(hash)
-        // return
         this.rawTx.hash = hash
+        this.extendObj = {
+          type: 'CreatContract',
+          from: this.rawTx.from,
+          to: this.rawTx.to,
+          nonce: this.rawTx.nonce,
+          gas: this.rawTx.gas,
+          gasPrice: this.rawTx.gasPrice,
+          chainId: this.rawTx.chainId,
+          value: this.rawTx.value,
+          network: this.$$.config.env,
+          hash: ''
+        }
         this.dataPage = {
           nonce: nonce,
           value: 0,
@@ -222,17 +304,11 @@ export default {
           ThresHold: this.groupAccount[this.selectIndex].mode,
           Mode: '0',
           TimeStamp: Date.now().toString(),
-          MsgContext: [JSON.stringify({
-            chainId: this.rawTx.chainId,
-            gas: this.rawTx.gas,
-            gasPrice: this.rawTx.gasPrice,
-            nonce: this.rawTx.nonce,
-            from: this.rawTx.from,
-            to: this.rawTx.to
-          })]
+          MsgContext: [JSON.stringify(this.extendObj)]
         }
         this.dataPage.data = JSON.stringify(dataObj)
         console.log(this.dataPage)
+        this.loading.init = false
         this.eDialog.pwd = true
       })
     },
@@ -269,36 +345,23 @@ export default {
         mode: this.groupAccount[this.selectIndex].mode,
         gId: this.groupAccount[this.selectIndex].gID,
         data: '',
-        extendObj: {
-          type: 'CreatContract',
-          nonce: this.rawTx.nonce,
-          gas: this.rawTx.gas,
-          gasPrice: this.rawTx.gasPrice,
-          network: this.$$.config.env,
-          chainId: this.rawTx.chainId,
-          hash: ''
-        },
+        extendObj: this.extendObj,
         accountType: '0'
       }
-      // if (Number(this.accountType) === 1) {
-      if (false) {
-        data.kId = this.address
-        data.eNode = this.eNode
-      } else {
-        data.gArr = [
-          {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
-        ]
-        for (let obj of this.gMember) {
-          if (obj === this.eNode) continue
-          data.gArr.push({eNode: obj, nodeKey: this.$$.eNodeCut(obj).key, kId: '', status: 0, timestamp: '', initiate: 0})
-        }
+      
+      data.gArr = [
+        {eNode: this.eNode, nodeKey: this.$$.eNodeCut(this.eNode).key, kId: this.address, status: 5, timestamp: Date.now(), initiate: 1}
+      ]
+      for (let obj of this.gMember) {
+        if (obj === this.eNode) continue
+        data.gArr.push({eNode: obj, nodeKey: this.$$.eNodeCut(obj).key, kId: '', status: 0, timestamp: '', initiate: 0})
       }
       console.log(data)
       // if (Number(this.accountType) === 1) {
       if (this.networkMode) {
         this.$socket.emit('SignsAdd', data)
       } else {
-        this.$db.AddGroupTxns(data)
+        this.$db.AddSigns(data)
       }
       setTimeout(() => {
         this.changeAccount()
