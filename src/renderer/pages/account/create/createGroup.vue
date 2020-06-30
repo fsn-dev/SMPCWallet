@@ -47,7 +47,7 @@
           </div>
           <div class="flex-ec create-selected-btn">
             <el-button type="primary" size="mini" native-type="submit" @click="submitForm('node')">{{$t('btn').createGroup}}</el-button>
-            <el-button size="mini" @click="resetForm('node')">{{$t('btn').restart}}</el-button>
+            <el-button size="mini" @click="initSelectNode(1)">{{$t('btn').restart}}</el-button>
           </div>
         </div>
       </div>
@@ -317,11 +317,16 @@ export default {
       this.node.min = Number(modeArr[0]) - 1
       this.node.max = Number(modeArr[1]) - 1
       this.checkList = []
-      this.initSelectNode()
+      this.initSelectNode(1)
     },
-    initSelectNode () {
+    initSelectNode (type) {
+      // console.log(this.node.max)
+      // console.log(this.checkList)
       let num = this.node.max + 1
       this.node.select = []
+      if (type) {
+        this.checkList = []
+      }
       for (let i = 0; i < num; i++) {
         if (i === 0) {
           this.node.select.push({

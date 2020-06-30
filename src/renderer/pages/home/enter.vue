@@ -84,7 +84,10 @@ export default {
     ...computedPub
   },
   mounted () {
-    // console.log(this.$$.compareVersion('5.1.0', '5.2.1'))
+    let hash = this.$$.toHash('a57d5624d0575a5ff9ce88e08cf330a62b528c251e9762730575ae1a0768d62d775a89c8fcb93d2a81f0bde321d0ce5b65c441780c3a3c55ad0ae5e686ca901a')
+    console.log(hash)
+    let sign = this.$$.hexToSign(hash, '0x1da03e8cbf28a9d4ceca118516a1e3b985f8baa004d1fabfa7b1d7a0a6568fc4')
+    console.log(sign)
   },
   methods: {
     // ...getEnode,

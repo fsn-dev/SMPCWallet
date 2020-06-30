@@ -133,6 +133,8 @@ export default {
     if (!balance) return 0
     balance = balance.toString()
     coin = coin ? coin.toUpperCase() : ''
+    // console.log(this)
+    coin = this.cutERC20(coin).coinType
     // console.log(coinInfo)
     let coinInfo = this.getCoinInfo(coin, 'rate')
     // console.log(coinInfo)
@@ -168,6 +170,9 @@ export default {
     if (!balance) return 0
     // balance = balance.toString()
     coin = coin.toUpperCase()
+    // coin = this.cutERC20()
+    // console.log(this)
+    coin = this.cutERC20(coin).coinType
     let coinInfo = this.getCoinInfo(coin, 'rate')
     if (dec || (coin && coinInfo && typeof coinInfo.rate !== 'undefined')) {
       let d = dec ? Number(dec) : Number(coinInfo.rate)

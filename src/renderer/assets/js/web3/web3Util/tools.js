@@ -52,14 +52,21 @@ export default {
     // let messageBytes = ethers.utils.toUtf8Bytes(message)
     // let messageDigest = ethers.utils.keccak256(messageBytes)
     let signature = signingKey.signDigest(str)
-    // console.log(signature)
-    v = v ? v : signature.v
-    // let v = signature.s
-    // if (signature.recoveryParam === 0) {
-    //   v = '00'
-    // } else if (signature.recoveryParam === 1) {
-    //   v = '01'
-    // }
+    console.log(signature)
+    console.log(web3.utils.toHex(signature.recoveryParam))
+    // let v = signature.v
+    if (!v || v === 0) {
+      if (signature.recoveryParam === 0) {
+        v = '00'
+      } else if (signature.recoveryParam === 1) {
+        v = '01'
+      } else if (signature.recoveryParam === 2) {
+        v = '02'
+      } else if (signature.recoveryParam === 3) {
+        v = '03'
+      }
+    }
+    // v = v ? v : signature.v
     let sign = signature.r + signature.s.replace('0x', '') + v
     return sign
   },
